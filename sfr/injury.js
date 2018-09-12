@@ -10,6 +10,10 @@ Ext.util.CSS.createStyleSheet(''
   + '.sfr-selector {'
   + '  background-color: white;'
   + '}'
+  + '.sfr-menu-item:hover {'
+  + '  text-decoration: underline;'
+  + '  text-decoration-color: #d0d0d0;'
+  +'}'
   + '.sfr-modal > div {'
   + '  border: solid 0px white;'
   + '}'
@@ -90,7 +94,7 @@ Ext.create('Ext.data.Store', {
 
 var imageTpl = new Ext.XTemplate(
   '<tpl for=".">',
-  '<div style="margin: 0; padding: 0 15px; overflow: hidden;" class="thumb-wrap">',
+  '<div style="margin: 0; padding: 0 15px; overflow: hidden;" class="sfr-menu-item">',
   '<div><span class="sfr-angle-left">&#xf104</span>{ValueName}</div>',
   '</div>',
   '</tpl>'
@@ -113,7 +117,7 @@ Ext.create('Ext.panel.Panel', {
       itemId: 'viewOne',
       store: Ext.data.StoreManager.lookup('firstStore'),
       tpl: imageTpl,
-      itemSelector: 'div.thumb-wrap',
+      itemSelector: 'div.sfr-menu-item',
       cls: 'sfr-selector',
       listeners: {
         itemclick: function (el, record) {
@@ -149,7 +153,7 @@ Ext.create('Ext.panel.Panel', {
       itemId: 'viewTwo',
       store: Ext.data.StoreManager.lookup('secondStore'),
       tpl: imageTpl,
-      itemSelector: 'div.thumb-wrap',
+      itemSelector: 'div.sfr-menu-item',
       cls: 'sfr-selector',
       listeners: {
         itemclick: function (el, record) {
@@ -185,7 +189,7 @@ Ext.create('Ext.panel.Panel', {
       itemId: 'viewThree',
       store: Ext.data.StoreManager.lookup('thirdStore'),
       tpl: imageTpl,
-      itemSelector: 'div.thumb-wrap',
+      itemSelector: 'div.sfr-menu-item',
       cls: 'sfr-selector',
       listeners: {
         itemclick: function (el, record) {
@@ -231,7 +235,7 @@ Ext.create('Ext.panel.Panel', {
       itemId: 'viewFour',
       store: Ext.data.StoreManager.lookup('fourthStore'),
       tpl: imageTpl,
-      itemSelector: 'div.thumb-wrap',
+      itemSelector: 'div.sfr-menu-item',
       cls: 'sfr-selector',
       listeners: {
         itemclick: function (element, record) {
@@ -276,7 +280,7 @@ Ext.create('Ext.panel.Panel', {
       itemId: 'viewFive',
       store: Ext.data.StoreManager.lookup('fifthStore'),
       tpl: imageTpl,
-      itemSelector: 'div.thumb-wrap',
+      itemSelector: 'div.sfr-menu-item',
       cls: 'sfr-selector',
       listeners: {
         itemclick: function (element, record) {
