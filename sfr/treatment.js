@@ -92,7 +92,7 @@ var treatmentWidget = function (e, current, callback, loadonly) {
     fields: []
   });
   
-  if(loadonly)return;
+  if(loadonly||current.Trt_Type===null)return;
   
   var imageTpl = new Ext.XTemplate(
     '<tpl for=".">',
