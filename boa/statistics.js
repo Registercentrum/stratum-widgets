@@ -15,7 +15,7 @@ Ext.util.CSS.createStyleSheet(
   + '  display: inline-block;'
   + '  margin-right: 20px;'
   + '}'
-  
+
   + '.bsw-info div {'
   + '  height: 12px;'
   + '  width: 12px;'
@@ -1266,7 +1266,7 @@ Ext.define('Boa.controller.DetailsController', {
         if (controller.unit === 0) {
           result.riket = result.choice;
         }
-        if(!controller.getView())return;
+        if (!controller.getView()) return;
         controller.getView().down('#' + graph).updateChart(result, controller.showStateComparison);
         controller.insertIndicatorExplanation();
       }
@@ -1480,7 +1480,7 @@ Ext.define('Boa.controller.DetailsController', {
           result.output.knee.twelvemonths = missingvalues;
           result.output.hip.twelvemonths = missingvalues;
         }
-        if(!controller.getViewModel())controller.redirectTo('overview');
+        if (!controller.getViewModel())controller.redirectTo('overview');
         controller.getViewModel().set('table', result.output);
         if (spinner) {
           spinner.classList.add('bsw-inactive');
@@ -1541,7 +1541,7 @@ Ext.define('Boa.controller.MainController', {
   alias: 'controller.main',
 
   routes: {
-    '!':'overview',
+    '!': 'overview',
     'overview': 'overview',
     'overview/:unit/:year/:interview/:followups': 'overview',
     'details': 'details',
@@ -1565,7 +1565,7 @@ Ext.define('Boa.controller.MainController', {
     if (window && window.scrollTo) {
       window.scrollTo(0, 0);
     }
-    if(tab === 'undefined') this.redirectTo('#overview');
+    if (tab === 'undefined') this.redirectTo('#overview');
     if (indicator && unit) {
       view.down('#detailsView').getController().setSelections(indicator, unit, interview, gender, age, hip, knee, hand, tab);
     }
@@ -1737,7 +1737,7 @@ Ext.define('Boa.controller.OverviewController', {
       url: this.getBaseUrl() + 'boaw-nyckeltal?' + 'apikey=' + this.getApiKey() + '&year=' + this.year + '&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeFollowUp=' + this.followups,
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
-        if(!controller.infobar.getViewModel())return;
+        if (!controller.infobar.getViewModel()) return;
         controller.infobar.getViewModel().set('infobar', result);
         if (!controller.simpleGoalsLoaded) {
           controller.loadSimpleGoals();
@@ -1808,7 +1808,7 @@ Ext.define('Boa.controller.OverviewController', {
       url: this.getBaseUrl() + 'boaw-cirkel-' + indicator + '?' + 'apikey=' + this.getApiKey() + '&rinvoke=1&formulartyp=' + period + '&year=' + this.year + '&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeFollowUp=' + this.followups,
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
-        if(!view.down('#' + component) || !view.down('#' + component).getViewModel()) return;
+        if (!view.down('#' + component) || !view.down('#' + component).getViewModel()) return;
         view.down('#' + component).getViewModel().set('goal', result);
         view.down('#' + component).down('#goalYear').updateYear(result.output);
         view.down('#' + component).updateGoal(result.output.target, result.output.grade);
@@ -1878,7 +1878,7 @@ Ext.define('Boa.controller.OverviewController', {
       cors: true,
       url: this.getBaseUrl() + 'boaw-simple-' + indicator + '?' + 'apikey=' + this.getApiKey() + '&rinvoke=1' + formTypeString + '&year=' + year + '&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeFollowUp=' + followups, success: function (response) {
         var result = Ext.decode(response.responseText).data;
-        if(!component.getViewModel())return;
+        if (!component.getViewModel()) return;
         component.getViewModel().set(goalNumber, result);
       }
     });
@@ -1999,7 +1999,7 @@ Ext.define('Boa.view.Comparison', {
         'good'
       ];
       var opacity = (sprite.getField() === 'base' ? 0.2 : 0.75);
-      if (!attr.store.data.items[index]) return;
+      if (!attr.store.data.items[index]) return {};
       var grade = attr.store.data.items[index].get('grade');
       var value = grades.indexOf(grade);
       var color = [
@@ -4066,24 +4066,24 @@ Ext.application({
         mainView.down('#detailsView').getController().updateLegend();
       }
     });
-    
+
     Ext.tip.QuickTipManager.init();
     Ext.apply(Ext.QuickTips.getQuickTip(), {
       dismissDelay: 0
     });
   },
   defaultToken: 'overview',
-  listen : {
-        controller : {
-            '#' : {
-                unmatchedroute : 'onUnmatchedRoute'
-            }
-        }
-    },
-
-    onUnmatchedRoute : function(hash) {
-       this.redirectTo('overview');
+  listen: {
+    controller: {
+      '#': {
+        unmatchedroute: 'onUnmatchedRoute'
+      }
     }
+  },
+
+  onUnmatchedRoute: function (hash) {
+    this.redirectTo('overview');
+  }
 });
 
 Ext.override(Ext.chart.series.Series, {
