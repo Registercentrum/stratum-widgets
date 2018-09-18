@@ -4445,7 +4445,7 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 				else {
 					var fractureForm = app.myCurrentFracturePanel;
 					var side = getSide(pelvisPanel);
-					onReturnCodes(fractureForm.id, side, '61', 'A', app.mySkeletonWindow.id, null, false);
+					onReturnCodes('', side, '61', 'A', app.mySkeletonWindow.id, null, false);
 					return;
 				}
 			}
