@@ -69,8 +69,11 @@ Ext.util.CSS.createStyleSheet(''
     treatmentWidget.valueGroups = treatmentWidget.valueGroups || [];
     treatmentWidget.icd10 = current.Parent.Fx_ICD10;
     treatmentWidget.trttype = current.Trt_Type;
-    treatmentWidget.child = current.Parent.Fx_OpenPhyses === 1;
-
+    var isBackFracture = current.Parent.Fx_LowerVertebra !== null;
+    var isChildTypeFracture = current.Parent.Fx_OpenPhyses === 1;
+    var inChildAge = (isBackFracture && Profile.Person.Age < 16) || Profile.Person.Age < 10;
+    treatmentWidget.isChild = isChildTypeFracture || inChildAge;
+    
     !treatmentWidget.valueGroups[4056] && fetchValueGroup(4056);
     !treatmentWidget.valueGroups[4061] && fetchValueGroup(4061);
     !treatmentWidget.valueGroups[4157] && fetchValueGroup(4157);
@@ -302,7 +305,7 @@ Ext.util.CSS.createStyleSheet(''
       for (var i = 0; i < treatmentWidget.valueGroups[4188].length; i++) {
         for (var j = 0; j < treatmentWidget.valueGroups[4188][i].Children.length; j++) {
           for (var k = 0; k < treatmentWidget.valueGroups[4188][i].Children[j].Children.length; k++) {
-            if (!filterSpecificValue(treatmentWidget.valueGroups[4188][i].Children[j].Children[k].DomainValueID, treatmentWidget.trttype, treatmentWidget.icd10, treatmentWidget.child)) {
+            if (!filterSpecificValue(treatmentWidget.valueGroups[4188][i].Children[j].Children[k].DomainValueID, treatmentWidget.trttype, treatmentWidget.icd10, treatmentWidget.isChild)) {
               treatmentWidget.valueGroups[4188][i].Children[j].Children.splice(k, 1);
               k--;
             }
@@ -378,7 +381,7 @@ Ext.util.CSS.createStyleSheet(''
           }
         }
       }
-      else {
+      else if (isChildFracture === false) {
         for (i = 0; i < treatmentWidget.valueGroups[5665].length; i++) {
           if (treatmentWidget.valueGroups[5665].DomainValueID == 60608) {
             if (treatmentWidget.valueGroups[5665][i].Children.length > 0) {
