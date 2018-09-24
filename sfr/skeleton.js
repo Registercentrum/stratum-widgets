@@ -1,302 +1,4 @@
 
-Object.assign = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-Ext.util.CSS.removeStyleSheet('sfr-skeleton');
-Ext.util.CSS.createStyleSheet(''
-	+ '.FormPanelInRed .x-panel-body					{ background-color: #E9D7D3; padding-bottom:0px; } '
-	+ '.FormPanelInRed .x-toolbar-footer				{ background-color: #E9D7D3; padding: 10px;margin-top:0px;}'
-	+ '.FormPanelInRedIcon								{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelRed.png) !important;}'
-	+ ''
-	+ '.FormPanelInYellow .x-panel-body				{ background-color: #FFFFDC; padding: 10px; }'
-	+ '.FormPanelInYellow .x-toolbar-footer			{ background-color: #FFFFDC; padding: 10px;margin-top:0px;}'
-	+ '.FormPanelInYellowIcon							{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelYellow.png) !important;}'
-	+ ''
-	+ '.FormPanelInGreen .x-panel-body					{ background-color: #DBF2BE; padding: 10px; } '
-	+ '.FormPanelInGreen .x-toolbar-footer				{ background-color: #DBF2BE; padding: 10px;margin-top:0px;}'
-	+ '.FormPanelInGreenIcon							{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelGreen.png) !important;}'
-	+ ''
-	+ '.FormPanelDefault .x-panel-body					{ padding: 10px; }'
-	+ '.FormPanelDefault .x-toolbar-footer				{ padding: 10px;margin-top:0px;}'
-	+ '.FormPanelDefaultIcon							{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelGrey.png) !important; } '
-	+ ''
-	+ '.FormPanelSmallFont *							{ font-family: Arial,Helvetica,sans-serif !important; }'
-	+ ''
-	+ '.skeleton * {background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-transp.png);}'
-	+ '.skeleton a {text-decoration: none; border: none}'
-	+ '.skeleton a:hover { border: none; }'
-	+ '										'
-	+ '.SevenV	*					{ position: absolute; width: 33px; height:50px; top: 275px; left: 170px; z-index:4; } '
-	+ '.SevenVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-7-V-mini.png)}'
-	+ ''
-	+ '.EightV	*					{ position: absolute; width: 27px; height:28px; top: 512px; left: 121px; z-index:4; } '
-	+ '.EightVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-8-V-mini.png)}'
-	+ ''
-	+ '.NineV	*					{ position: absolute; width: 51px; height:14px; top: 100px; left: 114px; z-index:20; }'
-	+ '.NineVHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-9-V-mini.png); }'
-	+ ''
-	+ '.TenV	*					{ position: absolute; width: 28px; height:42px; top: 107px; left: 132px; }'
-	+ '.TenVHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-10-V-mini.png); }'
-	+ ''
-	+ '.ElevenV	*				{ position: absolute; width: 35px; height:25px; top: 109px; left: 153px; }'
-	+ '.ElevenVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-11-V-mini.png); }'
-	+ ''
-	+ '.TwelveV	*				{ position: absolute; width: 35px; height:50px; top: 136px; left: 155px; }'
-	+ '.TwelveVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-12-V-mini.png); }'
-	+ ''
-	+ '.ThirteenV	*				{ position: absolute; width: 35px; height:25px; top: 185px; left: 156px; } '
-	+ '.ThirteenVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-13-V-mini.png); }'
-	+ ''
-	+ '.TwentyoneV	*				{ position: absolute; width: 16px; height:20px; top: 206px; left: 166px; }'
-	+ '.TwentyoneVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-21-V-mini.png); }'
-	+ ''
-	+ '.TwentytwoV	*				{ position: absolute; width: 15px; height:32px; top: 226px; left: 171px; }'
-	+ '.TwentytwoVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-22-V-mini.png); }'
-	+ ''
-	+ '.TwentythreeV	*			{ position: absolute; width: 15px; height:19px; top: 257px; left: 175px; }'
-	+ '.TwentythreeVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-23-V-mini.png); }'
-	+ ''
-	+ '.ThirtyoneV	*				{ position: absolute; width: 30px; height:26px; top: 260px; left: 127px; z-index:5;}'
-	+ '.ThirtyoneVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-31-V-mini.png); }'
-	+ ''
-	+ '.ThirtytwoV	*				{ position: absolute; width: 18px; height:73px; top: 287px; left: 131px; }'
-	+ '.ThirtytwoVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-32-V-mini.png); }'
-	+ ''
-	+ '.ThirtythreeV	*			{ position: absolute; width: 30px; height:30px; top: 362px; left: 120px; }'
-	+ '.ThirtythreeVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-33-V-mini.png); }'
-	+ ''
-	+ '.ThirtyFourV	*			{ position: absolute; width: 13px; height:10px; top: 385px; left: 127px; z-index:5;}'
-	+ '.ThirtyFourVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-34-V-mini.png); }'
-	+ ''
-	+ '.FortyoneV	*				{ position: absolute; width: 35px; height:30px;  top: 395px; left: 119px; }'
-	+ '.FortyoneVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-41-V-mini.png); }'
-	+ ''
-	+ '.FortytwoV	*				{ position: absolute; width: 35px; height:62px; top: 425px; left: 117px; } '
-	+ '.FortytwoVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-42-V-mini.png); }'
-	+ ''
-	+ '.FortythreeV	*			{ position: absolute; width: 11px; height:21px; top: 486px; left: 126px; z-index:4; } '
-	+ '.FortythreeVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-43-V-mini.png)}'
-	+ ''
-	+ '.FortyfourV	*				{ position: absolute; width: 35px; height:18px; top: 492px; left: 112px; z-index:3; } '
-	+ '.FortyfourVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-44-V-mini.png)}'
-	+ ''
-	+ '.FiftyoneV	*				{ position: absolute; width: 33px; height:25px; top: 260px; left: 127px; z-index:2; } '
-	+ '.FiftyoneVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-51-V-mini.png)}'
-	+ ''
-	+ '.SixtyTwoV	*				{ position: absolute; width: 31px; height:24px; top: 251px; left: 108px; z-index:6; }'
-	+ '.SixtyTwoVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-62-V-mini.png); }'
-	+ ''
-	+ '/* Right side */'
-	+ ''
-	+ '.SevenH	*					{ position: absolute; width: 33px; height:50px; top: 273px; left: 11px; z-index:4; }'
-	+ '.SevenHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-7-H-mini.png)}'
-	+ ''
-	+ '.EightH	*					{ position: absolute; width: 27px; height:28px; top: 512px; left: 66px; z-index:4; } '
-	+ '.EightHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-8-H-mini.png)}'
-	+ ''
-	+ '.NineH	*					{ position: absolute; width: 49px; height:15px; top: 99px; left: 48px; z-index:20; }'
-	+ '.NineHHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-9-H-mini.png); }'
-	+ ''
-	+ '.TenH	*					{ position: absolute; width: 25px; height:42px; top: 107px; left: 58px; }'
-	+ '.TenHHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-10-H-mini.png); }'
-	+ ''
-	+ '.ElevenH	*				{ position: absolute; width: 35px; height:25px; top: 110px; left: 34px; }'
-	+ '.ElevenHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-11-H-mini.png); }'
-	+ ''
-	+ '.TwelveH	*				{ position: absolute; width: 35px; height:50px; top: 136px; left: 28px; }'
-	+ '.TwelveHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-12-H-mini.png); }'
-	+ ''
-	+ '.ThirteenH	*				{ position: absolute; width: 35px; height:25px; top: 183px; left: 21px; } '
-	+ '.ThirteenHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-13-H-mini.png); }'
-	+ ''
-	+ '.TwentyoneH	*				{ position: absolute; width: 16px; height:21px; top: 206px; left: 27px; }'
-	+ '.TwentyoneHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-21-H-mini.png); }'
-	+ ''
-	+ '.TwentytwoH	*				{ position: absolute; width: 15px; height:30px; top: 227px; left: 25px; }'
-	+ '.TwentytwoHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-22-H-mini.png); }'
-	+ ''
-	+ '.TwentythreeH	*			{ position: absolute; width: 15px; height:19px; top: 258px; left: 25px; }'
-	+ '.TwentythreeHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-23-H-mini.png); }'
-	+ ''
-	+ '.ThirtyoneH	*				{ position: absolute; width: 33px; height:27px; top: 260px; left: 52px; z-index:5; }'
-	+ '.ThirtyoneHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-31-H-mini.png); }'
-	+ ''
-	+ '.ThirtytwoH	*				{ position: absolute; width: 18px; height:73px; top: 287px; left: 64px; }'
-	+ '.ThirtytwoHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-32-H-mini.png); }'
-	+ ''
-	+ '.ThirtythreeH	*			{ position: absolute; width: 33px; height:30px; top: 362px; left: 59px; }'
-	+ '.ThirtythreeHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-33-H-mini.png); }'
-	+ ''
-	+ '.ThirtyFourH	*			{ position: absolute; width: 14px; height:11px; top: 385px; left: 76px; z-index:5;}'
-	+ '.ThirtyFourHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-34-H-mini.png); }'
-	+ ''
-	+ '.FortyoneH	*				{ position: absolute; width: 35px; height:30px; top: 396px; left: 62px; }'
-	+ '.FortyoneHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-41-H-mini.png); }'
-	+ ''
-	+ '.FortytwoH	*				{ position: absolute; width: 35px; height:62px; top: 425px; left: 61px; } '
-	+ '.FortytwoHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-42-H-mini.png);}'
-	+ ''
-	+ '.FortythreeH	*			{ position: absolute; width: 11px; height:21px; top: 487px; left: 78px; z-index:6; } '
-	+ '.FortythreeHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-43-H-mini.png); }'
-	+ ''
-	+ '.FortyfourH	*				{ position: absolute; width: 35px; height:18px; top: 491px; left: 64px; z-index:5; } '
-	+ '.FortyfourHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-44-H-mini.png)}'
-	+ ''
-	+ '.SixtyTwoH	*				{ position: absolute; width: 31px; height:24px; top: 251px; left: 75px; z-index:6; } '
-	+ '.SixtyTwoHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-62-H-mini.png); }'
-	+ ''
-	+ ''
-	+ '/*No specified side*/'
-	+ '.SixtyOne *					{ position: absolute; width: 92px; height:64px; top: 222px; left: 62px; z-index:4; }'
-	+ '.SixtyOneHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-61-mini.png); }'
-	+ ''
-	+ '.Hundred	*				{ position: absolute; width: 48px; height:8px; top: 78px; left: 86px; z-index:20; }'
-	+ '.HundredHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-100-mini.png); }'
-	+ ''
-	+ '.HundredOne	*				{ position: absolute; width: 20px; height:24px; top: 86px; left: 98px; z-index:20; }'
-	+ '.HundredOneHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-101-mini.png); }'
-	+ ''
-	+ '.HundredTwo	*				{ position: absolute; width: 20px; height:58px; top: 110px; left: 98px; z-index:20; }'
-	+ '.HundredTwoHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-102-mini.png); }'
-	+ ''
-	+ '.HundredThree	*			{ position: absolute; width: 20px; height:69px; top: 168px; left: 98px; z-index:20; }'
-	+ '.HundredThreeHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-103-mini.png); }'
-	+ ''
-	+ '.AO a						{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-transp.png) repeat; border: 1px solid }'
-	+ '.AO a:hover					{ border: 2px solid #E89223/*BCBCBC*/; }'
-	+ ''
-	+ '/*hand skeleton*/'
-	+ '.OneHHandSkeleton			{ position: absolute; width: 30px; height:32px; top: 421px; left: 210px; z-index:0;}'
-	+ '.OneHHandSkeletonHover		{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-1.png); }'
-	+ ''
-	+ '.A1	*						{ top: 14px;  left: 88px;  width: 152px; height: 160px; position: absolute; }'
-	+ '.A2	*						{ top: 14px;  left: 246px; width: 152px; height: 160px; position: absolute; }'
-	+ '.A3	*						{ top: 14px;  left: 406px; width: 152px; height: 160px; position: absolute; }'
-	+ '.B1	*						{ top: 183px; left: 88px;  width: 152px; height: 160px; position: absolute; }'
-	+ '.B2	*						{ top: 183px; left: 246px; width: 152px; height: 160px; position: absolute; }'
-	+ '.B3	*						{ top: 183px; left: 406px; width: 152px; height: 160px; position: absolute; }'
-	+ '.C1	*						{ top: 354px; left: 88px;  width: 152px; height: 160px; position: absolute; }'
-	+ '.C2	*						{ top: 354px; left: 246px; width: 152px; height: 160px; position: absolute; }'
-	+ '.C3	*						{ top: 354px; left: 406px; width: 152px; height: 160px; position: absolute; }'
-	+ ''
-	+ '.A1RTG	*					{ top: 158px;  left: 90px;  width: 40px; height: 20px; position: absolute; z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A2RTG	*					{ top: 158px;  left: 248px; width: 40px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A3RTG	*					{ top: 158px;  left: 408px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B1RTG	*					{ top: 327px; left: 90px;  width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B2RTG	*					{ top: 327px; left: 248px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B3RTG	*					{ top: 327px; left: 408px; width: 40px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C1RTG	*					{ top: 498px; left: 90px;  width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C2RTG	*					{ top: 498px; left: 248px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C3RTG	*					{ top: 498px; left: 408px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ ''
-	+ '.A1-4Col *				{ top: 14px;  left: 89px;  width: 111px; height: 160px; position: absolute; }'
-	+ '.A2-4Col *				{ top: 14px;  left: 206px; width: 111px; height: 160px; position: absolute; }'
-	+ '.A3-4Col *				{ top: 14px;  left: 326px; width: 111px; height: 160px; position: absolute; }'
-	+ '.A4-4Col *				{ top: 14px;  left: 446px; width: 111px; height: 160px; position: absolute; }'
-	+ '.B1-4Col *				{ top: 183px; left: 89px;  width: 111px; height: 160px; position: absolute; }'
-	+ '.B2-4Col *				{ top: 183px; left: 206px; width: 111px; height: 160px; position: absolute; }'
-	+ '.B3-4Col *				{ top: 183px; left: 326px; width: 111px; height: 160px; position: absolute; }'
-	+ '.B4-4Col *				{ top: 183px; left: 446px; width: 111px; height: 160px; position: absolute; }'
-	+ '.C1-4Col *				{ top: 354px; left: 89px;  width: 111px; height: 160px; position: absolute; }'
-	+ '.C2-4Col *				{ top: 354px; left: 206px; width: 111px; height: 160px; position: absolute; }'
-	+ '.C3-4Col *				{ top: 354px; left: 326px; width: 111px; height: 160px; position: absolute; }'
-	+ '.C4-4Col *				{ top: 354px; left: 446px; width: 111px; height: 160px; position: absolute; }'
-	+ ''
-	+ '.A1RTG-4Col *				{ top: 158px;  left: 89px;  width: 111px; height: 20px; position: absolute; z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A2RTG-4Col *				{ top: 158px;  left: 206px; width: 111px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A3RTG-4Col *				{ top: 158px;  left: 326px; width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A4RTG-4Col *				{ top: 158px;  left: 446px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B1RTG-4Col *				{ top: 327px; left: 89px;  width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B2RTG-4Col *				{ top: 327px; left: 206px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B3RTG-4Col *				{ top: 327px; left: 326px; width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B4RTG-4Col *				{ top: 327px; left: 446px; width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C1RTG-4Col *				{ top: 498px; left: 89px;  width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C2RTG-4Col *				{ top: 498px; left: 206px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C3RTG-4Col *				{ top: 498px; left: 326px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C4RTG-4Col *				{ top: 498px; left: 446px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ ''
-	+ '.A1-5Col *				{ top: 14px;  left: 88px;  width: 90px; height: 160px; position: absolute; }'
-	+ '.A2-5Col *				{ top: 14px;  left: 182px; width: 90px; height: 160px; position: absolute; }'
-	+ '.A3-5Col *				{ top: 14px;  left: 278px; width: 90px; height: 160px; position: absolute; }'
-	+ '.A4-5Col *				{ top: 14px;  left: 372px; width: 90px; height: 160px; position: absolute; }'
-	+ '.A5-5Col *				{ top: 14px;  left: 468px; width: 90px; height: 160px; position: absolute; }'
-	+ '.B1-5Col *				{ top: 183px; left: 88px;  width: 90px; height: 160px; position: absolute; }'
-	+ '.B2-5Col *				{ top: 183px; left: 182px; width: 90px; height: 160px; position: absolute; }'
-	+ '.B3-5Col *				{ top: 183px; left: 278px; width: 90px; height: 160px; position: absolute; }'
-	+ '.B4-5Col *				{ top: 183px; left: 372px; width: 90px; height: 160px; position: absolute; }'
-	+ '.B5-5Col *				{ top: 183px; left: 468px; width: 90px; height: 160px; position: absolute; }'
-	+ '.C1-5Col *				{ top: 354px; left: 88px;  width: 90px; height: 160px; position: absolute; }'
-	+ '.C2-5Col *				{ top: 354px; left: 182px; width: 90px; height: 160px; position: absolute; }'
-	+ '.C3-5Col *				{ top: 354px; left: 278px; width: 90px; height: 160px; position: absolute; }'
-	+ '.C4-5Col *				{ top: 354px; left: 372px; width: 90px; height: 160px; position: absolute; }'
-	+ '.C5-5Col *				{ top: 354px; left: 468px; width: 90px; height: 160px; position: absolute; }'
-	+ ''
-	+ '.A1RTG-5Col *				{ top: 161px;  left: 89px;  width: 90px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A2RTG-5Col *				{ top: 161px;  left: 183px; width: 90px; height: 20px; position: absolute;   z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A3RTG-5Col *				{ top: 161px;  left: 279px; width: 90px; height: 20px; position: absolute;   z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A4RTG-5Col *				{ top: 161px;  left: 373px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A5RTG-5Col *				{ top: 161px;  left: 469px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B1RTG-5Col *				{ top: 330px; left: 89px;  width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B2RTG-5Col *				{ top: 330px; left: 183px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B3RTG-5Col *				{ top: 330px; left: 279px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B4RTG-5Col *				{ top: 330px; left: 373px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B5RTG-5Col *				{ top: 330px; left: 469px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C1RTG-5Col *				{ top: 501px; left: 89px;  width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C2RTG-5Col *				{ top: 501px; left: 183px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C3RTG-5Col *				{ top: 501px; left: 279px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C4RTG-5Col *				{ top: 501px; left: 373px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C5RTG-5Col *				{ top: 501px; left: 469px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ ''
-	+ '.A1-6Col *				{ top: 15px;  left: 86px;  width: 75px; height: 160px; position: absolute; }'
-	+ '.A2-6Col *				{ top: 15px;  left: 165px; width: 75px; height: 160px; position: absolute; }'
-	+ '.A3-6Col *				{ top: 15px;  left: 244px; width: 75px; height: 160px; position: absolute; }'
-	+ '.A4-6Col *				{ top: 15px;  left: 323px; width: 75px; height: 160px; position: absolute; }'
-	+ '.A5-6Col *				{ top: 15px;  left: 402px; width: 75px; height: 160px; position: absolute; }'
-	+ '.A6-6Col *				{ top: 15px;  left: 481px; width: 75px; height: 160px; position: absolute; }'
-	+ '.B1-6Col *				{ top: 184px; left: 86px; width: 75px; height: 160px; position: absolute; }'
-	+ '.B2-6Col *				{ top: 184px; left: 165px; width: 75px; height: 160px; position: absolute; }'
-	+ '.B3-6Col *				{ top: 184px; left: 244px; width: 75px; height: 160px; position: absolute; }'
-	+ '.B4-6Col *				{ top: 184px; left: 323px; width: 75px; height: 160px; position: absolute; }'
-	+ '.B5-6Col *				{ top: 184px; left: 402px; width: 75px; height: 160px; position: absolute; }'
-	+ '.B6-6Col *				{ top: 184px; left: 481px; width: 75px; height: 160px; position: absolute; }'
-	+ '.C1-6Col *				{ top: 354px; left: 86px;  width: 75px; height: 160px; position: absolute; }'
-	+ '.C2-6Col *				{ top: 354px; left: 165px; width: 75px; height: 160px; position: absolute; }'
-	+ '.C3-6Col *				{ top: 354px; left: 244px; width: 75px; height: 160px; position: absolute; }'
-	+ '.C4-6Col *				{ top: 354px; left: 323px; width: 75px; height: 160px; position: absolute; }'
-	+ '.C5-6Col *				{ top: 354px; left: 402px; width: 75px; height: 160px; position: absolute; }'
-	+ '.C6-6Col *				{ top: 354px; left: 481px; width: 75px; height: 160px; position: absolute; }'
-	+ ''
-	+ '.A1RTG-6Col *				{ top: 159px;  left: 86px;  width: 75px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A2RTG-6Col *				{ top: 159px;  left: 165px; width: 75px; height: 20px; position: absolute;   z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A3RTG-6Col *				{ top: 159px;  left: 244px; width: 75px; height: 20px; position: absolute;   z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A4RTG-6Col *				{ top: 159px;  left: 323px; width: 75px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A5RTG-6Col *				{ top: 159px;  left: 402px; width: 75px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.A6RTG-6Col *				{ top: 159px;  left: 481px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B1RTG-6Col *				{ top: 328px; left: 86px; width: 75px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B2RTG-6Col *				{ top: 328px; left: 165px; width: 75px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B3RTG-6Col *				{ top: 328px; left: 244px; width: 75px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B4RTG-6Col *				{ top: 328px; left: 323px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B5RTG-6Col *				{ top: 328px; left: 402px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.B6RTG-6Col *				{ top: 328px; left: 481px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C1RTG-6Col *				{ top: 498px; left: 86px;  width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C2RTG-6Col *				{ top: 498px; left: 165px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C3RTG-6Col *				{ top: 498px; left: 244px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C4RTG-6Col *				{ top: 498px; left: 323px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C5RTG-6Col *				{ top: 498px; left: 402px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-	+ '.C6RTG-6Col *				{ top: 498px; left: 481px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-
-	+ '.sfr-xray {'
-	+ '  margin: 0 10px;'
-	+ '  max-width: 470px;'
-	+ '  max-height: 800px;'
-	+ '}'
-	+ '.sfr-xray-link {'
-	+ '  cursor: pointer;'
-	+ '}'
-	+ '.sfr-skeleton .x-panel-body {'
-	+ '  border-width: 0px;'
-	+ '}'
-	, 'sfr-skeleton'
-);
-
 var skeletonWidget = function (event, current, callback, loadonly) {
 	var app = skeletonWidget;
 	app.event = event;
@@ -321,25 +23,11 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 	app.skeletonDomainCodes = [4158, 4159, 5554, 5555, 5563, 5572, 5573];
 	app.delayedDomainCodes = [4060, 5757];
 	app.registerDomainCodes = [4000, 4049, 4051, 4052, 4053, 4056, 4059, 4060, 4061, 4094, 4095, 4096, 4097, 4098, 4006, 4007, 4008, 4009, 4010,
-		4140, 4144, 4145, 4146, 4156, 4157, 4158, 4159, 4188, 4189, 4281, 4311, 4402, 4403, 5545, 5550, 5551, 5552, 5554, 5555, 5563, 5572, 5573, 5619, 5620, 5621, 5665, 5690, 5748, 5757];
+		4140, 4144, 4145, 4146, 4156, 4157, 4158, 4159, 4188, 4189, 4281, 4311, 4402, 4403, 5545, 5550, 5551, 5552, 5554,
+		5555, 5563, 5572, 5573, 5619, 5620, 5621, 5665, 5690, 5748, 5757];
+	app.showXray = showXray;
 
-	var tplFracture = new Ext.XTemplate(
-		'<img title="{title}" src="{image}" width="65" height="65" style="margin:0px" />'
-	);
-	var tplRadiusImg = new Ext.XTemplate(
-		'<img title="{title}" src="{image}" width="65" height="65" style="margin-top: 0px" />'
-	);
-	var tplUlnaImg = new Ext.XTemplate(
-		'<img title="{title}" src="{image}" width="65" height="65" style="margin-top: 0px" />'
-	);
-	var tplScapulaImg = new Ext.XTemplate(
-		'<img title="{title}" src="{image}" width="65" height="65" style="margin-top: 0px" />'
-	);
-	var tplClavicleImg = new Ext.XTemplate(
-		'<img title="{title}" src="{image}" width="65" height="65" style="margin-top: 0px" />'
-	);
-
-onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
+	onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 		var aoPanel = app.mySkeletonWindow.items.items[1];
 		if (aoImagesNavigationHandler.showNoChildFractureSupportAlert === true && !isBackFracture(aPictureID)) {
 			var t = new Ext.Template("<div></div>");
@@ -383,24 +71,6 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 
 		var sideLetter = "";
 		var sideText = "";
-		/*var infoTextA1 = "";
-        var infoTextA2 = "";
-        var infoTextA3 = "";
-        var infoTextA4 = "";
-        var infoTextA5 = "";
-        var infoTextA6 = "";
-        var infoTextB1 = "";
-        var infoTextB2 = "";
-        var infoTextB3 = "";
-        var infoTextB4 = "";
-        var infoTextB5 = "";
-        var infoTextB6 = "";
-        var infoTextC1 = "";
-        var infoTextC2 = "";
-        var infoTextC3 = "";
-        var infoTextC4 = "";
-        var infoTextC5 = "";
-        var infoTextC6 = "";*/
 		var infoTexts = createInfoTextMatrix();
 
 		aoImagesNavigationHandler.pictureID = aPictureID;
@@ -1486,80 +1156,8 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 						}
 					}
 				}
-				/*for(
-                switch (classCode) {
-                    case (codePrefixTextPicIDstr + aoMatrix[0][0]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[0][1]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[0][2]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[0][3]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[0][4]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[0][5]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[1][0]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[1][1]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[1][2]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        if (aPictureID == '61')
-                            infoTexts[0][0] = classText;
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[1][3]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[1][4]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[1][5]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[2][0]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[2][1]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        if (aPictureID == '61') {
-                            var otherSideText = 'Höger';
-                            if (sideText === 'Höger')
-                                otherSideText = 'Vänster';
-                            infoTextC2 = classText.replace('ena sidan', sideText).replace('andra sidan', otherSideText);
-                        }
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[2][2]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        if (aPictureID == '61') {
-                            infoTextC3 = classText;
-                        }
-                        break;
-                    case (codePrefixTextPicIDstr + aoMatrix[2][3]):
-                        infoTexts[0][0] = classText + ' ' + sideText;
-                        break;
-
-                    case (codePrefixTextPicIDstr + aoMatrix[2][4]):
-                        infoTexts[2][4] = classText + ' ' + sideText;
-                        break;
-
-                    case (codePrefixTextPicIDstr + aoMatrix[2][5]):
-                        infoTexts[2][5] = classText + ' ' + sideText;
-                        break;
-                }*/
 			}
 		}
-
-
 
 		if (sideLetter != '') {
 			sideLetter = '-' + sideLetter;
@@ -2610,7 +2208,9 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 			generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
 		}
 	}
-	
+
+	initialize(loadonly);
+
 	function getToday() {
 		var today = new Date();
 		return Ext.Date.dateFormat(today, 'Y-m-d');
@@ -3747,101 +3347,54 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 		var n = 0;
 		var tplSkeleton;
 		var tplHandSkeleton;
-		if (1) {
-			tplSkeleton = new Ext.XTemplate(
-				'<img src="{image}"> ',
-				'<div class="skeleton SevenV"><a onmouseover="onHover(this, \'SevenV\' )" onmouseout="onUnHover(this, \'SevenV\')" onclick="onDetermineIfChildFracture(null,7,2,null,false)"></a></div>',
-				'<div class="skeleton EightV"><a onmouseover="onHover(this, \'EightV\' )" onmouseout="onUnHover(this, \'EightV\')" onclick="onDetermineIfChildFracture(null,8,2,null,false)"></a></div>',
-				'<div class="skeleton NineV"><a onmouseover="onHover(this, \'NineV\' )" onmouseout="onUnHover(this, \'NineV\')" onclick="onDetermineIfChildFracture(null,9,2,null,false)"></a></div>',
-				'<div class="skeleton TenV"><a onmouseover="onHover(this, \'TenV\' )" onmouseout="onUnHover(this, \'TenV\')" onclick="onDetermineIfChildFracture(null,10,2,null,false)"></a></div>',
-				'<div class="skeleton ElevenV"><a onmouseover="onHover(this, \'ElevenV\' )" onmouseout="onUnHover(this, \'ElevenV\')" onclick="onDetermineIfChildFracture(null,11,2,null,false)"></a></div>',
-				'<div class="skeleton TwelveV"><a onmouseover="onHover(this, \'TwelveV\' )" onmouseout="onUnHover(this, \'TwelveV\')" onclick="onDetermineIfChildFracture(null,12,2,null,false)"></a></div>',
-				'<div class="skeleton ThirteenV"><a onmouseover="onHover(this, \'ThirteenV\' )" onmouseout="onUnHover(this, \'ThirteenV\')" onclick="onDetermineIfChildFracture(null,13,2,null,false)"></a></div>',
-				'<div class="skeleton TwentyoneV"><a onmouseover="onHover(this, \'TwentyoneV\' )" onmouseout="onUnHover(this, \'TwentyoneV\')" onclick="onDetermineIfChildFracture(null,21,2,null,false)"></a></div>',
-				'<div class="skeleton TwentytwoV"><a onmouseover="onHover(this, \'TwentytwoV\' )" onmouseout="onUnHover(this, \'TwentytwoV\')" onclick="onDetermineIfChildFracture(null,22,2,null,false)"></a></div>',
-				'<div class="skeleton TwentythreeV"><a onmouseover="onHover(this, \'TwentythreeV\' )" onmouseout="onUnHover(this, \'TwentythreeV\')" onclick="onDetermineIfChildFracture(null,23,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtyoneV"><a onmouseover="onHover(this, \'ThirtyoneV\' )" onmouseout="onUnHover(this, \'ThirtyoneV\')" onclick="onDetermineIfChildFracture(null,31,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtytwoV"><a onmouseover="onHover(this, \'ThirtytwoV\' )" onmouseout="onUnHover(this, \'ThirtytwoV\')" onclick="onDetermineIfChildFracture(null,32,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtythreeV"><a onmouseover="onHover(this, \'ThirtythreeV\' )" onmouseout="onUnHover(this, \'ThirtythreeV\')" onclick="onDetermineIfChildFracture(null,33,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtyFourV"><a onmouseover="onHover(this, \'ThirtyFourV\' )" onmouseout="onUnHover(this, \'ThirtyFourV\')" onclick="onDetermineIfChildFracture(null,34,2,null,false)"></a></div>',
-				'<div class="skeleton FortyoneV"><a onmouseover="onHover(this, \'FortyoneV\' )" onmouseout="onUnHover(this, \'FortyoneV\')" onclick="onDetermineIfChildFracture(null,41,2,null,false)"></a></div>',
-				'<div class="skeleton FortytwoV"><a onmouseover="onHover(this, \'FortytwoV\' )" onmouseout="onUnHover(this, \'FortytwoV\')" onclick="onDetermineIfChildFracture(null,42,2,null,false)"></a></div>',
-				'<div class="skeleton FortythreeV"><a onmouseover="onHover(this, \'FortythreeV\' )" onmouseout="onUnHover(this, \'FortythreeV\')" onclick="onDetermineIfChildFracture(null,43,2,null,false)"></a></div>',
-				'<div class="skeleton FortyfourV"><a onmouseover="onHover(this, \'FortyfourV\' )" onmouseout="onUnHover(this, \'FortyfourV\')" onclick="onDetermineIfChildFracture(null,44,2,null,false)"></a></div>',
-				'<div class="skeleton SixtyTwoV"><a onmouseover="onHover(this, \'SixtyTwoV\' )" onmouseout="onUnHover(this, \'SixtyTwoV\')" onclick="onDetermineIfChildFracture(null,62,2,null,false)"></a></div>',
-				'<div class="skeleton SevenH"><a onmouseover="onHover(this, \'SevenH\' )" onmouseout="onUnHover(this, \'SevenH\')" onclick="onDetermineIfChildFracture(null,7,1,null,false)"></a></div>',
-				'<div class="skeleton EightH"><a onmouseover="onHover(this, \'EightH\' )" onmouseout="onUnHover(this, \'EightH\')" onclick="onDetermineIfChildFracture(null,8,1,null,false)"></a></div>',
-				'<div class="skeleton NineH"><a onmouseover="onHover(this, \'NineH\' )" onmouseout="onUnHover(this, \'NineH\')" onclick="onDetermineIfChildFracture(null,9,1,null,false)"></a></div>',
-				'<div class="skeleton TenH"><a onmouseover="onHover(this, \'TenH\' )" onmouseout="onUnHover(this, \'TenH\')" onclick="onDetermineIfChildFracture(null,10,1,null,false)"></a></div>',
-				'<div class="skeleton ElevenH"><a onmouseover="onHover(this, \'ElevenH\' )" onmouseout="onUnHover(this, \'ElevenH\')" onclick="onDetermineIfChildFracture(null,11,1,null,false)"></a></div>',
-				'<div class="skeleton TwelveH"><a onmouseover="onHover(this, \'TwelveH\' )" onmouseout="onUnHover(this, \'TwelveH\')" onclick="onDetermineIfChildFracture(null,12,1,null,false)"></a></div>',
-				'<div class="skeleton ThirteenH"><a onmouseover="onHover(this, \'ThirteenH\' )" onmouseout="onUnHover(this, \'ThirteenH\')" onclick="onDetermineIfChildFracture(null,13,1,null,false)"></a></div>',
-				'<div class="skeleton TwentyoneH"><a onmouseover="onHover(this, \'TwentyoneH\' )" onmouseout="onUnHover(this, \'TwentyoneH\')" onclick="onDetermineIfChildFracture(null,21,1,null,false)"></a></div>',
-				'<div class="skeleton TwentytwoH"><a onmouseover="onHover(this, \'TwentytwoH\' )" onmouseout="onUnHover(this, \'TwentytwoH\')" onclick="onDetermineIfChildFracture(null,22,1,null,false)"></a></div>',
-				'<div class="skeleton TwentythreeH"><a onmouseover="onHover(this, \'TwentythreeH\' )" onmouseout="onUnHover(this, \'TwentythreeH\')" onclick="onDetermineIfChildFracture(null,23,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtyoneH"><a onmouseover="onHover(this, \'ThirtyoneH\' )" onmouseout="onUnHover(this, \'ThirtyoneH\')" onclick="onDetermineIfChildFracture(null,31,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtytwoH"><a onmouseover="onHover(this, \'ThirtytwoH\' )" onmouseout="onUnHover(this, \'ThirtytwoH\')" onclick="onDetermineIfChildFracture(null,32,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtythreeH"><a onmouseover="onHover(this, \'ThirtythreeH\' )" onmouseout="onUnHover(this, \'ThirtythreeH\')" onclick="onDetermineIfChildFracture(null,33,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtyFourH"><a onmouseover="onHover(this, \'ThirtyFourH\' )" onmouseout="onUnHover(this, \'ThirtyFourH\')" onclick="onDetermineIfChildFracture(null,34,1,null,false)"></a></div>',
-				'<div class="skeleton FortyoneH"><a onmouseover="onHover(this, \'FortyoneH\' )" onmouseout="onUnHover(this, \'FortyoneH\')" onclick="onDetermineIfChildFracture(null,41,1,null,false)"></a></div>',
-				'<div class="skeleton FortytwoH"><a onmouseover="onHover(this, \'FortytwoH\' )" onmouseout="onUnHover(this, \'FortytwoH\')"  onclick="onDetermineIfChildFracture(null,42,1,null,false)"></a></div>',
-				'<div class="skeleton FortythreeH"><a onmouseover="onHover(this, \'FortythreeH\' )" onmouseout="onUnHover(this, \'FortythreeH\')" onclick="onDetermineIfChildFracture(null,43,1,null,false)"></a></div>',
-				'<div class="skeleton FortyfourH"><a onmouseover="onHover(this, \'FortyfourH\' )" onmouseout="onUnHover(this, \'FortyfourH\')"  onclick="onDetermineIfChildFracture(null,44,1,null,false)"></a></div>',
-				'<div class="skeleton SixtyTwoH"><a onmouseover="onHover(this, \'SixtyTwoH\' )" onmouseout="onUnHover(this, \'SixtyTwoH\')" onclick="onDetermineIfChildFracture(null,62,1,null,false)"></a></div>',
-				'<div class="skeleton SixtyOne"><a onmouseover="onHover(this, \'SixtyOne\' )" onmouseout="onUnHover(this, \'SixtyOne\')" onclick="onDetermineIfChildFracture(null,61,0,null,false)"></a></div>',
-				'<div title="C0-C2" class="skeleton Hundred"><a onmouseover="onHover(this, \'Hundred\' )" onmouseout="onUnHover(this, \'Hundred\')" onclick="onDetermineIfChildFracture(null,100,3,null,false)"></a></div>',
-				'<div title="C3-T1" class="skeleton HundredOne"><a onmouseover="onHover(this, \'HundredOne\' )" onmouseout="onUnHover(this, \'HundredOne\')" onclick="onDetermineIfChildFracture(null,101,3,null,false)"></a></div>',
-				'<div title="T2-T10" class="skeleton HundredTwo"><a onmouseover="onHover(this, \'HundredTwo\' )" onmouseout="onUnHover(this, \'HundredTwo\')" onclick="onDetermineIfChildFracture(null,102,3,null,false)"></a></div>',
-				'<div title="T11-L5" class="skeleton HundredThree"><a onmouseover="onHover(this, \'HundredThree\' )" onmouseout="onUnHover(this, \'HundredThree\')" onclick="onDetermineIfChildFracture(null,103,3,null,false)"></a></div>'
-			);
-		} else {
-			tplSkeleton = new Ext.XTemplate(
-				'<img src="{image}"> ',
-				'<div class="skeleton SevenV"><a onmouseover="onHover(this, \'SevenV\' )" onmouseout="onUnHover(this, \'SevenV\')" onclick="onDetermineIfChildFracture(null,7,2,null,false)"></a></div>',
-				'<div class="skeleton EightV"><a onmouseover="onHover(this, \'EightV\' )" onmouseout="onUnHover(this, \'EightV\')" onclick="onDetermineIfChildFracture(null,8,2,null,false)"></a></div>',
-				'<div class="skeleton NineV"><a onmouseover="onHover(this, \'NineV\' )" onmouseout="onUnHover(this, \'NineV\')" onclick="onDetermineIfChildFracture(null,9,2,null,false)"></a></div>',
-				'<div class="skeleton TenV"><a onmouseover="onHover(this, \'TenV\' )" onmouseout="onUnHover(this, \'TenV\')" onclick="onDetermineIfChildFracture(null,10,2,null,false)"></a></div>',
-				'<div class="skeleton ElevenV"><a onmouseover="onHover(this, \'ElevenV\' )" onmouseout="onUnHover(this, \'ElevenV\')" onclick="onDetermineIfChildFracture(null,11,2,null,false)"></a></div>',
-				'<div class="skeleton TwelveV"><a onmouseover="onHover(this, \'TwelveV\' )" onmouseout="onUnHover(this, \'TwelveV\')" onclick="onDetermineIfChildFracture(null,12,2,null,false)"></a></div>',
-				'<div class="skeleton ThirteenV"><a onmouseover="onHover(this, \'ThirteenV\' )" onmouseout="onUnHover(this, \'ThirteenV\')" onclick="onDetermineIfChildFracture(null,13,2,null,false)"></a></div>',
-				'<div class="skeleton TwentyoneV"><a onmouseover="onHover(this, \'TwentyoneV\' )" onmouseout="onUnHover(this, \'TwentyoneV\')" onclick="onDetermineIfChildFracture(null,21,2,null,false)"></a></div>',
-				'<div class="skeleton TwentytwoV"><a onmouseover="onHover(this, \'TwentytwoV\' )" onmouseout="onUnHover(this, \'TwentytwoV\')" onclick="onDetermineIfChildFracture(null,22,2,null,false)"></a></div>',
-				'<div class="skeleton TwentythreeV"><a onmouseover="onHover(this, \'TwentythreeV\' )" onmouseout="onUnHover(this, \'TwentythreeV\')" onclick="onDetermineIfChildFracture(null,23,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtyoneV"><a onmouseover="onHover(this, \'ThirtyoneV\' )" onmouseout="onUnHover(this, \'ThirtyoneV\')" onclick="onDetermineIfChildFracture(null,31,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtytwoV"><a onmouseover="onHover(this, \'ThirtytwoV\' )" onmouseout="onUnHover(this, \'ThirtytwoV\')" onclick="onDetermineIfChildFracture(null,32,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtythreeV"><a onmouseover="onHover(this, \'ThirtythreeV\' )" onmouseout="onUnHover(this, \'ThirtythreeV\')" onclick="onDetermineIfChildFracture(null,33,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtyFourV"><a onmouseover="onHover(this, \'ThirtyFourV\' )" onmouseout="onUnHover(this, \'ThirtyFourV\')" onclick="onDetermineIfChildFracture(null,34,2,null,false)"></a></div>',
-				'<div class="skeleton FortyoneV"><a onmouseover="onHover(this, \'FortyoneV\' )" onmouseout="onUnHover(this, \'FortyoneV\')" onclick="onDetermineIfChildFracture(null,41,2,null,false)"></a></div>',
-				'<div class="skeleton FortytwoV"><a onmouseover="onHover(this, \'FortytwoV\' )" onmouseout="onUnHover(this, \'FortytwoV\')" onclick="onDetermineIfChildFracture(null,42,2,null,false)"></a></div>',
-				'<div class="skeleton FortythreeV"><a onmouseover="onHover(this, \'FortythreeV\' )" onmouseout="onUnHover(this, \'FortythreeV\')" onclick="onDetermineIfChildFracture(null,43,2,null,false)"></a></div>',
-				'<div class="skeleton FortyfourV"><a onmouseover="onHover(this, \'FortyfourV\' )" onmouseout="onUnHover(this, \'FortyfourV\')" onclick="onDetermineIfChildFracture(null,44,2,null,false)"></a></div>',
-				'<div class="skeleton SixtyTwoV"><a onmouseover="onHover(this, \'SixtyTwoV\' )" onmouseout="onUnHover(this, \'SixtyTwoV\')" onclick="onDetermineIfChildFracture(null,62,2,null,false)"></a></div>',
-				'<div class="skeleton SevenH"><a onmouseover="onHover(this, \'SevenH\' )" onmouseout="onUnHover(this, \'SevenH\')" onclick="onDetermineIfChildFracture(null,7,1,null,false)"></a></div>',
-				'<div class="skeleton EightH"><a onmouseover="onHover(this, \'EightH\' )" onmouseout="onUnHover(this, \'EightH\')" onclick="onDetermineIfChildFracture(null,8,1,null,false)"></a></div>',
-				'<div class="skeleton NineH"><a onmouseover="onHover(this, \'NineH\' )" onmouseout="onUnHover(this, \'NineH\')" onclick="onDetermineIfChildFracture(null,9,1,null,false)"></a></div>',
-				'<div class="skeleton TenH"><a onmouseover="onHover(this, \'TenH\' )" onmouseout="onUnHover(this, \'TenH\')" onclick="onDetermineIfChildFracture(null,10,1,null,false)"></a></div>',
-				'<div class="skeleton ElevenH"><a onmouseover="onHover(this, \'ElevenH\' )" onmouseout="onUnHover(this, \'ElevenH\')" onclick="onDetermineIfChildFracture(null,11,1,null,false)"></a></div>',
-				'<div class="skeleton TwelveH"><a onmouseover="onHover(this, \'TwelveH\' )" onmouseout="onUnHover(this, \'TwelveH\')" onclick="onDetermineIfChildFracture(null,12,1,null,false)"></a></div>',
-				'<div class="skeleton ThirteenH"><a onmouseover="onHover(this, \'ThirteenH\' )" onmouseout="onUnHover(this, \'ThirteenH\')" onclick="onDetermineIfChildFracture(null,13,1,null,false)"></a></div>',
-				'<div class="skeleton TwentyoneH"><a onmouseover="onHover(this, \'TwentyoneH\' )" onmouseout="onUnHover(this, \'TwentyoneH\')" onclick="onDetermineIfChildFracture(null,21,1,null,false)"></a></div>',
-				'<div class="skeleton TwentytwoH"><a onmouseover="onHover(this, \'TwentytwoH\' )" onmouseout="onUnHover(this, \'TwentytwoH\')" onclick="onDetermineIfChildFracture(null,22,1,null,false)"></a></div>',
-				'<div class="skeleton TwentythreeH"><a onmouseover="onHover(this, \'TwentythreeH\' )" onmouseout="onUnHover(this, \'TwentythreeH\')" onclick="onDetermineIfChildFracture(null,23,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtyoneH"><a onmouseover="onHover(this, \'ThirtyoneH\' )" onmouseout="onUnHover(this, \'ThirtyoneH\')" onclick="onDetermineIfChildFracture(null,31,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtytwoH"><a onmouseover="onHover(this, \'ThirtytwoH\' )" onmouseout="onUnHover(this, \'ThirtytwoH\')" onclick="onDetermineIfChildFracture(null,32,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtythreeH"><a onmouseover="onHover(this, \'ThirtythreeH\' )" onmouseout="onUnHover(this, \'ThirtythreeH\')" onclick="onDetermineIfChildFracture(null,33,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtyFourH"><a onmouseover="onHover(this, \'ThirtyFourH\' )" onmouseout="onUnHover(this, \'ThirtyFourH\')" onclick="onDetermineIfChildFracture(null,34,1,null,false)"></a></div>',
-				'<div class="skeleton FortyoneH"><a onmouseover="onHover(this, \'FortyoneH\' )" onmouseout="onUnHover(this, \'FortyoneH\')" onclick="onDetermineIfChildFracture(null,41,1,null,false)"></a></div>',
-				'<div class="skeleton FortytwoH"><a onmouseover="onHover(this, \'FortytwoH\' )" onmouseout="onUnHover(this, \'FortytwoH\')"  onclick="onDetermineIfChildFracture(null,42,1,null,false)"></a></div>',
-				'<div class="skeleton FortythreeH"><a onmouseover="onHover(this, \'FortythreeH\' )" onmouseout="onUnHover(this, \'FortythreeH\')" onclick="onDetermineIfChildFracture(null,43,1,null,false)"></a></div>',
-				'<div class="skeleton FortyfourH"><a onmouseover="onHover(this, \'FortyfourH\' )" onmouseout="onUnHover(this, \'FortyfourH\')"  onclick="onDetermineIfChildFracture(null,44,1,null,false)"></a></div>',
-				'<div class="skeleton SixtyTwoH"><a onmouseover="onHover(this, \'SixtyTwoH\' )" onmouseout="onUnHover(this, \'SixtyTwoH\')" onclick="onDetermineIfChildFracture(null,62,1,null,false)"></a></div>',
-				'<div class="skeleton SixtyOne"><a onmouseover="onHover(this, \'SixtyOne\' )" onmouseout="onUnHover(this, \'SixtyOne\')" onclick="onDetermineIfChildFracture(null,61,0,null,false)"></a></div>',
-				'<div title="C0-C2" class="skeleton Hundred"><a onmouseover="onHover(this, \'Hundred\' )" onmouseout="onUnHover(this, \'Hundred\')" onclick="onDetermineIfChildFracture(null,100,3,null,false)"></a></div>',
-				'<div title="C3-T1" class="skeleton HundredOne"><a onmouseover="onHover(this, \'HundredOne\' )" onmouseout="onUnHover(this, \'HundredOne\')" onclick="onDetermineIfChildFracture(null,101,3,null,false)"></a></div>',
-				'<div title="T2-T10" class="skeleton HundredTwo"><a onmouseover="onHover(this, \'HundredTwo\' )" onmouseout="onUnHover(this, \'HundredTwo\')" onclick="onDetermineIfChildFracture(null,102,3,null,false)"></a></div>',
-				'<div title="T11-L5" class="skeleton HundredThree"><a onmouseover="onHover(this, \'HundredThree\' )" onmouseout="onUnHover(this, \'HundredThree\')" onclick="onDetermineIfChildFracture(null,103,3,null,false)"></a></div>'
-			);
-		}
+
+		tplSkeleton = new Ext.XTemplate(
+			'<img src="{image}"> ',
+			'<div class="skeleton SevenV"><a onmouseover="onHover(this, \'SevenV\' )" onmouseout="onUnHover(this, \'SevenV\')" onclick="onDetermineIfChildFracture(null,7,2,null,false)"></a></div>',
+			'<div class="skeleton EightV"><a onmouseover="onHover(this, \'EightV\' )" onmouseout="onUnHover(this, \'EightV\')" onclick="onDetermineIfChildFracture(null,8,2,null,false)"></a></div>',
+			'<div class="skeleton NineV"><a onmouseover="onHover(this, \'NineV\' )" onmouseout="onUnHover(this, \'NineV\')" onclick="onDetermineIfChildFracture(null,9,2,null,false)"></a></div>',
+			'<div class="skeleton TenV"><a onmouseover="onHover(this, \'TenV\' )" onmouseout="onUnHover(this, \'TenV\')" onclick="onDetermineIfChildFracture(null,10,2,null,false)"></a></div>',
+			'<div class="skeleton ElevenV"><a onmouseover="onHover(this, \'ElevenV\' )" onmouseout="onUnHover(this, \'ElevenV\')" onclick="onDetermineIfChildFracture(null,11,2,null,false)"></a></div>',
+			'<div class="skeleton TwelveV"><a onmouseover="onHover(this, \'TwelveV\' )" onmouseout="onUnHover(this, \'TwelveV\')" onclick="onDetermineIfChildFracture(null,12,2,null,false)"></a></div>',
+			'<div class="skeleton ThirteenV"><a onmouseover="onHover(this, \'ThirteenV\' )" onmouseout="onUnHover(this, \'ThirteenV\')" onclick="onDetermineIfChildFracture(null,13,2,null,false)"></a></div>',
+			'<div class="skeleton TwentyoneV"><a onmouseover="onHover(this, \'TwentyoneV\' )" onmouseout="onUnHover(this, \'TwentyoneV\')" onclick="onDetermineIfChildFracture(null,21,2,null,false)"></a></div>',
+			'<div class="skeleton TwentytwoV"><a onmouseover="onHover(this, \'TwentytwoV\' )" onmouseout="onUnHover(this, \'TwentytwoV\')" onclick="onDetermineIfChildFracture(null,22,2,null,false)"></a></div>',
+			'<div class="skeleton TwentythreeV"><a onmouseover="onHover(this, \'TwentythreeV\' )" onmouseout="onUnHover(this, \'TwentythreeV\')" onclick="onDetermineIfChildFracture(null,23,2,null,false)"></a></div>',
+			'<div class="skeleton ThirtyoneV"><a onmouseover="onHover(this, \'ThirtyoneV\' )" onmouseout="onUnHover(this, \'ThirtyoneV\')" onclick="onDetermineIfChildFracture(null,31,2,null,false)"></a></div>',
+			'<div class="skeleton ThirtytwoV"><a onmouseover="onHover(this, \'ThirtytwoV\' )" onmouseout="onUnHover(this, \'ThirtytwoV\')" onclick="onDetermineIfChildFracture(null,32,2,null,false)"></a></div>',
+			'<div class="skeleton ThirtythreeV"><a onmouseover="onHover(this, \'ThirtythreeV\' )" onmouseout="onUnHover(this, \'ThirtythreeV\')" onclick="onDetermineIfChildFracture(null,33,2,null,false)"></a></div>',
+			'<div class="skeleton ThirtyFourV"><a onmouseover="onHover(this, \'ThirtyFourV\' )" onmouseout="onUnHover(this, \'ThirtyFourV\')" onclick="onDetermineIfChildFracture(null,34,2,null,false)"></a></div>',
+			'<div class="skeleton FortyoneV"><a onmouseover="onHover(this, \'FortyoneV\' )" onmouseout="onUnHover(this, \'FortyoneV\')" onclick="onDetermineIfChildFracture(null,41,2,null,false)"></a></div>',
+			'<div class="skeleton FortytwoV"><a onmouseover="onHover(this, \'FortytwoV\' )" onmouseout="onUnHover(this, \'FortytwoV\')" onclick="onDetermineIfChildFracture(null,42,2,null,false)"></a></div>',
+			'<div class="skeleton FortythreeV"><a onmouseover="onHover(this, \'FortythreeV\' )" onmouseout="onUnHover(this, \'FortythreeV\')" onclick="onDetermineIfChildFracture(null,43,2,null,false)"></a></div>',
+			'<div class="skeleton FortyfourV"><a onmouseover="onHover(this, \'FortyfourV\' )" onmouseout="onUnHover(this, \'FortyfourV\')" onclick="onDetermineIfChildFracture(null,44,2,null,false)"></a></div>',
+			'<div class="skeleton SixtyTwoV"><a onmouseover="onHover(this, \'SixtyTwoV\' )" onmouseout="onUnHover(this, \'SixtyTwoV\')" onclick="onDetermineIfChildFracture(null,62,2,null,false)"></a></div>',
+			'<div class="skeleton SevenH"><a onmouseover="onHover(this, \'SevenH\' )" onmouseout="onUnHover(this, \'SevenH\')" onclick="onDetermineIfChildFracture(null,7,1,null,false)"></a></div>',
+			'<div class="skeleton EightH"><a onmouseover="onHover(this, \'EightH\' )" onmouseout="onUnHover(this, \'EightH\')" onclick="onDetermineIfChildFracture(null,8,1,null,false)"></a></div>',
+			'<div class="skeleton NineH"><a onmouseover="onHover(this, \'NineH\' )" onmouseout="onUnHover(this, \'NineH\')" onclick="onDetermineIfChildFracture(null,9,1,null,false)"></a></div>',
+			'<div class="skeleton TenH"><a onmouseover="onHover(this, \'TenH\' )" onmouseout="onUnHover(this, \'TenH\')" onclick="onDetermineIfChildFracture(null,10,1,null,false)"></a></div>',
+			'<div class="skeleton ElevenH"><a onmouseover="onHover(this, \'ElevenH\' )" onmouseout="onUnHover(this, \'ElevenH\')" onclick="onDetermineIfChildFracture(null,11,1,null,false)"></a></div>',
+			'<div class="skeleton TwelveH"><a onmouseover="onHover(this, \'TwelveH\' )" onmouseout="onUnHover(this, \'TwelveH\')" onclick="onDetermineIfChildFracture(null,12,1,null,false)"></a></div>',
+			'<div class="skeleton ThirteenH"><a onmouseover="onHover(this, \'ThirteenH\' )" onmouseout="onUnHover(this, \'ThirteenH\')" onclick="onDetermineIfChildFracture(null,13,1,null,false)"></a></div>',
+			'<div class="skeleton TwentyoneH"><a onmouseover="onHover(this, \'TwentyoneH\' )" onmouseout="onUnHover(this, \'TwentyoneH\')" onclick="onDetermineIfChildFracture(null,21,1,null,false)"></a></div>',
+			'<div class="skeleton TwentytwoH"><a onmouseover="onHover(this, \'TwentytwoH\' )" onmouseout="onUnHover(this, \'TwentytwoH\')" onclick="onDetermineIfChildFracture(null,22,1,null,false)"></a></div>',
+			'<div class="skeleton TwentythreeH"><a onmouseover="onHover(this, \'TwentythreeH\' )" onmouseout="onUnHover(this, \'TwentythreeH\')" onclick="onDetermineIfChildFracture(null,23,1,null,false)"></a></div>',
+			'<div class="skeleton ThirtyoneH"><a onmouseover="onHover(this, \'ThirtyoneH\' )" onmouseout="onUnHover(this, \'ThirtyoneH\')" onclick="onDetermineIfChildFracture(null,31,1,null,false)"></a></div>',
+			'<div class="skeleton ThirtytwoH"><a onmouseover="onHover(this, \'ThirtytwoH\' )" onmouseout="onUnHover(this, \'ThirtytwoH\')" onclick="onDetermineIfChildFracture(null,32,1,null,false)"></a></div>',
+			'<div class="skeleton ThirtythreeH"><a onmouseover="onHover(this, \'ThirtythreeH\' )" onmouseout="onUnHover(this, \'ThirtythreeH\')" onclick="onDetermineIfChildFracture(null,33,1,null,false)"></a></div>',
+			'<div class="skeleton ThirtyFourH"><a onmouseover="onHover(this, \'ThirtyFourH\' )" onmouseout="onUnHover(this, \'ThirtyFourH\')" onclick="onDetermineIfChildFracture(null,34,1,null,false)"></a></div>',
+			'<div class="skeleton FortyoneH"><a onmouseover="onHover(this, \'FortyoneH\' )" onmouseout="onUnHover(this, \'FortyoneH\')" onclick="onDetermineIfChildFracture(null,41,1,null,false)"></a></div>',
+			'<div class="skeleton FortytwoH"><a onmouseover="onHover(this, \'FortytwoH\' )" onmouseout="onUnHover(this, \'FortytwoH\')"  onclick="onDetermineIfChildFracture(null,42,1,null,false)"></a></div>',
+			'<div class="skeleton FortythreeH"><a onmouseover="onHover(this, \'FortythreeH\' )" onmouseout="onUnHover(this, \'FortythreeH\')" onclick="onDetermineIfChildFracture(null,43,1,null,false)"></a></div>',
+			'<div class="skeleton FortyfourH"><a onmouseover="onHover(this, \'FortyfourH\' )" onmouseout="onUnHover(this, \'FortyfourH\')"  onclick="onDetermineIfChildFracture(null,44,1,null,false)"></a></div>',
+			'<div class="skeleton SixtyTwoH"><a onmouseover="onHover(this, \'SixtyTwoH\' )" onmouseout="onUnHover(this, \'SixtyTwoH\')" onclick="onDetermineIfChildFracture(null,62,1,null,false)"></a></div>',
+			'<div class="skeleton SixtyOne"><a onmouseover="onHover(this, \'SixtyOne\' )" onmouseout="onUnHover(this, \'SixtyOne\')" onclick="onDetermineIfChildFracture(null,61,0,null,false)"></a></div>',
+			'<div title="C0-C2" class="skeleton Hundred"><a onmouseover="onHover(this, \'Hundred\' )" onmouseout="onUnHover(this, \'Hundred\')" onclick="onDetermineIfChildFracture(null,100,3,null,false)"></a></div>',
+			'<div title="C3-T1" class="skeleton HundredOne"><a onmouseover="onHover(this, \'HundredOne\' )" onmouseout="onUnHover(this, \'HundredOne\')" onclick="onDetermineIfChildFracture(null,101,3,null,false)"></a></div>',
+			'<div title="T2-T10" class="skeleton HundredTwo"><a onmouseover="onHover(this, \'HundredTwo\' )" onmouseout="onUnHover(this, \'HundredTwo\')" onclick="onDetermineIfChildFracture(null,102,3,null,false)"></a></div>',
+			'<div title="T11-L5" class="skeleton HundredThree"><a onmouseover="onHover(this, \'HundredThree\' )" onmouseout="onUnHover(this, \'HundredThree\')" onclick="onDetermineIfChildFracture(null,103,3,null,false)"></a></div>'
+		);
+
 		tplHandSkeletonV = new Ext.XTemplate(
 			'<div id="container" style="display:block;background-image:url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-V.png);" width="591" height="500">',
 			'<img src="https://stratum.blob.core.windows.net/sfr/Images/s.gif" width="591" height="500" />',
@@ -4000,7 +3553,6 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 				app.mySkeletonWindow.getLayout().setActiveItem(6);
 				app.mySkeletonWindow.setTitle('<b>Klassificering av fraktur</b>');
 			}
-
 		}
 		var skeleton = Ext.create('Ext.panel.Panel', {
 			name: 'skeleton',
@@ -4009,7 +3561,6 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 			frame: true,
 			labelAlign: 'top',
 			cls: 'sfr-skeleton'
-
 		});
 
 		var handSkeleton = Ext.create('Ext.panel.Panel', {
@@ -5192,7 +4743,6 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 						break;
 				}
 
-				///enableDisableXrayTimeAndDateCmps(fractureForm, isFemurFracture(icd10));
 				if (icd10 != '') {
 					if (result.Open == 1) {
 						icd10 = icd10 + "1";
@@ -6125,329 +5675,6 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 		aoImagesNavigationHandler.goToProsthesisHandler = true;
 	}
 
-	function getXrayImagesPageID(aAo, aPictureID) {
-		var s = aPictureID + '-' + aAo;
-		/*switch (aAo) {
-	    }*/
-
-		switch (s) {
-			case '11-A1':
-				return 2188;
-				break;
-			case '11-A2':
-				return 2189;
-				break;
-			case '11-A3':
-				return 2190;
-				break;
-			case '11-B1':
-				return 2191;
-				break;
-			case '11-B2':
-				return 2192;
-				break;
-			case '11-B3':
-				return 2193;
-				break;
-			case '11-C1':
-				return 2194;
-				break;
-			case '11-C2':
-				return 2196;
-				break;
-			case '11-C2.3':
-				return 2195;
-				break;
-			case '11-C3':
-				return 2197;
-				break;
-			case '12-A1':
-				return 2198;
-				break;
-			case '12-A2':
-				return 2199;
-				break;
-			case '12-A3':
-				return 2200;
-				break;
-			case '12-B1':
-				return 2201;
-				break;
-			case '12-B2':
-				return 2202;
-				break;
-			case '12-B3':
-				return 2203;
-				break;
-			case '12-C1':
-				return 2204;
-				break;
-			case '12-C2':
-				return 2205;
-				break;
-			case '12-C3':
-				return 2206;
-				break;
-			case '13-A1':
-				return 2207;
-				break;
-			case '13-A2':
-				return 2208;
-				break;
-			case '13-A3':
-				return 2209;
-				break;
-			case '13-B1':
-				return 2210;
-				break;
-			case '13-B2':
-				return 2211;
-				break;
-			case '13-B3':
-				return 2212;
-				break;
-			case '13-C1':
-				return 2213;
-				break;
-			case '13-C2':
-				return 2214;
-				break;
-			case '13-C3':
-				return 2215;
-				break;
-			case '22-A1':
-				return 2164;
-				break;
-			case '22-A2':
-				return 2166;
-				break;
-			case '22-A3':
-				return 2167;
-				break;
-			case '22-B1':
-				return 2168;
-				break;
-			case '22-B2':
-				return 2169;
-				break;
-			case '22-B3':
-				return 2170;
-				break;
-			case '22-C1':
-				return 2171;
-				break;
-			case '22-C2':
-				return 2172;
-				break;
-			case '22-C3':
-				return 2173;
-				break;
-			case '23-A1':
-				return 2174;
-				break;
-			case '23-A2.1':
-				return 2165;
-				break;
-			case '23-A2.2':
-				return 2220;
-				break;
-			case '23-A2.3':
-				return 2175;
-				break;
-			case '23-A3':
-				return 2176;
-				break;
-			case '23-B1':
-				return 2177;
-				break;
-			case '23-B2':
-				return 2178;
-				break;
-			case '23-B3':
-				return 2179;
-				break;
-			case '23-C1':
-				return 2181;
-				break;
-			case '23-C2':
-				return 2182;
-				break;
-			case '23-C3':
-				return 2183;
-				break;
-			case '31-A1':
-				return 2135;
-				break;
-			case '31-A2':
-				return 2137;
-				break;
-			case '31-A3':
-				return 2138;
-				break;
-			case '31-B1':
-				return 2139;
-				break;
-			case '31-B2':
-				return 2140;
-				break;
-			case '31-B3':
-				return 2141;
-				break;
-			case '31-C1':
-				return 2142;
-				break;
-			case '32-A1':
-				return 2144;
-				break;
-			case '32-A2':
-				return 2145;
-				break;
-			case '32-A3':
-				return 2146;
-				break;
-			case '32-B1':
-				return 2147;
-				break;
-			case '32-B2':
-				return 2148;
-				break;
-			case '32-B3':
-				return 2149;
-				break;
-			case '32-C1':
-				return 2150;
-				break;
-			case '32-C2':
-				return 2151;
-				break;
-			case '32-C3':
-				return 2152;
-				break;
-			case '33-A1':
-				return 2154;
-				break;
-			case '33-A2':
-				return 2155;
-				break;
-			case '33-A3':
-				return 2156;
-				break;
-			case '33-B1':
-				return 2157;
-				break;
-			case '33-B2':
-				return 2158;
-				break;
-			case '33-B3':
-				return 2159;
-				break;
-			case '33-C1':
-				return 2160;
-				break;
-			case '33-C2':
-				return 2161;
-				break;
-			case '33-C3':
-				return 2162;
-				break;
-			case '41-A1':
-				return 1778;
-				break;
-			case '41-A2':
-				return 1779;
-				break;
-			case '41-A3':
-				return 1780;
-				break;
-			case '41-B1.1':
-				return 1781;
-				break;
-			case '41-B2':
-				return 1782;
-				break;
-			case '41-B3':
-				return 1783;
-				break;
-			case '41-C1':
-				return 1784;
-				break;
-			/*case '41-C2':
-									return 1785;
-									break;*/
-			case '41-C3':
-				return 1786;
-				break;
-			case '44-A1':
-				return 1614;
-				break;
-			case '44-A2.1/2':
-				return 1621;
-				break;
-			case '44-A3.3':
-				return 1615;
-				break;
-			case '44-B1':
-				return 1616;
-				break;
-			case '44-B2':
-				return 1617;
-				break;
-			case '44-B3':
-				return 1618;
-				break;
-			case '44-C1':
-				return 1619;
-				break;
-			case '44-C2':
-				return 1620;
-				break;
-			case '44-C3':
-				return 1546;
-				break;
-
-			case '42-A1':
-				return 2033;
-				break;
-			case '42-A2':
-				return 2034;
-				break;
-			case '42-A3':
-				return 2035;
-				break;
-			case '42-B1':
-				return 2036;
-				break;
-			case '42-B2':
-				return 2037;
-				break;
-			case '42-B3':
-				return 2038;
-				break;
-			case '43-A1':
-				return 2040;
-				break;
-			case '43-A2':
-				return 2041;
-				break;
-			case '43-A3':
-				return 2042;
-				break;
-			case '43-B1':
-				return 2043;
-				break;
-			case '43-B2':
-				return 2044;
-				break;
-			case '43-B3':
-				return 2045;
-				break;
-			case '43-C3':
-				return 2046;
-				break;
-		}
-		return null;
-	}
-
 	function initAOtemplate(aDisplayMatrix, aAoMatrix, ownerFormPanelID, aUseHandAO, aPictureID, gotoPicID) {
 
 		var s = '<img src="{image}" width="564" height="520" />';
@@ -6468,7 +5695,6 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 					var onClickText = '';
 
 					if (!Ext.isEmpty(gotoPicID)) {
-
 						onClickText = 'aoImagesNavigationHandler(null,\'' + gotoPicID + '\',{side},' + '\'' + aAoMatrix[i][j] + '\',false' + ')';
 					}
 					else if (aAoMatrix[i][j] == PROSTHESIS_FRACTURE) {
@@ -6480,7 +5706,6 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 
 					s += '<div class="AO ' + currentLetter + (j + 1) + extCss + '"><a title="{infoText' + currentLetter + (j + 1) + '}" onclick = "' + onClickText + '"></a></div>';
 					if (aoImagesNavigationHandler.isChildFracture !== true) {
-						var pID = getXrayImagesPageID(aAoMatrix[i][j], aPictureID);
 						var xrays = {
 							"11-A1": { "a": "ap", "b": "ax" }, "11-A2": { "a": "ap", "b": "ax" }, "11-A3": { "a": "ap", "b": "ax" },
 							"11-B1": { "a": "ap", "b": "ax" }, "11-B2": { "a": "ap", "b": "ax" }, "11-B3": { "a": "ap", "b": "ax" },
@@ -6522,8 +5747,7 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 							var dash = aPictureID > 40 ? ' ' : '-';
 							var p1 = aPictureID + '-' + aAoMatrix[i][j] + dash + xrays[aPictureID + '-' + aAoMatrix[i][j]].a;
 							var p2 = aPictureID + '-' + aAoMatrix[i][j] + dash + xrays[aPictureID + '-' + aAoMatrix[i][j]].b;
-							// s += '<div class="' + currentLetter + (j + 1) + 'RTG' + extCss + '"><a target="_blank" title="Visa röntgenbilder" href="#!' + pID + '"></a></div>';
-							s += '<div class="sfr-xray-link ' + currentLetter + (j + 1) + 'RTG' + extCss + '"><a title="Visa röntgenbilder" onclick = "showXray(\'' + p1 + '\', \'' + p2 + '\')"></a></div>';
+							s += '<div class="sfr-xray-link ' + currentLetter + (j + 1) + 'RTG' + extCss + '"><a title="Visa röntgenbilder" onclick = "skeletonWidget.showXray(\'' + p1 + '\', \'' + p2 + '\')"></a></div>';
 						}
 					}
 				}
@@ -6532,9 +5756,12 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 		}
 		return s;
 	}
-	showXray = function (a, b) {
+
+	function showXray(a, b) {
+		var titleParts = a.split('-');
+		var title = titleParts[0] + '-' + titleParts[1];
 		var lightbox = Ext.create('Ext.window.Window', {
-			title: 'Röntgen',
+			title: title,
 			resizable: false,
 			html: '<img class="sfr-xray" src="https://stratum.blob.core.windows.net/sfr/Images/Radiographs/' + a + '.png"><img class="sfr-xray" src="https://stratum.blob.core.windows.net/sfr/Images/Radiographs/' + b + '.png">',
 			style: 'text-align:center;',
@@ -6543,8 +5770,8 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 			modal: true,
 		});
 		lightbox.show();
-
 	}
+
 	function createDisplayMatrix(aRowCount, aColCount) {
 		var matrix = new Array(aRowCount);
 		var i = 0;
@@ -6740,16 +5967,11 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 	function getProsthesisClassificationPictureID(id) {
 		switch (id) {
 			case '10': return '10-PR';
-
 			case '11': return '11-PR';
 			case '12': return '12-PR';
 			case '13': return '13-PR';
-
-
 			case '21-B': case '22': return '21_22-PR';
-
 			case '23': return '23-PR';
-
 			case '31': return '31-PR';
 			case '32': return '32-PR';
 			case '33': return '33-PR';
@@ -6757,10 +5979,8 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 			case '41':
 			case '42': return '4X-PR';
 			case '43': case '44': return '43_44-PR';
-
 			case '61': case '62': return '61_62-PR';
 			case '81': return '81-PR';
-
 		}
 
 		if (id.indexOf('7') == 0) {
@@ -7285,7 +6505,303 @@ onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 			);
 		}
 	}
-	initialize(loadonly);
 };
 
-function start(event, current, callback) { skeletonWidget(event, current, callback) };
+
+Object.assign = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+Ext.util.CSS.removeStyleSheet('sfr-skeleton');
+Ext.util.CSS.createStyleSheet(''
+	+ '.FormPanelInRed .x-panel-body					{ background-color: #E9D7D3; padding-bottom:0px; } '
+	+ '.FormPanelInRed .x-toolbar-footer				{ background-color: #E9D7D3; padding: 10px;margin-top:0px;}'
+	+ '.FormPanelInRedIcon								{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelRed.png) !important;}'
+	+ ''
+	+ '.FormPanelInYellow .x-panel-body				{ background-color: #FFFFDC; padding: 10px; }'
+	+ '.FormPanelInYellow .x-toolbar-footer			{ background-color: #FFFFDC; padding: 10px;margin-top:0px;}'
+	+ '.FormPanelInYellowIcon							{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelYellow.png) !important;}'
+	+ ''
+	+ '.FormPanelInGreen .x-panel-body					{ background-color: #DBF2BE; padding: 10px; } '
+	+ '.FormPanelInGreen .x-toolbar-footer				{ background-color: #DBF2BE; padding: 10px;margin-top:0px;}'
+	+ '.FormPanelInGreenIcon							{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelGreen.png) !important;}'
+	+ ''
+	+ '.FormPanelDefault .x-panel-body					{ padding: 10px; }'
+	+ '.FormPanelDefault .x-toolbar-footer				{ padding: 10px;margin-top:0px;}'
+	+ '.FormPanelDefaultIcon							{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelGrey.png) !important; } '
+	+ ''
+	+ '.FormPanelSmallFont *							{ font-family: Arial,Helvetica,sans-serif !important; }'
+	+ ''
+	+ '.skeleton * {background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-transp.png);}'
+	+ '.skeleton a {text-decoration: none; border: none}'
+	+ '.skeleton a:hover { border: none; }'
+	+ '										'
+	+ '.SevenV	*					{ position: absolute; width: 33px; height:50px; top: 275px; left: 170px; z-index:4; } '
+	+ '.SevenVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-7-V-mini.png)}'
+	+ ''
+	+ '.EightV	*					{ position: absolute; width: 27px; height:28px; top: 512px; left: 121px; z-index:4; } '
+	+ '.EightVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-8-V-mini.png)}'
+	+ ''
+	+ '.NineV	*					{ position: absolute; width: 51px; height:14px; top: 100px; left: 114px; z-index:20; }'
+	+ '.NineVHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-9-V-mini.png); }'
+	+ ''
+	+ '.TenV	*					{ position: absolute; width: 28px; height:42px; top: 107px; left: 132px; }'
+	+ '.TenVHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-10-V-mini.png); }'
+	+ ''
+	+ '.ElevenV	*				{ position: absolute; width: 35px; height:25px; top: 109px; left: 153px; }'
+	+ '.ElevenVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-11-V-mini.png); }'
+	+ ''
+	+ '.TwelveV	*				{ position: absolute; width: 35px; height:50px; top: 136px; left: 155px; }'
+	+ '.TwelveVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-12-V-mini.png); }'
+	+ ''
+	+ '.ThirteenV	*				{ position: absolute; width: 35px; height:25px; top: 185px; left: 156px; } '
+	+ '.ThirteenVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-13-V-mini.png); }'
+	+ ''
+	+ '.TwentyoneV	*				{ position: absolute; width: 16px; height:20px; top: 206px; left: 166px; }'
+	+ '.TwentyoneVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-21-V-mini.png); }'
+	+ ''
+	+ '.TwentytwoV	*				{ position: absolute; width: 15px; height:32px; top: 226px; left: 171px; }'
+	+ '.TwentytwoVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-22-V-mini.png); }'
+	+ ''
+	+ '.TwentythreeV	*			{ position: absolute; width: 15px; height:19px; top: 257px; left: 175px; }'
+	+ '.TwentythreeVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-23-V-mini.png); }'
+	+ ''
+	+ '.ThirtyoneV	*				{ position: absolute; width: 30px; height:26px; top: 260px; left: 127px; z-index:5;}'
+	+ '.ThirtyoneVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-31-V-mini.png); }'
+	+ ''
+	+ '.ThirtytwoV	*				{ position: absolute; width: 18px; height:73px; top: 287px; left: 131px; }'
+	+ '.ThirtytwoVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-32-V-mini.png); }'
+	+ ''
+	+ '.ThirtythreeV	*			{ position: absolute; width: 30px; height:30px; top: 362px; left: 120px; }'
+	+ '.ThirtythreeVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-33-V-mini.png); }'
+	+ ''
+	+ '.ThirtyFourV	*			{ position: absolute; width: 13px; height:10px; top: 385px; left: 127px; z-index:5;}'
+	+ '.ThirtyFourVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-34-V-mini.png); }'
+	+ ''
+	+ '.FortyoneV	*				{ position: absolute; width: 35px; height:30px;  top: 395px; left: 119px; }'
+	+ '.FortyoneVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-41-V-mini.png); }'
+	+ ''
+	+ '.FortytwoV	*				{ position: absolute; width: 35px; height:62px; top: 425px; left: 117px; } '
+	+ '.FortytwoVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-42-V-mini.png); }'
+	+ ''
+	+ '.FortythreeV	*			{ position: absolute; width: 11px; height:21px; top: 486px; left: 126px; z-index:4; } '
+	+ '.FortythreeVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-43-V-mini.png)}'
+	+ ''
+	+ '.FortyfourV	*				{ position: absolute; width: 35px; height:18px; top: 492px; left: 112px; z-index:3; } '
+	+ '.FortyfourVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-44-V-mini.png)}'
+	+ ''
+	+ '.FiftyoneV	*				{ position: absolute; width: 33px; height:25px; top: 260px; left: 127px; z-index:2; } '
+	+ '.FiftyoneVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-51-V-mini.png)}'
+	+ ''
+	+ '.SixtyTwoV	*				{ position: absolute; width: 31px; height:24px; top: 251px; left: 108px; z-index:6; }'
+	+ '.SixtyTwoVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-62-V-mini.png); }'
+	+ ''
+	+ '/* Right side */'
+	+ ''
+	+ '.SevenH	*					{ position: absolute; width: 33px; height:50px; top: 273px; left: 11px; z-index:4; }'
+	+ '.SevenHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-7-H-mini.png)}'
+	+ ''
+	+ '.EightH	*					{ position: absolute; width: 27px; height:28px; top: 512px; left: 66px; z-index:4; } '
+	+ '.EightHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-8-H-mini.png)}'
+	+ ''
+	+ '.NineH	*					{ position: absolute; width: 49px; height:15px; top: 99px; left: 48px; z-index:20; }'
+	+ '.NineHHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-9-H-mini.png); }'
+	+ ''
+	+ '.TenH	*					{ position: absolute; width: 25px; height:42px; top: 107px; left: 58px; }'
+	+ '.TenHHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-10-H-mini.png); }'
+	+ ''
+	+ '.ElevenH	*				{ position: absolute; width: 35px; height:25px; top: 110px; left: 34px; }'
+	+ '.ElevenHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-11-H-mini.png); }'
+	+ ''
+	+ '.TwelveH	*				{ position: absolute; width: 35px; height:50px; top: 136px; left: 28px; }'
+	+ '.TwelveHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-12-H-mini.png); }'
+	+ ''
+	+ '.ThirteenH	*				{ position: absolute; width: 35px; height:25px; top: 183px; left: 21px; } '
+	+ '.ThirteenHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-13-H-mini.png); }'
+	+ ''
+	+ '.TwentyoneH	*				{ position: absolute; width: 16px; height:21px; top: 206px; left: 27px; }'
+	+ '.TwentyoneHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-21-H-mini.png); }'
+	+ ''
+	+ '.TwentytwoH	*				{ position: absolute; width: 15px; height:30px; top: 227px; left: 25px; }'
+	+ '.TwentytwoHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-22-H-mini.png); }'
+	+ ''
+	+ '.TwentythreeH	*			{ position: absolute; width: 15px; height:19px; top: 258px; left: 25px; }'
+	+ '.TwentythreeHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-23-H-mini.png); }'
+	+ ''
+	+ '.ThirtyoneH	*				{ position: absolute; width: 33px; height:27px; top: 260px; left: 52px; z-index:5; }'
+	+ '.ThirtyoneHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-31-H-mini.png); }'
+	+ ''
+	+ '.ThirtytwoH	*				{ position: absolute; width: 18px; height:73px; top: 287px; left: 64px; }'
+	+ '.ThirtytwoHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-32-H-mini.png); }'
+	+ ''
+	+ '.ThirtythreeH	*			{ position: absolute; width: 33px; height:30px; top: 362px; left: 59px; }'
+	+ '.ThirtythreeHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-33-H-mini.png); }'
+	+ ''
+	+ '.ThirtyFourH	*			{ position: absolute; width: 14px; height:11px; top: 385px; left: 76px; z-index:5;}'
+	+ '.ThirtyFourHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-34-H-mini.png); }'
+	+ ''
+	+ '.FortyoneH	*				{ position: absolute; width: 35px; height:30px; top: 396px; left: 62px; }'
+	+ '.FortyoneHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-41-H-mini.png); }'
+	+ ''
+	+ '.FortytwoH	*				{ position: absolute; width: 35px; height:62px; top: 425px; left: 61px; } '
+	+ '.FortytwoHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-42-H-mini.png);}'
+	+ ''
+	+ '.FortythreeH	*			{ position: absolute; width: 11px; height:21px; top: 487px; left: 78px; z-index:6; } '
+	+ '.FortythreeHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-43-H-mini.png); }'
+	+ ''
+	+ '.FortyfourH	*				{ position: absolute; width: 35px; height:18px; top: 491px; left: 64px; z-index:5; } '
+	+ '.FortyfourHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-44-H-mini.png)}'
+	+ ''
+	+ '.SixtyTwoH	*				{ position: absolute; width: 31px; height:24px; top: 251px; left: 75px; z-index:6; } '
+	+ '.SixtyTwoHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-62-H-mini.png); }'
+	+ ''
+	+ ''
+	+ '/*No specified side*/'
+	+ '.SixtyOne *					{ position: absolute; width: 92px; height:64px; top: 222px; left: 62px; z-index:4; }'
+	+ '.SixtyOneHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-61-mini.png); }'
+	+ ''
+	+ '.Hundred	*				{ position: absolute; width: 48px; height:8px; top: 78px; left: 86px; z-index:20; }'
+	+ '.HundredHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-100-mini.png); }'
+	+ ''
+	+ '.HundredOne	*				{ position: absolute; width: 20px; height:24px; top: 86px; left: 98px; z-index:20; }'
+	+ '.HundredOneHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-101-mini.png); }'
+	+ ''
+	+ '.HundredTwo	*				{ position: absolute; width: 20px; height:58px; top: 110px; left: 98px; z-index:20; }'
+	+ '.HundredTwoHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-102-mini.png); }'
+	+ ''
+	+ '.HundredThree	*			{ position: absolute; width: 20px; height:69px; top: 168px; left: 98px; z-index:20; }'
+	+ '.HundredThreeHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-103-mini.png); }'
+	+ ''
+	+ '.AO a						{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-transp.png) repeat; border: 1px solid }'
+	+ '.AO a:hover					{ border: 2px solid #E89223/*BCBCBC*/; }'
+	+ ''
+	+ '/*hand skeleton*/'
+	+ '.OneHHandSkeleton			{ position: absolute; width: 30px; height:32px; top: 421px; left: 210px; z-index:0;}'
+	+ '.OneHHandSkeletonHover		{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-1.png); }'
+	+ ''
+	+ '.A1	*						{ top: 14px;  left: 88px;  width: 152px; height: 160px; position: absolute; }'
+	+ '.A2	*						{ top: 14px;  left: 246px; width: 152px; height: 160px; position: absolute; }'
+	+ '.A3	*						{ top: 14px;  left: 406px; width: 152px; height: 160px; position: absolute; }'
+	+ '.B1	*						{ top: 183px; left: 88px;  width: 152px; height: 160px; position: absolute; }'
+	+ '.B2	*						{ top: 183px; left: 246px; width: 152px; height: 160px; position: absolute; }'
+	+ '.B3	*						{ top: 183px; left: 406px; width: 152px; height: 160px; position: absolute; }'
+	+ '.C1	*						{ top: 354px; left: 88px;  width: 152px; height: 160px; position: absolute; }'
+	+ '.C2	*						{ top: 354px; left: 246px; width: 152px; height: 160px; position: absolute; }'
+	+ '.C3	*						{ top: 354px; left: 406px; width: 152px; height: 160px; position: absolute; }'
+	+ ''
+	+ '.A1RTG	*					{ top: 158px;  left: 90px;  width: 40px; height: 20px; position: absolute; z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A2RTG	*					{ top: 158px;  left: 248px; width: 40px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A3RTG	*					{ top: 158px;  left: 408px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B1RTG	*					{ top: 327px; left: 90px;  width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B2RTG	*					{ top: 327px; left: 248px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B3RTG	*					{ top: 327px; left: 408px; width: 40px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C1RTG	*					{ top: 498px; left: 90px;  width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C2RTG	*					{ top: 498px; left: 248px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C3RTG	*					{ top: 498px; left: 408px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ ''
+	+ '.A1-4Col *				{ top: 14px;  left: 89px;  width: 111px; height: 160px; position: absolute; }'
+	+ '.A2-4Col *				{ top: 14px;  left: 206px; width: 111px; height: 160px; position: absolute; }'
+	+ '.A3-4Col *				{ top: 14px;  left: 326px; width: 111px; height: 160px; position: absolute; }'
+	+ '.A4-4Col *				{ top: 14px;  left: 446px; width: 111px; height: 160px; position: absolute; }'
+	+ '.B1-4Col *				{ top: 183px; left: 89px;  width: 111px; height: 160px; position: absolute; }'
+	+ '.B2-4Col *				{ top: 183px; left: 206px; width: 111px; height: 160px; position: absolute; }'
+	+ '.B3-4Col *				{ top: 183px; left: 326px; width: 111px; height: 160px; position: absolute; }'
+	+ '.B4-4Col *				{ top: 183px; left: 446px; width: 111px; height: 160px; position: absolute; }'
+	+ '.C1-4Col *				{ top: 354px; left: 89px;  width: 111px; height: 160px; position: absolute; }'
+	+ '.C2-4Col *				{ top: 354px; left: 206px; width: 111px; height: 160px; position: absolute; }'
+	+ '.C3-4Col *				{ top: 354px; left: 326px; width: 111px; height: 160px; position: absolute; }'
+	+ '.C4-4Col *				{ top: 354px; left: 446px; width: 111px; height: 160px; position: absolute; }'
+	+ ''
+	+ '.A1RTG-4Col *				{ top: 158px;  left: 89px;  width: 111px; height: 20px; position: absolute; z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A2RTG-4Col *				{ top: 158px;  left: 206px; width: 111px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A3RTG-4Col *				{ top: 158px;  left: 326px; width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A4RTG-4Col *				{ top: 158px;  left: 446px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B1RTG-4Col *				{ top: 327px; left: 89px;  width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B2RTG-4Col *				{ top: 327px; left: 206px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B3RTG-4Col *				{ top: 327px; left: 326px; width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B4RTG-4Col *				{ top: 327px; left: 446px; width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C1RTG-4Col *				{ top: 498px; left: 89px;  width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C2RTG-4Col *				{ top: 498px; left: 206px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C3RTG-4Col *				{ top: 498px; left: 326px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C4RTG-4Col *				{ top: 498px; left: 446px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ ''
+	+ '.A1-5Col *				{ top: 14px;  left: 88px;  width: 90px; height: 160px; position: absolute; }'
+	+ '.A2-5Col *				{ top: 14px;  left: 182px; width: 90px; height: 160px; position: absolute; }'
+	+ '.A3-5Col *				{ top: 14px;  left: 278px; width: 90px; height: 160px; position: absolute; }'
+	+ '.A4-5Col *				{ top: 14px;  left: 372px; width: 90px; height: 160px; position: absolute; }'
+	+ '.A5-5Col *				{ top: 14px;  left: 468px; width: 90px; height: 160px; position: absolute; }'
+	+ '.B1-5Col *				{ top: 183px; left: 88px;  width: 90px; height: 160px; position: absolute; }'
+	+ '.B2-5Col *				{ top: 183px; left: 182px; width: 90px; height: 160px; position: absolute; }'
+	+ '.B3-5Col *				{ top: 183px; left: 278px; width: 90px; height: 160px; position: absolute; }'
+	+ '.B4-5Col *				{ top: 183px; left: 372px; width: 90px; height: 160px; position: absolute; }'
+	+ '.B5-5Col *				{ top: 183px; left: 468px; width: 90px; height: 160px; position: absolute; }'
+	+ '.C1-5Col *				{ top: 354px; left: 88px;  width: 90px; height: 160px; position: absolute; }'
+	+ '.C2-5Col *				{ top: 354px; left: 182px; width: 90px; height: 160px; position: absolute; }'
+	+ '.C3-5Col *				{ top: 354px; left: 278px; width: 90px; height: 160px; position: absolute; }'
+	+ '.C4-5Col *				{ top: 354px; left: 372px; width: 90px; height: 160px; position: absolute; }'
+	+ '.C5-5Col *				{ top: 354px; left: 468px; width: 90px; height: 160px; position: absolute; }'
+	+ ''
+	+ '.A1RTG-5Col *				{ top: 161px;  left: 89px;  width: 90px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A2RTG-5Col *				{ top: 161px;  left: 183px; width: 90px; height: 20px; position: absolute;   z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A3RTG-5Col *				{ top: 161px;  left: 279px; width: 90px; height: 20px; position: absolute;   z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A4RTG-5Col *				{ top: 161px;  left: 373px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A5RTG-5Col *				{ top: 161px;  left: 469px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B1RTG-5Col *				{ top: 330px; left: 89px;  width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B2RTG-5Col *				{ top: 330px; left: 183px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B3RTG-5Col *				{ top: 330px; left: 279px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B4RTG-5Col *				{ top: 330px; left: 373px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B5RTG-5Col *				{ top: 330px; left: 469px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C1RTG-5Col *				{ top: 501px; left: 89px;  width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C2RTG-5Col *				{ top: 501px; left: 183px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C3RTG-5Col *				{ top: 501px; left: 279px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C4RTG-5Col *				{ top: 501px; left: 373px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C5RTG-5Col *				{ top: 501px; left: 469px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ ''
+	+ '.A1-6Col *				{ top: 15px;  left: 86px;  width: 75px; height: 160px; position: absolute; }'
+	+ '.A2-6Col *				{ top: 15px;  left: 165px; width: 75px; height: 160px; position: absolute; }'
+	+ '.A3-6Col *				{ top: 15px;  left: 244px; width: 75px; height: 160px; position: absolute; }'
+	+ '.A4-6Col *				{ top: 15px;  left: 323px; width: 75px; height: 160px; position: absolute; }'
+	+ '.A5-6Col *				{ top: 15px;  left: 402px; width: 75px; height: 160px; position: absolute; }'
+	+ '.A6-6Col *				{ top: 15px;  left: 481px; width: 75px; height: 160px; position: absolute; }'
+	+ '.B1-6Col *				{ top: 184px; left: 86px; width: 75px; height: 160px; position: absolute; }'
+	+ '.B2-6Col *				{ top: 184px; left: 165px; width: 75px; height: 160px; position: absolute; }'
+	+ '.B3-6Col *				{ top: 184px; left: 244px; width: 75px; height: 160px; position: absolute; }'
+	+ '.B4-6Col *				{ top: 184px; left: 323px; width: 75px; height: 160px; position: absolute; }'
+	+ '.B5-6Col *				{ top: 184px; left: 402px; width: 75px; height: 160px; position: absolute; }'
+	+ '.B6-6Col *				{ top: 184px; left: 481px; width: 75px; height: 160px; position: absolute; }'
+	+ '.C1-6Col *				{ top: 354px; left: 86px;  width: 75px; height: 160px; position: absolute; }'
+	+ '.C2-6Col *				{ top: 354px; left: 165px; width: 75px; height: 160px; position: absolute; }'
+	+ '.C3-6Col *				{ top: 354px; left: 244px; width: 75px; height: 160px; position: absolute; }'
+	+ '.C4-6Col *				{ top: 354px; left: 323px; width: 75px; height: 160px; position: absolute; }'
+	+ '.C5-6Col *				{ top: 354px; left: 402px; width: 75px; height: 160px; position: absolute; }'
+	+ '.C6-6Col *				{ top: 354px; left: 481px; width: 75px; height: 160px; position: absolute; }'
+	+ ''
+	+ '.A1RTG-6Col *				{ top: 159px;  left: 86px;  width: 75px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A2RTG-6Col *				{ top: 159px;  left: 165px; width: 75px; height: 20px; position: absolute;   z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A3RTG-6Col *				{ top: 159px;  left: 244px; width: 75px; height: 20px; position: absolute;   z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A4RTG-6Col *				{ top: 159px;  left: 323px; width: 75px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A5RTG-6Col *				{ top: 159px;  left: 402px; width: 75px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A6RTG-6Col *				{ top: 159px;  left: 481px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B1RTG-6Col *				{ top: 328px; left: 86px; width: 75px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B2RTG-6Col *				{ top: 328px; left: 165px; width: 75px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B3RTG-6Col *				{ top: 328px; left: 244px; width: 75px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B4RTG-6Col *				{ top: 328px; left: 323px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B5RTG-6Col *				{ top: 328px; left: 402px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B6RTG-6Col *				{ top: 328px; left: 481px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C1RTG-6Col *				{ top: 498px; left: 86px;  width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C2RTG-6Col *				{ top: 498px; left: 165px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C3RTG-6Col *				{ top: 498px; left: 244px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C4RTG-6Col *				{ top: 498px; left: 323px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C5RTG-6Col *				{ top: 498px; left: 402px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C6RTG-6Col *				{ top: 498px; left: 481px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+
+	+ '.sfr-xray {'
+	+ '  margin: 0 10px;'
+	+ '  max-width: 470px;'
+	+ '  max-height: 800px;'
+	+ '}'
+	+ '.sfr-xray-link {'
+	+ '  cursor: pointer;'
+	+ '}'
+	+ '.sfr-skeleton .x-panel-body {'
+	+ '  border-width: 0px;'
+	+ '}'
+	, 'sfr-skeleton'
+);
