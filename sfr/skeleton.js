@@ -2,299 +2,299 @@
 Object.assign = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 Ext.util.CSS.removeStyleSheet('sfr-skeleton');
 Ext.util.CSS.createStyleSheet(''
-+ '.FormPanelInRed .x-panel-body					{ background-color: #E9D7D3; padding-bottom:0px; } '
-+ '.FormPanelInRed .x-toolbar-footer				{ background-color: #E9D7D3; padding: 10px;margin-top:0px;}'
-+ '.FormPanelInRedIcon								{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelRed.png) !important;}'
-+ ''
-+ '.FormPanelInYellow .x-panel-body				{ background-color: #FFFFDC; padding: 10px; }'
-+ '.FormPanelInYellow .x-toolbar-footer			{ background-color: #FFFFDC; padding: 10px;margin-top:0px;}'
-+ '.FormPanelInYellowIcon							{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelYellow.png) !important;}'
-+ ''
-+ '.FormPanelInGreen .x-panel-body					{ background-color: #DBF2BE; padding: 10px; } '
-+ '.FormPanelInGreen .x-toolbar-footer				{ background-color: #DBF2BE; padding: 10px;margin-top:0px;}'
-+ '.FormPanelInGreenIcon							{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelGreen.png) !important;}'
-+ ''
-+ '.FormPanelDefault .x-panel-body					{ padding: 10px; }'
-+ '.FormPanelDefault .x-toolbar-footer				{ padding: 10px;margin-top:0px;}'
-+ '.FormPanelDefaultIcon							{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelGrey.png) !important; } '
-+ ''
-+ '.FormPanelSmallFont *							{ font-family: Arial,Helvetica,sans-serif !important; }'
-+ ''
-+ '.skeleton * {background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-transp.png);}'
-+ '.skeleton a {text-decoration: none; border: none}'
-+ '.skeleton a:hover { border: none; }'
-+ '										'
-+ '.SevenV	*					{ position: absolute; width: 33px; height:50px; top: 275px; left: 170px; z-index:4; } '
-+ '.SevenVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-7-V-mini.png)}'
-+ ''
-+ '.EightV	*					{ position: absolute; width: 27px; height:28px; top: 512px; left: 121px; z-index:4; } '
-+ '.EightVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-8-V-mini.png)}'
-+ ''
-+ '.NineV	*					{ position: absolute; width: 51px; height:14px; top: 100px; left: 114px; z-index:20; }'
-+ '.NineVHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-9-V-mini.png); }'
-+ ''
-+ '.TenV	*					{ position: absolute; width: 28px; height:42px; top: 107px; left: 132px; }'
-+ '.TenVHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-10-V-mini.png); }'
-+ ''
-+ '.ElevenV	*				{ position: absolute; width: 35px; height:25px; top: 109px; left: 153px; }'
-+ '.ElevenVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-11-V-mini.png); }'
-+ ''
-+ '.TwelveV	*				{ position: absolute; width: 35px; height:50px; top: 136px; left: 155px; }'
-+ '.TwelveVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-12-V-mini.png); }'
-+ ''
-+ '.ThirteenV	*				{ position: absolute; width: 35px; height:25px; top: 185px; left: 156px; } '
-+ '.ThirteenVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-13-V-mini.png); }'
-+ ''
-+ '.TwentyoneV	*				{ position: absolute; width: 16px; height:20px; top: 206px; left: 166px; }'
-+ '.TwentyoneVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-21-V-mini.png); }'
-+ ''
-+ '.TwentytwoV	*				{ position: absolute; width: 15px; height:32px; top: 226px; left: 171px; }'
-+ '.TwentytwoVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-22-V-mini.png); }'
-+ ''
-+ '.TwentythreeV	*			{ position: absolute; width: 15px; height:19px; top: 257px; left: 175px; }'
-+ '.TwentythreeVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-23-V-mini.png); }'
-+ ''
-+ '.ThirtyoneV	*				{ position: absolute; width: 30px; height:26px; top: 260px; left: 127px; z-index:5;}'
-+ '.ThirtyoneVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-31-V-mini.png); }'
-+ ''
-+ '.ThirtytwoV	*				{ position: absolute; width: 18px; height:73px; top: 287px; left: 131px; }'
-+ '.ThirtytwoVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-32-V-mini.png); }'
-+ ''
-+ '.ThirtythreeV	*			{ position: absolute; width: 30px; height:30px; top: 362px; left: 120px; }'
-+ '.ThirtythreeVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-33-V-mini.png); }'
-+ ''
-+ '.ThirtyFourV	*			{ position: absolute; width: 13px; height:10px; top: 385px; left: 127px; z-index:5;}'
-+ '.ThirtyFourVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-34-V-mini.png); }'
-+ ''
-+ '.FortyoneV	*				{ position: absolute; width: 35px; height:30px;  top: 395px; left: 119px; }'
-+ '.FortyoneVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-41-V-mini.png); }'
-+ ''
-+ '.FortytwoV	*				{ position: absolute; width: 35px; height:62px; top: 425px; left: 117px; } '
-+ '.FortytwoVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-42-V-mini.png); }'
-+ ''
-+ '.FortythreeV	*			{ position: absolute; width: 11px; height:21px; top: 486px; left: 126px; z-index:4; } '
-+ '.FortythreeVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-43-V-mini.png)}'
-+ ''
-+ '.FortyfourV	*				{ position: absolute; width: 35px; height:18px; top: 492px; left: 112px; z-index:3; } '
-+ '.FortyfourVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-44-V-mini.png)}'
-+ ''
-+ '.FiftyoneV	*				{ position: absolute; width: 33px; height:25px; top: 260px; left: 127px; z-index:2; } '
-+ '.FiftyoneVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-51-V-mini.png)}'
-+ ''
-+ '.SixtyTwoV	*				{ position: absolute; width: 31px; height:24px; top: 251px; left: 108px; z-index:6; }'
-+ '.SixtyTwoVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-62-V-mini.png); }'
-+ ''
-+ '/* Right side */'
-+ ''
-+ '.SevenH	*					{ position: absolute; width: 33px; height:50px; top: 273px; left: 11px; z-index:4; }'
-+ '.SevenHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-7-H-mini.png)}'
-+ ''
-+ '.EightH	*					{ position: absolute; width: 27px; height:28px; top: 512px; left: 66px; z-index:4; } '
-+ '.EightHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-8-H-mini.png)}'
-+ ''
-+ '.NineH	*					{ position: absolute; width: 49px; height:15px; top: 99px; left: 48px; z-index:20; }'
-+ '.NineHHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-9-H-mini.png); }'
-+ ''
-+ '.TenH	*					{ position: absolute; width: 25px; height:42px; top: 107px; left: 58px; }'
-+ '.TenHHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-10-H-mini.png); }'
-+ ''
-+ '.ElevenH	*				{ position: absolute; width: 35px; height:25px; top: 110px; left: 34px; }'
-+ '.ElevenHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-11-H-mini.png); }'
-+ ''
-+ '.TwelveH	*				{ position: absolute; width: 35px; height:50px; top: 136px; left: 28px; }'
-+ '.TwelveHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-12-H-mini.png); }'
-+ ''
-+ '.ThirteenH	*				{ position: absolute; width: 35px; height:25px; top: 183px; left: 21px; } '
-+ '.ThirteenHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-13-H-mini.png); }'
-+ ''
-+ '.TwentyoneH	*				{ position: absolute; width: 16px; height:21px; top: 206px; left: 27px; }'
-+ '.TwentyoneHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-21-H-mini.png); }'
-+ ''
-+ '.TwentytwoH	*				{ position: absolute; width: 15px; height:30px; top: 227px; left: 25px; }'
-+ '.TwentytwoHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-22-H-mini.png); }'
-+ ''
-+ '.TwentythreeH	*			{ position: absolute; width: 15px; height:19px; top: 258px; left: 25px; }'
-+ '.TwentythreeHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-23-H-mini.png); }'
-+ ''
-+ '.ThirtyoneH	*				{ position: absolute; width: 33px; height:27px; top: 260px; left: 52px; z-index:5; }'
-+ '.ThirtyoneHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-31-H-mini.png); }'
-+ ''
-+ '.ThirtytwoH	*				{ position: absolute; width: 18px; height:73px; top: 287px; left: 64px; }'
-+ '.ThirtytwoHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-32-H-mini.png); }'
-+ ''
-+ '.ThirtythreeH	*			{ position: absolute; width: 33px; height:30px; top: 362px; left: 59px; }'
-+ '.ThirtythreeHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-33-H-mini.png); }'
-+ ''
-+ '.ThirtyFourH	*			{ position: absolute; width: 14px; height:11px; top: 385px; left: 76px; z-index:5;}'
-+ '.ThirtyFourHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-34-H-mini.png); }'
-+ ''
-+ '.FortyoneH	*				{ position: absolute; width: 35px; height:30px; top: 396px; left: 62px; }'
-+ '.FortyoneHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-41-H-mini.png); }'
-+ ''
-+ '.FortytwoH	*				{ position: absolute; width: 35px; height:62px; top: 425px; left: 61px; } '
-+ '.FortytwoHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-42-H-mini.png);}'
-+ ''
-+ '.FortythreeH	*			{ position: absolute; width: 11px; height:21px; top: 487px; left: 78px; z-index:6; } '
-+ '.FortythreeHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-43-H-mini.png); }'
-+ ''
-+ '.FortyfourH	*				{ position: absolute; width: 35px; height:18px; top: 491px; left: 64px; z-index:5; } '
-+ '.FortyfourHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-44-H-mini.png)}'
-+ ''
-+ '.SixtyTwoH	*				{ position: absolute; width: 31px; height:24px; top: 251px; left: 75px; z-index:6; } '
-+ '.SixtyTwoHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-62-H-mini.png); }'
-+ ''
-+ ''
-+ '/*No specified side*/'
-+ '.SixtyOne *					{ position: absolute; width: 92px; height:64px; top: 222px; left: 62px; z-index:4; }'
-+ '.SixtyOneHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-61-mini.png); }'
-+ ''
-+ '.Hundred	*				{ position: absolute; width: 48px; height:8px; top: 78px; left: 86px; z-index:20; }'
-+ '.HundredHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-100-mini.png); }'
-+ ''
-+ '.HundredOne	*				{ position: absolute; width: 20px; height:24px; top: 86px; left: 98px; z-index:20; }'
-+ '.HundredOneHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-101-mini.png); }'
-+ ''
-+ '.HundredTwo	*				{ position: absolute; width: 20px; height:58px; top: 110px; left: 98px; z-index:20; }'
-+ '.HundredTwoHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-102-mini.png); }'
-+ ''
-+ '.HundredThree	*			{ position: absolute; width: 20px; height:69px; top: 168px; left: 98px; z-index:20; }'
-+ '.HundredThreeHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-103-mini.png); }'
-+ ''
-+ '.AO a						{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-transp.png) repeat; border: 1px solid }'
-+ '.AO a:hover					{ border: 2px solid #E89223/*BCBCBC*/; }'
-+ ''
-+ '/*hand skeleton*/'
-+ '.OneHHandSkeleton			{ position: absolute; width: 30px; height:32px; top: 421px; left: 210px; z-index:0;}'
-+ '.OneHHandSkeletonHover		{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-1.png); }'
-+ ''
-+ '.A1	*						{ top: 14px;  left: 88px;  width: 152px; height: 160px; position: absolute; }'
-+ '.A2	*						{ top: 14px;  left: 246px; width: 152px; height: 160px; position: absolute; }'
-+ '.A3	*						{ top: 14px;  left: 406px; width: 152px; height: 160px; position: absolute; }'
-+ '.B1	*						{ top: 183px; left: 88px;  width: 152px; height: 160px; position: absolute; }'
-+ '.B2	*						{ top: 183px; left: 246px; width: 152px; height: 160px; position: absolute; }'
-+ '.B3	*						{ top: 183px; left: 406px; width: 152px; height: 160px; position: absolute; }'
-+ '.C1	*						{ top: 354px; left: 88px;  width: 152px; height: 160px; position: absolute; }'
-+ '.C2	*						{ top: 354px; left: 246px; width: 152px; height: 160px; position: absolute; }'
-+ '.C3	*						{ top: 354px; left: 406px; width: 152px; height: 160px; position: absolute; }'
-+ ''
-+ '.A1RTG	*					{ top: 158px;  left: 90px;  width: 40px; height: 20px; position: absolute; z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A2RTG	*					{ top: 158px;  left: 248px; width: 40px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A3RTG	*					{ top: 158px;  left: 408px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B1RTG	*					{ top: 327px; left: 90px;  width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B2RTG	*					{ top: 327px; left: 248px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B3RTG	*					{ top: 327px; left: 408px; width: 40px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C1RTG	*					{ top: 498px; left: 90px;  width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C2RTG	*					{ top: 498px; left: 248px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C3RTG	*					{ top: 498px; left: 408px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ ''
-+ '.A1-4Col *				{ top: 14px;  left: 89px;  width: 111px; height: 160px; position: absolute; }'
-+ '.A2-4Col *				{ top: 14px;  left: 206px; width: 111px; height: 160px; position: absolute; }'
-+ '.A3-4Col *				{ top: 14px;  left: 326px; width: 111px; height: 160px; position: absolute; }'
-+ '.A4-4Col *				{ top: 14px;  left: 446px; width: 111px; height: 160px; position: absolute; }'
-+ '.B1-4Col *				{ top: 183px; left: 89px;  width: 111px; height: 160px; position: absolute; }'
-+ '.B2-4Col *				{ top: 183px; left: 206px; width: 111px; height: 160px; position: absolute; }'
-+ '.B3-4Col *				{ top: 183px; left: 326px; width: 111px; height: 160px; position: absolute; }'
-+ '.B4-4Col *				{ top: 183px; left: 446px; width: 111px; height: 160px; position: absolute; }'
-+ '.C1-4Col *				{ top: 354px; left: 89px;  width: 111px; height: 160px; position: absolute; }'
-+ '.C2-4Col *				{ top: 354px; left: 206px; width: 111px; height: 160px; position: absolute; }'
-+ '.C3-4Col *				{ top: 354px; left: 326px; width: 111px; height: 160px; position: absolute; }'
-+ '.C4-4Col *				{ top: 354px; left: 446px; width: 111px; height: 160px; position: absolute; }'
-+ ''
-+ '.A1RTG-4Col *				{ top: 158px;  left: 89px;  width: 111px; height: 20px; position: absolute; z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A2RTG-4Col *				{ top: 158px;  left: 206px; width: 111px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A3RTG-4Col *				{ top: 158px;  left: 326px; width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A4RTG-4Col *				{ top: 158px;  left: 446px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B1RTG-4Col *				{ top: 327px; left: 89px;  width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B2RTG-4Col *				{ top: 327px; left: 206px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B3RTG-4Col *				{ top: 327px; left: 326px; width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B4RTG-4Col *				{ top: 327px; left: 446px; width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C1RTG-4Col *				{ top: 498px; left: 89px;  width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C2RTG-4Col *				{ top: 498px; left: 206px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C3RTG-4Col *				{ top: 498px; left: 326px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C4RTG-4Col *				{ top: 498px; left: 446px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ ''
-+ '.A1-5Col *				{ top: 14px;  left: 88px;  width: 90px; height: 160px; position: absolute; }'
-+ '.A2-5Col *				{ top: 14px;  left: 182px; width: 90px; height: 160px; position: absolute; }'
-+ '.A3-5Col *				{ top: 14px;  left: 278px; width: 90px; height: 160px; position: absolute; }'
-+ '.A4-5Col *				{ top: 14px;  left: 372px; width: 90px; height: 160px; position: absolute; }'
-+ '.A5-5Col *				{ top: 14px;  left: 468px; width: 90px; height: 160px; position: absolute; }'
-+ '.B1-5Col *				{ top: 183px; left: 88px;  width: 90px; height: 160px; position: absolute; }'
-+ '.B2-5Col *				{ top: 183px; left: 182px; width: 90px; height: 160px; position: absolute; }'
-+ '.B3-5Col *				{ top: 183px; left: 278px; width: 90px; height: 160px; position: absolute; }'
-+ '.B4-5Col *				{ top: 183px; left: 372px; width: 90px; height: 160px; position: absolute; }'
-+ '.B5-5Col *				{ top: 183px; left: 468px; width: 90px; height: 160px; position: absolute; }'
-+ '.C1-5Col *				{ top: 354px; left: 88px;  width: 90px; height: 160px; position: absolute; }'
-+ '.C2-5Col *				{ top: 354px; left: 182px; width: 90px; height: 160px; position: absolute; }'
-+ '.C3-5Col *				{ top: 354px; left: 278px; width: 90px; height: 160px; position: absolute; }'
-+ '.C4-5Col *				{ top: 354px; left: 372px; width: 90px; height: 160px; position: absolute; }'
-+ '.C5-5Col *				{ top: 354px; left: 468px; width: 90px; height: 160px; position: absolute; }'
-+ ''
-+ '.A1RTG-5Col *				{ top: 161px;  left: 89px;  width: 90px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A2RTG-5Col *				{ top: 161px;  left: 183px; width: 90px; height: 20px; position: absolute;   z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A3RTG-5Col *				{ top: 161px;  left: 279px; width: 90px; height: 20px; position: absolute;   z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A4RTG-5Col *				{ top: 161px;  left: 373px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A5RTG-5Col *				{ top: 161px;  left: 469px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B1RTG-5Col *				{ top: 330px; left: 89px;  width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B2RTG-5Col *				{ top: 330px; left: 183px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B3RTG-5Col *				{ top: 330px; left: 279px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B4RTG-5Col *				{ top: 330px; left: 373px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B5RTG-5Col *				{ top: 330px; left: 469px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C1RTG-5Col *				{ top: 501px; left: 89px;  width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C2RTG-5Col *				{ top: 501px; left: 183px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C3RTG-5Col *				{ top: 501px; left: 279px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C4RTG-5Col *				{ top: 501px; left: 373px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C5RTG-5Col *				{ top: 501px; left: 469px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ ''
-+ '.A1-6Col *				{ top: 15px;  left: 86px;  width: 75px; height: 160px; position: absolute; }'
-+ '.A2-6Col *				{ top: 15px;  left: 165px; width: 75px; height: 160px; position: absolute; }'
-+ '.A3-6Col *				{ top: 15px;  left: 244px; width: 75px; height: 160px; position: absolute; }'
-+ '.A4-6Col *				{ top: 15px;  left: 323px; width: 75px; height: 160px; position: absolute; }'
-+ '.A5-6Col *				{ top: 15px;  left: 402px; width: 75px; height: 160px; position: absolute; }'
-+ '.A6-6Col *				{ top: 15px;  left: 481px; width: 75px; height: 160px; position: absolute; }'
-+ '.B1-6Col *				{ top: 184px; left: 86px; width: 75px; height: 160px; position: absolute; }'
-+ '.B2-6Col *				{ top: 184px; left: 165px; width: 75px; height: 160px; position: absolute; }'
-+ '.B3-6Col *				{ top: 184px; left: 244px; width: 75px; height: 160px; position: absolute; }'
-+ '.B4-6Col *				{ top: 184px; left: 323px; width: 75px; height: 160px; position: absolute; }'
-+ '.B5-6Col *				{ top: 184px; left: 402px; width: 75px; height: 160px; position: absolute; }'
-+ '.B6-6Col *				{ top: 184px; left: 481px; width: 75px; height: 160px; position: absolute; }'
-+ '.C1-6Col *				{ top: 354px; left: 86px;  width: 75px; height: 160px; position: absolute; }'
-+ '.C2-6Col *				{ top: 354px; left: 165px; width: 75px; height: 160px; position: absolute; }'
-+ '.C3-6Col *				{ top: 354px; left: 244px; width: 75px; height: 160px; position: absolute; }'
-+ '.C4-6Col *				{ top: 354px; left: 323px; width: 75px; height: 160px; position: absolute; }'
-+ '.C5-6Col *				{ top: 354px; left: 402px; width: 75px; height: 160px; position: absolute; }'
-+ '.C6-6Col *				{ top: 354px; left: 481px; width: 75px; height: 160px; position: absolute; }'
-+ ''
-+ '.A1RTG-6Col *				{ top: 159px;  left: 86px;  width: 75px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A2RTG-6Col *				{ top: 159px;  left: 165px; width: 75px; height: 20px; position: absolute;   z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A3RTG-6Col *				{ top: 159px;  left: 244px; width: 75px; height: 20px; position: absolute;   z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A4RTG-6Col *				{ top: 159px;  left: 323px; width: 75px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A5RTG-6Col *				{ top: 159px;  left: 402px; width: 75px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.A6RTG-6Col *				{ top: 159px;  left: 481px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B1RTG-6Col *				{ top: 328px; left: 86px; width: 75px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B2RTG-6Col *				{ top: 328px; left: 165px; width: 75px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B3RTG-6Col *				{ top: 328px; left: 244px; width: 75px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B4RTG-6Col *				{ top: 328px; left: 323px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B5RTG-6Col *				{ top: 328px; left: 402px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.B6RTG-6Col *				{ top: 328px; left: 481px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C1RTG-6Col *				{ top: 498px; left: 86px;  width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C2RTG-6Col *				{ top: 498px; left: 165px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C3RTG-6Col *				{ top: 498px; left: 244px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C4RTG-6Col *				{ top: 498px; left: 323px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C5RTG-6Col *				{ top: 498px; left: 402px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
-+ '.C6RTG-6Col *				{ top: 498px; left: 481px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.FormPanelInRed .x-panel-body					{ background-color: #E9D7D3; padding-bottom:0px; } '
+	+ '.FormPanelInRed .x-toolbar-footer				{ background-color: #E9D7D3; padding: 10px;margin-top:0px;}'
+	+ '.FormPanelInRedIcon								{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelRed.png) !important;}'
+	+ ''
+	+ '.FormPanelInYellow .x-panel-body				{ background-color: #FFFFDC; padding: 10px; }'
+	+ '.FormPanelInYellow .x-toolbar-footer			{ background-color: #FFFFDC; padding: 10px;margin-top:0px;}'
+	+ '.FormPanelInYellowIcon							{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelYellow.png) !important;}'
+	+ ''
+	+ '.FormPanelInGreen .x-panel-body					{ background-color: #DBF2BE; padding: 10px; } '
+	+ '.FormPanelInGreen .x-toolbar-footer				{ background-color: #DBF2BE; padding: 10px;margin-top:0px;}'
+	+ '.FormPanelInGreenIcon							{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelGreen.png) !important;}'
+	+ ''
+	+ '.FormPanelDefault .x-panel-body					{ padding: 10px; }'
+	+ '.FormPanelDefault .x-toolbar-footer				{ padding: 10px;margin-top:0px;}'
+	+ '.FormPanelDefaultIcon							{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelGrey.png) !important; } '
+	+ ''
+	+ '.FormPanelSmallFont *							{ font-family: Arial,Helvetica,sans-serif !important; }'
+	+ ''
+	+ '.skeleton * {background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-transp.png);}'
+	+ '.skeleton a {text-decoration: none; border: none}'
+	+ '.skeleton a:hover { border: none; }'
+	+ '										'
+	+ '.SevenV	*					{ position: absolute; width: 33px; height:50px; top: 275px; left: 170px; z-index:4; } '
+	+ '.SevenVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-7-V-mini.png)}'
+	+ ''
+	+ '.EightV	*					{ position: absolute; width: 27px; height:28px; top: 512px; left: 121px; z-index:4; } '
+	+ '.EightVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-8-V-mini.png)}'
+	+ ''
+	+ '.NineV	*					{ position: absolute; width: 51px; height:14px; top: 100px; left: 114px; z-index:20; }'
+	+ '.NineVHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-9-V-mini.png); }'
+	+ ''
+	+ '.TenV	*					{ position: absolute; width: 28px; height:42px; top: 107px; left: 132px; }'
+	+ '.TenVHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-10-V-mini.png); }'
+	+ ''
+	+ '.ElevenV	*				{ position: absolute; width: 35px; height:25px; top: 109px; left: 153px; }'
+	+ '.ElevenVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-11-V-mini.png); }'
+	+ ''
+	+ '.TwelveV	*				{ position: absolute; width: 35px; height:50px; top: 136px; left: 155px; }'
+	+ '.TwelveVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-12-V-mini.png); }'
+	+ ''
+	+ '.ThirteenV	*				{ position: absolute; width: 35px; height:25px; top: 185px; left: 156px; } '
+	+ '.ThirteenVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-13-V-mini.png); }'
+	+ ''
+	+ '.TwentyoneV	*				{ position: absolute; width: 16px; height:20px; top: 206px; left: 166px; }'
+	+ '.TwentyoneVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-21-V-mini.png); }'
+	+ ''
+	+ '.TwentytwoV	*				{ position: absolute; width: 15px; height:32px; top: 226px; left: 171px; }'
+	+ '.TwentytwoVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-22-V-mini.png); }'
+	+ ''
+	+ '.TwentythreeV	*			{ position: absolute; width: 15px; height:19px; top: 257px; left: 175px; }'
+	+ '.TwentythreeVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-23-V-mini.png); }'
+	+ ''
+	+ '.ThirtyoneV	*				{ position: absolute; width: 30px; height:26px; top: 260px; left: 127px; z-index:5;}'
+	+ '.ThirtyoneVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-31-V-mini.png); }'
+	+ ''
+	+ '.ThirtytwoV	*				{ position: absolute; width: 18px; height:73px; top: 287px; left: 131px; }'
+	+ '.ThirtytwoVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-32-V-mini.png); }'
+	+ ''
+	+ '.ThirtythreeV	*			{ position: absolute; width: 30px; height:30px; top: 362px; left: 120px; }'
+	+ '.ThirtythreeVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-33-V-mini.png); }'
+	+ ''
+	+ '.ThirtyFourV	*			{ position: absolute; width: 13px; height:10px; top: 385px; left: 127px; z-index:5;}'
+	+ '.ThirtyFourVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-34-V-mini.png); }'
+	+ ''
+	+ '.FortyoneV	*				{ position: absolute; width: 35px; height:30px;  top: 395px; left: 119px; }'
+	+ '.FortyoneVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-41-V-mini.png); }'
+	+ ''
+	+ '.FortytwoV	*				{ position: absolute; width: 35px; height:62px; top: 425px; left: 117px; } '
+	+ '.FortytwoVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-42-V-mini.png); }'
+	+ ''
+	+ '.FortythreeV	*			{ position: absolute; width: 11px; height:21px; top: 486px; left: 126px; z-index:4; } '
+	+ '.FortythreeVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-43-V-mini.png)}'
+	+ ''
+	+ '.FortyfourV	*				{ position: absolute; width: 35px; height:18px; top: 492px; left: 112px; z-index:3; } '
+	+ '.FortyfourVHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-44-V-mini.png)}'
+	+ ''
+	+ '.FiftyoneV	*				{ position: absolute; width: 33px; height:25px; top: 260px; left: 127px; z-index:2; } '
+	+ '.FiftyoneVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-51-V-mini.png)}'
+	+ ''
+	+ '.SixtyTwoV	*				{ position: absolute; width: 31px; height:24px; top: 251px; left: 108px; z-index:6; }'
+	+ '.SixtyTwoVHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-62-V-mini.png); }'
+	+ ''
+	+ '/* Right side */'
+	+ ''
+	+ '.SevenH	*					{ position: absolute; width: 33px; height:50px; top: 273px; left: 11px; z-index:4; }'
+	+ '.SevenHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-7-H-mini.png)}'
+	+ ''
+	+ '.EightH	*					{ position: absolute; width: 27px; height:28px; top: 512px; left: 66px; z-index:4; } '
+	+ '.EightHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-8-H-mini.png)}'
+	+ ''
+	+ '.NineH	*					{ position: absolute; width: 49px; height:15px; top: 99px; left: 48px; z-index:20; }'
+	+ '.NineHHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-9-H-mini.png); }'
+	+ ''
+	+ '.TenH	*					{ position: absolute; width: 25px; height:42px; top: 107px; left: 58px; }'
+	+ '.TenHHover					{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-10-H-mini.png); }'
+	+ ''
+	+ '.ElevenH	*				{ position: absolute; width: 35px; height:25px; top: 110px; left: 34px; }'
+	+ '.ElevenHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-11-H-mini.png); }'
+	+ ''
+	+ '.TwelveH	*				{ position: absolute; width: 35px; height:50px; top: 136px; left: 28px; }'
+	+ '.TwelveHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-12-H-mini.png); }'
+	+ ''
+	+ '.ThirteenH	*				{ position: absolute; width: 35px; height:25px; top: 183px; left: 21px; } '
+	+ '.ThirteenHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-13-H-mini.png); }'
+	+ ''
+	+ '.TwentyoneH	*				{ position: absolute; width: 16px; height:21px; top: 206px; left: 27px; }'
+	+ '.TwentyoneHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-21-H-mini.png); }'
+	+ ''
+	+ '.TwentytwoH	*				{ position: absolute; width: 15px; height:30px; top: 227px; left: 25px; }'
+	+ '.TwentytwoHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-22-H-mini.png); }'
+	+ ''
+	+ '.TwentythreeH	*			{ position: absolute; width: 15px; height:19px; top: 258px; left: 25px; }'
+	+ '.TwentythreeHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-23-H-mini.png); }'
+	+ ''
+	+ '.ThirtyoneH	*				{ position: absolute; width: 33px; height:27px; top: 260px; left: 52px; z-index:5; }'
+	+ '.ThirtyoneHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-31-H-mini.png); }'
+	+ ''
+	+ '.ThirtytwoH	*				{ position: absolute; width: 18px; height:73px; top: 287px; left: 64px; }'
+	+ '.ThirtytwoHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-32-H-mini.png); }'
+	+ ''
+	+ '.ThirtythreeH	*			{ position: absolute; width: 33px; height:30px; top: 362px; left: 59px; }'
+	+ '.ThirtythreeHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-33-H-mini.png); }'
+	+ ''
+	+ '.ThirtyFourH	*			{ position: absolute; width: 14px; height:11px; top: 385px; left: 76px; z-index:5;}'
+	+ '.ThirtyFourHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-34-H-mini.png); }'
+	+ ''
+	+ '.FortyoneH	*				{ position: absolute; width: 35px; height:30px; top: 396px; left: 62px; }'
+	+ '.FortyoneHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-41-H-mini.png); }'
+	+ ''
+	+ '.FortytwoH	*				{ position: absolute; width: 35px; height:62px; top: 425px; left: 61px; } '
+	+ '.FortytwoHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-42-H-mini.png);}'
+	+ ''
+	+ '.FortythreeH	*			{ position: absolute; width: 11px; height:21px; top: 487px; left: 78px; z-index:6; } '
+	+ '.FortythreeHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-43-H-mini.png); }'
+	+ ''
+	+ '.FortyfourH	*				{ position: absolute; width: 35px; height:18px; top: 491px; left: 64px; z-index:5; } '
+	+ '.FortyfourHHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-44-H-mini.png)}'
+	+ ''
+	+ '.SixtyTwoH	*				{ position: absolute; width: 31px; height:24px; top: 251px; left: 75px; z-index:6; } '
+	+ '.SixtyTwoHHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-62-H-mini.png); }'
+	+ ''
+	+ ''
+	+ '/*No specified side*/'
+	+ '.SixtyOne *					{ position: absolute; width: 92px; height:64px; top: 222px; left: 62px; z-index:4; }'
+	+ '.SixtyOneHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-61-mini.png); }'
+	+ ''
+	+ '.Hundred	*				{ position: absolute; width: 48px; height:8px; top: 78px; left: 86px; z-index:20; }'
+	+ '.HundredHover				{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-100-mini.png); }'
+	+ ''
+	+ '.HundredOne	*				{ position: absolute; width: 20px; height:24px; top: 86px; left: 98px; z-index:20; }'
+	+ '.HundredOneHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-101-mini.png); }'
+	+ ''
+	+ '.HundredTwo	*				{ position: absolute; width: 20px; height:58px; top: 110px; left: 98px; z-index:20; }'
+	+ '.HundredTwoHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-102-mini.png); }'
+	+ ''
+	+ '.HundredThree	*			{ position: absolute; width: 20px; height:69px; top: 168px; left: 98px; z-index:20; }'
+	+ '.HundredThreeHover			{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-103-mini.png); }'
+	+ ''
+	+ '.AO a						{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-transp.png) repeat; border: 1px solid }'
+	+ '.AO a:hover					{ border: 2px solid #E89223/*BCBCBC*/; }'
+	+ ''
+	+ '/*hand skeleton*/'
+	+ '.OneHHandSkeleton			{ position: absolute; width: 30px; height:32px; top: 421px; left: 210px; z-index:0;}'
+	+ '.OneHHandSkeletonHover		{ background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-1.png); }'
+	+ ''
+	+ '.A1	*						{ top: 14px;  left: 88px;  width: 152px; height: 160px; position: absolute; }'
+	+ '.A2	*						{ top: 14px;  left: 246px; width: 152px; height: 160px; position: absolute; }'
+	+ '.A3	*						{ top: 14px;  left: 406px; width: 152px; height: 160px; position: absolute; }'
+	+ '.B1	*						{ top: 183px; left: 88px;  width: 152px; height: 160px; position: absolute; }'
+	+ '.B2	*						{ top: 183px; left: 246px; width: 152px; height: 160px; position: absolute; }'
+	+ '.B3	*						{ top: 183px; left: 406px; width: 152px; height: 160px; position: absolute; }'
+	+ '.C1	*						{ top: 354px; left: 88px;  width: 152px; height: 160px; position: absolute; }'
+	+ '.C2	*						{ top: 354px; left: 246px; width: 152px; height: 160px; position: absolute; }'
+	+ '.C3	*						{ top: 354px; left: 406px; width: 152px; height: 160px; position: absolute; }'
+	+ ''
+	+ '.A1RTG	*					{ top: 158px;  left: 90px;  width: 40px; height: 20px; position: absolute; z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A2RTG	*					{ top: 158px;  left: 248px; width: 40px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A3RTG	*					{ top: 158px;  left: 408px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B1RTG	*					{ top: 327px; left: 90px;  width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B2RTG	*					{ top: 327px; left: 248px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B3RTG	*					{ top: 327px; left: 408px; width: 40px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C1RTG	*					{ top: 498px; left: 90px;  width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C2RTG	*					{ top: 498px; left: 248px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C3RTG	*					{ top: 498px; left: 408px; width: 40px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ ''
+	+ '.A1-4Col *				{ top: 14px;  left: 89px;  width: 111px; height: 160px; position: absolute; }'
+	+ '.A2-4Col *				{ top: 14px;  left: 206px; width: 111px; height: 160px; position: absolute; }'
+	+ '.A3-4Col *				{ top: 14px;  left: 326px; width: 111px; height: 160px; position: absolute; }'
+	+ '.A4-4Col *				{ top: 14px;  left: 446px; width: 111px; height: 160px; position: absolute; }'
+	+ '.B1-4Col *				{ top: 183px; left: 89px;  width: 111px; height: 160px; position: absolute; }'
+	+ '.B2-4Col *				{ top: 183px; left: 206px; width: 111px; height: 160px; position: absolute; }'
+	+ '.B3-4Col *				{ top: 183px; left: 326px; width: 111px; height: 160px; position: absolute; }'
+	+ '.B4-4Col *				{ top: 183px; left: 446px; width: 111px; height: 160px; position: absolute; }'
+	+ '.C1-4Col *				{ top: 354px; left: 89px;  width: 111px; height: 160px; position: absolute; }'
+	+ '.C2-4Col *				{ top: 354px; left: 206px; width: 111px; height: 160px; position: absolute; }'
+	+ '.C3-4Col *				{ top: 354px; left: 326px; width: 111px; height: 160px; position: absolute; }'
+	+ '.C4-4Col *				{ top: 354px; left: 446px; width: 111px; height: 160px; position: absolute; }'
+	+ ''
+	+ '.A1RTG-4Col *				{ top: 158px;  left: 89px;  width: 111px; height: 20px; position: absolute; z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A2RTG-4Col *				{ top: 158px;  left: 206px; width: 111px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A3RTG-4Col *				{ top: 158px;  left: 326px; width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A4RTG-4Col *				{ top: 158px;  left: 446px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B1RTG-4Col *				{ top: 327px; left: 89px;  width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B2RTG-4Col *				{ top: 327px; left: 206px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B3RTG-4Col *				{ top: 327px; left: 326px; width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B4RTG-4Col *				{ top: 327px; left: 446px; width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C1RTG-4Col *				{ top: 498px; left: 89px;  width: 111px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C2RTG-4Col *				{ top: 498px; left: 206px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C3RTG-4Col *				{ top: 498px; left: 326px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C4RTG-4Col *				{ top: 498px; left: 446px; width: 111px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ ''
+	+ '.A1-5Col *				{ top: 14px;  left: 88px;  width: 90px; height: 160px; position: absolute; }'
+	+ '.A2-5Col *				{ top: 14px;  left: 182px; width: 90px; height: 160px; position: absolute; }'
+	+ '.A3-5Col *				{ top: 14px;  left: 278px; width: 90px; height: 160px; position: absolute; }'
+	+ '.A4-5Col *				{ top: 14px;  left: 372px; width: 90px; height: 160px; position: absolute; }'
+	+ '.A5-5Col *				{ top: 14px;  left: 468px; width: 90px; height: 160px; position: absolute; }'
+	+ '.B1-5Col *				{ top: 183px; left: 88px;  width: 90px; height: 160px; position: absolute; }'
+	+ '.B2-5Col *				{ top: 183px; left: 182px; width: 90px; height: 160px; position: absolute; }'
+	+ '.B3-5Col *				{ top: 183px; left: 278px; width: 90px; height: 160px; position: absolute; }'
+	+ '.B4-5Col *				{ top: 183px; left: 372px; width: 90px; height: 160px; position: absolute; }'
+	+ '.B5-5Col *				{ top: 183px; left: 468px; width: 90px; height: 160px; position: absolute; }'
+	+ '.C1-5Col *				{ top: 354px; left: 88px;  width: 90px; height: 160px; position: absolute; }'
+	+ '.C2-5Col *				{ top: 354px; left: 182px; width: 90px; height: 160px; position: absolute; }'
+	+ '.C3-5Col *				{ top: 354px; left: 278px; width: 90px; height: 160px; position: absolute; }'
+	+ '.C4-5Col *				{ top: 354px; left: 372px; width: 90px; height: 160px; position: absolute; }'
+	+ '.C5-5Col *				{ top: 354px; left: 468px; width: 90px; height: 160px; position: absolute; }'
+	+ ''
+	+ '.A1RTG-5Col *				{ top: 161px;  left: 89px;  width: 90px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A2RTG-5Col *				{ top: 161px;  left: 183px; width: 90px; height: 20px; position: absolute;   z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A3RTG-5Col *				{ top: 161px;  left: 279px; width: 90px; height: 20px; position: absolute;   z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A4RTG-5Col *				{ top: 161px;  left: 373px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A5RTG-5Col *				{ top: 161px;  left: 469px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B1RTG-5Col *				{ top: 330px; left: 89px;  width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B2RTG-5Col *				{ top: 330px; left: 183px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B3RTG-5Col *				{ top: 330px; left: 279px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B4RTG-5Col *				{ top: 330px; left: 373px; width: 90px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B5RTG-5Col *				{ top: 330px; left: 469px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C1RTG-5Col *				{ top: 501px; left: 89px;  width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C2RTG-5Col *				{ top: 501px; left: 183px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C3RTG-5Col *				{ top: 501px; left: 279px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C4RTG-5Col *				{ top: 501px; left: 373px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C5RTG-5Col *				{ top: 501px; left: 469px; width: 90px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ ''
+	+ '.A1-6Col *				{ top: 15px;  left: 86px;  width: 75px; height: 160px; position: absolute; }'
+	+ '.A2-6Col *				{ top: 15px;  left: 165px; width: 75px; height: 160px; position: absolute; }'
+	+ '.A3-6Col *				{ top: 15px;  left: 244px; width: 75px; height: 160px; position: absolute; }'
+	+ '.A4-6Col *				{ top: 15px;  left: 323px; width: 75px; height: 160px; position: absolute; }'
+	+ '.A5-6Col *				{ top: 15px;  left: 402px; width: 75px; height: 160px; position: absolute; }'
+	+ '.A6-6Col *				{ top: 15px;  left: 481px; width: 75px; height: 160px; position: absolute; }'
+	+ '.B1-6Col *				{ top: 184px; left: 86px; width: 75px; height: 160px; position: absolute; }'
+	+ '.B2-6Col *				{ top: 184px; left: 165px; width: 75px; height: 160px; position: absolute; }'
+	+ '.B3-6Col *				{ top: 184px; left: 244px; width: 75px; height: 160px; position: absolute; }'
+	+ '.B4-6Col *				{ top: 184px; left: 323px; width: 75px; height: 160px; position: absolute; }'
+	+ '.B5-6Col *				{ top: 184px; left: 402px; width: 75px; height: 160px; position: absolute; }'
+	+ '.B6-6Col *				{ top: 184px; left: 481px; width: 75px; height: 160px; position: absolute; }'
+	+ '.C1-6Col *				{ top: 354px; left: 86px;  width: 75px; height: 160px; position: absolute; }'
+	+ '.C2-6Col *				{ top: 354px; left: 165px; width: 75px; height: 160px; position: absolute; }'
+	+ '.C3-6Col *				{ top: 354px; left: 244px; width: 75px; height: 160px; position: absolute; }'
+	+ '.C4-6Col *				{ top: 354px; left: 323px; width: 75px; height: 160px; position: absolute; }'
+	+ '.C5-6Col *				{ top: 354px; left: 402px; width: 75px; height: 160px; position: absolute; }'
+	+ '.C6-6Col *				{ top: 354px; left: 481px; width: 75px; height: 160px; position: absolute; }'
+	+ ''
+	+ '.A1RTG-6Col *				{ top: 159px;  left: 86px;  width: 75px; height: 20px; position: absolute;  z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A2RTG-6Col *				{ top: 159px;  left: 165px; width: 75px; height: 20px; position: absolute;   z-index:1000; font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A3RTG-6Col *				{ top: 159px;  left: 244px; width: 75px; height: 20px; position: absolute;   z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A4RTG-6Col *				{ top: 159px;  left: 323px; width: 75px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A5RTG-6Col *				{ top: 159px;  left: 402px; width: 75px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.A6RTG-6Col *				{ top: 159px;  left: 481px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B1RTG-6Col *				{ top: 328px; left: 86px; width: 75px; height: 20px; position: absolute;  z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B2RTG-6Col *				{ top: 328px; left: 165px; width: 75px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B3RTG-6Col *				{ top: 328px; left: 244px; width: 75px; height: 20px; position: absolute; z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B4RTG-6Col *				{ top: 328px; left: 323px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B5RTG-6Col *				{ top: 328px; left: 402px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.B6RTG-6Col *				{ top: 328px; left: 481px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C1RTG-6Col *				{ top: 498px; left: 86px;  width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C2RTG-6Col *				{ top: 498px; left: 165px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C3RTG-6Col *				{ top: 498px; left: 244px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C4RTG-6Col *				{ top: 498px; left: 323px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C5RTG-6Col *				{ top: 498px; left: 402px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
+	+ '.C6RTG-6Col *				{ top: 498px; left: 481px; width: 75px; height: 20px; position: absolute;z-index:1000;font-size:11px;background: url(https://stratum.blob.core.windows.net/sfr/Images/IconLink.png)  no-repeat;}'
 
-+ '.sfr-xray {'
-+ '  margin: 0 10px;'
-+ '  max-width: 470px;'
-+ '  max-height: 800px;'
-+ '}'
-+ '.sfr-xray-link {'
-+ '  cursor: pointer;'
-+ '}'
-+ '.sfr-skeleton .x-panel-body {'
-+ '  border-width: 0px;'
-+ '}'
-, 'sfr-skeleton'
+	+ '.sfr-xray {'
+	+ '  margin: 0 10px;'
+	+ '  max-width: 470px;'
+	+ '  max-height: 800px;'
+	+ '}'
+	+ '.sfr-xray-link {'
+	+ '  cursor: pointer;'
+	+ '}'
+	+ '.sfr-skeleton .x-panel-body {'
+	+ '  border-width: 0px;'
+	+ '}'
+	, 'sfr-skeleton'
 );
 
 var skeletonWidget = function (event, current, callback, loadonly) {
@@ -318,14 +318,14 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 	var PROSTHESIS_FRACTURE = 'PROSTHESIS_FRACTURE';
 
 	var ChildClassChars = { VESSEL: '-K', CAPUT: '-C', FELSTALLNING: '-F', NERV: '-N', FLEX: '-M' };
-	app.skeletonDomainCodes = [4158, 4159, 5554, 5555, 5563, 5572, 5573]; 
+	app.skeletonDomainCodes = [4158, 4159, 5554, 5555, 5563, 5572, 5573];
 	app.delayedDomainCodes = [4060, 5757];
 	app.registerDomainCodes = [4000, 4049, 4051, 4052, 4053, 4056, 4059, 4060, 4061, 4094, 4095, 4096, 4097, 4098, 4006, 4007, 4008, 4009, 4010,
-									4140, 4144, 4145, 4146, 4156, 4157, 4158, 4159, 4188, 4189, 4281, 4311, 4402, 4403, 5545, 5550, 5551, 5552, 5554, 5555, 5563, 5572, 5573, 5619, 5620, 5621, 5665, 5690, 5748, 5757];
+		4140, 4144, 4145, 4146, 4156, 4157, 4158, 4159, 4188, 4189, 4281, 4311, 4402, 4403, 5545, 5550, 5551, 5552, 5554, 5555, 5563, 5572, 5573, 5619, 5620, 5621, 5665, 5690, 5748, 5757];
 
 	var tplFracture = new Ext.XTemplate(
-        '<img title="{title}" src="{image}" width="65" height="65" style="margin:0px" />'
-    );
+		'<img title="{title}" src="{image}" width="65" height="65" style="margin:0px" />'
+	);
 	var tplRadiusImg = new Ext.XTemplate(
 		'<img title="{title}" src="{image}" width="65" height="65" style="margin-top: 0px" />'
 	);
@@ -338,2030 +338,8 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 	var tplClavicleImg = new Ext.XTemplate(
 		'<img title="{title}" src="{image}" width="65" height="65" style="margin-top: 0px" />'
 	);
-	
-	initialize(loadonly);
-	
-	function getToday() {
-		var today = new Date();
-		return Ext.Date.dateFormat(today, 'Y-m-d');
-	}
 
-	function setICD10TextToolTip(aFractureForm, target) {
-		var icd10Field = getCmpByName('Fx_ICD10', aFractureForm);
-		if (icd10Field === null) {
-			icd10Field = getCmpByName('FxS_ICD10', aFractureForm);
-		}
-		if (icd10Field === null) {
-			icd10Field = getCmpByName('FxP_ICD10', aFractureForm);
-		}
-		if (icd10Field === null) {
-			return;
-		}
-		var icd10Code = icd10Field.getValue();
-		var icd10Text = getDomainValueName(4061, icd10Code);
-		if (icd10Text == '')
-			return;
-		Ext.tip.QuickTipManager.register({
-			target: target.id,
-			text: icd10Text,
-			title: icd10Code
-		});
-	}
-
-	function getCmpByName(cmpName, panel) {
-		var i = 0;
-		if (panel instanceof Ext.form.Panel || panel instanceof Ext.panel.Panel) {
-			for (i = 0; i < panel.items.length; i++) {
-				switch (panel.items.items[i].name) {
-					case cmpName:
-						return panel.items.items[i];
-						break;
-				}
-			}
-		}
-		else if (panel instanceof Ext.form.BasicForm) {
-			for (i = 0; i < panel.items.length; i++) {
-				switch (panel.items[i].name) {
-					case cmpName:
-						return panel.items[i];
-						break;
-				}
-			}
-		}
-		return null;
-	}
-
-	function getPanel(eventID) {
-		var i = 0;
-		for (i = 0; i < app.myMiddlePanel.items.length; i++) {
-			var cmp = app.myMiddlePanel.items.items[i];
-			if (cmp instanceof Ext.form.Panel) {
-				var eventIDField = getCmpByName('EventID', cmp);
-				if (eventIDField != null) {
-					if (eventIDField.getValue() == eventID) {
-						return cmp;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	function getDomainValueName(domainid, valueCode) {
-		if (isNaN(domainid))
-			return;
-		var i = 0;
-		for (i = 0; i < app.myRegisterdomains[domainid].DomainValues.length; i++) {
-			if (app.myRegisterdomains[domainid].DomainValues[i].ValueCode == valueCode) {
-				return app.myRegisterdomains[domainid].DomainValues[i].ValueName;
-			}
-		}
-		return '';
-	}
-
-	function getDomainValue(domainid, valueCode) {
-		if (isNaN(domainid))
-			return;
-		var i = 0;
-		for (i = 0; i < app.myRegisterdomains[domainid].DomainValues.length; i++) {
-			if (app.myRegisterdomains[domainid].DomainValues[i].ValueCode == valueCode) {
-				return app.myRegisterdomains[domainid].DomainValues[i];
-			}
-		}
-		return '';
-	}
-
-	function getButtonByName(buttonName, buttons) {
-		var i = 0;
-		for (i = 0; i < buttons.items.length; i++) {
-			switch (buttons.items.items[i].name) {
-				case buttonName:
-					return buttons.items.items[i];
-					break;
-			}
-		}
-		return null;
-	}
-
-	function getSide(pelvisPanel) {
-		if (aoImagesNavigationHandler.inProsthesisMode === true) {
-			return 3;
-		}
-		var manualClassification = onPelvisClick.matchFoundForSeriousRingInjury(pelvisPanel);
-		if (manualClassification)
-			return '';
-		var middleInjuryFound = false;
-		var leftInjuryFound = false;
-		var rightInjuryFound = false;
-		var i = 0;
-		var selectedCmps = onPelvisClick.getSelectedCmps(pelvisPanel);
-		for (i = 0; i < selectedCmps.length; i++) {
-			var cmpName = selectedCmps[i].name;
-			if (selectedCmps[i].name.indexOf('H', cmpName.length - 1) > 0)
-				rightInjuryFound = true;
-			else if (selectedCmps[i].name.indexOf('V', cmpName.length - 1) > 0)
-				leftInjuryFound = true;
-			else
-				middleInjuryFound = true;
-		}
-		if (middleInjuryFound)
-			return 3;
-		if (leftInjuryFound && rightInjuryFound)
-			return 3;
-		if (leftInjuryFound)
-			return 2;
-		if (rightInjuryFound)
-			return 1;
-		return '';
-	}
-
-	function onPelvisClick (cmp, checked) {
-		if (onPelvisClick.DISLOCATED_TEXT === undefined) {
-			onPelvisClick.DISLOCATED_TEXT = 'Dislocerad';
-		}
-		if (onPelvisClick.matchFoundForSeriousRingInjury === undefined) {
-			onPelvisClick.matchFoundForSeriousRingInjury = function (pelvisPanel) {
-				var match = false;
-				match = match || getCmpByName('RingskadaInstabilH', pelvisPanel).checked;
-				match = match || getCmpByName('SakrumH', pelvisPanel).checked;
-				match = match || getCmpByName('SILedH', pelvisPanel).checked;
-				match = match || getCmpByName('RingskadaInstabilV', pelvisPanel).checked;
-				match = match || getCmpByName('SakrumV', pelvisPanel).checked;
-				match = match || getCmpByName('SILedV', pelvisPanel).checked;
-				return match;
-			}
-		}
-		if (onPelvisClick.matchFoundForLightRingInjury === undefined) {
-			onPelvisClick.matchFoundForLightRingInjury = function (pelvisPanel) {
-				var match = false;
-				match = match || getCmpByName('AlaStabilH', pelvisPanel).checked;
-				match = match || getCmpByName('OSPubisH', pelvisPanel).checked;
-				match = match || getCmpByName('AlaStabilV', pelvisPanel).checked;
-				match = match || getCmpByName('OSPubisV', pelvisPanel).checked;
-				match = match || getCmpByName('SpinopelvinDissociation', pelvisPanel).checked;
-				match = match || getCmpByName('Transversell', pelvisPanel).checked;
-				match = match || getCmpByName('Coccyx', pelvisPanel).checked;
-				match = match || getCmpByName('Symfys', pelvisPanel).checked;
-				return match;
-			}
-		}
-		if (onPelvisClick.getLabel === undefined)
-			onPelvisClick.getLabel = function (checkbox, pelvisPanel) {
-				var i = 0;
-				var j = 0;
-				var index = 0;
-				var cmps = getGroupedCmpsArray(pelvisPanel);
-				for (i = 0; i < cmps.length; i++) {
-					for (j = 0; j < cmps[i].length; j++) {
-						if (cmps[i][j] === checkbox) {
-							index = i;
-							break;
-						}
-					}
-				}
-				switch (index) {
-					case 0:
-						return pelvisPanel.items.items[24];
-					case 1:
-						return pelvisPanel.items.items[28];
-					case 2:
-						return pelvisPanel.items.items[26];
-					case 3:
-						return pelvisPanel.items.items[30];
-					case 4:
-						return pelvisPanel.items.items[25];
-					case 5:
-						return pelvisPanel.items.items[29];
-					case 6:
-						return pelvisPanel.items.items[27];
-					case 7:
-						return pelvisPanel.items.items[31];
-					case 8:
-						return pelvisPanel.items.items[32];
-					case 9:
-						return pelvisPanel.items.items[33];
-				}
-			}
-		if (onPelvisClick.getSelectedCmps === undefined)
-			onPelvisClick.getSelectedCmps = function (pelvisPanel) {
-				var i = 0;
-				var cmps = [];
-				var j = 0;
-				for (i = 0; i < pelvisPanel.items.length; i++) {
-					if (pelvisPanel.items.items[i] instanceof Ext.form.Checkbox) {
-						var box = pelvisPanel.items.items[i];
-						if (box.checked) {
-							cmps[j] = box;
-							j++;
-						}
-					}
-				}
-				return cmps;
-
-			}
-		if (onPelvisClick.multipleInjuriesSelected === undefined)
-			onPelvisClick.multipleInjuriesSelected = function (pelvisPanel) {
-				var cmps = onPelvisClick.getSelectedCmps(pelvisPanel);
-				var nrOfCmps = cmps.length;
-				var nrOfDislocated = 0;
-				var i = 0;
-				for (i = 0; i < nrOfCmps; i++) {
-					if (cmps[i].name.indexOf('Dislocerad') >= 0) {
-						nrOfDislocated++;
-					}
-				}
-				return (nrOfCmps - nrOfDislocated) > 1;
-			}
-		if (onPelvisClick.generateRingInjuries === undefined)
-			onPelvisClick.generateRingInjuries = function (pelvisPanel, fractureForm) {
-				var cmps = onPelvisClick.getSelectedCmps(pelvisPanel);
-				var openFracture = getCmpByName('Fx_Open', fractureForm).getValue();
-				var icd10codes = getICD10codes(pelvisPanel, openFracture);
-				var form = null;
-				var currentCmp = null;
-				var i = 0;
-				var insertPosition = 0;
-				//Find owner fracture form´s position																																
-				for (i = 0; i < app.myMiddlePanel.items.length; i++) {
-					if (app.myMiddlePanel.items.items[i] == fractureForm) {
-						insertPosition = i + 1;
-						break;
-					}
-				}
-				form = app.myMiddlePanel.items.items[insertPosition];
-				while (isRingInjuryForm(form) || isBackSubFractureForm(form)) {
-					if (form.isVisible()) {
-						break;
-					}
-					else {
-						insertPosition++;
-						form = app.myMiddlePanel.items.items[insertPosition];
-					}
-				}
-				var j = 0;
-				var k = 0;
-				for (i = 0; i < cmps.length; i++) {
-					currentCmp = cmps[i];
-					if (currentCmp.name.indexOf(onPelvisClick.DISLOCATED_TEXT) >= 0)
-						continue;
-					form = createPelvisRingInjuryForm('1022', null, Profile.Person.SocialNumber);
-					var parentEventIDfield = createParentEventIDfield('');
-					form.items.add(parentEventIDfield);
-					form.add(getPelvisRingInjuryFormItems(null));
-					PelvisRingInjuryFormHandler(form);
-					var regDateField = getCmpByName('FxP_RegDat', form);
-					var delField = getCmpByName('FxP_Segment', form);
-					var skadaField = getCmpByName('FxP_Fx', form);
-					var sidaField = getCmpByName('FxP_Side', form);
-					var icd10Field = getCmpByName('FxP_ICD10', form);
-					var disloceradField = getCmpByName('FxP_Disloc', form);
-					regDateField.setValue(getToday());
-					var side = icd10codes[j].substr(icd10codes[j].length - 1, 1); //side: last char
-					var icdCode = icd10codes[j].substr(0, icd10codes[j].length - 1); //Exclude side nr
-					icd10Field.setValue(icdCode);
-					sidaField.setValue(side);
-					var sideText = getSideLetter(side);
-					skadaField.setValue(cmps[i].aValue);
-					var partCode = getPelvisRingInjuryPart(skadaField.getValue());
-					delField.setValue(partCode);
-
-
-					var isDislocated = 0;
-					for (k = 0; k < cmps.length; k++) {
-						if (cmps[k].name.indexOf(onPelvisClick.DISLOCATED_TEXT) >= 0) {
-							var disloceradSideText = cmps[k].name.charAt(cmps[k].name.length - 1);
-							if (cmps[k].aValue == partCode && (disloceradSideText == sideText || disloceradSideText == 'd')) { //'d': last letter in dislocerad
-								if (cmps[k].checked) {
-									isDislocated = 1;
-								}
-							}
-						}
-					}
-					for (k = 0; k < app.myRegisterdomains['4146'].DomainValues.length; k++) {
-						if (isDislocated === parseInt(app.myRegisterdomains['4146'].DomainValues[k].ValueCode))
-							disloceradField.setValue(app.myRegisterdomains['4146'].DomainValues[k].ValueCode);
-					}
-					app.myMiddlePanel.insert(insertPosition, form);
-					form.setTitle(RINGSKADA_TEXT + ' ' + icdCode + ' ' + getFractureFormSideTitleText(form) + addCrossBorderTitleInfo(form));
-					setUndirty(form);
-					insertPosition++;
-					j++;
-				}
-			}
-		var pelvisPanel = cmp.ownerCt;
-		if (cmp.name.indexOf(onPelvisClick.DISLOCATED_TEXT) >= 0)
-			return;
-		cmps = getGroupedCmps(cmp, pelvisPanel);
-		var label = onPelvisClick.getLabel(cmp, pelvisPanel);
-		if (checked) {
-			label.el.dom.style.color = 'orange';
-			var i = 0;
-			for (i = 0; i < cmps.length; i++) {
-				if (i === cmps.length - 1) //Dislocerad button
-					cmps[i].setDisabled(false);
-				else if (cmps[i] !== cmp && cmps[cmps.length - 1] !== cmp)
-					cmps[i].setValue(false);
-			}
-		}
-		else {
-			label.el.dom.style.color = '';
-			if (cmps.length > 0) {
-				var dislocatedButton = cmps[cmps.length - 1];
-				if (dislocatedButton !== cmp) {
-					dislocatedButton.setDisabled(true);
-					dislocatedButton.setValue(false);
-				}
-			}
-		}
-		aoImagesNavigationHandler.toggleNavigationButton(pelvisPanel);
-		function getICD10codes(pelvisPanel, openFractureMarker) {
-			var codes = [];
-			var selectedCmps = onPelvisClick.getSelectedCmps(pelvisPanel);
-			var rightSideMarker = 1;
-			var leftSideMarker = 2;
-			var unspecSideMarker = 3;
-			if (openFractureMarker === undefined) {
-				openFractureMarker = '';
-			}
-			var i = 0;
-			for (i = 0; i < selectedCmps.length; i++) {
-				var pelvisPart = selectedCmps[i].name;
-				switch (pelvisPart) {
-					case 'RingskadaInstabilH':
-					case 'AlaStabilH':
-						codes[i] = 'S32.3' + openFractureMarker + rightSideMarker;
-						break;
-					case 'RingskadaInstabilV':
-					case 'AlaStabilV':
-						codes[i] = 'S32.3' + openFractureMarker + leftSideMarker;
-						break;
-					case 'SILedH':
-						codes[i] = 'S33.2' + openFractureMarker + rightSideMarker;
-						break;
-					case 'SILedV':
-						codes[i] = 'S33.2' + openFractureMarker + leftSideMarker;
-						break;
-					case 'SakrumH':
-						codes[i] = 'S32.1' + openFractureMarker + rightSideMarker;
-						break;
-					case 'SakrumV':
-						codes[i] = 'S32.1' + openFractureMarker + leftSideMarker;
-						break;
-					case 'OSPubisH':
-						codes[i] = 'S32.5' + openFractureMarker + rightSideMarker;
-						break;
-					case 'OSPubisV':
-						codes[i] = 'S32.5' + openFractureMarker + leftSideMarker;
-						break;
-					case 'SpinopelvinDissociation':
-					case 'Transversell':
-						codes[i] = 'S32.1' + openFractureMarker + unspecSideMarker;
-						break;
-					case 'Coccyx':
-						codes[i] = 'S32.2' + openFractureMarker + unspecSideMarker;
-						break;
-					case 'Symfys':
-						codes[i] = 'S33.4' + openFractureMarker + unspecSideMarker;
-						break;
-				}
-			}
-			return codes;
-		}
-		//Returns AO-code for pelvis parts where no manual (image-click) ao-classification is made
-		function getAOcode(fractureForm) {
-			var codes = [];
-			var selectedCmps = onPelvisClick.getSelectedCmps(fractureForm);
-			var i = 0;
-			for (i = 0; i < selectedCmps.length; i++) {
-				var pelvisPart = selectedCmps[i].name;
-				switch (pelvisPart) {
-					case 'AlaStabilH':
-					case 'AlaStabilV':
-						codes[i] = '61-A2.1';
-						break;
-					case 'OSPubisH':
-					case 'OSPubisV':
-						codes[i] = '61-A2.2';
-						break;
-					case 'SpinopelvinDissociation':
-						codes[i] = '?'; //TODO:?
-						break;
-					case 'Transversell':
-					case 'coccyx':
-						codes[i] = '61-A3';
-						break;
-					case 'Symfys':
-						return '?'; //TODO:?
-						break;
-				}
-			}
-			var aoCode = '';
-			if (codes.indexOf('OSPubisH') > 0 && codes.indexOf('OSPubisV') > 0 && codes.length === 2)
-				aoCode = '61-A2.3';
-			else if (codes.length > 1)
-				aoCode = '61-A';
-			else if (codes.length === 1)
-				aoCode = codes[0];
-			else
-				return '';
-			return aoCode;
-		}
-	}
-
-	function getPelvisRingInjuryPart(aInjuryCode) {
-		var i = 0;
-		var j = 0;
-		var valueCode = '';
-		for (i = 0; i < app.myRegisterdomains[4144].DomainValues.length; i++) {
-			for (j = 0; j < app.myRegisterdomains[4144].DomainValues[i].ChildValues.length; j++) {
-				valueCode = app.myRegisterdomains[4144].DomainValues[i].ChildValues[j].ValueCode;
-				if (valueCode == aInjuryCode)
-					return app.myRegisterdomains[4144].DomainValues[i].ValueCode;
-			}
-		}
-		return '';
-	}
-
-	function getGroupedCmpsArray(pelvisPanel) {
-		return [[getCmpByName('RingskadaInstabilH', pelvisPanel), getCmpByName('AlaStabilH', pelvisPanel), getCmpByName('IleumDisloceradH', pelvisPanel)],
-						[getCmpByName('SILedH', pelvisPanel), getCmpByName('SILedDisloceradH', pelvisPanel)],
-					    [getCmpByName('SakrumH', pelvisPanel), getCmpByName('SakrumDisloceradH', pelvisPanel)],
-					    [getCmpByName('OSPubisH', pelvisPanel), getCmpByName('OSPubisDisloceradH', pelvisPanel)],
-						[getCmpByName('RingskadaInstabilV', pelvisPanel), getCmpByName('AlaStabilV', pelvisPanel), getCmpByName('IleumDisloceradV', pelvisPanel)],
-						[getCmpByName('SILedV', pelvisPanel), getCmpByName('SILedDisloceradV', pelvisPanel)],
-					    [getCmpByName('SakrumV', pelvisPanel), getCmpByName('SakrumDisloceradV', pelvisPanel)],
-						[getCmpByName('OSPubisV', pelvisPanel), getCmpByName('OSPubisDisloceradV', pelvisPanel)],
-						[getCmpByName('Symfys', pelvisPanel), getCmpByName('SymfysDislocerad', pelvisPanel)],
-						[getCmpByName('SpinopelvinDissociation', pelvisPanel), getCmpByName('Transversell', pelvisPanel), getCmpByName('Coccyx', pelvisPanel), getCmpByName('SakrumDislocerad', pelvisPanel)]
-		];
-	}
-
-	function getGroupedCmps(cmp, pelvisPanel) {
-		var groupedCmps = getGroupedCmpsArray(pelvisPanel);
-		var i = 0;
-		for (i = 0; i < groupedCmps.length; i++) {
-			var j = 0;
-			for (j = 0; j < groupedCmps[i].length; j++) {
-				if (groupedCmps[i][j] === cmp) {
-					return groupedCmps[i];
-				}
-			}
-		}
-		return [];
-	}
-	
-	function createPelvisPanel() {
-		//To change the placement of components modify the [CMP]_[SIDE]_FIRST_BOX_POS_X and [CMP]_FIRST_BOX_POS_Y
-		//"constants", Changing for example ILEUM_RIGHT_FIRST_BOX_POS_X and ILEUM_FIRST_BOX_POS_Y moves the Ileum components (labels, headers and checkboxes)
-		//Modifying the other constants changes components relative spacing. Changing for example HEADER_SPACE_Y 
-		//modfies the height between header labels and related checkboxes.
-		var ILEUM_RIGHT_FIRST_BOX_POS_X = 117;
-		var ILEUM_LEFT_FIRST_BOX_POS_X = 460;
-		var ILEUM_FIRST_BOX_POS_Y = 140;
-		var SILED_RIGHT_FIRST_BOX_POS_X = 215;
-		var SILED_LEFT_FIRST_BOX_POS_X = 362;
-		var SILED_FIRST_BOX_POS_Y = 115;
-		var SAKRUM_RIGHT_FIRST_BOX_POS_X = 246;
-		var SAKRUM_LEFT_FIRST_BOX_POS_X = 330;
-		var SAKRUM_FIRST_BOX_POS_Y = 47;
-		var OSPUBIS_RIGHT_FIRST_BOX_POS_X = 216;
-		var OSPUBIS_RIGHT_HEADER_POS_X = 248;
-		var OSPUBIS_LEFT_FIRST_BOX_POS_X = 368;
-		var OSPUBIS_FIRST_BOX_POS_Y = 457;
-		var SAKRUM_MIDDLE_FIRST_BOX_POS_X = 280;
-		var SAKRUM_MIDDLE_FIRST_BOX_POS_Y = 282;
-		var SYMFYS_FIRST_BOX_POS_X = 278;
-		var SYMFYS_FIRST_BOX_POS_Y = 457;
-		var BOX_SPACE_Y = 16;
-		var EXTRA_SEPARATOR_SPACE_Y = 3;
-		var EXTRA_LABEL_SPACE_Y = 3;
-		var HEADER_SPACE_Y = 15;
-		var LEFT_LABEL_SPACE_X = 20;
-		var DISLOCATED_RIGHT_LABEL_SPACE_X = -67;
-		var HEADER_STYLE = 'background-color:white;font-weight:bold;z-index:2;';
-		var DESC_STYLE = 'background-color:white;z-index:2;font-style:italic;';
-		var LABEL_STYLE = 'background-color:white;z-index:2;';
-		var DISLOCATED_LABEL_STYLE = 'background-color:white;font-style:italic;';
-		var SEPARATOR_LABEL_STYLE = 'background-color:white;z-index:5;font-weight:bold;';
-		var BOX_STYLE = 'z-index:1';
-		return Ext.create('Ext.panel.Panel', {
-			xtype: 'panel',
-			cls: 'FormPanelSmallFont',
-			name: 'pelvisPanel',
-			layout: 'absolute',
-			height: 668,
-			width: 670,
-			defaults: { handler: Ext.bind(onPelvisClick, this, [], true) },
-			bodyStyle: 'background-image:url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-pelvis.png);background-repeat:no-repeat;background-color:white;',
-
-			items: [
-
-      {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SILED_LEFT_FIRST_BOX_POS_X,
-      	y: SILED_FIRST_BOX_POS_Y,
-      	boxLabel: '',
-      	name: 'SILedV',
-      	style: BOX_STYLE,
-      	aValue: '3'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SILED_RIGHT_FIRST_BOX_POS_X,
-      	y: SILED_FIRST_BOX_POS_Y,
-      	boxLabel: '',
-      	name: 'SILedH',
-      	style: BOX_STYLE,
-      	aValue: '3'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SAKRUM_MIDDLE_FIRST_BOX_POS_X,
-      	y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 2),
-      	boxLabel: '',
-      	name: 'Coccyx',
-      	style: BOX_STYLE,
-      	aValue: '7'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SAKRUM_MIDDLE_FIRST_BOX_POS_X,
-      	y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 1),
-      	boxLabel: '',
-      	name: 'Transversell',
-      	style: BOX_STYLE,
-      	aValue: '6'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SAKRUM_MIDDLE_FIRST_BOX_POS_X,
-      	y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y,
-      	boxLabel: '',
-      	name: 'SpinopelvinDissociation',
-      	style: BOX_STYLE,
-      	aValue: '5'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SYMFYS_FIRST_BOX_POS_X,
-      	y: SYMFYS_FIRST_BOX_POS_Y,
-      	boxLabel: '',
-      	name: 'Symfys',
-      	style: BOX_STYLE,
-      	aValue: '9'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SAKRUM_LEFT_FIRST_BOX_POS_X,
-      	y: SAKRUM_FIRST_BOX_POS_Y,
-      	boxLabel: '',
-      	name: 'SakrumV',
-      	style: BOX_STYLE,
-      	aValue: '4'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SAKRUM_RIGHT_FIRST_BOX_POS_X,
-      	y: SAKRUM_FIRST_BOX_POS_Y,
-      	boxLabel: '',
-      	name: 'SakrumH',
-      	style: BOX_STYLE,
-      	aValue: '4'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: ILEUM_LEFT_FIRST_BOX_POS_X,
-      	y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 1),
-      	boxLabel: '',
-      	name: 'AlaStabilV',
-      	style: BOX_STYLE,
-      	aValue: '2'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: ILEUM_LEFT_FIRST_BOX_POS_X,
-      	y: ILEUM_FIRST_BOX_POS_Y,
-      	boxLabel: '',
-      	name: 'RingskadaInstabilV',
-      	style: BOX_STYLE,
-      	aValue: '1'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	x: ILEUM_RIGHT_FIRST_BOX_POS_X,
-      	y: ILEUM_FIRST_BOX_POS_Y,
-      	boxLabel: '',
-      	name: 'RingskadaInstabilH',
-      	style: BOX_STYLE,
-      	aValue: '1'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: ILEUM_RIGHT_FIRST_BOX_POS_X,
-      	y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 1),
-      	boxLabel: '',
-      	name: 'AlaStabilH',
-      	style: BOX_STYLE,
-      	aValue: '2'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: OSPUBIS_LEFT_FIRST_BOX_POS_X,
-      	y: OSPUBIS_FIRST_BOX_POS_Y,
-      	boxLabel: '',
-      	name: 'OSPubisV',
-      	style: BOX_STYLE,
-      	aValue: '8'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: OSPUBIS_RIGHT_FIRST_BOX_POS_X,
-      	y: OSPUBIS_FIRST_BOX_POS_Y,
-      	boxLabel: '',
-      	name: 'OSPubisH',
-      	style: BOX_STYLE,
-      	aValue: '8'
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SILED_LEFT_FIRST_BOX_POS_X,
-      	y: SILED_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
-      	boxLabel: '',
-      	name: 'SILedDisloceradV',
-      	style: BOX_STYLE,
-      	aValue: '6',
-      	disabled: true
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SILED_RIGHT_FIRST_BOX_POS_X,
-      	y: SILED_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
-      	boxLabel: '',
-      	name: 'SILedDisloceradH',
-      	style: BOX_STYLE,
-      	aValue: '6',
-      	disabled: true
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SAKRUM_LEFT_FIRST_BOX_POS_X,
-      	y: SAKRUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
-      	boxLabel: '',
-      	name: 'SakrumDisloceradV',
-      	aValue: '2',
-      	style: BOX_STYLE,
-      	disabled: true
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SAKRUM_RIGHT_FIRST_BOX_POS_X,
-      	y: SAKRUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
-      	boxLabel: '',
-      	name: 'SakrumDisloceradH',
-      	style: BOX_STYLE,
-      	aValue: '2',
-      	disabled: true
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: ILEUM_LEFT_FIRST_BOX_POS_X,
-      	y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 2),
-      	boxLabel: '',
-      	name: 'IleumDisloceradV',
-      	style: BOX_STYLE,
-      	aValue: '7',
-      	disabled: true
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: OSPUBIS_LEFT_FIRST_BOX_POS_X,
-      	y: OSPUBIS_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
-      	boxLabel: '',
-      	name: 'OSPubisDisloceradV',
-      	style: BOX_STYLE,
-      	aValue: '4',
-      	disabled: true
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SYMFYS_FIRST_BOX_POS_X,
-      	y: SYMFYS_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
-      	boxLabel: '',
-      	name: 'SymfysDislocerad',
-      	style: BOX_STYLE,
-      	aValue: '1',
-      	disabled: true
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: OSPUBIS_RIGHT_FIRST_BOX_POS_X,
-      	y: OSPUBIS_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
-      	boxLabel: '',
-      	name: 'OSPubisDisloceradH',
-      	style: BOX_STYLE,
-      	aValue: '4',
-      	disabled: true
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: ILEUM_RIGHT_FIRST_BOX_POS_X,
-      	y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 2),
-      	boxLabel: '',
-      	name: 'IleumDisloceradH',
-      	style: BOX_STYLE,
-      	aValue: '7',
-      	disabled: true
-      }, {
-      	xtype: 'checkboxfield',
-      	uncheckedValue: 'false',
-      	inputValue: 'true',
-      	x: SAKRUM_MIDDLE_FIRST_BOX_POS_X,
-      	y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 3),
-      	boxLabel: '',
-      	name: 'SakrumDislocerad',
-      	style: BOX_STYLE,
-      	aValue: '5',
-      	disabled: true
-      }, {
-      	xtype: 'label',
-      	text: 'Ilium hö',
-      	x: ILEUM_RIGHT_FIRST_BOX_POS_X - 62,
-      	y: ILEUM_FIRST_BOX_POS_Y - HEADER_SPACE_Y,
-      	style: HEADER_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Ilium vä',
-      	x: ILEUM_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: ILEUM_FIRST_BOX_POS_Y - HEADER_SPACE_Y,
-      	style: HEADER_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Sakrum hö',
-      	x: SAKRUM_RIGHT_FIRST_BOX_POS_X - 73,
-      	y: SAKRUM_FIRST_BOX_POS_Y,
-      	style: HEADER_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Sakrum vä',
-      	x: SAKRUM_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: SAKRUM_FIRST_BOX_POS_Y,
-      	style: HEADER_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Si-led hö',
-      	x: SILED_RIGHT_FIRST_BOX_POS_X - 61,
-      	y: SILED_FIRST_BOX_POS_Y,
-      	style: HEADER_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Si-led vä',
-      	x: SILED_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: SILED_FIRST_BOX_POS_Y,
-      	style: HEADER_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'OS pubis hö',
-      	x: OSPUBIS_RIGHT_FIRST_BOX_POS_X - 81,
-      	y: OSPUBIS_FIRST_BOX_POS_Y,
-      	style: HEADER_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'OS pubis vä',
-      	x: OSPUBIS_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: OSPUBIS_FIRST_BOX_POS_Y,
-      	style: HEADER_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Symfys',
-      	x: SYMFYS_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: SYMFYS_FIRST_BOX_POS_Y,
-      	style: HEADER_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Sakrum',
-      	x: SAKRUM_MIDDLE_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y - HEADER_SPACE_Y,
-      	style: HEADER_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Ringskada instabil',
-      	x: ILEUM_RIGHT_FIRST_BOX_POS_X - 111,
-      	y: ILEUM_FIRST_BOX_POS_Y + EXTRA_LABEL_SPACE_Y,
-      	style: LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Ringskada instabil',
-      	x: ILEUM_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: ILEUM_FIRST_BOX_POS_Y + EXTRA_LABEL_SPACE_Y,
-      	style: LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Ala stabil',
-      	x: ILEUM_RIGHT_FIRST_BOX_POS_X - 59,
-      	y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 1 + EXTRA_LABEL_SPACE_Y),
-      	style: LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Ala stabil',
-      	x: ILEUM_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 1 + EXTRA_LABEL_SPACE_Y),
-      	style: LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Spinopelvin dissociation',
-      	x: SAKRUM_MIDDLE_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + EXTRA_LABEL_SPACE_Y,
-      	style: LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Transversell',
-      	x: SAKRUM_MIDDLE_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 1 + EXTRA_LABEL_SPACE_Y),
-      	style: LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Coccyx',
-      	x: SAKRUM_MIDDLE_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 2 + EXTRA_LABEL_SPACE_Y),
-      	style: LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Dislocerad',
-      	x: ILEUM_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 2 + EXTRA_LABEL_SPACE_Y),
-      	style: DISLOCATED_LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Dislocerad',
-      	x: ILEUM_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X,
-      	y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 2 + EXTRA_LABEL_SPACE_Y),
-      	style: DISLOCATED_LABEL_STYLE
-      },
-      {
-      	xtype: 'label',
-      	text: 'Dislocerad',
-      	x: SILED_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: SILED_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
-      	style: DISLOCATED_LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Dislocerad',
-      	x: SILED_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X,
-      	y: SILED_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
-      	style: DISLOCATED_LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Dislocerad',
-      	x: SAKRUM_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: SAKRUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
-      	style: DISLOCATED_LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Dislocerad',
-      	x: SAKRUM_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X,
-      	y: SAKRUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
-      	style: DISLOCATED_LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Dislocerad',
-      	x: OSPUBIS_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X,
-      	y: OSPUBIS_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
-      	style: DISLOCATED_LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Dislocerad',
-      	x: OSPUBIS_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: OSPUBIS_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
-      	style: DISLOCATED_LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Dislocerad',
-      	x: SYMFYS_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: SYMFYS_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
-      	style: DISLOCATED_LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	text: 'Dislocerad',
-      	x: SAKRUM_MIDDLE_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
-      	y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 3 + EXTRA_LABEL_SPACE_Y),
-      	style: DISLOCATED_LABEL_STYLE
-      }, {
-      	xtype: 'label',
-      	html: 'Börja alltid med att sätta ett kryss för varje skadekomponent samt ytterligare kryss<br/>om dislocerad. Flera kryss är tillåtna. Gå sedan vidare genom att klicka på Nästa. Om frakturen är protesnära klicka istället på knappen Protesnära fraktur för den aktuella sidan.<br/><b>OBS! Acetabulumengagerande frakturer klassificeras i Acetabulum-modulen.</b>',
-      	x: 20,
-      	y: 535,
-      	style: DESC_STYLE
-      }, {
-      	xtype: 'button',
-      	name: 'prosthesisRight',
-      	text: 'Protesnära fraktur Hö',
-      	disabled: true,
-      	style: 'background-color:#B80000 ;',
-      	x: 10,
-      	y: 430,
-      	handler: function () {
-      		aoImagesNavigationHandler(null, '61', '1', PROSTHESIS_FRACTURE, false);
-      	}
-      },
-        {
-        	xtype: 'button',
-        	name: 'prosthesisLeft',
-        	text: 'Protesnära fraktur Vä',
-        	style: 'background-color:#B80000 ;',
-        	disabled: true,
-        	x: 445,
-        	y: 430,
-        	handler: function () {
-        		aoImagesNavigationHandler(null, '61', '2', PROSTHESIS_FRACTURE, false);
-        	}
-        }
-			]
-		});
-	}
-
-	function createPelvisRingInjuryForm(aFormName, aEventID, socialNumber, isCrossBorder, isReduced, unitName) {
-		return Ext.create('Ext.form.Panel', {
-			socialNumber: socialNumber,
-			isReduced: isReduced,
-			isCrossBorder: isCrossBorder,
-			unitName: unitName,
-			layout: 'absolute',
-			style: 'margin-bottom: 10px; margin-left: 20px;',
-			cls: 'FormPanelInYellow',
-			collapsible: true,
-			border: false,
-			titleCollapse: true,
-			collapsed: true,
-			animCollapse: false,
-			iconCls: 'FormPanelInYellowIcon',
-			frame: true,
-			height: 115,
-			width: 680,
-			listeners: {
-				afterrender: function (form) {
-					var icd10Field = getCmpByName('FxP_ICD10', form);
-					var sidaField = getCmpByName('FxP_Side', form);
-					if (icd10Field == null) {
-						return;
-					}
-					form.setTitle(RINGSKADA_TEXT + ' ' + icd10Field.getValue() + ' ' + getFractureFormSideTitleText(form, sidaField.getValue()) + addCrossBorderTitleInfo(form));
-				}
-			},
-			tools: [createRegisterInfoButton(aEventID)],
-			items: [, {
-				xtype: 'textfield',
-				fieldLabel: 'EventID',
-				name: 'EventID',
-				submitValue: false,
-				hideLabel: true,
-				hidden: true,
-				value: aEventID
-			}, {
-				xtype: 'textfield',
-				name: 'FxP_ICD10',
-				readOnly: true,
-				x: 381,
-				y: 29,
-				width: 98,
-				listeners: {
-					render: function (c) {
-						setICD10TextToolTip(c.ownerCt, c);
-						setICD10TextToolTip(c.ownerCt, c.ownerCt.header);
-					}
-				}
-			},
-				{
-					xtype: 'combo',
-					name: 'FxP_Side',
-					displayField: 'ValueName',
-					store: createSelectValueStore(4051),
-					valueField: 'ValueCode',
-					width: 100,
-					mode: 'local',
-					x: 271,
-					y: 29,
-					readOnly: true
-				}
-			],
-			api: {
-				submit: FormManagement.SubmitRegistration
-			}
-		});
-
-	}
-
-	function createBackFractureSubPanel(aEventID, socialNumber, isCrossBorder, isReduced, unitName) {
-		return Ext.create('Ext.form.Panel', {
-			isReduced: isReduced,
-			isCrossBorder: isCrossBorder,
-			unitName: unitName,
-			socialNumber: socialNumber,
-			layout: 'absolute',
-			style: 'margin-bottom: 10px; margin-left: 20px;',
-			cls: 'FormPanelInYellow',
-			collapsible: true,
-			border: false,
-			titleCollapse: true,
-			collapsed: true,
-			animCollapse: false,
-			iconCls: 'FormPanelInYellowIcon',
-			frame: true,
-			height: 115,
-			width: 680,
-			listeners: {
-				afterrender: function (form) {
-					var icd10Field = getCmpByName('FxS_ICD10', form);
-
-					if (icd10Field == null) {
-						return;
-					}
-					form.setTitle(BACK_SUBFRACTURE_TEXT + ' ' + icd10Field.getValue() + addCrossBorderTitleInfo(form));
-				}
-			},
-			tools: [createRegisterInfoButton(aEventID)],
-			items: [{
-				xtype: 'label',
-				text: 'Diagnos (ICD-10):',
-				name: 'lbl_fxs_icd10',
-				x: 10,
-				y: 10
-			}, {
-				xtype: 'textfield',
-				fieldLabel: 'EventID',
-				name: 'EventID',
-				submitValue: false,
-				hideLabel: true,
-				hidden: true,
-				value: aEventID
-			}, {
-				xtype: 'textfield',
-				name: 'FxS_ICD10',
-				readOnly: true,
-				x: 10,
-				y: 29,
-				width: 98,
-				listeners: {
-					render: function (c) {
-						setICD10TextToolTip(c.ownerCt, c);
-						setICD10TextToolTip(c.ownerCt, c.ownerCt.header);
-					}
-				}
-			}, {
-				xtype: 'datefield',
-				name: 'FxS_RegDat',
-				fieldLabel: 'RegDat',
-				format: 'Y-m-d',
-				altFormats: "Ymd|ymd",
-				hidden: true,
-				hideLabel: true
-			}
-			],
-			api: {
-				submit: FormManagement.SubmitRegistration
-			}
-		});
-
-
-	}
-	
-	function clone(obj) {
-		if (obj == null || typeof (obj) != 'object')
-			return obj;
-		var temp = obj.constructor();
-		for (var key in obj)
-			temp[key] = clone(obj[key]);
-		return temp;
-	}
-	
-	function compareMenuItems(a, b) {
-		if (a.getValue() < b.getValue()) {
-			return -1;
-		}
-		if (a.getValue() > b.getValue()) {
-			return 1;
-		}
-		return 0;
-	}
-	
-	function PelvisRingInjuryFormHandler(aRingInjuryForm) {
-		var comboDislocerad = getCmpByName('FxP_Disloc', aRingInjuryForm);
-		comboDislocerad.store.loadData(app.myRegisterdomains['4146'].DomainValues);
-		var comboSida = getCmpByName('FxP_Side', aRingInjuryForm);
-		comboSida.store.loadData(app.myRegisterdomains['4051'].DomainValues);
-	}
-	
-	function createSkeletonWindow(aBody) {
-		var n = 0;
-		var tplSkeleton;
-		var tplHandSkeleton;
-		if (1) {
-			tplSkeleton = new Ext.XTemplate(
-				'<img src="{image}"> ',
-				'<div class="skeleton SevenV"><a onmouseover="onHover(this, \'SevenV\' )" onmouseout="onUnHover(this, \'SevenV\')" onclick="onDetermineIfChildFracture(null,7,2,null,false)"></a></div>',
-				'<div class="skeleton EightV"><a onmouseover="onHover(this, \'EightV\' )" onmouseout="onUnHover(this, \'EightV\')" onclick="onDetermineIfChildFracture(null,8,2,null,false)"></a></div>',
-				'<div class="skeleton NineV"><a onmouseover="onHover(this, \'NineV\' )" onmouseout="onUnHover(this, \'NineV\')" onclick="onDetermineIfChildFracture(null,9,2,null,false)"></a></div>',
-				'<div class="skeleton TenV"><a onmouseover="onHover(this, \'TenV\' )" onmouseout="onUnHover(this, \'TenV\')" onclick="onDetermineIfChildFracture(null,10,2,null,false)"></a></div>',
-				'<div class="skeleton ElevenV"><a onmouseover="onHover(this, \'ElevenV\' )" onmouseout="onUnHover(this, \'ElevenV\')" onclick="onDetermineIfChildFracture(null,11,2,null,false)"></a></div>',
-				'<div class="skeleton TwelveV"><a onmouseover="onHover(this, \'TwelveV\' )" onmouseout="onUnHover(this, \'TwelveV\')" onclick="onDetermineIfChildFracture(null,12,2,null,false)"></a></div>',
-				'<div class="skeleton ThirteenV"><a onmouseover="onHover(this, \'ThirteenV\' )" onmouseout="onUnHover(this, \'ThirteenV\')" onclick="onDetermineIfChildFracture(null,13,2,null,false)"></a></div>',
-				'<div class="skeleton TwentyoneV"><a onmouseover="onHover(this, \'TwentyoneV\' )" onmouseout="onUnHover(this, \'TwentyoneV\')" onclick="onDetermineIfChildFracture(null,21,2,null,false)"></a></div>',
-				'<div class="skeleton TwentytwoV"><a onmouseover="onHover(this, \'TwentytwoV\' )" onmouseout="onUnHover(this, \'TwentytwoV\')" onclick="onDetermineIfChildFracture(null,22,2,null,false)"></a></div>',
-				'<div class="skeleton TwentythreeV"><a onmouseover="onHover(this, \'TwentythreeV\' )" onmouseout="onUnHover(this, \'TwentythreeV\')" onclick="onDetermineIfChildFracture(null,23,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtyoneV"><a onmouseover="onHover(this, \'ThirtyoneV\' )" onmouseout="onUnHover(this, \'ThirtyoneV\')" onclick="onDetermineIfChildFracture(null,31,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtytwoV"><a onmouseover="onHover(this, \'ThirtytwoV\' )" onmouseout="onUnHover(this, \'ThirtytwoV\')" onclick="onDetermineIfChildFracture(null,32,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtythreeV"><a onmouseover="onHover(this, \'ThirtythreeV\' )" onmouseout="onUnHover(this, \'ThirtythreeV\')" onclick="onDetermineIfChildFracture(null,33,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtyFourV"><a onmouseover="onHover(this, \'ThirtyFourV\' )" onmouseout="onUnHover(this, \'ThirtyFourV\')" onclick="onDetermineIfChildFracture(null,34,2,null,false)"></a></div>',
-				'<div class="skeleton FortyoneV"><a onmouseover="onHover(this, \'FortyoneV\' )" onmouseout="onUnHover(this, \'FortyoneV\')" onclick="onDetermineIfChildFracture(null,41,2,null,false)"></a></div>',
-				'<div class="skeleton FortytwoV"><a onmouseover="onHover(this, \'FortytwoV\' )" onmouseout="onUnHover(this, \'FortytwoV\')" onclick="onDetermineIfChildFracture(null,42,2,null,false)"></a></div>',
-				'<div class="skeleton FortythreeV"><a onmouseover="onHover(this, \'FortythreeV\' )" onmouseout="onUnHover(this, \'FortythreeV\')" onclick="onDetermineIfChildFracture(null,43,2,null,false)"></a></div>',
-				'<div class="skeleton FortyfourV"><a onmouseover="onHover(this, \'FortyfourV\' )" onmouseout="onUnHover(this, \'FortyfourV\')" onclick="onDetermineIfChildFracture(null,44,2,null,false)"></a></div>',
-				'<div class="skeleton SixtyTwoV"><a onmouseover="onHover(this, \'SixtyTwoV\' )" onmouseout="onUnHover(this, \'SixtyTwoV\')" onclick="onDetermineIfChildFracture(null,62,2,null,false)"></a></div>',
-				'<div class="skeleton SevenH"><a onmouseover="onHover(this, \'SevenH\' )" onmouseout="onUnHover(this, \'SevenH\')" onclick="onDetermineIfChildFracture(null,7,1,null,false)"></a></div>',
-				'<div class="skeleton EightH"><a onmouseover="onHover(this, \'EightH\' )" onmouseout="onUnHover(this, \'EightH\')" onclick="onDetermineIfChildFracture(null,8,1,null,false)"></a></div>',
-				'<div class="skeleton NineH"><a onmouseover="onHover(this, \'NineH\' )" onmouseout="onUnHover(this, \'NineH\')" onclick="onDetermineIfChildFracture(null,9,1,null,false)"></a></div>',
-				'<div class="skeleton TenH"><a onmouseover="onHover(this, \'TenH\' )" onmouseout="onUnHover(this, \'TenH\')" onclick="onDetermineIfChildFracture(null,10,1,null,false)"></a></div>',
-				'<div class="skeleton ElevenH"><a onmouseover="onHover(this, \'ElevenH\' )" onmouseout="onUnHover(this, \'ElevenH\')" onclick="onDetermineIfChildFracture(null,11,1,null,false)"></a></div>',
-				'<div class="skeleton TwelveH"><a onmouseover="onHover(this, \'TwelveH\' )" onmouseout="onUnHover(this, \'TwelveH\')" onclick="onDetermineIfChildFracture(null,12,1,null,false)"></a></div>',
-				'<div class="skeleton ThirteenH"><a onmouseover="onHover(this, \'ThirteenH\' )" onmouseout="onUnHover(this, \'ThirteenH\')" onclick="onDetermineIfChildFracture(null,13,1,null,false)"></a></div>',
-				'<div class="skeleton TwentyoneH"><a onmouseover="onHover(this, \'TwentyoneH\' )" onmouseout="onUnHover(this, \'TwentyoneH\')" onclick="onDetermineIfChildFracture(null,21,1,null,false)"></a></div>',
-				'<div class="skeleton TwentytwoH"><a onmouseover="onHover(this, \'TwentytwoH\' )" onmouseout="onUnHover(this, \'TwentytwoH\')" onclick="onDetermineIfChildFracture(null,22,1,null,false)"></a></div>',
-				'<div class="skeleton TwentythreeH"><a onmouseover="onHover(this, \'TwentythreeH\' )" onmouseout="onUnHover(this, \'TwentythreeH\')" onclick="onDetermineIfChildFracture(null,23,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtyoneH"><a onmouseover="onHover(this, \'ThirtyoneH\' )" onmouseout="onUnHover(this, \'ThirtyoneH\')" onclick="onDetermineIfChildFracture(null,31,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtytwoH"><a onmouseover="onHover(this, \'ThirtytwoH\' )" onmouseout="onUnHover(this, \'ThirtytwoH\')" onclick="onDetermineIfChildFracture(null,32,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtythreeH"><a onmouseover="onHover(this, \'ThirtythreeH\' )" onmouseout="onUnHover(this, \'ThirtythreeH\')" onclick="onDetermineIfChildFracture(null,33,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtyFourH"><a onmouseover="onHover(this, \'ThirtyFourH\' )" onmouseout="onUnHover(this, \'ThirtyFourH\')" onclick="onDetermineIfChildFracture(null,34,1,null,false)"></a></div>',
-				'<div class="skeleton FortyoneH"><a onmouseover="onHover(this, \'FortyoneH\' )" onmouseout="onUnHover(this, \'FortyoneH\')" onclick="onDetermineIfChildFracture(null,41,1,null,false)"></a></div>',
-				'<div class="skeleton FortytwoH"><a onmouseover="onHover(this, \'FortytwoH\' )" onmouseout="onUnHover(this, \'FortytwoH\')"  onclick="onDetermineIfChildFracture(null,42,1,null,false)"></a></div>',
-				'<div class="skeleton FortythreeH"><a onmouseover="onHover(this, \'FortythreeH\' )" onmouseout="onUnHover(this, \'FortythreeH\')" onclick="onDetermineIfChildFracture(null,43,1,null,false)"></a></div>',
-				'<div class="skeleton FortyfourH"><a onmouseover="onHover(this, \'FortyfourH\' )" onmouseout="onUnHover(this, \'FortyfourH\')"  onclick="onDetermineIfChildFracture(null,44,1,null,false)"></a></div>',
-				'<div class="skeleton SixtyTwoH"><a onmouseover="onHover(this, \'SixtyTwoH\' )" onmouseout="onUnHover(this, \'SixtyTwoH\')" onclick="onDetermineIfChildFracture(null,62,1,null,false)"></a></div>',
-				'<div class="skeleton SixtyOne"><a onmouseover="onHover(this, \'SixtyOne\' )" onmouseout="onUnHover(this, \'SixtyOne\')" onclick="onDetermineIfChildFracture(null,61,0,null,false)"></a></div>',
-                '<div title="C0-C2" class="skeleton Hundred"><a onmouseover="onHover(this, \'Hundred\' )" onmouseout="onUnHover(this, \'Hundred\')" onclick="onDetermineIfChildFracture(null,100,3,null,false)"></a></div>',
-                '<div title="C3-T1" class="skeleton HundredOne"><a onmouseover="onHover(this, \'HundredOne\' )" onmouseout="onUnHover(this, \'HundredOne\')" onclick="onDetermineIfChildFracture(null,101,3,null,false)"></a></div>',
-                '<div title="T2-T10" class="skeleton HundredTwo"><a onmouseover="onHover(this, \'HundredTwo\' )" onmouseout="onUnHover(this, \'HundredTwo\')" onclick="onDetermineIfChildFracture(null,102,3,null,false)"></a></div>',
-                '<div title="T11-L5" class="skeleton HundredThree"><a onmouseover="onHover(this, \'HundredThree\' )" onmouseout="onUnHover(this, \'HundredThree\')" onclick="onDetermineIfChildFracture(null,103,3,null,false)"></a></div>'
-			);
-		} else {
-			tplSkeleton = new Ext.XTemplate(
-				'<img src="{image}"> ',
-				'<div class="skeleton SevenV"><a onmouseover="onHover(this, \'SevenV\' )" onmouseout="onUnHover(this, \'SevenV\')" onclick="onDetermineIfChildFracture(null,7,2,null,false)"></a></div>',
-				'<div class="skeleton EightV"><a onmouseover="onHover(this, \'EightV\' )" onmouseout="onUnHover(this, \'EightV\')" onclick="onDetermineIfChildFracture(null,8,2,null,false)"></a></div>',
-				'<div class="skeleton NineV"><a onmouseover="onHover(this, \'NineV\' )" onmouseout="onUnHover(this, \'NineV\')" onclick="onDetermineIfChildFracture(null,9,2,null,false)"></a></div>',
-				'<div class="skeleton TenV"><a onmouseover="onHover(this, \'TenV\' )" onmouseout="onUnHover(this, \'TenV\')" onclick="onDetermineIfChildFracture(null,10,2,null,false)"></a></div>',
-				'<div class="skeleton ElevenV"><a onmouseover="onHover(this, \'ElevenV\' )" onmouseout="onUnHover(this, \'ElevenV\')" onclick="onDetermineIfChildFracture(null,11,2,null,false)"></a></div>',
-				'<div class="skeleton TwelveV"><a onmouseover="onHover(this, \'TwelveV\' )" onmouseout="onUnHover(this, \'TwelveV\')" onclick="onDetermineIfChildFracture(null,12,2,null,false)"></a></div>',
-				'<div class="skeleton ThirteenV"><a onmouseover="onHover(this, \'ThirteenV\' )" onmouseout="onUnHover(this, \'ThirteenV\')" onclick="onDetermineIfChildFracture(null,13,2,null,false)"></a></div>',
-				'<div class="skeleton TwentyoneV"><a onmouseover="onHover(this, \'TwentyoneV\' )" onmouseout="onUnHover(this, \'TwentyoneV\')" onclick="onDetermineIfChildFracture(null,21,2,null,false)"></a></div>',
-				'<div class="skeleton TwentytwoV"><a onmouseover="onHover(this, \'TwentytwoV\' )" onmouseout="onUnHover(this, \'TwentytwoV\')" onclick="onDetermineIfChildFracture(null,22,2,null,false)"></a></div>',
-				'<div class="skeleton TwentythreeV"><a onmouseover="onHover(this, \'TwentythreeV\' )" onmouseout="onUnHover(this, \'TwentythreeV\')" onclick="onDetermineIfChildFracture(null,23,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtyoneV"><a onmouseover="onHover(this, \'ThirtyoneV\' )" onmouseout="onUnHover(this, \'ThirtyoneV\')" onclick="onDetermineIfChildFracture(null,31,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtytwoV"><a onmouseover="onHover(this, \'ThirtytwoV\' )" onmouseout="onUnHover(this, \'ThirtytwoV\')" onclick="onDetermineIfChildFracture(null,32,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtythreeV"><a onmouseover="onHover(this, \'ThirtythreeV\' )" onmouseout="onUnHover(this, \'ThirtythreeV\')" onclick="onDetermineIfChildFracture(null,33,2,null,false)"></a></div>',
-				'<div class="skeleton ThirtyFourV"><a onmouseover="onHover(this, \'ThirtyFourV\' )" onmouseout="onUnHover(this, \'ThirtyFourV\')" onclick="onDetermineIfChildFracture(null,34,2,null,false)"></a></div>',
-				'<div class="skeleton FortyoneV"><a onmouseover="onHover(this, \'FortyoneV\' )" onmouseout="onUnHover(this, \'FortyoneV\')" onclick="onDetermineIfChildFracture(null,41,2,null,false)"></a></div>',
-				'<div class="skeleton FortytwoV"><a onmouseover="onHover(this, \'FortytwoV\' )" onmouseout="onUnHover(this, \'FortytwoV\')" onclick="onDetermineIfChildFracture(null,42,2,null,false)"></a></div>',
-				'<div class="skeleton FortythreeV"><a onmouseover="onHover(this, \'FortythreeV\' )" onmouseout="onUnHover(this, \'FortythreeV\')" onclick="onDetermineIfChildFracture(null,43,2,null,false)"></a></div>',
-				'<div class="skeleton FortyfourV"><a onmouseover="onHover(this, \'FortyfourV\' )" onmouseout="onUnHover(this, \'FortyfourV\')" onclick="onDetermineIfChildFracture(null,44,2,null,false)"></a></div>',
-				'<div class="skeleton SixtyTwoV"><a onmouseover="onHover(this, \'SixtyTwoV\' )" onmouseout="onUnHover(this, \'SixtyTwoV\')" onclick="onDetermineIfChildFracture(null,62,2,null,false)"></a></div>',
-				'<div class="skeleton SevenH"><a onmouseover="onHover(this, \'SevenH\' )" onmouseout="onUnHover(this, \'SevenH\')" onclick="onDetermineIfChildFracture(null,7,1,null,false)"></a></div>',
-				'<div class="skeleton EightH"><a onmouseover="onHover(this, \'EightH\' )" onmouseout="onUnHover(this, \'EightH\')" onclick="onDetermineIfChildFracture(null,8,1,null,false)"></a></div>',
-				'<div class="skeleton NineH"><a onmouseover="onHover(this, \'NineH\' )" onmouseout="onUnHover(this, \'NineH\')" onclick="onDetermineIfChildFracture(null,9,1,null,false)"></a></div>',
-				'<div class="skeleton TenH"><a onmouseover="onHover(this, \'TenH\' )" onmouseout="onUnHover(this, \'TenH\')" onclick="onDetermineIfChildFracture(null,10,1,null,false)"></a></div>',
-				'<div class="skeleton ElevenH"><a onmouseover="onHover(this, \'ElevenH\' )" onmouseout="onUnHover(this, \'ElevenH\')" onclick="onDetermineIfChildFracture(null,11,1,null,false)"></a></div>',
-				'<div class="skeleton TwelveH"><a onmouseover="onHover(this, \'TwelveH\' )" onmouseout="onUnHover(this, \'TwelveH\')" onclick="onDetermineIfChildFracture(null,12,1,null,false)"></a></div>',
-				'<div class="skeleton ThirteenH"><a onmouseover="onHover(this, \'ThirteenH\' )" onmouseout="onUnHover(this, \'ThirteenH\')" onclick="onDetermineIfChildFracture(null,13,1,null,false)"></a></div>',
-				'<div class="skeleton TwentyoneH"><a onmouseover="onHover(this, \'TwentyoneH\' )" onmouseout="onUnHover(this, \'TwentyoneH\')" onclick="onDetermineIfChildFracture(null,21,1,null,false)"></a></div>',
-				'<div class="skeleton TwentytwoH"><a onmouseover="onHover(this, \'TwentytwoH\' )" onmouseout="onUnHover(this, \'TwentytwoH\')" onclick="onDetermineIfChildFracture(null,22,1,null,false)"></a></div>',
-				'<div class="skeleton TwentythreeH"><a onmouseover="onHover(this, \'TwentythreeH\' )" onmouseout="onUnHover(this, \'TwentythreeH\')" onclick="onDetermineIfChildFracture(null,23,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtyoneH"><a onmouseover="onHover(this, \'ThirtyoneH\' )" onmouseout="onUnHover(this, \'ThirtyoneH\')" onclick="onDetermineIfChildFracture(null,31,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtytwoH"><a onmouseover="onHover(this, \'ThirtytwoH\' )" onmouseout="onUnHover(this, \'ThirtytwoH\')" onclick="onDetermineIfChildFracture(null,32,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtythreeH"><a onmouseover="onHover(this, \'ThirtythreeH\' )" onmouseout="onUnHover(this, \'ThirtythreeH\')" onclick="onDetermineIfChildFracture(null,33,1,null,false)"></a></div>',
-				'<div class="skeleton ThirtyFourH"><a onmouseover="onHover(this, \'ThirtyFourH\' )" onmouseout="onUnHover(this, \'ThirtyFourH\')" onclick="onDetermineIfChildFracture(null,34,1,null,false)"></a></div>',
-				'<div class="skeleton FortyoneH"><a onmouseover="onHover(this, \'FortyoneH\' )" onmouseout="onUnHover(this, \'FortyoneH\')" onclick="onDetermineIfChildFracture(null,41,1,null,false)"></a></div>',
-				'<div class="skeleton FortytwoH"><a onmouseover="onHover(this, \'FortytwoH\' )" onmouseout="onUnHover(this, \'FortytwoH\')"  onclick="onDetermineIfChildFracture(null,42,1,null,false)"></a></div>',
-				'<div class="skeleton FortythreeH"><a onmouseover="onHover(this, \'FortythreeH\' )" onmouseout="onUnHover(this, \'FortythreeH\')" onclick="onDetermineIfChildFracture(null,43,1,null,false)"></a></div>',
-				'<div class="skeleton FortyfourH"><a onmouseover="onHover(this, \'FortyfourH\' )" onmouseout="onUnHover(this, \'FortyfourH\')"  onclick="onDetermineIfChildFracture(null,44,1,null,false)"></a></div>',
-				'<div class="skeleton SixtyTwoH"><a onmouseover="onHover(this, \'SixtyTwoH\' )" onmouseout="onUnHover(this, \'SixtyTwoH\')" onclick="onDetermineIfChildFracture(null,62,1,null,false)"></a></div>',
-				'<div class="skeleton SixtyOne"><a onmouseover="onHover(this, \'SixtyOne\' )" onmouseout="onUnHover(this, \'SixtyOne\')" onclick="onDetermineIfChildFracture(null,61,0,null,false)"></a></div>',
-                '<div title="C0-C2" class="skeleton Hundred"><a onmouseover="onHover(this, \'Hundred\' )" onmouseout="onUnHover(this, \'Hundred\')" onclick="onDetermineIfChildFracture(null,100,3,null,false)"></a></div>',
-                '<div title="C3-T1" class="skeleton HundredOne"><a onmouseover="onHover(this, \'HundredOne\' )" onmouseout="onUnHover(this, \'HundredOne\')" onclick="onDetermineIfChildFracture(null,101,3,null,false)"></a></div>',
-                '<div title="T2-T10" class="skeleton HundredTwo"><a onmouseover="onHover(this, \'HundredTwo\' )" onmouseout="onUnHover(this, \'HundredTwo\')" onclick="onDetermineIfChildFracture(null,102,3,null,false)"></a></div>',
-                '<div title="T11-L5" class="skeleton HundredThree"><a onmouseover="onHover(this, \'HundredThree\' )" onmouseout="onUnHover(this, \'HundredThree\')" onclick="onDetermineIfChildFracture(null,103,3,null,false)"></a></div>'
-			);
-		}
-		tplHandSkeletonV = new Ext.XTemplate(
-				'<div id="container" style="display:block;background-image:url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-V.png);" width="591" height="500">',
-				'<img src="https://stratum.blob.core.windows.net/sfr/Images/s.gif" width="591" height="500" />',
-				'<img src="https://stratum.blob.core.windows.net/sfr/Images/s.gif" style="position:absolute;top:0px; left:0px;z-index:2;" width="591" height="500" class="map-trans" usemap="#handMap" />',
-				'<img onload="onLoadHandImgMini()"  src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-75P-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:423px; left:345px;z-index:0;visibility:hidden;" id="img75P" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-75T-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:404px; left:334px;z-index:0;visibility:hidden;" id="img75T" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-71-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:438px; left:299px;z-index:0;visibility:hidden;" id="img71" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-72-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:419px; left:253px;z-index:0;visibility:hidden;" id="img72" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-76T2-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:392px; left:266px;z-index:0;visibility:hidden;" id="img76T2" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-73-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:388px; left:282px;z-index:0;visibility:hidden;" id="img73" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-74-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:380px; left:319px;z-index:0;visibility:hidden;" id="img74" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-76T1-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:388px; left:231px;z-index:0;visibility:hidden;" id="img76T1" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78N1-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:128px; left:239px;z-index:0;visibility:hidden;" id="img78N1" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78M1-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:123px; left:289px;z-index:0;visibility:hidden;" id="img78M1" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78R1-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:148px; left:338px;z-index:0;visibility:hidden;" id="img78R1" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78L1-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:200px; left:386px;z-index:0;visibility:hidden;" id="img78L1" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77N-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:229px; left:244px;z-index:0;visibility:hidden;" id="img77N" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77M-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:231px; left:286px;z-index:0;visibility:hidden;" id="img77M" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77R-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:244px; left:312px;z-index:0;visibility:hidden;" id="img77R" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77L-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:270px; left:337px;z-index:0;visibility:hidden;" id="img77L" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78N2-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:72px; left:229px;z-index:0;visibility:hidden;" id="img78N2" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78M2-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:55px; left:289px;z-index:0;visibility:hidden;" id="img78M2" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78R2-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:78px; left:348px;z-index:0;visibility:hidden;" id="img78R2" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78L2-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:139px; left:412px;z-index:0;visibility:hidden;" id="img78L2" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78N3-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:34px; left:233px;z-index:0;visibility:hidden;" id="img78N3" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78M3-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:5px; left:290px;z-index:0;visibility:hidden;" id="img78M3" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78R3-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:33px; left:360px;z-index:0;visibility:hidden;" id="img78R3" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78L3-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:108px; left:417px;z-index:0;visibility:hidden;" id="img78L3" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78T2-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:205px; left:100px;z-index:0;visibility:hidden;" id="img78T2" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78T1-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:250px; left:124px;z-index:0;visibility:hidden;" id="img78T1" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77T-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:310px; left:159px;z-index:0;visibility:hidden;" id="img77T" />',
-				'</div>',
-				'<map id="handMap" name="handMap">',
-				'<area title="Pisiforme" shape="polygon" coords="339,437,347,451,371,451,371,419,358,419" onmouseover="onHandSkeletonHover(\'img75P\')" onmouseout="onHandSkeletonUnhover(\'img75P\')" onclick="aoImagesNavigationHandler(null,\'75P\',2,null,true)"/>',
-				'<area title="Triquetrum" shape="polygon" coords="331,431,338,436,353,417,380,417,380,396,354,396" onmouseover="onHandSkeletonHover(\'img75T\')" onmouseout="onHandSkeletonUnhover(\'img75T\')" onclick="aoImagesNavigationHandler(null,\'75T\',2,null,true)"/>',
-				'<area title="Lunatum" shape="polygon" coords="298,449,308,464,348,464,328,435" onmouseover="onHandSkeletonHover(\'img71\')" onmouseout="onHandSkeletonUnhover(\'img71\')" onclick="aoImagesNavigationHandler(null,\'71\',2,null,true)"/>',
-				'<area title="Scaphoideum" shape="polygon" coords="245,438,297,463,297,442,279,415" onmouseover="onHandSkeletonHover(\'img72\')" onmouseout="onHandSkeletonUnhover(\'img72\')" onclick="aoImagesNavigationHandler(null,\'72\',2,null,true)"/>',
-				'<area title="Trapezoideum" shape="polygon" coords="266,399,279,415,287,410,290,390,269,390" onmouseover="onHandSkeletonHover(\'img76T2\')" onmouseout="onHandSkeletonUnhover(\'img76T2\')" onclick="aoImagesNavigationHandler(null,\'76T2\',2,null,true)"/>',
-				'<area title="Capitatum" shape="polygon" coords="281,417,298,443,320,431,311,382" onmouseover="onHandSkeletonHover(\'img73\')" onmouseout="onHandSkeletonUnhover(\'img73\')" onclick="aoImagesNavigationHandler(null,\'73\',2,null,true)"/>',
-				'<area title="Hamatum" shape="polygon" coords="319,395,324,432,353,393,337,376" onmouseover="onHandSkeletonHover(\'img74\')" onmouseout="onHandSkeletonUnhover(\'img74\')" onclick="aoImagesNavigationHandler(null,\'74\',2,null,true)"/>',
-				'<area title="Trapezium" shape="polygon" coords="221,415,247,438,279,416,258,392" onmouseover="onHandSkeletonHover(\'img76T1\')" onmouseout="onHandSkeletonUnhover(\'img76T1\')" onclick="aoImagesNavigationHandler(null,\'76T1\',2,null,true)"/>',
-				'<area title="Metakarpal N" shape="rect" coords="253,235,284,386" onmouseover="onHandSkeletonHover(\'img77N\')" onmouseout="onHandSkeletonUnhover(\'img77N\')" onclick="aoImagesNavigationHandler(null,\'77N\',2,null,true)"/>',
-				'<area title="Metakarpal M" shape="rect" coords="292,235,327,372" onmouseover="onHandSkeletonHover(\'img77M\')" onmouseout="onHandSkeletonUnhover(\'img77M\')" onclick="aoImagesNavigationHandler(null,\'77M\',2,null,true)"/>',
-				'<area title="Metakarpal R" shape="rect" coords="333,247,366,359" onmouseover="onHandSkeletonHover(\'img77R\')" onmouseout="onHandSkeletonUnhover(\'img77R\')" onclick="aoImagesNavigationHandler(null,\'77R\',2,null,true)"/>',
-				'<area title="Metakarpal L" shape="rect" coords="372,270,418,384" onmouseover="onHandSkeletonHover(\'img77L\')" onmouseout="onHandSkeletonUnhover(\'img77L\')" onclick="aoImagesNavigationHandler(null,\'77L\',2,null,true)"/>',
-				'<area title="Proximal falang N" shape="rect" coords="236,134,282,231" onmouseover="onHandSkeletonHover(\'img78N1\')" onmouseout="onHandSkeletonUnhover(\'img78N1\')" onclick="aoImagesNavigationHandler(null,\'78N1\',2,null,true)"/>',
-				'<area title="Proximal falang M" shape="rect" coords="290,124,330,233" onmouseover="onHandSkeletonHover(\'img78M1\')" onmouseout="onHandSkeletonUnhover(\'img78M1\')" onclick="aoImagesNavigationHandler(null,\'78M1\',2,null,true)"/>',
-				'<area title="Proximal falang R" shape="rect" coords="340,145,378,248" onmouseover="onHandSkeletonHover(\'img78R1\')" onmouseout="onHandSkeletonUnhover(\'img78R1\')" onclick="aoImagesNavigationHandler(null,\'78R1\',2,null,true)"/>',
-				'<area title="Proximal falang L" shape="rect" coords="387,195,435,275" onmouseover="onHandSkeletonHover(\'img78L1\')" onmouseout="onHandSkeletonUnhover(\'img78L1\')" onclick="aoImagesNavigationHandler(null,\'78L1\',2,null,true)"/>',
-				'<area title="Mellanfalang N" shape="rect" coords="227,78,282,135" onmouseover="onHandSkeletonHover(\'img78N2\')" onmouseout="onHandSkeletonUnhover(\'img78N2\')" onclick="aoImagesNavigationHandler(null,\'78N2\',2,null,true)"/>',
-				'<area title="Mellanfalang M" shape="rect" coords="290,52,332,121" onmouseover="onHandSkeletonHover(\'img78M2\')" onmouseout="onHandSkeletonUnhover(\'img78M2\')" onclick="aoImagesNavigationHandler(null,\'78M2\',2,null,true)"/>',
-				'<area title="Mellanfalang R" shape="rect" coords="349,77,392,144" onmouseover="onHandSkeletonHover(\'img78R2\')" onmouseout="onHandSkeletonUnhover(\'img78R2\')" onclick="aoImagesNavigationHandler(null,\'78R2\',2,null,true)"/>',
-				'<area title="Mellanfalang L" shape="rect" coords="405,147,450,198" onmouseover="onHandSkeletonHover(\'img78L2\')" onmouseout="onHandSkeletonUnhover(\'img78L2\')" onclick="aoImagesNavigationHandler(null,\'78L2\',2,null,true)"/>',
-				'<area title="Distal falang N" shape="rect" coords="218,37,266,75" onmouseover="onHandSkeletonHover(\'img78N3\')" onmouseout="onHandSkeletonUnhover(\'img78N3\')" onclick="aoImagesNavigationHandler(null,\'78N3\',2,null,true)"/>',
-				'<area title="Distal falang M" shape="rect" coords="291,1,332,52" onmouseover="onHandSkeletonHover(\'img78M3\')" onmouseout="onHandSkeletonUnhover(\'img78M3\')" onclick="aoImagesNavigationHandler(null,\'78M3\',2,null,true)"/>',
-				'<area title="Distal falang R" shape="rect" coords="356,32,392,87" onmouseover="onHandSkeletonHover(\'img78R3\')" onmouseout="onHandSkeletonUnhover(\'img78R3\')" onclick="aoImagesNavigationHandler(null,\'78R3\',2,null,true)"/>',
-				'<area title="Distal falang L" shape="rect" coords="411,109,457,152" onmouseover="onHandSkeletonHover(\'img78L3\')" onmouseout="onHandSkeletonUnhover(\'img78L3\')" onclick="aoImagesNavigationHandler(null,\'78L3\',2,null,true)"/>',
-				'<area title="Distal falang T" shape="rect" coords="76,204,160,251" onmouseover="onHandSkeletonHover(\'img78T2\')" onmouseout="onHandSkeletonUnhover(\'img78T2\')" onclick="aoImagesNavigationHandler(null,\'78T2\',2,null,true)"/>',
-				'<area title="Proximal falang T" shape="rect" coords="114,267,194,316" onmouseover="onHandSkeletonHover(\'img78T1\')" onmouseout="onHandSkeletonUnhover(\'img78T1\')" onclick="aoImagesNavigationHandler(null,\'78T1\',2,null,true)"/>',
-				'<area title="Metakarpal T" shape="rect" coords="160,327,248,396" onmouseover="onHandSkeletonHover(\'img77T\')" onmouseout="onHandSkeletonUnhover(\'img77T\')" onclick="aoImagesNavigationHandler(null,\'77T\',2,null,true)"/>',
-				'</map>'
-			);
-
-		tplHandSkeletonH = new Ext.XTemplate(
-				'<div id="container" style="display:block;background-image:url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-H.png);" width="591" height="500">',
-				'<img src="https://stratum.blob.core.windows.net/sfr/Images/s.gif" width="591" height="500" />',
-				'<img src="https://stratum.blob.core.windows.net/sfr/Images/s.gif" style="position:absolute;top:0px; left:0px;z-index:2;" width="591" height="500" class="map-trans" usemap="#handMap" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-75P-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:423px; left:208px;z-index:0;visibility:hidden;" id="img75P" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-75T-H-mini.png?_' + (new Date().getTime()) + '"  style="position:absolute;top:404px; left:208px;z-index:0;visibility:hidden;" id="img75T" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-71-H-mini.png?_' + (new Date().getTime()) + '"  style="position:absolute;top:438px; left:230px;z-index:0;visibility:hidden;" id="img71" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-72-H-mini.png?_' + (new Date().getTime()) + '"  style="position:absolute;top:419px; left:271px;z-index:0;visibility:hidden;" id="img72" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-76T2-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:392px; left:288px;z-index:0;visibility:hidden;" id="img76T2" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-73-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:388px; left:255px;z-index:0;visibility:hidden;" id="img73" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-74-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:380px; left:221px;z-index:0;visibility:hidden;" id="img74" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-76T1-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:388px; left:300px;z-index:0;visibility:hidden;" id="img76T1" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78N1-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:128px; left:296px;z-index:0;visibility:hidden;" id="img78N1" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78M1-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:123px; left:251px;z-index:0;visibility:hidden;" id="img78M1" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78R1-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:148px; left:192px;z-index:0;visibility:hidden;" id="img78R1" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78L1-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:200px; left:137px;z-index:0;visibility:hidden;" id="img78L1" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77N-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:229px; left:283px;z-index:0;visibility:hidden;" id="img77N" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77M-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:231px; left:248px;z-index:0;visibility:hidden;" id="img77M" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77R-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:244px; left:203px;z-index:0;visibility:hidden;" id="img77R" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77L-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:270px; left:168px;z-index:0;visibility:hidden;" id="img77L" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78N2-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:72px; left:300px;z-index:0;visibility:hidden;" id="img78N2" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78M2-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:55px; left:246px;z-index:0;visibility:hidden;" id="img78M2" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78R2-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:78px; left:185px;z-index:0;visibility:hidden;" id="img78R2" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78L2-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:139px; left:137px;z-index:0;visibility:hidden;" id="img78L2" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78N3-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:34px; left:310px;z-index:0;visibility:hidden;" id="img78N3" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78M3-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:5px; left:243px;z-index:0;visibility:hidden;" id="img78M3" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78R3-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:33px; left:186px;z-index:0;visibility:hidden;" id="img78R3" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78L3-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:108px; left:127px;z-index:0;visibility:hidden;" id="img78L3" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78T2-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:205px; left:434px;z-index:0;visibility:hidden;" id="img78T2" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78T1-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:250px; left:393px;z-index:0;visibility:hidden;" id="img78T1" />',
-				'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77T-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:310px; left:319px;z-index:0;visibility:hidden;" id="img77T" />',
-				'</div>',
-				'<map id="handMap" name="handMap">',
-				'<area title="Pisiforme" shape="polygon" coords="208,427, 217,447, 237,447, 241,442, 239 ,422" onmouseover="onHandSkeletonHover(\'img75P\')" onmouseout="onHandSkeletonUnhover(\'img75P\')" onclick="aoImagesNavigationHandler(null,\'75P\',1,null,true)"/>',
-				'<area title="Triquetrum" shape="polygon" coords="203,405, 203,418, 221,418, 238,437, 246,431, 217,399" onmouseover="onHandSkeletonHover(\'img75T\')" onmouseout="onHandSkeletonUnhover(\'img75T\')" onclick="aoImagesNavigationHandler(null,\'75T\',1,null,true)"/>',
-				'<area title="Lunatum" shape="polygon" coords="230,465, 271,465, 278,445, 251,435" onmouseover="onHandSkeletonHover(\'img71\')" onmouseout="onHandSkeletonUnhover(\'img71\')" onclick="aoImagesNavigationHandler(null,\'71\',1,null,true)"/>',
-				'<area title="Scaphoideum" shape="polygon" coords="297,416, 289,431, 282,445, 282,470, 332,439" onmouseover="onHandSkeletonHover(\'img72\')" onmouseout="onHandSkeletonUnhover(\'img72\')" onclick="aoImagesNavigationHandler(null,\'72\',1,null,true)"/>',
-				'<area title="Trapezoideum" shape="polygon" coords="287,394, 287,410, 297,415, 315,392" onmouseover="onHandSkeletonHover(\'img76T2\')" onmouseout="onHandSkeletonUnhover(\'img76T2\')" onclick="aoImagesNavigationHandler(null,\'76T2\',1,null,true)"/>',
-				'<area title="Capitatum" shape="polygon" coords="260,397, 257,436, 278,443, 296,416" onmouseover="onHandSkeletonHover(\'img73\')" onmouseout="onHandSkeletonUnhover(\'img73\')" onclick="aoImagesNavigationHandler(null,\'73\',1,null,true)"/>',
-				'<area title="Hamatum" shape="polygon" coords="217,399, 248,430, 259,403, 238,380" onmouseover="onHandSkeletonHover(\'img74\')" onmouseout="onHandSkeletonUnhover(\'img74\')" onclick="aoImagesNavigationHandler(null,\'74\',1,null,true)"/>',
-				'<area title="Trapezium" shape="polygon" coords="320,397, 299,417, 312,429, 335,432, 347,413" onmouseover="onHandSkeletonHover(\'img76T1\')" onmouseout="onHandSkeletonUnhover(\'img76T1\')" onclick="aoImagesNavigationHandler(null,\'76T1\',1,null,true)"/>',
-				'<area title="Metakarpal N" shape="rect" coords="292,235,327,372" onmouseover="onHandSkeletonHover(\'img77N\')" onmouseout="onHandSkeletonUnhover(\'img77N\')" onclick="aoImagesNavigationHandler(null,\'77N\',1,null,true)"/>',
-				'<area title="Metakarpal M" shape="rect" coords="253,235,284,386" onmouseover="onHandSkeletonHover(\'img77M\')" onmouseout="onHandSkeletonUnhover(\'img77M\')" onclick="aoImagesNavigationHandler(null,\'77M\',1,null,true)"/>',
-				'<area title="Metakarpal R" shape="rect" coords="206,246,251,386" onmouseover="onHandSkeletonHover(\'img77R\')" onmouseout="onHandSkeletonUnhover(\'img77R\')" onclick="aoImagesNavigationHandler(null,\'77R\',1,null,true)"/>',
-				'<area title="Metakarpal L" shape="rect" coords="165,286,210,376" onmouseover="onHandSkeletonHover(\'img77L\')" onmouseout="onHandSkeletonUnhover(\'img77L\')" onclick="aoImagesNavigationHandler(null,\'77L\',1,null,true)"/>',
-				'<area title="Proximal falang N" shape="rect" coords="296,132,346,232" onmouseover="onHandSkeletonHover(\'img78N1\')" onmouseout="onHandSkeletonUnhover(\'img78N1\')" onclick="aoImagesNavigationHandler(null,\'78N1\',1,null,true)"/>',
-				'<area title="Proximal falang M" shape="rect" coords="247,131,284,232" onmouseover="onHandSkeletonHover(\'img78M1\')" onmouseout="onHandSkeletonUnhover(\'img78M1\')" onclick="aoImagesNavigationHandler(null,\'78M1\',1,null,true)"/>',
-				'<area title="Proximal falang R" shape="rect" coords="193,148,235,242" onmouseover="onHandSkeletonHover(\'img78R1\')" onmouseout="onHandSkeletonUnhover(\'img78R1\')" onclick="aoImagesNavigationHandler(null,\'78R1\',1,null,true)"/>',
-				'<area title="Proximal falang L" shape="rect" coords="144,197,189,272" onmouseover="onHandSkeletonHover(\'img78L1\')" onmouseout="onHandSkeletonUnhover(\'img78L1\')" onclick="aoImagesNavigationHandler(null,\'78L1\',1,null,true)"/>',
-				'<area title="Mellanfalang N" shape="rect" coords="309,80,346,130" onmouseover="onHandSkeletonHover(\'img78N2\')" onmouseout="onHandSkeletonUnhover(\'img78N2\')" onclick="aoImagesNavigationHandler(null,\'78N2\',1,null,true)"/>',
-				'<area title="Mellanfalang M" shape="rect" coords="248,56,286,122" onmouseover="onHandSkeletonHover(\'img78M2\')" onmouseout="onHandSkeletonUnhover(\'img78M2\')" onclick="aoImagesNavigationHandler(null,\'78M2\',1,null,true)"/>',
-				'<area title="Mellanfalang R" shape="rect" coords="189,87,224 146" onmouseover="onHandSkeletonHover(\'img78R2\')" onmouseout="onHandSkeletonUnhover(\'img78R2\')" onclick="aoImagesNavigationHandler(null,\'78R2\',1,null,true)"/>',
-				'<area title="Mellanfalang L" shape="rect" coords="136,152,169,190" onmouseover="onHandSkeletonHover(\'img78L2\')" onmouseout="onHandSkeletonUnhover(\'img78L2\')" onclick="aoImagesNavigationHandler(null,\'78L2\',1,null,true)"/>',
-				'<area title="Distal falang N" shape="rect" coords="315,37,343,75" onmouseover="onHandSkeletonHover(\'img78N3\')" onmouseout="onHandSkeletonUnhover(\'img78N3\')" onclick="aoImagesNavigationHandler(null,\'78N3\',1,null,true)"/>',
-				'<area title="Distal falang M" shape="rect" coords="246,2,278,47" onmouseover="onHandSkeletonHover(\'img78M3\')" onmouseout="onHandSkeletonUnhover(\'img78M3\')" onclick="aoImagesNavigationHandler(null,\'78M3\',1,null,true)"/>',
-				'<area title="Distal falang R" shape="rect" coords="186,39,214,79" onmouseover="onHandSkeletonHover(\'img78R3\')" onmouseout="onHandSkeletonUnhover(\'img78R3\')" onclick="aoImagesNavigationHandler(null,\'78R3\',1,null,true)"/>',
-				'<area title="Distal falang L" shape="rect" coords="126,116,159,142" onmouseover="onHandSkeletonHover(\'img78L3\')" onmouseout="onHandSkeletonUnhover(\'img78L3\')" onclick="aoImagesNavigationHandler(null,\'78L3\',1,null,true)"/>',
-				'<area title="Distal falang T" shape="rect" coords="418,201,480,270" onmouseover="onHandSkeletonHover(\'img78T2\')" onmouseout="onHandSkeletonUnhover(\'img78T2\')" onclick="aoImagesNavigationHandler(null,\'78T2\',1,null,true)"/>',
-				'<area title="Proximal falang T" shape="rect" coords="383,248,460,337" onmouseover="onHandSkeletonHover(\'img78T1\')" onmouseout="onHandSkeletonUnhover(\'img78T1\')" onclick="aoImagesNavigationHandler(null,\'78T1\',1,null,true)"/>',
-				'<area title="Metakarpal T" shape="rect" coords="336,326,410,403" onmouseover="onHandSkeletonHover(\'img77T\')" onmouseout="onHandSkeletonUnhover(\'img77T\')" onclick="aoImagesNavigationHandler(null,\'77T\',1,null,true)"/>',
-				'</map>'
-			);
-		onHover = function (aEl, aNumber) {
-			aEl.className = aNumber + ' ' + aNumber + 'Hover';
-		}
-		onUnHover = function (aEl, aNumber) {
-			aEl.className = aNumber;
-		}
-		onHandSkeletonHover = function (aImgNumber) {
-			var el = document.getElementById(aImgNumber);
-			el.style.visibility = 'visible';
-		}
-		onHandSkeletonUnhover = function (aImgNumber) {
-			var el = document.getElementById(aImgNumber);
-			el.style.visibility = 'hidden';
-		}
-		onHandSkeletonClick = function (aImgNumber) {
-			alert(aImgNumber);
-		}
-
-		onLoadHandImgMini = function () {
-			if (onLoadHandImgMini.count === undefined) {
-				onLoadHandImgMini.count = 0;
-			}
-			//app.mySkeletonWindow.getLayout().setActiveItem(0);
-			if (onLoadHandImgMini.count === 0) {
-
-			}
-			onLoadHandImgMini.count++;
-			app.mySkeletonWindow.setTitle('Laddar handmodul (' + onLoadHandImgMini.count + ' av totalt 27 objekt)');
-			if (onLoadHandImgMini.count == 27) {
-				onLoadHandImgMini.count = 0;
-				app.mySkeletonWindow.getLayout().setActiveItem(6);
-				app.mySkeletonWindow.setTitle('<b>Klassificering av fraktur</b>');
-			}
-
-		}
-		var skeleton = Ext.create('Ext.panel.Panel', {
-			name: 'skeleton',
-			bodyStyle: 'padding: 5px',
-			style: 'margin-bottom: 10px',
-			frame: true,
-			labelAlign: 'top',
-			cls: 'sfr-skeleton'
-
-		});
-
-		var handSkeleton = Ext.create('Ext.panel.Panel', {
-			name: 'handSkeleton',
-			bodyStyle: 'padding: 5px',
-			style: 'margin-bottom: 10px',
-			frame: true,
-			labelAlign: 'top'
-		});
-
-		var foreArmRadiusImages = Ext.create('Ext.panel.Panel', {
-			name: 'foreArmRadiusImages',
-			title: 'Radius - Klassifikation enligt Mason',
-			bodyStyle: 'padding: 5px',
-			style: 'margin-bottom: 10px',
-			frame: true,
-			labelAlign: 'top',
-			buttons: [{
-				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>radiusfraktur</b>',
-				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
-				handler: function (btn) {
-					aoImagesNavigationHandler(btn, '', '', '', false);
-				},
-				listeners: {
-					render: function (c) {
-						Ext.tip.QuickTipManager.register({
-							target: c.id,
-							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
-							title: 'Ej kunnat klassificera/ej klassificerbar radiusfraktur',
-							autoHide: false
-						});
-					}
-				}
-			}
-			]
-		});
-
-		var prosthesisImages = Ext.create('Ext.panel.Panel', {
-			name: 'prosthesisImages',
-			title: 'Protesnära frakturer - Unified Classification System',
-			bodyStyle: 'padding: 5px',
-			style: 'margin-bottom: 10px',
-			frame: true,
-			labelAlign: 'top',
-			buttons: [{
-				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>protesnära fraktur</b>',
-				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
-				handler: function (btn) {
-					aoImagesNavigationHandler(btn, '', '', '', false);
-				},
-				listeners: {
-					render: function (c) {
-						Ext.tip.QuickTipManager.register({
-							target: c.id,
-							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
-							title: 'Ej kunnat klassificera/ej klassificerbar radiusfraktur',
-							autoHide: false
-						});
-					}
-				}
-			}
-			]
-		});
-
-		var foreArmRadiusChildImages = Ext.create('Ext.panel.Panel', {
-			name: 'foreArmRadiusChildImages',
-			title: 'Radius',
-			bodyStyle: 'padding: 5px',
-			style: 'margin-bottom: 10px',
-			frame: true,
-			labelAlign: 'top',
-			buttons: [{
-				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>radiusfraktur</b>',
-				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
-				handler: function (btn) {
-					aoImagesNavigationHandler(btn, '', '', '', false);
-				},
-				listeners: {
-					render: function (c) {
-						Ext.tip.QuickTipManager.register({
-							target: c.id,
-							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
-							title: 'Ej kunnat klassificera/ej klassificerbar radiusfraktur',
-							autoHide: false
-						});
-					}
-				}
-			}
-			]
-		});
-
-		var foreArmUlnaImages = Ext.create('Ext.panel.Panel', {
-			name: 'foreArmUlnaImages',
-			title: 'Ulna - Modifiering efter Mayo',
-			bodyStyle: 'padding: 5px',
-			style: 'margin-bottom: 10px',
-			frame: true,
-			labelAlign: 'top',
-			buttons: [{
-				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>ulnafraktur</b>',
-				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
-				handler: function (btn) {
-					var panelName = btn.ownerCt.ownerCt.name;
-					if (onReturnCodes.foreArmRadiusAO == 'X') {
-						var dialogitems = [
-                            {
-                            	tooltip: NO_COMPETENCE_TO_CLASSIFY_TOOLTIP,
-                            	text: NO_COMPETENCE_TO_CLASSIFY_TEXT,
-                            	handler: function () {
-                            		msgBox.close();
-                            		foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
-                            	}
-                            }, {
-                            	tooltip: NO_CLASSIFIABLE_TOOLTIP,
-                            	text: NO_CLASSIFIABLE_TEXT,
-                            	handler: function () {
-                            		msgBox.close();
-                            		foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, NO_CLASSIFIABLE_CODE, panelName);
-                            	}
-                            }
-						]
-						var msgBox = createDialog("Ej kunnat/Ej klassificerbar", NO_CLASSIFIABLE_DIALOG_TEXT, dialogitems);
-						msgBox.show();
-					}
-					else {
-
-						foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, PARTIAL_NO_CLASSIFIABLE_CODE, panelName);
-					}
-
-				},
-				listeners: {
-					render: function (c) {
-						Ext.tip.QuickTipManager.register({
-							target: c.id,
-							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
-							title: 'Ej kunnat klassificera/ej klassificerbar ulnafraktur',
-							autoHide: false
-						});
-					}
-				}
-			},
-				{
-					//Only for pelvis ring injury (where side is not decided before ao-classification is made)
-					name: 'pelvisRingSideSwitcher',
-					text: 'Visa vänsterbilder',
-					hidden: true
-				}
-			]
-		});
-
-		var foreArmUlnaChildImages = Ext.create('Ext.panel.Panel', {
-			name: 'foreArmUlnaChildImages',
-			title: 'Ulna',
-			bodyStyle: 'padding: 5px',
-			style: 'margin-bottom: 10px',
-			frame: true,
-			labelAlign: 'top',
-			buttons: [{
-				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>ulnafraktur</b>',
-				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
-				handler: function (btn) {
-					var panelName = btn.ownerCt.ownerCt.name;
-					if (onReturnCodes.foreArmRadiusAO == 'X') {
-						var dialogitems = [
-                            {
-                            	tooltip: NO_COMPETENCE_TO_CLASSIFY_TOOLTIP,
-                            	text: NO_COMPETENCE_TO_CLASSIFY_TEXT,
-                            	handler: function () {
-                            		msgBox.close();
-                            		foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
-                            	}
-                            }, {
-                            	tooltip: NO_CLASSIFIABLE_TOOLTIP,
-                            	text: NO_CLASSIFIABLE_TEXT,
-                            	handler: function () {
-                            		msgBox.close();
-                            		foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, NO_CLASSIFIABLE_CODE, panelName);
-                            	}
-                            }
-						]
-						var msgBox = createDialog("Ej kunnat/Ej klassificerbar", NO_CLASSIFIABLE_DIALOG_TEXT, dialogitems);
-						msgBox.show();
-					}
-					else {
-
-						foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, PARTIAL_NO_CLASSIFIABLE_CODE, panelName);
-					}
-
-				},
-				listeners: {
-					render: function (c) {
-						Ext.tip.QuickTipManager.register({
-							target: c.id,
-							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
-							title: 'Ej kunnat klassificera/ej klassificerbar ulnafraktur',
-							autoHide: false
-						});
-					}
-				}
-			},
-				{
-					//Only for pelvis ring injury (where side is not decided before ao-classification is made)
-					name: 'pelvisRingSideSwitcher',
-					text: 'Visa vänsterbilder',
-					hidden: true
-				}
-			]
-		});
-
-		var vertebraC0Images = Ext.create('Ext.panel.Panel', {
-			name: 'vertebraC0Images',
-			title: '<b>C0</b> Klassifikation enligt Anderson och Montesano (Spine, 1988, sidorna 731-736)',
-			bodyStyle: 'padding: 5px',
-			style: 'margin-bottom: 10px',
-			frame: true,
-			labelAlign: 'top',
-			buttons: [{
-				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>C0-fraktur</b>',
-				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
-				handler: function (btn) {
-					aoImagesNavigationHandler(btn, '100', '3', 'X', false);
-				},
-				listeners: {
-					render: function (c) {
-						Ext.tip.QuickTipManager.register({
-							target: c.id,
-							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
-							title: 'Ej kunnat klassificera/ej klassificerbar C0-fraktur',
-							autoHide: false
-						});
-					}
-				}
-			}
-			]
-		});
-
-		var vertebraC1Images = Ext.create('Ext.panel.Panel', {
-			name: 'vertebraC1Images',
-			title: '<b>C1</b> Klassifikation av C1-frakturer enligt Jackson et al<br/>(J Am Acad Orthop Surg, 2002, sidorna 271-280)',
-			bodyStyle: 'padding: 5px',
-			style: 'margin-bottom: 10px',
-			frame: true,
-			labelAlign: 'top',
-			buttons: [{
-				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>C1-fraktur</b>',
-				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
-				handler: function (btn) {
-					aoImagesNavigationHandler(btn, '100', '3', 'X', false);
-				},
-				listeners: {
-					render: function (c) {
-						Ext.tip.QuickTipManager.register({
-							target: c.id,
-							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
-							title: 'Ej kunnat klassificera/ej klassificerbar C1-fraktur',
-							autoHide: false
-						});
-					}
-				}
-			}
-			]
-		});
-
-		var vertebraC2Images = Ext.create('Ext.panel.Panel', {
-			name: 'vertebraC2Images',
-			title: '<b>C2</b>. Dens: Anderson och DAlonzo (JBJS(A) 1974, pp 1663-1674).<br/>Hangman: Effendi et al (JBJS(B) 1981; pp 319-327 ),Levine, Edwards (JBJS(A) 1985, pp 217-226)',
-			bodyStyle: 'padding: 5px',
-			style: 'margin-bottom: 10px',
-			frame: true,
-			labelAlign: 'top',
-			buttons: [{
-				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>C2-fraktur</b>',
-				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
-				handler: function (btn) {
-					aoImagesNavigationHandler(btn, '100', '3', 'AOD-X', false); //TODO: AOD?? constant?
-				},
-				listeners: {
-					render: function (c) {
-						Ext.tip.QuickTipManager.register({
-							target: c.id,
-							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
-							title: 'Ej kunnat klassificera/ej klassificerbar C2-fraktur',
-							autoHide: false
-						});
-					}
-				}
-			}
-			]
-		});
-
-		function createTransitionPanel(name, title) {
-			return Ext.create('Ext.panel.Panel', {
-				name: name,
-				title: title,
-				bodyStyle: 'padding: 5px',
-				style: 'margin-bottom: 10px',
-				frame: true,
-				labelAlign: 'top'
-			});
-		}
-		
-		var footPartImages = createTransitionPanel('footPartImages', 'Fot');
-		var childDistHumerusImages = createTransitionPanel('childDistHumerusImages', 'Distala humerus');
-		var childDistForearmImages = createTransitionPanel('childDistForearmImages', 'Distala underam');
-		var childProxTibiaImages = createTransitionPanel('childProxTibiaImages', 'Proximala tibia');
-		var childDistTibiaImages = createTransitionPanel('childDistTibiaImages', 'Distala tibia');
-		var childProxFemurImages = createTransitionPanel('childProxFemurImages', 'Proximala femur');
-		var childDistFemurImages = createTransitionPanel('childDistFemurImages', 'Distala femur');
-		var vertebra102BImages = createTransitionPanel('vertebra102BImages', 'B-skador');
-
-		var vertebraSelectorPanel = Ext.create('Ext.panel.Panel', {
-			name: 'vertebraSelectorPanel',
-			title: 'Välj kota/kotor',
-			bodyStyle: 'padding: 5px',
-			style: 'margin-bottom: 10px',
-			frame: true,
-			layout: 'absolute',
-			//style: { display: 'block', backgroundPosition:'170px 40px', backgroundImage: 'url(Images/Assembled/Spine-S4.png)', height: '50', overflow: 'hidden', backgroundRepeat: 'no-repeat' },
-			labelAlign: 'top',
-			items: [
-
-                {
-                	xtype: 'label',
-                	text: 'Skadade kotor:',
-                	style: 'font-weight:bold;',
-                	x: 20,
-                	y: 3
-                },
-                {
-                	xtype: 'component',
-                	style: 'margin-top:10px'
-                },
-                {
-                	xtype: 'checkboxfield',
-                	uncheckedValue: 'false',
-                	inputValue: 'true',
-                	boxLabel: 'x',
-                	name: 'v1',
-                	x: 125,
-                	y: 40
-                },
-                , {
-                	xtype: 'checkboxfield',
-                	uncheckedValue: 'false',
-                	inputValue: 'true',
-                	boxLabel: 'x',
-                	name: 'v2',
-                	x: 125,
-                	y: 65
-
-                }, {
-                	xtype: 'checkboxfield',
-                	uncheckedValue: 'false',
-                	inputValue: 'true',
-                	boxLabel: 'x',
-                	name: 'v3',
-                	x: 125,
-                	y: 90
-                }, {
-                	xtype: 'checkboxfield',
-                	uncheckedValue: 'false',
-                	inputValue: 'true',
-                	boxLabel: 'x',
-                	name: 'v4',
-                	x: 125,
-                	y: 115
-                }, {
-                	xtype: 'checkboxfield',
-                	uncheckedValue: 'false',
-                	inputValue: 'true',
-                	boxLabel: 'x',
-                	name: 'v5',
-                	x: 125,
-                	y: 140
-                }, {
-                	xtype: 'checkboxfield',
-                	uncheckedValue: 'false',
-                	inputValue: 'true',
-                	boxLabel: 'x',
-                	name: 'v6',
-                	x: 125,
-                	y: 165
-                }, {
-                	xtype: 'checkboxfield',
-                	uncheckedValue: 'false',
-                	inputValue: 'true',
-                	boxLabel: 'x',
-                	name: 'v7',
-                	x: 125,
-                	y: 190
-                }, {
-                	xtype: 'checkboxfield',
-                	uncheckedValue: 'false',
-                	inputValue: 'true',
-                	boxLabel: 'x',
-                	name: 'v8',
-                	x: 125,
-                	y: 215
-                }, {
-                	xtype: 'checkboxfield',
-                	uncheckedValue: 'false',
-                	inputValue: 'true',
-                	boxLabel: 'x',
-                	name: 'v9',
-                	x: 125,
-                	y: 240
-                }, {
-                	xtype: 'component',
-                	style: 'margin-top:125px'
-                }, /*{
-                    xtype: 'component',
-                    //html: '<div style="display:block;background-image:url(Images/Assembled/Spine-S4.png);height:auto;overflow:hidden" ></div>',
-                    style: { display: 'block', backgroundImage: 'url(Images/Assembled/Spine-S4.png)', height: '50', overflow: 'hidden', backgroundRepeat:'no-repeat' },
-                    baseCls: '',
-                    html:'<div style:"clear:both"></div>'
-                },*/ {
-                	xtype: 'label',
-                	text: 'Neurologifrågor:',
-                	style: 'font-weight:bold;',
-                	x: 20,
-                	y: 445
-                }, {
-                	xtype: 'component',
-                	style: 'margin-top:10px'
-                }, 
-                 {
-                	xtype: 'combo',
-                	lastQuery: '',
-                	fieldLabel: 'Neurologi',
-                	width: 500,
-                	name: 'neurology',
-                	x: 20,
-                	y: 465,
-                	store: createSelectValueStore(5554),
-                	mode: 'local',
-                	displayField: 'ValueName',
-                	valueField: 'ValueCode',
-                	listeners: {
-                		select: function (combo, records, eOpts) {
-                			var neurologiExtCmp = getCmpByName('neurologiExtended', vertebraSelectorPanel);
-                			var neurologiExtStore = neurologiExtCmp.getStore();
-                			neurologiExtStore.clearFilter(true);
-                			neurologiExtStore.filterBy(Ext.bind(filterNeurologiExtStore, this, [records.data.ValueCode], true));
-
-                			if (this.getValue() !== '4') {
-                				neurologiExtCmp.setDisabled(true);
-                				neurologiExtCmp.setValue('');
-                			}
-                			else {
-                				neurologiExtCmp.setDisabled(false);
-
-                			}
-                		}
-                	}
-                },
-                {
-                	xtype: 'combo',
-                	lastQuery: '',
-                	fieldLabel: 'Inkomplett ryggmärgsskada/<br/>conus-skada',
-                	width: 500,
-                	x: 20,
-                	y: 500,
-                	name: 'neurologiExtended',
-                	store: createSelectValueStore(5555),
-                	mode: 'local',
-                	displayField: 'ValueName',
-                	valueField: 'ValueCode'
-                }, {
-                	xtype: 'label',
-                	html: '<l><li>Markera alla skadade kotor och fyll i neurologifrågorna</li><li>I nästa bild klassificerar du frakturtyp för den allvarligast skadade kotan.</li><l>',
-                	style: 'background-color:#B8B8B8;font-weight:bold;',
-                	x: 20,
-                	y: 390
-                }
-			]
-		});
-
-		var AO = Ext.create('Ext.panel.Panel', {
-			name: 'ao',
-			title: 'AO-klassifikation',
-			bodyStyle: 'padding: 5px',
-			style: 'margin-bottom: 10px',
-			frame: true,
-			//header: false,
-			labelAlign: 'top',
-
-			buttons: [{
-				text: NO_CLASSIFIABLE_BUTTON_TEXT,
-				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
-				handler: function (btn) {
-					var panelName = btn.ownerCt.ownerCt.name;
-
-					var pictureID = aoImagesNavigationHandler.pictureID;
-					var inBackModule = pictureID == '101' || pictureID == '102';
-					var dialogitems = [
-                        {
-                        	tooltip: NO_COMPETENCE_TO_CLASSIFY_TOOLTIP,
-                        	text: NO_COMPETENCE_TO_CLASSIFY_TEXT,
-                        	handler: function () {
-                        		msgBox.close();
-                        		if (inBackModule === true) {
-                        			backHandler(/*app.myCurrentFracturePanel.id*/'', 3, pictureID, null, app.mySkeletonWindow.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
-                        		}
-                        		else {
-                        			onReturnCodes(/*app.myCurrentFracturePanel.id*/ '', '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, false, panelName);
-                        		}
-                        	}
-                        }, {
-                        	tooltip: NO_CLASSIFIABLE_TOOLTIP,
-                        	text: NO_CLASSIFIABLE_TEXT,
-                        	handler: function () {
-                        		msgBox.close();
-                        		if (inBackModule === true) {
-                        			backHandler(/*app.myCurrentFracturePanel.id*/'', 3, pictureID, null, app.mySkeletonWindow.id, NO_CLASSIFIABLE_CODE, panelName);
-                        		}
-                        		else {
-                        			onReturnCodes('', '', '', '', container.id, NO_CLASSIFIABLE_CODE, false, panelName);
-                        		}
-                        	}
-                        }
-					]
-					var msgBox = createDialog("Ej kunnat/Ej klassificerbar", NO_CLASSIFIABLE_DIALOG_TEXT, dialogitems);
-					msgBox.show();
-				},
-
-				listeners: {
-					render: function (c) {
-						Ext.tip.QuickTipManager.register({
-							target: c.id,
-							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
-							title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE,
-							autoHide: false
-						});
-					}
-				}
-			},
-				{
-					//Only for pelvis ring injury (where side is not decided before ao-classification is made)
-					name: 'pelvisRingSideSwitcher',
-					text: 'Visa vänsterbilder',
-					hidden: true
-				}
-			]
-		});
-
-		onDetermineIfChildFracture = function (aBtn, aPictureID, aSide, aPseduoAO) {
-			aoImagesNavigationHandler.showNoChildFractureSupportAlert = false;
-			aoImagesNavigationHandler.classifyAsAdult = false;
-			var picIDstr = aPictureID.toString();
-			if (isChildFracture(aPictureID) && childFracturesActivated()) {
-				aoImagesNavigationHandler.isChildFracture = true;
-				aoImagesNavigationHandler(aBtn, picIDstr, aSide, aPseduoAO);
-			}
-			else if (askIfChildFracture(aPictureID) && childFracturesActivated()) {
-				Ext.MessageBox.show({
-					title: 'Öppna fyser?',
-					msg: 'Är tillväxtzonerna (fyserna) synligt öppna på röntgenbilderna av det skadade skelettsegmentet, dvs är skelettet att betrakta som ett barnskelett där tillväxt pågår?',
-					buttons: Ext.Msg.YESNOCANCEL,
-					fn: function (aDialogButton) {
-						if (aDialogButton === 'yes') {
-							aoImagesNavigationHandler.isChildFracture = true;
-							aoImagesNavigationHandler(aBtn, picIDstr, aSide, aPseduoAO);
-						}
-						else if (aDialogButton == 'no') {
-							aoImagesNavigationHandler.isChildFracture = false;
-							aoImagesNavigationHandler(aBtn, picIDstr, aSide, aPseduoAO);
-						}
-					}
-				});
-			}
-			else {
-				aoImagesNavigationHandler.isChildFracture = false;
-				aoImagesNavigationHandler(aBtn, picIDstr, aSide, aPseduoAO);
-
-			}
-		}
-		var pelvisPanel = createPelvisPanel();
-		var container = Ext.create('Ext.window.Window', {
-			renderTo: aBody,
-			x: 40,
-			y: 40,
-			width: 615,
-			height: 690,
-			minWidth: 420,
-			minHeight: 200,
-			constrain: true,
-			collapsible: false,
-			closable: true,
-			layout: 'card',
-			activeItem: 0,
-			items: [skeleton, AO, pelvisPanel, foreArmRadiusImages, foreArmUlnaImages, footPartImages, handSkeleton, childDistHumerusImages, childProxTibiaImages, childDistTibiaImages, childProxFemurImages, childDistFemurImages, vertebraSelectorPanel, vertebra102BImages, foreArmRadiusChildImages, foreArmUlnaChildImages, childDistForearmImages, vertebraC0Images, vertebraC1Images, vertebraC2Images, prosthesisImages],
-			//          0      1    2               3                   4                   5               6           7                           8                   9                       10                  11                  12                      13                      14                      15                      16                      17              18                  19              20
-			buttons: [{
-				name: 'previousBtn',
-				text: '<b>Föregående</b>',
-				disabled: true,
-				handler: Ext.bind(aoImagesNavigationHandler, this, [-1, -1], true)
-			}, {
-				name: 'nextBtn', text: '<b>Nästa</b>', disabled: true, handler: Ext.bind(aoImagesNavigationHandler, this, [-1, -1], true)
-			}
-			],
-			listeners: {
-				show: function (t) {
-					t.setTitle('<b>Klassificering av fraktur</b>');
-					var data = {
-						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton.png"
-					};
-					tplSkeleton.overwrite(skeleton.body, data);
-				},
-				beforeclose: function (panel) {
-					panel.hide();
-					return false;
-				},
-				beforedestroy: function () {
-					purgeOrphans(app.mySkeletonWindow);
-				}
-			}
-		});
-		return container;
-	}
-
-	onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
+onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
 		var aoPanel = app.mySkeletonWindow.items.items[1];
 		if (aoImagesNavigationHandler.showNoChildFractureSupportAlert === true && !isBackFracture(aPictureID)) {
 			var t = new Ext.Template("<div></div>");
@@ -2372,31 +350,31 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 				t.overwrite(aTargetPanel.body, '');
 			}
 			var dialogitems = [
-                        {
-                        	tooltip: '',
-                        	text: 'Fortsätt',
-                        	handler: function () {
-                        		msgBox.close();
-                        		aoImagesNavigationHandler.showNoChildFractureSupportAlert = false;
-                        		onLoadAOImages(aPictureID, aSide, aTargetPanel, gotoPicID);
-                        	}
-                        }, {
-                        	tooltip: '',
-                        	text: 'Ej klassificerad barnfraktur',
-                        	handler: function () {
-                        		msgBox.close();
-                        		generate_ICD_AO_SubFracturePanels(app.myCurrentFracturePanel.id, aSide, aPictureID, '-1', app.mySkeletonWindow.id, null, false, null);
+				{
+					tooltip: '',
+					text: 'Fortsätt',
+					handler: function () {
+						msgBox.close();
+						aoImagesNavigationHandler.showNoChildFractureSupportAlert = false;
+						onLoadAOImages(aPictureID, aSide, aTargetPanel, gotoPicID);
+					}
+				}, {
+					tooltip: '',
+					text: 'Ej klassificerad barnfraktur',
+					handler: function () {
+						msgBox.close();
+						generate_ICD_AO_SubFracturePanels(app.myCurrentFracturePanel.id, aSide, aPictureID, '-1', app.mySkeletonWindow.id, null, false, null);
 
-                        	}
-                        }, {
-                        	tooltip: '',
-                        	text: 'Avbryt',
-                        	handler: function () {
-                        		msgBox.close();
-                        		app.mySkeletonWindow.setActiveItem(0);
+					}
+				}, {
+					tooltip: '',
+					text: 'Avbryt',
+					handler: function () {
+						msgBox.close();
+						app.mySkeletonWindow.setActiveItem(0);
 
-                        	}
-                        }
+					}
+				}
 			]
 			var msgBox = createDialog('Öppna fyser', "Registret stödjer inte klassificering av barnfrakturer för denna skelettdel. Om du anser att frakturen ändå kan klassas i vuxenklassificeringen klicka på Fortsätt. Är frakturen en uttalad barnfraktur klicka på Ej klassificerad barnfraktur.", dialogitems, true);
 			msgBox.show();
@@ -3615,7 +1593,7 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 			infoTextC6: infoTexts[2][5]
 		};
 		var currentFracturePanelID = null;
-		
+
 		var tplContent = null;
 		//if (Ext.isEmpty(gotoPicID)) {
 		tplContent = initAOtemplate(displayMatrix, aoMatrix, currentFracturePanelID, aoImagesNavigationHandler.inHandMode, aPictureID, gotoPicID);
@@ -4216,7 +2194,7 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 						app.mySkeletonWindow.getLayout().setActiveItem(19);
 					}
 					else {
-						backHandler(app.myCurrentFracturePanel.id, aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, vertebraC0Images.name);
+						backHandler('', aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, vertebraC0Images.name);
 					}
 				}
 				else if (activeItem == vertebraC1Images) {
@@ -4239,28 +2217,28 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 									layout: 'vbox',
 									dock: 'bottom',
 									items: [
-                                    {
-                                    	text: 'JA',
-                                    	handler: function () {
-                                    		dialog.close();
-                                    		backHandler.massaLateralis = true;
-                                    		aoImagesNavigationHandler(null, '100b', '3', null, false);
-                                    		//onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '0';
-                                    		//generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                                    	}
-                                    }, {
-                                    	text: 'NEJ',
-                                    	handler: function () {
-                                    		dialog.close();
-                                    		backHandler.massaLateralis = false;
-                                    		aoImagesNavigationHandler(null, '100b', '3', null, false);
-                                    		//onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '1';
-                                    		//generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                                    	}
-                                    }]
+										{
+											text: 'JA',
+											handler: function () {
+												dialog.close();
+												backHandler.massaLateralis = true;
+												aoImagesNavigationHandler(null, '100b', '3', null, false);
+												//onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '0';
+												//generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+											}
+										}, {
+											text: 'NEJ',
+											handler: function () {
+												dialog.close();
+												backHandler.massaLateralis = false;
+												aoImagesNavigationHandler(null, '100b', '3', null, false);
+												//onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '1';
+												//generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+											}
+										}]
 								}]
 							}
-                            );
+							);
 							dialog.show();
 							return;
 						}
@@ -4270,12 +2248,12 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 						app.mySkeletonWindow.getLayout().setActiveItem(19);
 					}
 					else {
-						backHandler(app.myCurrentFracturePanel.id, aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, vertebraC1Images.name);
+						backHandler('', aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, vertebraC1Images.name);
 					}
 				}
 				else if (activeItem == vertebraC2Images) {
 					backHandler.c2Class = aPseduoAO;
-					backHandler(app.myCurrentFracturePanel.id, aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, vertebraC2Images.name);
+					backHandler('', aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, vertebraC2Images.name);
 				}
 				else {
 					app.mySkeletonWindow.getLayout().setActiveItem(12);
@@ -4362,7 +2340,7 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 				}
 				else {
 					backHandler.pseudoAO = '';
-					backHandler(app.myCurrentFracturePanel.id, aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, false);
+					backHandler('', aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, false);
 				}
 
 			}
@@ -4632,6 +2610,2026 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 			generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
 		}
 	}
+	
+	function getToday() {
+		var today = new Date();
+		return Ext.Date.dateFormat(today, 'Y-m-d');
+	}
+
+	function setICD10TextToolTip(aFractureForm, target) {
+		var icd10Field = getCmpByName('Fx_ICD10', aFractureForm);
+		if (icd10Field === null) {
+			icd10Field = getCmpByName('FxS_ICD10', aFractureForm);
+		}
+		if (icd10Field === null) {
+			icd10Field = getCmpByName('FxP_ICD10', aFractureForm);
+		}
+		if (icd10Field === null) {
+			return;
+		}
+		var icd10Code = icd10Field.getValue();
+		var icd10Text = getDomainValueName(4061, icd10Code);
+		if (icd10Text == '')
+			return;
+		Ext.tip.QuickTipManager.register({
+			target: target.id,
+			text: icd10Text,
+			title: icd10Code
+		});
+	}
+
+	function getCmpByName(cmpName, panel) {
+		var i = 0;
+		if (panel instanceof Ext.form.Panel || panel instanceof Ext.panel.Panel) {
+			for (i = 0; i < panel.items.length; i++) {
+				switch (panel.items.items[i].name) {
+					case cmpName:
+						return panel.items.items[i];
+						break;
+				}
+			}
+		}
+		else if (panel instanceof Ext.form.BasicForm) {
+			for (i = 0; i < panel.items.length; i++) {
+				switch (panel.items[i].name) {
+					case cmpName:
+						return panel.items[i];
+						break;
+				}
+			}
+		}
+		return null;
+	}
+
+	function getPanel(eventID) {
+		var i = 0;
+		for (i = 0; i < app.myMiddlePanel.items.length; i++) {
+			var cmp = app.myMiddlePanel.items.items[i];
+			if (cmp instanceof Ext.form.Panel) {
+				var eventIDField = getCmpByName('EventID', cmp);
+				if (eventIDField != null) {
+					if (eventIDField.getValue() == eventID) {
+						return cmp;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	function getDomainValueName(domainid, valueCode) {
+		if (isNaN(domainid))
+			return;
+		var i = 0;
+		for (i = 0; i < app.myRegisterdomains[domainid].DomainValues.length; i++) {
+			if (app.myRegisterdomains[domainid].DomainValues[i].ValueCode == valueCode) {
+				return app.myRegisterdomains[domainid].DomainValues[i].ValueName;
+			}
+		}
+		return '';
+	}
+
+	function getDomainValue(domainid, valueCode) {
+		if (isNaN(domainid))
+			return;
+		var i = 0;
+		for (i = 0; i < app.myRegisterdomains[domainid].DomainValues.length; i++) {
+			if (app.myRegisterdomains[domainid].DomainValues[i].ValueCode == valueCode) {
+				return app.myRegisterdomains[domainid].DomainValues[i];
+			}
+		}
+		return '';
+	}
+
+	function getButtonByName(buttonName, buttons) {
+		var i = 0;
+		for (i = 0; i < buttons.items.length; i++) {
+			switch (buttons.items.items[i].name) {
+				case buttonName:
+					return buttons.items.items[i];
+					break;
+			}
+		}
+		return null;
+	}
+
+	function getSide(pelvisPanel) {
+		if (aoImagesNavigationHandler.inProsthesisMode === true) {
+			return 3;
+		}
+		var manualClassification = onPelvisClick.matchFoundForSeriousRingInjury(pelvisPanel);
+		if (manualClassification)
+			return '';
+		var middleInjuryFound = false;
+		var leftInjuryFound = false;
+		var rightInjuryFound = false;
+		var i = 0;
+		var selectedCmps = onPelvisClick.getSelectedCmps(pelvisPanel);
+		for (i = 0; i < selectedCmps.length; i++) {
+			var cmpName = selectedCmps[i].name;
+			if (selectedCmps[i].name.indexOf('H', cmpName.length - 1) > 0)
+				rightInjuryFound = true;
+			else if (selectedCmps[i].name.indexOf('V', cmpName.length - 1) > 0)
+				leftInjuryFound = true;
+			else
+				middleInjuryFound = true;
+		}
+		if (middleInjuryFound)
+			return 3;
+		if (leftInjuryFound && rightInjuryFound)
+			return 3;
+		if (leftInjuryFound)
+			return 2;
+		if (rightInjuryFound)
+			return 1;
+		return '';
+	}
+
+	function onPelvisClick(cmp, checked) {
+		if (onPelvisClick.DISLOCATED_TEXT === undefined) {
+			onPelvisClick.DISLOCATED_TEXT = 'Dislocerad';
+		}
+		if (onPelvisClick.matchFoundForSeriousRingInjury === undefined) {
+			onPelvisClick.matchFoundForSeriousRingInjury = function (pelvisPanel) {
+				var match = false;
+				match = match || getCmpByName('RingskadaInstabilH', pelvisPanel).checked;
+				match = match || getCmpByName('SakrumH', pelvisPanel).checked;
+				match = match || getCmpByName('SILedH', pelvisPanel).checked;
+				match = match || getCmpByName('RingskadaInstabilV', pelvisPanel).checked;
+				match = match || getCmpByName('SakrumV', pelvisPanel).checked;
+				match = match || getCmpByName('SILedV', pelvisPanel).checked;
+				return match;
+			}
+		}
+		if (onPelvisClick.matchFoundForLightRingInjury === undefined) {
+			onPelvisClick.matchFoundForLightRingInjury = function (pelvisPanel) {
+				var match = false;
+				match = match || getCmpByName('AlaStabilH', pelvisPanel).checked;
+				match = match || getCmpByName('OSPubisH', pelvisPanel).checked;
+				match = match || getCmpByName('AlaStabilV', pelvisPanel).checked;
+				match = match || getCmpByName('OSPubisV', pelvisPanel).checked;
+				match = match || getCmpByName('SpinopelvinDissociation', pelvisPanel).checked;
+				match = match || getCmpByName('Transversell', pelvisPanel).checked;
+				match = match || getCmpByName('Coccyx', pelvisPanel).checked;
+				match = match || getCmpByName('Symfys', pelvisPanel).checked;
+				return match;
+			}
+		}
+		if (onPelvisClick.getLabel === undefined)
+			onPelvisClick.getLabel = function (checkbox, pelvisPanel) {
+				var i = 0;
+				var j = 0;
+				var index = 0;
+				var cmps = getGroupedCmpsArray(pelvisPanel);
+				for (i = 0; i < cmps.length; i++) {
+					for (j = 0; j < cmps[i].length; j++) {
+						if (cmps[i][j] === checkbox) {
+							index = i;
+							break;
+						}
+					}
+				}
+				switch (index) {
+					case 0:
+						return pelvisPanel.items.items[24];
+					case 1:
+						return pelvisPanel.items.items[28];
+					case 2:
+						return pelvisPanel.items.items[26];
+					case 3:
+						return pelvisPanel.items.items[30];
+					case 4:
+						return pelvisPanel.items.items[25];
+					case 5:
+						return pelvisPanel.items.items[29];
+					case 6:
+						return pelvisPanel.items.items[27];
+					case 7:
+						return pelvisPanel.items.items[31];
+					case 8:
+						return pelvisPanel.items.items[32];
+					case 9:
+						return pelvisPanel.items.items[33];
+				}
+			}
+		if (onPelvisClick.getSelectedCmps === undefined)
+			onPelvisClick.getSelectedCmps = function (pelvisPanel) {
+				var i = 0;
+				var cmps = [];
+				var j = 0;
+				for (i = 0; i < pelvisPanel.items.length; i++) {
+					if (pelvisPanel.items.items[i] instanceof Ext.form.Checkbox) {
+						var box = pelvisPanel.items.items[i];
+						if (box.checked) {
+							cmps[j] = box;
+							j++;
+						}
+					}
+				}
+				return cmps;
+
+			}
+		if (onPelvisClick.multipleInjuriesSelected === undefined)
+			onPelvisClick.multipleInjuriesSelected = function (pelvisPanel) {
+				var cmps = onPelvisClick.getSelectedCmps(pelvisPanel);
+				var nrOfCmps = cmps.length;
+				var nrOfDislocated = 0;
+				var i = 0;
+				for (i = 0; i < nrOfCmps; i++) {
+					if (cmps[i].name.indexOf('Dislocerad') >= 0) {
+						nrOfDislocated++;
+					}
+				}
+				return (nrOfCmps - nrOfDislocated) > 1;
+			}
+		if (onPelvisClick.generateRingInjuries === undefined)
+			onPelvisClick.generateRingInjuries = function (pelvisPanel, fractureForm) {
+				var cmps = onPelvisClick.getSelectedCmps(pelvisPanel);
+				var openFracture = getCmpByName('Fx_Open', fractureForm).getValue();
+				var icd10codes = getICD10codes(pelvisPanel, openFracture);
+				var form = null;
+				var currentCmp = null;
+				var i = 0;
+				var insertPosition = 0;
+				//Find owner fracture form´s position																																
+				for (i = 0; i < app.myMiddlePanel.items.length; i++) {
+					if (app.myMiddlePanel.items.items[i] == fractureForm) {
+						insertPosition = i + 1;
+						break;
+					}
+				}
+				form = app.myMiddlePanel.items.items[insertPosition];
+				while (isRingInjuryForm(form) || isBackSubFractureForm(form)) {
+					if (form.isVisible()) {
+						break;
+					}
+					else {
+						insertPosition++;
+						form = app.myMiddlePanel.items.items[insertPosition];
+					}
+				}
+				var j = 0;
+				var k = 0;
+				for (i = 0; i < cmps.length; i++) {
+					currentCmp = cmps[i];
+					if (currentCmp.name.indexOf(onPelvisClick.DISLOCATED_TEXT) >= 0)
+						continue;
+					form = createPelvisRingInjuryForm('1022', null, Profile.Person.SocialNumber);
+					var parentEventIDfield = createParentEventIDfield('');
+					form.items.add(parentEventIDfield);
+					form.add(getPelvisRingInjuryFormItems(null));
+					PelvisRingInjuryFormHandler(form);
+					var regDateField = getCmpByName('FxP_RegDat', form);
+					var delField = getCmpByName('FxP_Segment', form);
+					var skadaField = getCmpByName('FxP_Fx', form);
+					var sidaField = getCmpByName('FxP_Side', form);
+					var icd10Field = getCmpByName('FxP_ICD10', form);
+					var disloceradField = getCmpByName('FxP_Disloc', form);
+					regDateField.setValue(getToday());
+					var side = icd10codes[j].substr(icd10codes[j].length - 1, 1); //side: last char
+					var icdCode = icd10codes[j].substr(0, icd10codes[j].length - 1); //Exclude side nr
+					icd10Field.setValue(icdCode);
+					sidaField.setValue(side);
+					var sideText = getSideLetter(side);
+					skadaField.setValue(cmps[i].aValue);
+					var partCode = getPelvisRingInjuryPart(skadaField.getValue());
+					delField.setValue(partCode);
+
+
+					var isDislocated = 0;
+					for (k = 0; k < cmps.length; k++) {
+						if (cmps[k].name.indexOf(onPelvisClick.DISLOCATED_TEXT) >= 0) {
+							var disloceradSideText = cmps[k].name.charAt(cmps[k].name.length - 1);
+							if (cmps[k].aValue == partCode && (disloceradSideText == sideText || disloceradSideText == 'd')) { //'d': last letter in dislocerad
+								if (cmps[k].checked) {
+									isDislocated = 1;
+								}
+							}
+						}
+					}
+					for (k = 0; k < app.myRegisterdomains['4146'].DomainValues.length; k++) {
+						if (isDislocated === parseInt(app.myRegisterdomains['4146'].DomainValues[k].ValueCode))
+							disloceradField.setValue(app.myRegisterdomains['4146'].DomainValues[k].ValueCode);
+					}
+					app.myMiddlePanel.insert(insertPosition, form);
+					form.setTitle(RINGSKADA_TEXT + ' ' + icdCode + ' ' + getFractureFormSideTitleText(form) + addCrossBorderTitleInfo(form));
+					setUndirty(form);
+					insertPosition++;
+					j++;
+				}
+			}
+		var pelvisPanel = cmp.ownerCt;
+		if (cmp.name.indexOf(onPelvisClick.DISLOCATED_TEXT) >= 0)
+			return;
+		cmps = getGroupedCmps(cmp, pelvisPanel);
+		var label = onPelvisClick.getLabel(cmp, pelvisPanel);
+		if (checked) {
+			label.el.dom.style.color = 'orange';
+			var i = 0;
+			for (i = 0; i < cmps.length; i++) {
+				if (i === cmps.length - 1) //Dislocerad button
+					cmps[i].setDisabled(false);
+				else if (cmps[i] !== cmp && cmps[cmps.length - 1] !== cmp)
+					cmps[i].setValue(false);
+			}
+		}
+		else {
+			label.el.dom.style.color = '';
+			if (cmps.length > 0) {
+				var dislocatedButton = cmps[cmps.length - 1];
+				if (dislocatedButton !== cmp) {
+					dislocatedButton.setDisabled(true);
+					dislocatedButton.setValue(false);
+				}
+			}
+		}
+		aoImagesNavigationHandler.toggleNavigationButton(pelvisPanel);
+		function getICD10codes(pelvisPanel, openFractureMarker) {
+			var codes = [];
+			var selectedCmps = onPelvisClick.getSelectedCmps(pelvisPanel);
+			var rightSideMarker = 1;
+			var leftSideMarker = 2;
+			var unspecSideMarker = 3;
+			if (openFractureMarker === undefined) {
+				openFractureMarker = '';
+			}
+			var i = 0;
+			for (i = 0; i < selectedCmps.length; i++) {
+				var pelvisPart = selectedCmps[i].name;
+				switch (pelvisPart) {
+					case 'RingskadaInstabilH':
+					case 'AlaStabilH':
+						codes[i] = 'S32.3' + openFractureMarker + rightSideMarker;
+						break;
+					case 'RingskadaInstabilV':
+					case 'AlaStabilV':
+						codes[i] = 'S32.3' + openFractureMarker + leftSideMarker;
+						break;
+					case 'SILedH':
+						codes[i] = 'S33.2' + openFractureMarker + rightSideMarker;
+						break;
+					case 'SILedV':
+						codes[i] = 'S33.2' + openFractureMarker + leftSideMarker;
+						break;
+					case 'SakrumH':
+						codes[i] = 'S32.1' + openFractureMarker + rightSideMarker;
+						break;
+					case 'SakrumV':
+						codes[i] = 'S32.1' + openFractureMarker + leftSideMarker;
+						break;
+					case 'OSPubisH':
+						codes[i] = 'S32.5' + openFractureMarker + rightSideMarker;
+						break;
+					case 'OSPubisV':
+						codes[i] = 'S32.5' + openFractureMarker + leftSideMarker;
+						break;
+					case 'SpinopelvinDissociation':
+					case 'Transversell':
+						codes[i] = 'S32.1' + openFractureMarker + unspecSideMarker;
+						break;
+					case 'Coccyx':
+						codes[i] = 'S32.2' + openFractureMarker + unspecSideMarker;
+						break;
+					case 'Symfys':
+						codes[i] = 'S33.4' + openFractureMarker + unspecSideMarker;
+						break;
+				}
+			}
+			return codes;
+		}
+		//Returns AO-code for pelvis parts where no manual (image-click) ao-classification is made
+		function getAOcode(fractureForm) {
+			var codes = [];
+			var selectedCmps = onPelvisClick.getSelectedCmps(fractureForm);
+			var i = 0;
+			for (i = 0; i < selectedCmps.length; i++) {
+				var pelvisPart = selectedCmps[i].name;
+				switch (pelvisPart) {
+					case 'AlaStabilH':
+					case 'AlaStabilV':
+						codes[i] = '61-A2.1';
+						break;
+					case 'OSPubisH':
+					case 'OSPubisV':
+						codes[i] = '61-A2.2';
+						break;
+					case 'SpinopelvinDissociation':
+						codes[i] = '?'; //TODO:?
+						break;
+					case 'Transversell':
+					case 'coccyx':
+						codes[i] = '61-A3';
+						break;
+					case 'Symfys':
+						return '?'; //TODO:?
+						break;
+				}
+			}
+			var aoCode = '';
+			if (codes.indexOf('OSPubisH') > 0 && codes.indexOf('OSPubisV') > 0 && codes.length === 2)
+				aoCode = '61-A2.3';
+			else if (codes.length > 1)
+				aoCode = '61-A';
+			else if (codes.length === 1)
+				aoCode = codes[0];
+			else
+				return '';
+			return aoCode;
+		}
+	}
+
+	function getPelvisRingInjuryPart(aInjuryCode) {
+		var i = 0;
+		var j = 0;
+		var valueCode = '';
+		for (i = 0; i < app.myRegisterdomains[4144].DomainValues.length; i++) {
+			for (j = 0; j < app.myRegisterdomains[4144].DomainValues[i].ChildValues.length; j++) {
+				valueCode = app.myRegisterdomains[4144].DomainValues[i].ChildValues[j].ValueCode;
+				if (valueCode == aInjuryCode)
+					return app.myRegisterdomains[4144].DomainValues[i].ValueCode;
+			}
+		}
+		return '';
+	}
+
+	function getGroupedCmpsArray(pelvisPanel) {
+		return [[getCmpByName('RingskadaInstabilH', pelvisPanel), getCmpByName('AlaStabilH', pelvisPanel), getCmpByName('IleumDisloceradH', pelvisPanel)],
+		[getCmpByName('SILedH', pelvisPanel), getCmpByName('SILedDisloceradH', pelvisPanel)],
+		[getCmpByName('SakrumH', pelvisPanel), getCmpByName('SakrumDisloceradH', pelvisPanel)],
+		[getCmpByName('OSPubisH', pelvisPanel), getCmpByName('OSPubisDisloceradH', pelvisPanel)],
+		[getCmpByName('RingskadaInstabilV', pelvisPanel), getCmpByName('AlaStabilV', pelvisPanel), getCmpByName('IleumDisloceradV', pelvisPanel)],
+		[getCmpByName('SILedV', pelvisPanel), getCmpByName('SILedDisloceradV', pelvisPanel)],
+		[getCmpByName('SakrumV', pelvisPanel), getCmpByName('SakrumDisloceradV', pelvisPanel)],
+		[getCmpByName('OSPubisV', pelvisPanel), getCmpByName('OSPubisDisloceradV', pelvisPanel)],
+		[getCmpByName('Symfys', pelvisPanel), getCmpByName('SymfysDislocerad', pelvisPanel)],
+		[getCmpByName('SpinopelvinDissociation', pelvisPanel), getCmpByName('Transversell', pelvisPanel), getCmpByName('Coccyx', pelvisPanel), getCmpByName('SakrumDislocerad', pelvisPanel)]
+		];
+	}
+
+	function getGroupedCmps(cmp, pelvisPanel) {
+		var groupedCmps = getGroupedCmpsArray(pelvisPanel);
+		var i = 0;
+		for (i = 0; i < groupedCmps.length; i++) {
+			var j = 0;
+			for (j = 0; j < groupedCmps[i].length; j++) {
+				if (groupedCmps[i][j] === cmp) {
+					return groupedCmps[i];
+				}
+			}
+		}
+		return [];
+	}
+
+	function createPelvisPanel() {
+		//To change the placement of components modify the [CMP]_[SIDE]_FIRST_BOX_POS_X and [CMP]_FIRST_BOX_POS_Y
+		//"constants", Changing for example ILEUM_RIGHT_FIRST_BOX_POS_X and ILEUM_FIRST_BOX_POS_Y moves the Ileum components (labels, headers and checkboxes)
+		//Modifying the other constants changes components relative spacing. Changing for example HEADER_SPACE_Y 
+		//modfies the height between header labels and related checkboxes.
+		var ILEUM_RIGHT_FIRST_BOX_POS_X = 117;
+		var ILEUM_LEFT_FIRST_BOX_POS_X = 460;
+		var ILEUM_FIRST_BOX_POS_Y = 140;
+		var SILED_RIGHT_FIRST_BOX_POS_X = 215;
+		var SILED_LEFT_FIRST_BOX_POS_X = 362;
+		var SILED_FIRST_BOX_POS_Y = 115;
+		var SAKRUM_RIGHT_FIRST_BOX_POS_X = 246;
+		var SAKRUM_LEFT_FIRST_BOX_POS_X = 330;
+		var SAKRUM_FIRST_BOX_POS_Y = 47;
+		var OSPUBIS_RIGHT_FIRST_BOX_POS_X = 216;
+		var OSPUBIS_RIGHT_HEADER_POS_X = 248;
+		var OSPUBIS_LEFT_FIRST_BOX_POS_X = 368;
+		var OSPUBIS_FIRST_BOX_POS_Y = 457;
+		var SAKRUM_MIDDLE_FIRST_BOX_POS_X = 280;
+		var SAKRUM_MIDDLE_FIRST_BOX_POS_Y = 282;
+		var SYMFYS_FIRST_BOX_POS_X = 278;
+		var SYMFYS_FIRST_BOX_POS_Y = 457;
+		var BOX_SPACE_Y = 16;
+		var EXTRA_SEPARATOR_SPACE_Y = 3;
+		var EXTRA_LABEL_SPACE_Y = 3;
+		var HEADER_SPACE_Y = 15;
+		var LEFT_LABEL_SPACE_X = 20;
+		var DISLOCATED_RIGHT_LABEL_SPACE_X = -67;
+		var HEADER_STYLE = 'background-color:white;font-weight:bold;z-index:2;';
+		var DESC_STYLE = 'background-color:white;z-index:2;font-style:italic;';
+		var LABEL_STYLE = 'background-color:white;z-index:2;';
+		var DISLOCATED_LABEL_STYLE = 'background-color:white;font-style:italic;';
+		var SEPARATOR_LABEL_STYLE = 'background-color:white;z-index:5;font-weight:bold;';
+		var BOX_STYLE = 'z-index:1';
+		return Ext.create('Ext.panel.Panel', {
+			xtype: 'panel',
+			cls: 'FormPanelSmallFont',
+			name: 'pelvisPanel',
+			layout: 'absolute',
+			height: 668,
+			width: 670,
+			defaults: { handler: Ext.bind(onPelvisClick, this, [], true) },
+			bodyStyle: 'background-image:url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-pelvis.png);background-repeat:no-repeat;background-color:white;',
+
+			items: [
+
+				{
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SILED_LEFT_FIRST_BOX_POS_X,
+					y: SILED_FIRST_BOX_POS_Y,
+					boxLabel: '',
+					name: 'SILedV',
+					style: BOX_STYLE,
+					aValue: '3'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SILED_RIGHT_FIRST_BOX_POS_X,
+					y: SILED_FIRST_BOX_POS_Y,
+					boxLabel: '',
+					name: 'SILedH',
+					style: BOX_STYLE,
+					aValue: '3'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SAKRUM_MIDDLE_FIRST_BOX_POS_X,
+					y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 2),
+					boxLabel: '',
+					name: 'Coccyx',
+					style: BOX_STYLE,
+					aValue: '7'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SAKRUM_MIDDLE_FIRST_BOX_POS_X,
+					y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 1),
+					boxLabel: '',
+					name: 'Transversell',
+					style: BOX_STYLE,
+					aValue: '6'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SAKRUM_MIDDLE_FIRST_BOX_POS_X,
+					y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y,
+					boxLabel: '',
+					name: 'SpinopelvinDissociation',
+					style: BOX_STYLE,
+					aValue: '5'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SYMFYS_FIRST_BOX_POS_X,
+					y: SYMFYS_FIRST_BOX_POS_Y,
+					boxLabel: '',
+					name: 'Symfys',
+					style: BOX_STYLE,
+					aValue: '9'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SAKRUM_LEFT_FIRST_BOX_POS_X,
+					y: SAKRUM_FIRST_BOX_POS_Y,
+					boxLabel: '',
+					name: 'SakrumV',
+					style: BOX_STYLE,
+					aValue: '4'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SAKRUM_RIGHT_FIRST_BOX_POS_X,
+					y: SAKRUM_FIRST_BOX_POS_Y,
+					boxLabel: '',
+					name: 'SakrumH',
+					style: BOX_STYLE,
+					aValue: '4'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: ILEUM_LEFT_FIRST_BOX_POS_X,
+					y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 1),
+					boxLabel: '',
+					name: 'AlaStabilV',
+					style: BOX_STYLE,
+					aValue: '2'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: ILEUM_LEFT_FIRST_BOX_POS_X,
+					y: ILEUM_FIRST_BOX_POS_Y,
+					boxLabel: '',
+					name: 'RingskadaInstabilV',
+					style: BOX_STYLE,
+					aValue: '1'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					x: ILEUM_RIGHT_FIRST_BOX_POS_X,
+					y: ILEUM_FIRST_BOX_POS_Y,
+					boxLabel: '',
+					name: 'RingskadaInstabilH',
+					style: BOX_STYLE,
+					aValue: '1'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: ILEUM_RIGHT_FIRST_BOX_POS_X,
+					y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 1),
+					boxLabel: '',
+					name: 'AlaStabilH',
+					style: BOX_STYLE,
+					aValue: '2'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: OSPUBIS_LEFT_FIRST_BOX_POS_X,
+					y: OSPUBIS_FIRST_BOX_POS_Y,
+					boxLabel: '',
+					name: 'OSPubisV',
+					style: BOX_STYLE,
+					aValue: '8'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: OSPUBIS_RIGHT_FIRST_BOX_POS_X,
+					y: OSPUBIS_FIRST_BOX_POS_Y,
+					boxLabel: '',
+					name: 'OSPubisH',
+					style: BOX_STYLE,
+					aValue: '8'
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SILED_LEFT_FIRST_BOX_POS_X,
+					y: SILED_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
+					boxLabel: '',
+					name: 'SILedDisloceradV',
+					style: BOX_STYLE,
+					aValue: '6',
+					disabled: true
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SILED_RIGHT_FIRST_BOX_POS_X,
+					y: SILED_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
+					boxLabel: '',
+					name: 'SILedDisloceradH',
+					style: BOX_STYLE,
+					aValue: '6',
+					disabled: true
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SAKRUM_LEFT_FIRST_BOX_POS_X,
+					y: SAKRUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
+					boxLabel: '',
+					name: 'SakrumDisloceradV',
+					aValue: '2',
+					style: BOX_STYLE,
+					disabled: true
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SAKRUM_RIGHT_FIRST_BOX_POS_X,
+					y: SAKRUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
+					boxLabel: '',
+					name: 'SakrumDisloceradH',
+					style: BOX_STYLE,
+					aValue: '2',
+					disabled: true
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: ILEUM_LEFT_FIRST_BOX_POS_X,
+					y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 2),
+					boxLabel: '',
+					name: 'IleumDisloceradV',
+					style: BOX_STYLE,
+					aValue: '7',
+					disabled: true
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: OSPUBIS_LEFT_FIRST_BOX_POS_X,
+					y: OSPUBIS_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
+					boxLabel: '',
+					name: 'OSPubisDisloceradV',
+					style: BOX_STYLE,
+					aValue: '4',
+					disabled: true
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SYMFYS_FIRST_BOX_POS_X,
+					y: SYMFYS_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
+					boxLabel: '',
+					name: 'SymfysDislocerad',
+					style: BOX_STYLE,
+					aValue: '1',
+					disabled: true
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: OSPUBIS_RIGHT_FIRST_BOX_POS_X,
+					y: OSPUBIS_FIRST_BOX_POS_Y + (BOX_SPACE_Y),
+					boxLabel: '',
+					name: 'OSPubisDisloceradH',
+					style: BOX_STYLE,
+					aValue: '4',
+					disabled: true
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: ILEUM_RIGHT_FIRST_BOX_POS_X,
+					y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 2),
+					boxLabel: '',
+					name: 'IleumDisloceradH',
+					style: BOX_STYLE,
+					aValue: '7',
+					disabled: true
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					x: SAKRUM_MIDDLE_FIRST_BOX_POS_X,
+					y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 3),
+					boxLabel: '',
+					name: 'SakrumDislocerad',
+					style: BOX_STYLE,
+					aValue: '5',
+					disabled: true
+				}, {
+					xtype: 'label',
+					text: 'Ilium hö',
+					x: ILEUM_RIGHT_FIRST_BOX_POS_X - 62,
+					y: ILEUM_FIRST_BOX_POS_Y - HEADER_SPACE_Y,
+					style: HEADER_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Ilium vä',
+					x: ILEUM_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: ILEUM_FIRST_BOX_POS_Y - HEADER_SPACE_Y,
+					style: HEADER_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Sakrum hö',
+					x: SAKRUM_RIGHT_FIRST_BOX_POS_X - 73,
+					y: SAKRUM_FIRST_BOX_POS_Y,
+					style: HEADER_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Sakrum vä',
+					x: SAKRUM_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: SAKRUM_FIRST_BOX_POS_Y,
+					style: HEADER_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Si-led hö',
+					x: SILED_RIGHT_FIRST_BOX_POS_X - 61,
+					y: SILED_FIRST_BOX_POS_Y,
+					style: HEADER_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Si-led vä',
+					x: SILED_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: SILED_FIRST_BOX_POS_Y,
+					style: HEADER_STYLE
+				}, {
+					xtype: 'label',
+					text: 'OS pubis hö',
+					x: OSPUBIS_RIGHT_FIRST_BOX_POS_X - 81,
+					y: OSPUBIS_FIRST_BOX_POS_Y,
+					style: HEADER_STYLE
+				}, {
+					xtype: 'label',
+					text: 'OS pubis vä',
+					x: OSPUBIS_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: OSPUBIS_FIRST_BOX_POS_Y,
+					style: HEADER_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Symfys',
+					x: SYMFYS_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: SYMFYS_FIRST_BOX_POS_Y,
+					style: HEADER_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Sakrum',
+					x: SAKRUM_MIDDLE_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y - HEADER_SPACE_Y,
+					style: HEADER_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Ringskada instabil',
+					x: ILEUM_RIGHT_FIRST_BOX_POS_X - 111,
+					y: ILEUM_FIRST_BOX_POS_Y + EXTRA_LABEL_SPACE_Y,
+					style: LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Ringskada instabil',
+					x: ILEUM_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: ILEUM_FIRST_BOX_POS_Y + EXTRA_LABEL_SPACE_Y,
+					style: LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Ala stabil',
+					x: ILEUM_RIGHT_FIRST_BOX_POS_X - 59,
+					y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 1 + EXTRA_LABEL_SPACE_Y),
+					style: LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Ala stabil',
+					x: ILEUM_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 1 + EXTRA_LABEL_SPACE_Y),
+					style: LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Spinopelvin dissociation',
+					x: SAKRUM_MIDDLE_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + EXTRA_LABEL_SPACE_Y,
+					style: LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Transversell',
+					x: SAKRUM_MIDDLE_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 1 + EXTRA_LABEL_SPACE_Y),
+					style: LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Coccyx',
+					x: SAKRUM_MIDDLE_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 2 + EXTRA_LABEL_SPACE_Y),
+					style: LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Dislocerad',
+					x: ILEUM_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 2 + EXTRA_LABEL_SPACE_Y),
+					style: DISLOCATED_LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Dislocerad',
+					x: ILEUM_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X,
+					y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 2 + EXTRA_LABEL_SPACE_Y),
+					style: DISLOCATED_LABEL_STYLE
+				},
+				{
+					xtype: 'label',
+					text: 'Dislocerad',
+					x: SILED_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: SILED_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
+					style: DISLOCATED_LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Dislocerad',
+					x: SILED_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X,
+					y: SILED_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
+					style: DISLOCATED_LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Dislocerad',
+					x: SAKRUM_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: SAKRUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
+					style: DISLOCATED_LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Dislocerad',
+					x: SAKRUM_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X,
+					y: SAKRUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
+					style: DISLOCATED_LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Dislocerad',
+					x: OSPUBIS_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X,
+					y: OSPUBIS_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
+					style: DISLOCATED_LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Dislocerad',
+					x: OSPUBIS_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: OSPUBIS_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
+					style: DISLOCATED_LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Dislocerad',
+					x: SYMFYS_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: SYMFYS_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
+					style: DISLOCATED_LABEL_STYLE
+				}, {
+					xtype: 'label',
+					text: 'Dislocerad',
+					x: SAKRUM_MIDDLE_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
+					y: SAKRUM_MIDDLE_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 3 + EXTRA_LABEL_SPACE_Y),
+					style: DISLOCATED_LABEL_STYLE
+				}, {
+					xtype: 'label',
+					html: 'Börja alltid med att sätta ett kryss för varje skadekomponent samt ytterligare kryss<br/>om dislocerad. Flera kryss är tillåtna. Gå sedan vidare genom att klicka på Nästa. Om frakturen är protesnära klicka istället på knappen Protesnära fraktur för den aktuella sidan.<br/><b>OBS! Acetabulumengagerande frakturer klassificeras i Acetabulum-modulen.</b>',
+					x: 20,
+					y: 535,
+					style: DESC_STYLE
+				}, {
+					xtype: 'button',
+					name: 'prosthesisRight',
+					text: 'Protesnära fraktur Hö',
+					disabled: true,
+					style: 'background-color:#B80000 ;',
+					x: 10,
+					y: 430,
+					handler: function () {
+						aoImagesNavigationHandler(null, '61', '1', PROSTHESIS_FRACTURE, false);
+					}
+				},
+				{
+					xtype: 'button',
+					name: 'prosthesisLeft',
+					text: 'Protesnära fraktur Vä',
+					style: 'background-color:#B80000 ;',
+					disabled: true,
+					x: 445,
+					y: 430,
+					handler: function () {
+						aoImagesNavigationHandler(null, '61', '2', PROSTHESIS_FRACTURE, false);
+					}
+				}
+			]
+		});
+	}
+
+	function createPelvisRingInjuryForm(aFormName, aEventID, socialNumber, isCrossBorder, isReduced, unitName) {
+		return Ext.create('Ext.form.Panel', {
+			socialNumber: socialNumber,
+			isReduced: isReduced,
+			isCrossBorder: isCrossBorder,
+			unitName: unitName,
+			layout: 'absolute',
+			style: 'margin-bottom: 10px; margin-left: 20px;',
+			cls: 'FormPanelInYellow',
+			collapsible: true,
+			border: false,
+			titleCollapse: true,
+			collapsed: true,
+			animCollapse: false,
+			iconCls: 'FormPanelInYellowIcon',
+			frame: true,
+			height: 115,
+			width: 680,
+			listeners: {
+				afterrender: function (form) {
+					var icd10Field = getCmpByName('FxP_ICD10', form);
+					var sidaField = getCmpByName('FxP_Side', form);
+					if (icd10Field == null) {
+						return;
+					}
+					form.setTitle(RINGSKADA_TEXT + ' ' + icd10Field.getValue() + ' ' + getFractureFormSideTitleText(form, sidaField.getValue()) + addCrossBorderTitleInfo(form));
+				}
+			},
+			tools: [createRegisterInfoButton(aEventID)],
+			items: [, {
+				xtype: 'textfield',
+				fieldLabel: 'EventID',
+				name: 'EventID',
+				submitValue: false,
+				hideLabel: true,
+				hidden: true,
+				value: aEventID
+			}, {
+					xtype: 'textfield',
+					name: 'FxP_ICD10',
+					readOnly: true,
+					x: 381,
+					y: 29,
+					width: 98,
+					listeners: {
+						render: function (c) {
+							setICD10TextToolTip(c.ownerCt, c);
+							setICD10TextToolTip(c.ownerCt, c.ownerCt.header);
+						}
+					}
+				},
+				{
+					xtype: 'combo',
+					name: 'FxP_Side',
+					displayField: 'ValueName',
+					store: createSelectValueStore(4051),
+					valueField: 'ValueCode',
+					width: 100,
+					mode: 'local',
+					x: 271,
+					y: 29,
+					readOnly: true
+				}
+			],
+			api: {
+				submit: FormManagement.SubmitRegistration
+			}
+		});
+
+	}
+
+	function createBackFractureSubPanel(aEventID, socialNumber, isCrossBorder, isReduced, unitName) {
+		return Ext.create('Ext.form.Panel', {
+			isReduced: isReduced,
+			isCrossBorder: isCrossBorder,
+			unitName: unitName,
+			socialNumber: socialNumber,
+			layout: 'absolute',
+			style: 'margin-bottom: 10px; margin-left: 20px;',
+			cls: 'FormPanelInYellow',
+			collapsible: true,
+			border: false,
+			titleCollapse: true,
+			collapsed: true,
+			animCollapse: false,
+			iconCls: 'FormPanelInYellowIcon',
+			frame: true,
+			height: 115,
+			width: 680,
+			listeners: {
+				afterrender: function (form) {
+					var icd10Field = getCmpByName('FxS_ICD10', form);
+
+					if (icd10Field == null) {
+						return;
+					}
+					form.setTitle(BACK_SUBFRACTURE_TEXT + ' ' + icd10Field.getValue() + addCrossBorderTitleInfo(form));
+				}
+			},
+			tools: [createRegisterInfoButton(aEventID)],
+			items: [{
+				xtype: 'label',
+				text: 'Diagnos (ICD-10):',
+				name: 'lbl_fxs_icd10',
+				x: 10,
+				y: 10
+			}, {
+				xtype: 'textfield',
+				fieldLabel: 'EventID',
+				name: 'EventID',
+				submitValue: false,
+				hideLabel: true,
+				hidden: true,
+				value: aEventID
+			}, {
+				xtype: 'textfield',
+				name: 'FxS_ICD10',
+				readOnly: true,
+				x: 10,
+				y: 29,
+				width: 98,
+				listeners: {
+					render: function (c) {
+						setICD10TextToolTip(c.ownerCt, c);
+						setICD10TextToolTip(c.ownerCt, c.ownerCt.header);
+					}
+				}
+			}, {
+				xtype: 'datefield',
+				name: 'FxS_RegDat',
+				fieldLabel: 'RegDat',
+				format: 'Y-m-d',
+				altFormats: "Ymd|ymd",
+				hidden: true,
+				hideLabel: true
+			}
+			],
+			api: {
+				submit: FormManagement.SubmitRegistration
+			}
+		});
+
+
+	}
+
+	function clone(obj) {
+		if (obj == null || typeof (obj) != 'object')
+			return obj;
+		var temp = obj.constructor();
+		for (var key in obj)
+			temp[key] = clone(obj[key]);
+		return temp;
+	}
+
+	function compareMenuItems(a, b) {
+		if (a.getValue() < b.getValue()) {
+			return -1;
+		}
+		if (a.getValue() > b.getValue()) {
+			return 1;
+		}
+		return 0;
+	}
+
+	function PelvisRingInjuryFormHandler(aRingInjuryForm) {
+		var comboDislocerad = getCmpByName('FxP_Disloc', aRingInjuryForm);
+		comboDislocerad.store.loadData(app.myRegisterdomains['4146'].DomainValues);
+		var comboSida = getCmpByName('FxP_Side', aRingInjuryForm);
+		comboSida.store.loadData(app.myRegisterdomains['4051'].DomainValues);
+	}
+
+	function createSkeletonWindow(aBody) {
+		var n = 0;
+		var tplSkeleton;
+		var tplHandSkeleton;
+		if (1) {
+			tplSkeleton = new Ext.XTemplate(
+				'<img src="{image}"> ',
+				'<div class="skeleton SevenV"><a onmouseover="onHover(this, \'SevenV\' )" onmouseout="onUnHover(this, \'SevenV\')" onclick="onDetermineIfChildFracture(null,7,2,null,false)"></a></div>',
+				'<div class="skeleton EightV"><a onmouseover="onHover(this, \'EightV\' )" onmouseout="onUnHover(this, \'EightV\')" onclick="onDetermineIfChildFracture(null,8,2,null,false)"></a></div>',
+				'<div class="skeleton NineV"><a onmouseover="onHover(this, \'NineV\' )" onmouseout="onUnHover(this, \'NineV\')" onclick="onDetermineIfChildFracture(null,9,2,null,false)"></a></div>',
+				'<div class="skeleton TenV"><a onmouseover="onHover(this, \'TenV\' )" onmouseout="onUnHover(this, \'TenV\')" onclick="onDetermineIfChildFracture(null,10,2,null,false)"></a></div>',
+				'<div class="skeleton ElevenV"><a onmouseover="onHover(this, \'ElevenV\' )" onmouseout="onUnHover(this, \'ElevenV\')" onclick="onDetermineIfChildFracture(null,11,2,null,false)"></a></div>',
+				'<div class="skeleton TwelveV"><a onmouseover="onHover(this, \'TwelveV\' )" onmouseout="onUnHover(this, \'TwelveV\')" onclick="onDetermineIfChildFracture(null,12,2,null,false)"></a></div>',
+				'<div class="skeleton ThirteenV"><a onmouseover="onHover(this, \'ThirteenV\' )" onmouseout="onUnHover(this, \'ThirteenV\')" onclick="onDetermineIfChildFracture(null,13,2,null,false)"></a></div>',
+				'<div class="skeleton TwentyoneV"><a onmouseover="onHover(this, \'TwentyoneV\' )" onmouseout="onUnHover(this, \'TwentyoneV\')" onclick="onDetermineIfChildFracture(null,21,2,null,false)"></a></div>',
+				'<div class="skeleton TwentytwoV"><a onmouseover="onHover(this, \'TwentytwoV\' )" onmouseout="onUnHover(this, \'TwentytwoV\')" onclick="onDetermineIfChildFracture(null,22,2,null,false)"></a></div>',
+				'<div class="skeleton TwentythreeV"><a onmouseover="onHover(this, \'TwentythreeV\' )" onmouseout="onUnHover(this, \'TwentythreeV\')" onclick="onDetermineIfChildFracture(null,23,2,null,false)"></a></div>',
+				'<div class="skeleton ThirtyoneV"><a onmouseover="onHover(this, \'ThirtyoneV\' )" onmouseout="onUnHover(this, \'ThirtyoneV\')" onclick="onDetermineIfChildFracture(null,31,2,null,false)"></a></div>',
+				'<div class="skeleton ThirtytwoV"><a onmouseover="onHover(this, \'ThirtytwoV\' )" onmouseout="onUnHover(this, \'ThirtytwoV\')" onclick="onDetermineIfChildFracture(null,32,2,null,false)"></a></div>',
+				'<div class="skeleton ThirtythreeV"><a onmouseover="onHover(this, \'ThirtythreeV\' )" onmouseout="onUnHover(this, \'ThirtythreeV\')" onclick="onDetermineIfChildFracture(null,33,2,null,false)"></a></div>',
+				'<div class="skeleton ThirtyFourV"><a onmouseover="onHover(this, \'ThirtyFourV\' )" onmouseout="onUnHover(this, \'ThirtyFourV\')" onclick="onDetermineIfChildFracture(null,34,2,null,false)"></a></div>',
+				'<div class="skeleton FortyoneV"><a onmouseover="onHover(this, \'FortyoneV\' )" onmouseout="onUnHover(this, \'FortyoneV\')" onclick="onDetermineIfChildFracture(null,41,2,null,false)"></a></div>',
+				'<div class="skeleton FortytwoV"><a onmouseover="onHover(this, \'FortytwoV\' )" onmouseout="onUnHover(this, \'FortytwoV\')" onclick="onDetermineIfChildFracture(null,42,2,null,false)"></a></div>',
+				'<div class="skeleton FortythreeV"><a onmouseover="onHover(this, \'FortythreeV\' )" onmouseout="onUnHover(this, \'FortythreeV\')" onclick="onDetermineIfChildFracture(null,43,2,null,false)"></a></div>',
+				'<div class="skeleton FortyfourV"><a onmouseover="onHover(this, \'FortyfourV\' )" onmouseout="onUnHover(this, \'FortyfourV\')" onclick="onDetermineIfChildFracture(null,44,2,null,false)"></a></div>',
+				'<div class="skeleton SixtyTwoV"><a onmouseover="onHover(this, \'SixtyTwoV\' )" onmouseout="onUnHover(this, \'SixtyTwoV\')" onclick="onDetermineIfChildFracture(null,62,2,null,false)"></a></div>',
+				'<div class="skeleton SevenH"><a onmouseover="onHover(this, \'SevenH\' )" onmouseout="onUnHover(this, \'SevenH\')" onclick="onDetermineIfChildFracture(null,7,1,null,false)"></a></div>',
+				'<div class="skeleton EightH"><a onmouseover="onHover(this, \'EightH\' )" onmouseout="onUnHover(this, \'EightH\')" onclick="onDetermineIfChildFracture(null,8,1,null,false)"></a></div>',
+				'<div class="skeleton NineH"><a onmouseover="onHover(this, \'NineH\' )" onmouseout="onUnHover(this, \'NineH\')" onclick="onDetermineIfChildFracture(null,9,1,null,false)"></a></div>',
+				'<div class="skeleton TenH"><a onmouseover="onHover(this, \'TenH\' )" onmouseout="onUnHover(this, \'TenH\')" onclick="onDetermineIfChildFracture(null,10,1,null,false)"></a></div>',
+				'<div class="skeleton ElevenH"><a onmouseover="onHover(this, \'ElevenH\' )" onmouseout="onUnHover(this, \'ElevenH\')" onclick="onDetermineIfChildFracture(null,11,1,null,false)"></a></div>',
+				'<div class="skeleton TwelveH"><a onmouseover="onHover(this, \'TwelveH\' )" onmouseout="onUnHover(this, \'TwelveH\')" onclick="onDetermineIfChildFracture(null,12,1,null,false)"></a></div>',
+				'<div class="skeleton ThirteenH"><a onmouseover="onHover(this, \'ThirteenH\' )" onmouseout="onUnHover(this, \'ThirteenH\')" onclick="onDetermineIfChildFracture(null,13,1,null,false)"></a></div>',
+				'<div class="skeleton TwentyoneH"><a onmouseover="onHover(this, \'TwentyoneH\' )" onmouseout="onUnHover(this, \'TwentyoneH\')" onclick="onDetermineIfChildFracture(null,21,1,null,false)"></a></div>',
+				'<div class="skeleton TwentytwoH"><a onmouseover="onHover(this, \'TwentytwoH\' )" onmouseout="onUnHover(this, \'TwentytwoH\')" onclick="onDetermineIfChildFracture(null,22,1,null,false)"></a></div>',
+				'<div class="skeleton TwentythreeH"><a onmouseover="onHover(this, \'TwentythreeH\' )" onmouseout="onUnHover(this, \'TwentythreeH\')" onclick="onDetermineIfChildFracture(null,23,1,null,false)"></a></div>',
+				'<div class="skeleton ThirtyoneH"><a onmouseover="onHover(this, \'ThirtyoneH\' )" onmouseout="onUnHover(this, \'ThirtyoneH\')" onclick="onDetermineIfChildFracture(null,31,1,null,false)"></a></div>',
+				'<div class="skeleton ThirtytwoH"><a onmouseover="onHover(this, \'ThirtytwoH\' )" onmouseout="onUnHover(this, \'ThirtytwoH\')" onclick="onDetermineIfChildFracture(null,32,1,null,false)"></a></div>',
+				'<div class="skeleton ThirtythreeH"><a onmouseover="onHover(this, \'ThirtythreeH\' )" onmouseout="onUnHover(this, \'ThirtythreeH\')" onclick="onDetermineIfChildFracture(null,33,1,null,false)"></a></div>',
+				'<div class="skeleton ThirtyFourH"><a onmouseover="onHover(this, \'ThirtyFourH\' )" onmouseout="onUnHover(this, \'ThirtyFourH\')" onclick="onDetermineIfChildFracture(null,34,1,null,false)"></a></div>',
+				'<div class="skeleton FortyoneH"><a onmouseover="onHover(this, \'FortyoneH\' )" onmouseout="onUnHover(this, \'FortyoneH\')" onclick="onDetermineIfChildFracture(null,41,1,null,false)"></a></div>',
+				'<div class="skeleton FortytwoH"><a onmouseover="onHover(this, \'FortytwoH\' )" onmouseout="onUnHover(this, \'FortytwoH\')"  onclick="onDetermineIfChildFracture(null,42,1,null,false)"></a></div>',
+				'<div class="skeleton FortythreeH"><a onmouseover="onHover(this, \'FortythreeH\' )" onmouseout="onUnHover(this, \'FortythreeH\')" onclick="onDetermineIfChildFracture(null,43,1,null,false)"></a></div>',
+				'<div class="skeleton FortyfourH"><a onmouseover="onHover(this, \'FortyfourH\' )" onmouseout="onUnHover(this, \'FortyfourH\')"  onclick="onDetermineIfChildFracture(null,44,1,null,false)"></a></div>',
+				'<div class="skeleton SixtyTwoH"><a onmouseover="onHover(this, \'SixtyTwoH\' )" onmouseout="onUnHover(this, \'SixtyTwoH\')" onclick="onDetermineIfChildFracture(null,62,1,null,false)"></a></div>',
+				'<div class="skeleton SixtyOne"><a onmouseover="onHover(this, \'SixtyOne\' )" onmouseout="onUnHover(this, \'SixtyOne\')" onclick="onDetermineIfChildFracture(null,61,0,null,false)"></a></div>',
+				'<div title="C0-C2" class="skeleton Hundred"><a onmouseover="onHover(this, \'Hundred\' )" onmouseout="onUnHover(this, \'Hundred\')" onclick="onDetermineIfChildFracture(null,100,3,null,false)"></a></div>',
+				'<div title="C3-T1" class="skeleton HundredOne"><a onmouseover="onHover(this, \'HundredOne\' )" onmouseout="onUnHover(this, \'HundredOne\')" onclick="onDetermineIfChildFracture(null,101,3,null,false)"></a></div>',
+				'<div title="T2-T10" class="skeleton HundredTwo"><a onmouseover="onHover(this, \'HundredTwo\' )" onmouseout="onUnHover(this, \'HundredTwo\')" onclick="onDetermineIfChildFracture(null,102,3,null,false)"></a></div>',
+				'<div title="T11-L5" class="skeleton HundredThree"><a onmouseover="onHover(this, \'HundredThree\' )" onmouseout="onUnHover(this, \'HundredThree\')" onclick="onDetermineIfChildFracture(null,103,3,null,false)"></a></div>'
+			);
+		} else {
+			tplSkeleton = new Ext.XTemplate(
+				'<img src="{image}"> ',
+				'<div class="skeleton SevenV"><a onmouseover="onHover(this, \'SevenV\' )" onmouseout="onUnHover(this, \'SevenV\')" onclick="onDetermineIfChildFracture(null,7,2,null,false)"></a></div>',
+				'<div class="skeleton EightV"><a onmouseover="onHover(this, \'EightV\' )" onmouseout="onUnHover(this, \'EightV\')" onclick="onDetermineIfChildFracture(null,8,2,null,false)"></a></div>',
+				'<div class="skeleton NineV"><a onmouseover="onHover(this, \'NineV\' )" onmouseout="onUnHover(this, \'NineV\')" onclick="onDetermineIfChildFracture(null,9,2,null,false)"></a></div>',
+				'<div class="skeleton TenV"><a onmouseover="onHover(this, \'TenV\' )" onmouseout="onUnHover(this, \'TenV\')" onclick="onDetermineIfChildFracture(null,10,2,null,false)"></a></div>',
+				'<div class="skeleton ElevenV"><a onmouseover="onHover(this, \'ElevenV\' )" onmouseout="onUnHover(this, \'ElevenV\')" onclick="onDetermineIfChildFracture(null,11,2,null,false)"></a></div>',
+				'<div class="skeleton TwelveV"><a onmouseover="onHover(this, \'TwelveV\' )" onmouseout="onUnHover(this, \'TwelveV\')" onclick="onDetermineIfChildFracture(null,12,2,null,false)"></a></div>',
+				'<div class="skeleton ThirteenV"><a onmouseover="onHover(this, \'ThirteenV\' )" onmouseout="onUnHover(this, \'ThirteenV\')" onclick="onDetermineIfChildFracture(null,13,2,null,false)"></a></div>',
+				'<div class="skeleton TwentyoneV"><a onmouseover="onHover(this, \'TwentyoneV\' )" onmouseout="onUnHover(this, \'TwentyoneV\')" onclick="onDetermineIfChildFracture(null,21,2,null,false)"></a></div>',
+				'<div class="skeleton TwentytwoV"><a onmouseover="onHover(this, \'TwentytwoV\' )" onmouseout="onUnHover(this, \'TwentytwoV\')" onclick="onDetermineIfChildFracture(null,22,2,null,false)"></a></div>',
+				'<div class="skeleton TwentythreeV"><a onmouseover="onHover(this, \'TwentythreeV\' )" onmouseout="onUnHover(this, \'TwentythreeV\')" onclick="onDetermineIfChildFracture(null,23,2,null,false)"></a></div>',
+				'<div class="skeleton ThirtyoneV"><a onmouseover="onHover(this, \'ThirtyoneV\' )" onmouseout="onUnHover(this, \'ThirtyoneV\')" onclick="onDetermineIfChildFracture(null,31,2,null,false)"></a></div>',
+				'<div class="skeleton ThirtytwoV"><a onmouseover="onHover(this, \'ThirtytwoV\' )" onmouseout="onUnHover(this, \'ThirtytwoV\')" onclick="onDetermineIfChildFracture(null,32,2,null,false)"></a></div>',
+				'<div class="skeleton ThirtythreeV"><a onmouseover="onHover(this, \'ThirtythreeV\' )" onmouseout="onUnHover(this, \'ThirtythreeV\')" onclick="onDetermineIfChildFracture(null,33,2,null,false)"></a></div>',
+				'<div class="skeleton ThirtyFourV"><a onmouseover="onHover(this, \'ThirtyFourV\' )" onmouseout="onUnHover(this, \'ThirtyFourV\')" onclick="onDetermineIfChildFracture(null,34,2,null,false)"></a></div>',
+				'<div class="skeleton FortyoneV"><a onmouseover="onHover(this, \'FortyoneV\' )" onmouseout="onUnHover(this, \'FortyoneV\')" onclick="onDetermineIfChildFracture(null,41,2,null,false)"></a></div>',
+				'<div class="skeleton FortytwoV"><a onmouseover="onHover(this, \'FortytwoV\' )" onmouseout="onUnHover(this, \'FortytwoV\')" onclick="onDetermineIfChildFracture(null,42,2,null,false)"></a></div>',
+				'<div class="skeleton FortythreeV"><a onmouseover="onHover(this, \'FortythreeV\' )" onmouseout="onUnHover(this, \'FortythreeV\')" onclick="onDetermineIfChildFracture(null,43,2,null,false)"></a></div>',
+				'<div class="skeleton FortyfourV"><a onmouseover="onHover(this, \'FortyfourV\' )" onmouseout="onUnHover(this, \'FortyfourV\')" onclick="onDetermineIfChildFracture(null,44,2,null,false)"></a></div>',
+				'<div class="skeleton SixtyTwoV"><a onmouseover="onHover(this, \'SixtyTwoV\' )" onmouseout="onUnHover(this, \'SixtyTwoV\')" onclick="onDetermineIfChildFracture(null,62,2,null,false)"></a></div>',
+				'<div class="skeleton SevenH"><a onmouseover="onHover(this, \'SevenH\' )" onmouseout="onUnHover(this, \'SevenH\')" onclick="onDetermineIfChildFracture(null,7,1,null,false)"></a></div>',
+				'<div class="skeleton EightH"><a onmouseover="onHover(this, \'EightH\' )" onmouseout="onUnHover(this, \'EightH\')" onclick="onDetermineIfChildFracture(null,8,1,null,false)"></a></div>',
+				'<div class="skeleton NineH"><a onmouseover="onHover(this, \'NineH\' )" onmouseout="onUnHover(this, \'NineH\')" onclick="onDetermineIfChildFracture(null,9,1,null,false)"></a></div>',
+				'<div class="skeleton TenH"><a onmouseover="onHover(this, \'TenH\' )" onmouseout="onUnHover(this, \'TenH\')" onclick="onDetermineIfChildFracture(null,10,1,null,false)"></a></div>',
+				'<div class="skeleton ElevenH"><a onmouseover="onHover(this, \'ElevenH\' )" onmouseout="onUnHover(this, \'ElevenH\')" onclick="onDetermineIfChildFracture(null,11,1,null,false)"></a></div>',
+				'<div class="skeleton TwelveH"><a onmouseover="onHover(this, \'TwelveH\' )" onmouseout="onUnHover(this, \'TwelveH\')" onclick="onDetermineIfChildFracture(null,12,1,null,false)"></a></div>',
+				'<div class="skeleton ThirteenH"><a onmouseover="onHover(this, \'ThirteenH\' )" onmouseout="onUnHover(this, \'ThirteenH\')" onclick="onDetermineIfChildFracture(null,13,1,null,false)"></a></div>',
+				'<div class="skeleton TwentyoneH"><a onmouseover="onHover(this, \'TwentyoneH\' )" onmouseout="onUnHover(this, \'TwentyoneH\')" onclick="onDetermineIfChildFracture(null,21,1,null,false)"></a></div>',
+				'<div class="skeleton TwentytwoH"><a onmouseover="onHover(this, \'TwentytwoH\' )" onmouseout="onUnHover(this, \'TwentytwoH\')" onclick="onDetermineIfChildFracture(null,22,1,null,false)"></a></div>',
+				'<div class="skeleton TwentythreeH"><a onmouseover="onHover(this, \'TwentythreeH\' )" onmouseout="onUnHover(this, \'TwentythreeH\')" onclick="onDetermineIfChildFracture(null,23,1,null,false)"></a></div>',
+				'<div class="skeleton ThirtyoneH"><a onmouseover="onHover(this, \'ThirtyoneH\' )" onmouseout="onUnHover(this, \'ThirtyoneH\')" onclick="onDetermineIfChildFracture(null,31,1,null,false)"></a></div>',
+				'<div class="skeleton ThirtytwoH"><a onmouseover="onHover(this, \'ThirtytwoH\' )" onmouseout="onUnHover(this, \'ThirtytwoH\')" onclick="onDetermineIfChildFracture(null,32,1,null,false)"></a></div>',
+				'<div class="skeleton ThirtythreeH"><a onmouseover="onHover(this, \'ThirtythreeH\' )" onmouseout="onUnHover(this, \'ThirtythreeH\')" onclick="onDetermineIfChildFracture(null,33,1,null,false)"></a></div>',
+				'<div class="skeleton ThirtyFourH"><a onmouseover="onHover(this, \'ThirtyFourH\' )" onmouseout="onUnHover(this, \'ThirtyFourH\')" onclick="onDetermineIfChildFracture(null,34,1,null,false)"></a></div>',
+				'<div class="skeleton FortyoneH"><a onmouseover="onHover(this, \'FortyoneH\' )" onmouseout="onUnHover(this, \'FortyoneH\')" onclick="onDetermineIfChildFracture(null,41,1,null,false)"></a></div>',
+				'<div class="skeleton FortytwoH"><a onmouseover="onHover(this, \'FortytwoH\' )" onmouseout="onUnHover(this, \'FortytwoH\')"  onclick="onDetermineIfChildFracture(null,42,1,null,false)"></a></div>',
+				'<div class="skeleton FortythreeH"><a onmouseover="onHover(this, \'FortythreeH\' )" onmouseout="onUnHover(this, \'FortythreeH\')" onclick="onDetermineIfChildFracture(null,43,1,null,false)"></a></div>',
+				'<div class="skeleton FortyfourH"><a onmouseover="onHover(this, \'FortyfourH\' )" onmouseout="onUnHover(this, \'FortyfourH\')"  onclick="onDetermineIfChildFracture(null,44,1,null,false)"></a></div>',
+				'<div class="skeleton SixtyTwoH"><a onmouseover="onHover(this, \'SixtyTwoH\' )" onmouseout="onUnHover(this, \'SixtyTwoH\')" onclick="onDetermineIfChildFracture(null,62,1,null,false)"></a></div>',
+				'<div class="skeleton SixtyOne"><a onmouseover="onHover(this, \'SixtyOne\' )" onmouseout="onUnHover(this, \'SixtyOne\')" onclick="onDetermineIfChildFracture(null,61,0,null,false)"></a></div>',
+				'<div title="C0-C2" class="skeleton Hundred"><a onmouseover="onHover(this, \'Hundred\' )" onmouseout="onUnHover(this, \'Hundred\')" onclick="onDetermineIfChildFracture(null,100,3,null,false)"></a></div>',
+				'<div title="C3-T1" class="skeleton HundredOne"><a onmouseover="onHover(this, \'HundredOne\' )" onmouseout="onUnHover(this, \'HundredOne\')" onclick="onDetermineIfChildFracture(null,101,3,null,false)"></a></div>',
+				'<div title="T2-T10" class="skeleton HundredTwo"><a onmouseover="onHover(this, \'HundredTwo\' )" onmouseout="onUnHover(this, \'HundredTwo\')" onclick="onDetermineIfChildFracture(null,102,3,null,false)"></a></div>',
+				'<div title="T11-L5" class="skeleton HundredThree"><a onmouseover="onHover(this, \'HundredThree\' )" onmouseout="onUnHover(this, \'HundredThree\')" onclick="onDetermineIfChildFracture(null,103,3,null,false)"></a></div>'
+			);
+		}
+		tplHandSkeletonV = new Ext.XTemplate(
+			'<div id="container" style="display:block;background-image:url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-V.png);" width="591" height="500">',
+			'<img src="https://stratum.blob.core.windows.net/sfr/Images/s.gif" width="591" height="500" />',
+			'<img src="https://stratum.blob.core.windows.net/sfr/Images/s.gif" style="position:absolute;top:0px; left:0px;z-index:2;" width="591" height="500" class="map-trans" usemap="#handMap" />',
+			'<img onload="onLoadHandImgMini()"  src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-75P-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:423px; left:345px;z-index:0;visibility:hidden;" id="img75P" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-75T-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:404px; left:334px;z-index:0;visibility:hidden;" id="img75T" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-71-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:438px; left:299px;z-index:0;visibility:hidden;" id="img71" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-72-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:419px; left:253px;z-index:0;visibility:hidden;" id="img72" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-76T2-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:392px; left:266px;z-index:0;visibility:hidden;" id="img76T2" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-73-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:388px; left:282px;z-index:0;visibility:hidden;" id="img73" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-74-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:380px; left:319px;z-index:0;visibility:hidden;" id="img74" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-76T1-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:388px; left:231px;z-index:0;visibility:hidden;" id="img76T1" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78N1-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:128px; left:239px;z-index:0;visibility:hidden;" id="img78N1" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78M1-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:123px; left:289px;z-index:0;visibility:hidden;" id="img78M1" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78R1-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:148px; left:338px;z-index:0;visibility:hidden;" id="img78R1" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78L1-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:200px; left:386px;z-index:0;visibility:hidden;" id="img78L1" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77N-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:229px; left:244px;z-index:0;visibility:hidden;" id="img77N" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77M-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:231px; left:286px;z-index:0;visibility:hidden;" id="img77M" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77R-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:244px; left:312px;z-index:0;visibility:hidden;" id="img77R" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77L-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:270px; left:337px;z-index:0;visibility:hidden;" id="img77L" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78N2-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:72px; left:229px;z-index:0;visibility:hidden;" id="img78N2" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78M2-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:55px; left:289px;z-index:0;visibility:hidden;" id="img78M2" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78R2-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:78px; left:348px;z-index:0;visibility:hidden;" id="img78R2" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78L2-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:139px; left:412px;z-index:0;visibility:hidden;" id="img78L2" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78N3-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:34px; left:233px;z-index:0;visibility:hidden;" id="img78N3" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78M3-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:5px; left:290px;z-index:0;visibility:hidden;" id="img78M3" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78R3-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:33px; left:360px;z-index:0;visibility:hidden;" id="img78R3" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78L3-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:108px; left:417px;z-index:0;visibility:hidden;" id="img78L3" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78T2-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:205px; left:100px;z-index:0;visibility:hidden;" id="img78T2" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78T1-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:250px; left:124px;z-index:0;visibility:hidden;" id="img78T1" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77T-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:310px; left:159px;z-index:0;visibility:hidden;" id="img77T" />',
+			'</div>',
+			'<map id="handMap" name="handMap">',
+			'<area title="Pisiforme" shape="polygon" coords="339,437,347,451,371,451,371,419,358,419" onmouseover="onHandSkeletonHover(\'img75P\')" onmouseout="onHandSkeletonUnhover(\'img75P\')" onclick="aoImagesNavigationHandler(null,\'75P\',2,null,true)"/>',
+			'<area title="Triquetrum" shape="polygon" coords="331,431,338,436,353,417,380,417,380,396,354,396" onmouseover="onHandSkeletonHover(\'img75T\')" onmouseout="onHandSkeletonUnhover(\'img75T\')" onclick="aoImagesNavigationHandler(null,\'75T\',2,null,true)"/>',
+			'<area title="Lunatum" shape="polygon" coords="298,449,308,464,348,464,328,435" onmouseover="onHandSkeletonHover(\'img71\')" onmouseout="onHandSkeletonUnhover(\'img71\')" onclick="aoImagesNavigationHandler(null,\'71\',2,null,true)"/>',
+			'<area title="Scaphoideum" shape="polygon" coords="245,438,297,463,297,442,279,415" onmouseover="onHandSkeletonHover(\'img72\')" onmouseout="onHandSkeletonUnhover(\'img72\')" onclick="aoImagesNavigationHandler(null,\'72\',2,null,true)"/>',
+			'<area title="Trapezoideum" shape="polygon" coords="266,399,279,415,287,410,290,390,269,390" onmouseover="onHandSkeletonHover(\'img76T2\')" onmouseout="onHandSkeletonUnhover(\'img76T2\')" onclick="aoImagesNavigationHandler(null,\'76T2\',2,null,true)"/>',
+			'<area title="Capitatum" shape="polygon" coords="281,417,298,443,320,431,311,382" onmouseover="onHandSkeletonHover(\'img73\')" onmouseout="onHandSkeletonUnhover(\'img73\')" onclick="aoImagesNavigationHandler(null,\'73\',2,null,true)"/>',
+			'<area title="Hamatum" shape="polygon" coords="319,395,324,432,353,393,337,376" onmouseover="onHandSkeletonHover(\'img74\')" onmouseout="onHandSkeletonUnhover(\'img74\')" onclick="aoImagesNavigationHandler(null,\'74\',2,null,true)"/>',
+			'<area title="Trapezium" shape="polygon" coords="221,415,247,438,279,416,258,392" onmouseover="onHandSkeletonHover(\'img76T1\')" onmouseout="onHandSkeletonUnhover(\'img76T1\')" onclick="aoImagesNavigationHandler(null,\'76T1\',2,null,true)"/>',
+			'<area title="Metakarpal N" shape="rect" coords="253,235,284,386" onmouseover="onHandSkeletonHover(\'img77N\')" onmouseout="onHandSkeletonUnhover(\'img77N\')" onclick="aoImagesNavigationHandler(null,\'77N\',2,null,true)"/>',
+			'<area title="Metakarpal M" shape="rect" coords="292,235,327,372" onmouseover="onHandSkeletonHover(\'img77M\')" onmouseout="onHandSkeletonUnhover(\'img77M\')" onclick="aoImagesNavigationHandler(null,\'77M\',2,null,true)"/>',
+			'<area title="Metakarpal R" shape="rect" coords="333,247,366,359" onmouseover="onHandSkeletonHover(\'img77R\')" onmouseout="onHandSkeletonUnhover(\'img77R\')" onclick="aoImagesNavigationHandler(null,\'77R\',2,null,true)"/>',
+			'<area title="Metakarpal L" shape="rect" coords="372,270,418,384" onmouseover="onHandSkeletonHover(\'img77L\')" onmouseout="onHandSkeletonUnhover(\'img77L\')" onclick="aoImagesNavigationHandler(null,\'77L\',2,null,true)"/>',
+			'<area title="Proximal falang N" shape="rect" coords="236,134,282,231" onmouseover="onHandSkeletonHover(\'img78N1\')" onmouseout="onHandSkeletonUnhover(\'img78N1\')" onclick="aoImagesNavigationHandler(null,\'78N1\',2,null,true)"/>',
+			'<area title="Proximal falang M" shape="rect" coords="290,124,330,233" onmouseover="onHandSkeletonHover(\'img78M1\')" onmouseout="onHandSkeletonUnhover(\'img78M1\')" onclick="aoImagesNavigationHandler(null,\'78M1\',2,null,true)"/>',
+			'<area title="Proximal falang R" shape="rect" coords="340,145,378,248" onmouseover="onHandSkeletonHover(\'img78R1\')" onmouseout="onHandSkeletonUnhover(\'img78R1\')" onclick="aoImagesNavigationHandler(null,\'78R1\',2,null,true)"/>',
+			'<area title="Proximal falang L" shape="rect" coords="387,195,435,275" onmouseover="onHandSkeletonHover(\'img78L1\')" onmouseout="onHandSkeletonUnhover(\'img78L1\')" onclick="aoImagesNavigationHandler(null,\'78L1\',2,null,true)"/>',
+			'<area title="Mellanfalang N" shape="rect" coords="227,78,282,135" onmouseover="onHandSkeletonHover(\'img78N2\')" onmouseout="onHandSkeletonUnhover(\'img78N2\')" onclick="aoImagesNavigationHandler(null,\'78N2\',2,null,true)"/>',
+			'<area title="Mellanfalang M" shape="rect" coords="290,52,332,121" onmouseover="onHandSkeletonHover(\'img78M2\')" onmouseout="onHandSkeletonUnhover(\'img78M2\')" onclick="aoImagesNavigationHandler(null,\'78M2\',2,null,true)"/>',
+			'<area title="Mellanfalang R" shape="rect" coords="349,77,392,144" onmouseover="onHandSkeletonHover(\'img78R2\')" onmouseout="onHandSkeletonUnhover(\'img78R2\')" onclick="aoImagesNavigationHandler(null,\'78R2\',2,null,true)"/>',
+			'<area title="Mellanfalang L" shape="rect" coords="405,147,450,198" onmouseover="onHandSkeletonHover(\'img78L2\')" onmouseout="onHandSkeletonUnhover(\'img78L2\')" onclick="aoImagesNavigationHandler(null,\'78L2\',2,null,true)"/>',
+			'<area title="Distal falang N" shape="rect" coords="218,37,266,75" onmouseover="onHandSkeletonHover(\'img78N3\')" onmouseout="onHandSkeletonUnhover(\'img78N3\')" onclick="aoImagesNavigationHandler(null,\'78N3\',2,null,true)"/>',
+			'<area title="Distal falang M" shape="rect" coords="291,1,332,52" onmouseover="onHandSkeletonHover(\'img78M3\')" onmouseout="onHandSkeletonUnhover(\'img78M3\')" onclick="aoImagesNavigationHandler(null,\'78M3\',2,null,true)"/>',
+			'<area title="Distal falang R" shape="rect" coords="356,32,392,87" onmouseover="onHandSkeletonHover(\'img78R3\')" onmouseout="onHandSkeletonUnhover(\'img78R3\')" onclick="aoImagesNavigationHandler(null,\'78R3\',2,null,true)"/>',
+			'<area title="Distal falang L" shape="rect" coords="411,109,457,152" onmouseover="onHandSkeletonHover(\'img78L3\')" onmouseout="onHandSkeletonUnhover(\'img78L3\')" onclick="aoImagesNavigationHandler(null,\'78L3\',2,null,true)"/>',
+			'<area title="Distal falang T" shape="rect" coords="76,204,160,251" onmouseover="onHandSkeletonHover(\'img78T2\')" onmouseout="onHandSkeletonUnhover(\'img78T2\')" onclick="aoImagesNavigationHandler(null,\'78T2\',2,null,true)"/>',
+			'<area title="Proximal falang T" shape="rect" coords="114,267,194,316" onmouseover="onHandSkeletonHover(\'img78T1\')" onmouseout="onHandSkeletonUnhover(\'img78T1\')" onclick="aoImagesNavigationHandler(null,\'78T1\',2,null,true)"/>',
+			'<area title="Metakarpal T" shape="rect" coords="160,327,248,396" onmouseover="onHandSkeletonHover(\'img77T\')" onmouseout="onHandSkeletonUnhover(\'img77T\')" onclick="aoImagesNavigationHandler(null,\'77T\',2,null,true)"/>',
+			'</map>'
+		);
+
+		tplHandSkeletonH = new Ext.XTemplate(
+			'<div id="container" style="display:block;background-image:url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-H.png);" width="591" height="500">',
+			'<img src="https://stratum.blob.core.windows.net/sfr/Images/s.gif" width="591" height="500" />',
+			'<img src="https://stratum.blob.core.windows.net/sfr/Images/s.gif" style="position:absolute;top:0px; left:0px;z-index:2;" width="591" height="500" class="map-trans" usemap="#handMap" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-75P-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:423px; left:208px;z-index:0;visibility:hidden;" id="img75P" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-75T-H-mini.png?_' + (new Date().getTime()) + '"  style="position:absolute;top:404px; left:208px;z-index:0;visibility:hidden;" id="img75T" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-71-H-mini.png?_' + (new Date().getTime()) + '"  style="position:absolute;top:438px; left:230px;z-index:0;visibility:hidden;" id="img71" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-72-H-mini.png?_' + (new Date().getTime()) + '"  style="position:absolute;top:419px; left:271px;z-index:0;visibility:hidden;" id="img72" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-76T2-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:392px; left:288px;z-index:0;visibility:hidden;" id="img76T2" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-73-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:388px; left:255px;z-index:0;visibility:hidden;" id="img73" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-74-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:380px; left:221px;z-index:0;visibility:hidden;" id="img74" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-76T1-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:388px; left:300px;z-index:0;visibility:hidden;" id="img76T1" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78N1-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:128px; left:296px;z-index:0;visibility:hidden;" id="img78N1" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78M1-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:123px; left:251px;z-index:0;visibility:hidden;" id="img78M1" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78R1-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:148px; left:192px;z-index:0;visibility:hidden;" id="img78R1" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78L1-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:200px; left:137px;z-index:0;visibility:hidden;" id="img78L1" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77N-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:229px; left:283px;z-index:0;visibility:hidden;" id="img77N" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77M-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:231px; left:248px;z-index:0;visibility:hidden;" id="img77M" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77R-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:244px; left:203px;z-index:0;visibility:hidden;" id="img77R" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77L-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:270px; left:168px;z-index:0;visibility:hidden;" id="img77L" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78N2-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:72px; left:300px;z-index:0;visibility:hidden;" id="img78N2" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78M2-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:55px; left:246px;z-index:0;visibility:hidden;" id="img78M2" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78R2-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:78px; left:185px;z-index:0;visibility:hidden;" id="img78R2" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78L2-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:139px; left:137px;z-index:0;visibility:hidden;" id="img78L2" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78N3-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:34px; left:310px;z-index:0;visibility:hidden;" id="img78N3" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78M3-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:5px; left:243px;z-index:0;visibility:hidden;" id="img78M3" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78R3-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:33px; left:186px;z-index:0;visibility:hidden;" id="img78R3" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78L3-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:108px; left:127px;z-index:0;visibility:hidden;" id="img78L3" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78T2-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:205px; left:434px;z-index:0;visibility:hidden;" id="img78T2" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-78T1-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:250px; left:393px;z-index:0;visibility:hidden;" id="img78T1" />',
+			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77T-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:310px; left:319px;z-index:0;visibility:hidden;" id="img77T" />',
+			'</div>',
+			'<map id="handMap" name="handMap">',
+			'<area title="Pisiforme" shape="polygon" coords="208,427, 217,447, 237,447, 241,442, 239 ,422" onmouseover="onHandSkeletonHover(\'img75P\')" onmouseout="onHandSkeletonUnhover(\'img75P\')" onclick="aoImagesNavigationHandler(null,\'75P\',1,null,true)"/>',
+			'<area title="Triquetrum" shape="polygon" coords="203,405, 203,418, 221,418, 238,437, 246,431, 217,399" onmouseover="onHandSkeletonHover(\'img75T\')" onmouseout="onHandSkeletonUnhover(\'img75T\')" onclick="aoImagesNavigationHandler(null,\'75T\',1,null,true)"/>',
+			'<area title="Lunatum" shape="polygon" coords="230,465, 271,465, 278,445, 251,435" onmouseover="onHandSkeletonHover(\'img71\')" onmouseout="onHandSkeletonUnhover(\'img71\')" onclick="aoImagesNavigationHandler(null,\'71\',1,null,true)"/>',
+			'<area title="Scaphoideum" shape="polygon" coords="297,416, 289,431, 282,445, 282,470, 332,439" onmouseover="onHandSkeletonHover(\'img72\')" onmouseout="onHandSkeletonUnhover(\'img72\')" onclick="aoImagesNavigationHandler(null,\'72\',1,null,true)"/>',
+			'<area title="Trapezoideum" shape="polygon" coords="287,394, 287,410, 297,415, 315,392" onmouseover="onHandSkeletonHover(\'img76T2\')" onmouseout="onHandSkeletonUnhover(\'img76T2\')" onclick="aoImagesNavigationHandler(null,\'76T2\',1,null,true)"/>',
+			'<area title="Capitatum" shape="polygon" coords="260,397, 257,436, 278,443, 296,416" onmouseover="onHandSkeletonHover(\'img73\')" onmouseout="onHandSkeletonUnhover(\'img73\')" onclick="aoImagesNavigationHandler(null,\'73\',1,null,true)"/>',
+			'<area title="Hamatum" shape="polygon" coords="217,399, 248,430, 259,403, 238,380" onmouseover="onHandSkeletonHover(\'img74\')" onmouseout="onHandSkeletonUnhover(\'img74\')" onclick="aoImagesNavigationHandler(null,\'74\',1,null,true)"/>',
+			'<area title="Trapezium" shape="polygon" coords="320,397, 299,417, 312,429, 335,432, 347,413" onmouseover="onHandSkeletonHover(\'img76T1\')" onmouseout="onHandSkeletonUnhover(\'img76T1\')" onclick="aoImagesNavigationHandler(null,\'76T1\',1,null,true)"/>',
+			'<area title="Metakarpal N" shape="rect" coords="292,235,327,372" onmouseover="onHandSkeletonHover(\'img77N\')" onmouseout="onHandSkeletonUnhover(\'img77N\')" onclick="aoImagesNavigationHandler(null,\'77N\',1,null,true)"/>',
+			'<area title="Metakarpal M" shape="rect" coords="253,235,284,386" onmouseover="onHandSkeletonHover(\'img77M\')" onmouseout="onHandSkeletonUnhover(\'img77M\')" onclick="aoImagesNavigationHandler(null,\'77M\',1,null,true)"/>',
+			'<area title="Metakarpal R" shape="rect" coords="206,246,251,386" onmouseover="onHandSkeletonHover(\'img77R\')" onmouseout="onHandSkeletonUnhover(\'img77R\')" onclick="aoImagesNavigationHandler(null,\'77R\',1,null,true)"/>',
+			'<area title="Metakarpal L" shape="rect" coords="165,286,210,376" onmouseover="onHandSkeletonHover(\'img77L\')" onmouseout="onHandSkeletonUnhover(\'img77L\')" onclick="aoImagesNavigationHandler(null,\'77L\',1,null,true)"/>',
+			'<area title="Proximal falang N" shape="rect" coords="296,132,346,232" onmouseover="onHandSkeletonHover(\'img78N1\')" onmouseout="onHandSkeletonUnhover(\'img78N1\')" onclick="aoImagesNavigationHandler(null,\'78N1\',1,null,true)"/>',
+			'<area title="Proximal falang M" shape="rect" coords="247,131,284,232" onmouseover="onHandSkeletonHover(\'img78M1\')" onmouseout="onHandSkeletonUnhover(\'img78M1\')" onclick="aoImagesNavigationHandler(null,\'78M1\',1,null,true)"/>',
+			'<area title="Proximal falang R" shape="rect" coords="193,148,235,242" onmouseover="onHandSkeletonHover(\'img78R1\')" onmouseout="onHandSkeletonUnhover(\'img78R1\')" onclick="aoImagesNavigationHandler(null,\'78R1\',1,null,true)"/>',
+			'<area title="Proximal falang L" shape="rect" coords="144,197,189,272" onmouseover="onHandSkeletonHover(\'img78L1\')" onmouseout="onHandSkeletonUnhover(\'img78L1\')" onclick="aoImagesNavigationHandler(null,\'78L1\',1,null,true)"/>',
+			'<area title="Mellanfalang N" shape="rect" coords="309,80,346,130" onmouseover="onHandSkeletonHover(\'img78N2\')" onmouseout="onHandSkeletonUnhover(\'img78N2\')" onclick="aoImagesNavigationHandler(null,\'78N2\',1,null,true)"/>',
+			'<area title="Mellanfalang M" shape="rect" coords="248,56,286,122" onmouseover="onHandSkeletonHover(\'img78M2\')" onmouseout="onHandSkeletonUnhover(\'img78M2\')" onclick="aoImagesNavigationHandler(null,\'78M2\',1,null,true)"/>',
+			'<area title="Mellanfalang R" shape="rect" coords="189,87,224 146" onmouseover="onHandSkeletonHover(\'img78R2\')" onmouseout="onHandSkeletonUnhover(\'img78R2\')" onclick="aoImagesNavigationHandler(null,\'78R2\',1,null,true)"/>',
+			'<area title="Mellanfalang L" shape="rect" coords="136,152,169,190" onmouseover="onHandSkeletonHover(\'img78L2\')" onmouseout="onHandSkeletonUnhover(\'img78L2\')" onclick="aoImagesNavigationHandler(null,\'78L2\',1,null,true)"/>',
+			'<area title="Distal falang N" shape="rect" coords="315,37,343,75" onmouseover="onHandSkeletonHover(\'img78N3\')" onmouseout="onHandSkeletonUnhover(\'img78N3\')" onclick="aoImagesNavigationHandler(null,\'78N3\',1,null,true)"/>',
+			'<area title="Distal falang M" shape="rect" coords="246,2,278,47" onmouseover="onHandSkeletonHover(\'img78M3\')" onmouseout="onHandSkeletonUnhover(\'img78M3\')" onclick="aoImagesNavigationHandler(null,\'78M3\',1,null,true)"/>',
+			'<area title="Distal falang R" shape="rect" coords="186,39,214,79" onmouseover="onHandSkeletonHover(\'img78R3\')" onmouseout="onHandSkeletonUnhover(\'img78R3\')" onclick="aoImagesNavigationHandler(null,\'78R3\',1,null,true)"/>',
+			'<area title="Distal falang L" shape="rect" coords="126,116,159,142" onmouseover="onHandSkeletonHover(\'img78L3\')" onmouseout="onHandSkeletonUnhover(\'img78L3\')" onclick="aoImagesNavigationHandler(null,\'78L3\',1,null,true)"/>',
+			'<area title="Distal falang T" shape="rect" coords="418,201,480,270" onmouseover="onHandSkeletonHover(\'img78T2\')" onmouseout="onHandSkeletonUnhover(\'img78T2\')" onclick="aoImagesNavigationHandler(null,\'78T2\',1,null,true)"/>',
+			'<area title="Proximal falang T" shape="rect" coords="383,248,460,337" onmouseover="onHandSkeletonHover(\'img78T1\')" onmouseout="onHandSkeletonUnhover(\'img78T1\')" onclick="aoImagesNavigationHandler(null,\'78T1\',1,null,true)"/>',
+			'<area title="Metakarpal T" shape="rect" coords="336,326,410,403" onmouseover="onHandSkeletonHover(\'img77T\')" onmouseout="onHandSkeletonUnhover(\'img77T\')" onclick="aoImagesNavigationHandler(null,\'77T\',1,null,true)"/>',
+			'</map>'
+		);
+		onHover = function (aEl, aNumber) {
+			aEl.className = aNumber + ' ' + aNumber + 'Hover';
+		}
+		onUnHover = function (aEl, aNumber) {
+			aEl.className = aNumber;
+		}
+		onHandSkeletonHover = function (aImgNumber) {
+			var el = document.getElementById(aImgNumber);
+			el.style.visibility = 'visible';
+		}
+		onHandSkeletonUnhover = function (aImgNumber) {
+			var el = document.getElementById(aImgNumber);
+			el.style.visibility = 'hidden';
+		}
+		onHandSkeletonClick = function (aImgNumber) {
+			alert(aImgNumber);
+		}
+
+		onLoadHandImgMini = function () {
+			if (onLoadHandImgMini.count === undefined) {
+				onLoadHandImgMini.count = 0;
+			}
+			//app.mySkeletonWindow.getLayout().setActiveItem(0);
+			if (onLoadHandImgMini.count === 0) {
+
+			}
+			onLoadHandImgMini.count++;
+			app.mySkeletonWindow.setTitle('Laddar handmodul (' + onLoadHandImgMini.count + ' av totalt 27 objekt)');
+			if (onLoadHandImgMini.count == 27) {
+				onLoadHandImgMini.count = 0;
+				app.mySkeletonWindow.getLayout().setActiveItem(6);
+				app.mySkeletonWindow.setTitle('<b>Klassificering av fraktur</b>');
+			}
+
+		}
+		var skeleton = Ext.create('Ext.panel.Panel', {
+			name: 'skeleton',
+			bodyStyle: 'padding: 5px',
+			style: 'margin-bottom: 10px',
+			frame: true,
+			labelAlign: 'top',
+			cls: 'sfr-skeleton'
+
+		});
+
+		var handSkeleton = Ext.create('Ext.panel.Panel', {
+			name: 'handSkeleton',
+			bodyStyle: 'padding: 5px',
+			style: 'margin-bottom: 10px',
+			frame: true,
+			labelAlign: 'top'
+		});
+
+		var foreArmRadiusImages = Ext.create('Ext.panel.Panel', {
+			name: 'foreArmRadiusImages',
+			title: 'Radius - Klassifikation enligt Mason',
+			bodyStyle: 'padding: 5px',
+			style: 'margin-bottom: 10px',
+			frame: true,
+			labelAlign: 'top',
+			buttons: [{
+				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>radiusfraktur</b>',
+				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
+				handler: function (btn) {
+					aoImagesNavigationHandler(btn, '', '', '', false);
+				},
+				listeners: {
+					render: function (c) {
+						Ext.tip.QuickTipManager.register({
+							target: c.id,
+							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
+							title: 'Ej kunnat klassificera/ej klassificerbar radiusfraktur',
+							autoHide: false
+						});
+					}
+				}
+			}
+			]
+		});
+
+		var prosthesisImages = Ext.create('Ext.panel.Panel', {
+			name: 'prosthesisImages',
+			title: 'Protesnära frakturer - Unified Classification System',
+			bodyStyle: 'padding: 5px',
+			style: 'margin-bottom: 10px',
+			frame: true,
+			labelAlign: 'top',
+			buttons: [{
+				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>protesnära fraktur</b>',
+				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
+				handler: function (btn) {
+					aoImagesNavigationHandler(btn, '', '', '', false);
+				},
+				listeners: {
+					render: function (c) {
+						Ext.tip.QuickTipManager.register({
+							target: c.id,
+							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
+							title: 'Ej kunnat klassificera/ej klassificerbar radiusfraktur',
+							autoHide: false
+						});
+					}
+				}
+			}
+			]
+		});
+
+		var foreArmRadiusChildImages = Ext.create('Ext.panel.Panel', {
+			name: 'foreArmRadiusChildImages',
+			title: 'Radius',
+			bodyStyle: 'padding: 5px',
+			style: 'margin-bottom: 10px',
+			frame: true,
+			labelAlign: 'top',
+			buttons: [{
+				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>radiusfraktur</b>',
+				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
+				handler: function (btn) {
+					aoImagesNavigationHandler(btn, '', '', '', false);
+				},
+				listeners: {
+					render: function (c) {
+						Ext.tip.QuickTipManager.register({
+							target: c.id,
+							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
+							title: 'Ej kunnat klassificera/ej klassificerbar radiusfraktur',
+							autoHide: false
+						});
+					}
+				}
+			}
+			]
+		});
+
+		var foreArmUlnaImages = Ext.create('Ext.panel.Panel', {
+			name: 'foreArmUlnaImages',
+			title: 'Ulna - Modifiering efter Mayo',
+			bodyStyle: 'padding: 5px',
+			style: 'margin-bottom: 10px',
+			frame: true,
+			labelAlign: 'top',
+			buttons: [{
+				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>ulnafraktur</b>',
+				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
+				handler: function (btn) {
+					var panelName = btn.ownerCt.ownerCt.name;
+					if (onReturnCodes.foreArmRadiusAO == 'X') {
+						var dialogitems = [
+							{
+								tooltip: NO_COMPETENCE_TO_CLASSIFY_TOOLTIP,
+								text: NO_COMPETENCE_TO_CLASSIFY_TEXT,
+								handler: function () {
+									msgBox.close();
+									foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
+								}
+							}, {
+								tooltip: NO_CLASSIFIABLE_TOOLTIP,
+								text: NO_CLASSIFIABLE_TEXT,
+								handler: function () {
+									msgBox.close();
+									foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, NO_CLASSIFIABLE_CODE, panelName);
+								}
+							}
+						]
+						var msgBox = createDialog("Ej kunnat/Ej klassificerbar", NO_CLASSIFIABLE_DIALOG_TEXT, dialogitems);
+						msgBox.show();
+					}
+					else {
+
+						foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, PARTIAL_NO_CLASSIFIABLE_CODE, panelName);
+					}
+
+				},
+				listeners: {
+					render: function (c) {
+						Ext.tip.QuickTipManager.register({
+							target: c.id,
+							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
+							title: 'Ej kunnat klassificera/ej klassificerbar ulnafraktur',
+							autoHide: false
+						});
+					}
+				}
+			},
+			{
+				//Only for pelvis ring injury (where side is not decided before ao-classification is made)
+				name: 'pelvisRingSideSwitcher',
+				text: 'Visa vänsterbilder',
+				hidden: true
+			}
+			]
+		});
+
+		var foreArmUlnaChildImages = Ext.create('Ext.panel.Panel', {
+			name: 'foreArmUlnaChildImages',
+			title: 'Ulna',
+			bodyStyle: 'padding: 5px',
+			style: 'margin-bottom: 10px',
+			frame: true,
+			labelAlign: 'top',
+			buttons: [{
+				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>ulnafraktur</b>',
+				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
+				handler: function (btn) {
+					var panelName = btn.ownerCt.ownerCt.name;
+					if (onReturnCodes.foreArmRadiusAO == 'X') {
+						var dialogitems = [
+							{
+								tooltip: NO_COMPETENCE_TO_CLASSIFY_TOOLTIP,
+								text: NO_COMPETENCE_TO_CLASSIFY_TEXT,
+								handler: function () {
+									msgBox.close();
+									foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
+								}
+							}, {
+								tooltip: NO_CLASSIFIABLE_TOOLTIP,
+								text: NO_CLASSIFIABLE_TEXT,
+								handler: function () {
+									msgBox.close();
+									foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, NO_CLASSIFIABLE_CODE, panelName);
+								}
+							}
+						]
+						var msgBox = createDialog("Ej kunnat/Ej klassificerbar", NO_CLASSIFIABLE_DIALOG_TEXT, dialogitems);
+						msgBox.show();
+					}
+					else {
+
+						foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, PARTIAL_NO_CLASSIFIABLE_CODE, panelName);
+					}
+
+				},
+				listeners: {
+					render: function (c) {
+						Ext.tip.QuickTipManager.register({
+							target: c.id,
+							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
+							title: 'Ej kunnat klassificera/ej klassificerbar ulnafraktur',
+							autoHide: false
+						});
+					}
+				}
+			},
+			{
+				//Only for pelvis ring injury (where side is not decided before ao-classification is made)
+				name: 'pelvisRingSideSwitcher',
+				text: 'Visa vänsterbilder',
+				hidden: true
+			}
+			]
+		});
+
+		var vertebraC0Images = Ext.create('Ext.panel.Panel', {
+			name: 'vertebraC0Images',
+			title: '<b>C0</b> Klassifikation enligt Anderson och Montesano (Spine, 1988, sidorna 731-736)',
+			bodyStyle: 'padding: 5px',
+			style: 'margin-bottom: 10px',
+			frame: true,
+			labelAlign: 'top',
+			buttons: [{
+				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>C0-fraktur</b>',
+				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
+				handler: function (btn) {
+					aoImagesNavigationHandler(btn, '100', '3', 'X', false);
+				},
+				listeners: {
+					render: function (c) {
+						Ext.tip.QuickTipManager.register({
+							target: c.id,
+							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
+							title: 'Ej kunnat klassificera/ej klassificerbar C0-fraktur',
+							autoHide: false
+						});
+					}
+				}
+			}
+			]
+		});
+
+		var vertebraC1Images = Ext.create('Ext.panel.Panel', {
+			name: 'vertebraC1Images',
+			title: '<b>C1</b> Klassifikation av C1-frakturer enligt Jackson et al<br/>(J Am Acad Orthop Surg, 2002, sidorna 271-280)',
+			bodyStyle: 'padding: 5px',
+			style: 'margin-bottom: 10px',
+			frame: true,
+			labelAlign: 'top',
+			buttons: [{
+				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>C1-fraktur</b>',
+				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
+				handler: function (btn) {
+					aoImagesNavigationHandler(btn, '100', '3', 'X', false);
+				},
+				listeners: {
+					render: function (c) {
+						Ext.tip.QuickTipManager.register({
+							target: c.id,
+							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
+							title: 'Ej kunnat klassificera/ej klassificerbar C1-fraktur',
+							autoHide: false
+						});
+					}
+				}
+			}
+			]
+		});
+
+		var vertebraC2Images = Ext.create('Ext.panel.Panel', {
+			name: 'vertebraC2Images',
+			title: '<b>C2</b>. Dens: Anderson och DAlonzo (JBJS(A) 1974, pp 1663-1674).<br/>Hangman: Effendi et al (JBJS(B) 1981; pp 319-327 ),Levine, Edwards (JBJS(A) 1985, pp 217-226)',
+			bodyStyle: 'padding: 5px',
+			style: 'margin-bottom: 10px',
+			frame: true,
+			labelAlign: 'top',
+			buttons: [{
+				text: NO_CLASSIFIABLE_BUTTON_TEXT + ' <b>C2-fraktur</b>',
+				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
+				handler: function (btn) {
+					aoImagesNavigationHandler(btn, '100', '3', 'AOD-X', false); //TODO: AOD?? constant?
+				},
+				listeners: {
+					render: function (c) {
+						Ext.tip.QuickTipManager.register({
+							target: c.id,
+							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
+							title: 'Ej kunnat klassificera/ej klassificerbar C2-fraktur',
+							autoHide: false
+						});
+					}
+				}
+			}
+			]
+		});
+
+		function createTransitionPanel(name, title) {
+			return Ext.create('Ext.panel.Panel', {
+				name: name,
+				title: title,
+				bodyStyle: 'padding: 5px',
+				style: 'margin-bottom: 10px',
+				frame: true,
+				labelAlign: 'top'
+			});
+		}
+
+		var footPartImages = createTransitionPanel('footPartImages', 'Fot');
+		var childDistHumerusImages = createTransitionPanel('childDistHumerusImages', 'Distala humerus');
+		var childDistForearmImages = createTransitionPanel('childDistForearmImages', 'Distala underam');
+		var childProxTibiaImages = createTransitionPanel('childProxTibiaImages', 'Proximala tibia');
+		var childDistTibiaImages = createTransitionPanel('childDistTibiaImages', 'Distala tibia');
+		var childProxFemurImages = createTransitionPanel('childProxFemurImages', 'Proximala femur');
+		var childDistFemurImages = createTransitionPanel('childDistFemurImages', 'Distala femur');
+		var vertebra102BImages = createTransitionPanel('vertebra102BImages', 'B-skador');
+
+		var vertebraSelectorPanel = Ext.create('Ext.panel.Panel', {
+			name: 'vertebraSelectorPanel',
+			title: 'Välj kota/kotor',
+			bodyStyle: 'padding: 5px',
+			style: 'margin-bottom: 10px',
+			frame: true,
+			layout: 'absolute',
+			//style: { display: 'block', backgroundPosition:'170px 40px', backgroundImage: 'url(Images/Assembled/Spine-S4.png)', height: '50', overflow: 'hidden', backgroundRepeat: 'no-repeat' },
+			labelAlign: 'top',
+			items: [
+
+				{
+					xtype: 'label',
+					text: 'Skadade kotor:',
+					style: 'font-weight:bold;',
+					x: 20,
+					y: 3
+				},
+				{
+					xtype: 'component',
+					style: 'margin-top:10px'
+				},
+				{
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					boxLabel: 'x',
+					name: 'v1',
+					x: 125,
+					y: 40
+				},
+				, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					boxLabel: 'x',
+					name: 'v2',
+					x: 125,
+					y: 65
+
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					boxLabel: 'x',
+					name: 'v3',
+					x: 125,
+					y: 90
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					boxLabel: 'x',
+					name: 'v4',
+					x: 125,
+					y: 115
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					boxLabel: 'x',
+					name: 'v5',
+					x: 125,
+					y: 140
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					boxLabel: 'x',
+					name: 'v6',
+					x: 125,
+					y: 165
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					boxLabel: 'x',
+					name: 'v7',
+					x: 125,
+					y: 190
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					boxLabel: 'x',
+					name: 'v8',
+					x: 125,
+					y: 215
+				}, {
+					xtype: 'checkboxfield',
+					uncheckedValue: 'false',
+					inputValue: 'true',
+					boxLabel: 'x',
+					name: 'v9',
+					x: 125,
+					y: 240
+				}, {
+					xtype: 'component',
+					style: 'margin-top:125px'
+				}, /*{
+                    xtype: 'component',
+                    //html: '<div style="display:block;background-image:url(Images/Assembled/Spine-S4.png);height:auto;overflow:hidden" ></div>',
+                    style: { display: 'block', backgroundImage: 'url(Images/Assembled/Spine-S4.png)', height: '50', overflow: 'hidden', backgroundRepeat:'no-repeat' },
+                    baseCls: '',
+                    html:'<div style:"clear:both"></div>'
+                },*/ {
+					xtype: 'label',
+					text: 'Neurologifrågor:',
+					style: 'font-weight:bold;',
+					x: 20,
+					y: 445
+				}, {
+					xtype: 'component',
+					style: 'margin-top:10px'
+				},
+				{
+					xtype: 'combo',
+					lastQuery: '',
+					fieldLabel: 'Neurologi',
+					width: 500,
+					name: 'neurology',
+					x: 20,
+					y: 465,
+					store: createSelectValueStore(5554),
+					mode: 'local',
+					displayField: 'ValueName',
+					valueField: 'ValueCode',
+					listeners: {
+						select: function (combo, records, eOpts) {
+							var neurologiExtCmp = getCmpByName('neurologiExtended', vertebraSelectorPanel);
+							var neurologiExtStore = neurologiExtCmp.getStore();
+							neurologiExtStore.clearFilter(true);
+							neurologiExtStore.filterBy(Ext.bind(filterNeurologiExtStore, this, [records.data.ValueCode], true));
+
+							if (this.getValue() !== '4') {
+								neurologiExtCmp.setDisabled(true);
+								neurologiExtCmp.setValue('');
+							}
+							else {
+								neurologiExtCmp.setDisabled(false);
+
+							}
+						}
+					}
+				},
+				{
+					xtype: 'combo',
+					lastQuery: '',
+					fieldLabel: 'Inkomplett ryggmärgsskada/<br/>conus-skada',
+					width: 500,
+					x: 20,
+					y: 500,
+					name: 'neurologiExtended',
+					store: createSelectValueStore(5555),
+					mode: 'local',
+					displayField: 'ValueName',
+					valueField: 'ValueCode'
+				}, {
+					xtype: 'label',
+					html: '<l><li>Markera alla skadade kotor och fyll i neurologifrågorna</li><li>I nästa bild klassificerar du frakturtyp för den allvarligast skadade kotan.</li><l>',
+					style: 'background-color:#B8B8B8;font-weight:bold;',
+					x: 20,
+					y: 390
+				}
+			]
+		});
+
+		var AO = Ext.create('Ext.panel.Panel', {
+			name: 'ao',
+			title: 'AO-klassifikation',
+			bodyStyle: 'padding: 5px',
+			style: 'margin-bottom: 10px',
+			frame: true,
+			//header: false,
+			labelAlign: 'top',
+
+			buttons: [{
+				text: NO_CLASSIFIABLE_BUTTON_TEXT,
+				tooltip: new Ext.ToolTip({ title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE, text: NO_CLASSIFIABLE_BUTTON_TOOLTIP }),
+				handler: function (btn) {
+					var panelName = btn.ownerCt.ownerCt.name;
+
+					var pictureID = aoImagesNavigationHandler.pictureID;
+					var inBackModule = pictureID == '101' || pictureID == '102';
+					var dialogitems = [
+						{
+							tooltip: NO_COMPETENCE_TO_CLASSIFY_TOOLTIP,
+							text: NO_COMPETENCE_TO_CLASSIFY_TEXT,
+							handler: function () {
+								msgBox.close();
+								if (inBackModule === true) {
+									backHandler(/*app.myCurrentFracturePanel.id*/'', 3, pictureID, null, app.mySkeletonWindow.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
+								}
+								else {
+									onReturnCodes(/*app.myCurrentFracturePanel.id*/ '', '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, false, panelName);
+								}
+							}
+						}, {
+							tooltip: NO_CLASSIFIABLE_TOOLTIP,
+							text: NO_CLASSIFIABLE_TEXT,
+							handler: function () {
+								msgBox.close();
+								if (inBackModule === true) {
+									backHandler(/*app.myCurrentFracturePanel.id*/'', 3, pictureID, null, app.mySkeletonWindow.id, NO_CLASSIFIABLE_CODE, panelName);
+								}
+								else {
+									onReturnCodes('', '', '', '', container.id, NO_CLASSIFIABLE_CODE, false, panelName);
+								}
+							}
+						}
+					]
+					var msgBox = createDialog("Ej kunnat/Ej klassificerbar", NO_CLASSIFIABLE_DIALOG_TEXT, dialogitems);
+					msgBox.show();
+				},
+
+				listeners: {
+					render: function (c) {
+						Ext.tip.QuickTipManager.register({
+							target: c.id,
+							text: NO_CLASSIFIABLE_BUTTON_TOOLTIP,
+							title: NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE,
+							autoHide: false
+						});
+					}
+				}
+			},
+			{
+				//Only for pelvis ring injury (where side is not decided before ao-classification is made)
+				name: 'pelvisRingSideSwitcher',
+				text: 'Visa vänsterbilder',
+				hidden: true
+			}
+			]
+		});
+
+		onDetermineIfChildFracture = function (aBtn, aPictureID, aSide, aPseduoAO) {
+			aoImagesNavigationHandler.showNoChildFractureSupportAlert = false;
+			aoImagesNavigationHandler.classifyAsAdult = false;
+			var picIDstr = aPictureID.toString();
+			if (isChildFracture(aPictureID) && childFracturesActivated()) {
+				aoImagesNavigationHandler.isChildFracture = true;
+				aoImagesNavigationHandler(aBtn, picIDstr, aSide, aPseduoAO);
+			}
+			else if (askIfChildFracture(aPictureID) && childFracturesActivated()) {
+				Ext.MessageBox.show({
+					title: 'Öppna fyser?',
+					msg: 'Är tillväxtzonerna (fyserna) synligt öppna på röntgenbilderna av det skadade skelettsegmentet, dvs är skelettet att betrakta som ett barnskelett där tillväxt pågår?',
+					buttons: Ext.Msg.YESNOCANCEL,
+					fn: function (aDialogButton) {
+						if (aDialogButton === 'yes') {
+							aoImagesNavigationHandler.isChildFracture = true;
+							aoImagesNavigationHandler(aBtn, picIDstr, aSide, aPseduoAO);
+						}
+						else if (aDialogButton == 'no') {
+							aoImagesNavigationHandler.isChildFracture = false;
+							aoImagesNavigationHandler(aBtn, picIDstr, aSide, aPseduoAO);
+						}
+					}
+				});
+			}
+			else {
+				aoImagesNavigationHandler.isChildFracture = false;
+				aoImagesNavigationHandler(aBtn, picIDstr, aSide, aPseduoAO);
+
+			}
+		}
+		var pelvisPanel = createPelvisPanel();
+		var container = Ext.create('Ext.window.Window', {
+			renderTo: aBody,
+			x: 40,
+			y: 40,
+			width: 615,
+			height: 690,
+			minWidth: 420,
+			minHeight: 200,
+			constrain: true,
+			collapsible: false,
+			closable: true,
+			layout: 'card',
+			activeItem: 0,
+			items: [skeleton, AO, pelvisPanel, foreArmRadiusImages, foreArmUlnaImages, footPartImages, handSkeleton, childDistHumerusImages, childProxTibiaImages, childDistTibiaImages, childProxFemurImages, childDistFemurImages, vertebraSelectorPanel, vertebra102BImages, foreArmRadiusChildImages, foreArmUlnaChildImages, childDistForearmImages, vertebraC0Images, vertebraC1Images, vertebraC2Images, prosthesisImages],
+			//          0      1    2               3                   4                   5               6           7                           8                   9                       10                  11                  12                      13                      14                      15                      16                      17              18                  19              20
+			buttons: [{
+				name: 'previousBtn',
+				text: '<b>Föregående</b>',
+				disabled: true,
+				handler: Ext.bind(aoImagesNavigationHandler, this, [-1, -1], true)
+			}, {
+				name: 'nextBtn', text: '<b>Nästa</b>', disabled: true, handler: Ext.bind(aoImagesNavigationHandler, this, [-1, -1], true)
+			}
+			],
+			listeners: {
+				show: function (t) {
+					t.setTitle('<b>Klassificering av fraktur</b>');
+					var data = {
+						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton.png"
+					};
+					tplSkeleton.overwrite(skeleton.body, data);
+				},
+				beforeclose: function (panel) {
+					panel.hide();
+					return false;
+				},
+				beforedestroy: function () {
+					purgeOrphans(app.mySkeletonWindow);
+				}
+			}
+		});
+		return container;
+	}
 
 	function generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName) {
 		var msg = 'Öppen fraktur?';
@@ -4640,19 +4638,19 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 			msg = '<b>Finns tecken på diffus idiopatisk skeletal hyperostos (DISH) eller ankyloserande spondylit (Mb Bechterew) i frakturområdet?</b><br/><br/>(DISH respektive ankyloserande spondylit innebär överbroande ben mellan flera intill-liggande kotor, som medför en ankylos. En fraktur genom ett sådant område kan vara mycket instabil.)';
 			title = 'DISH/Mb Bechterew';
 		}
-        var result = {};
-        if(aSide==='')aSide=aoImagesNavigationHandler.side;
+		var result = {};
+		if (aSide === '') aSide = aoImagesNavigationHandler.side;
 		Ext.Msg.show({
 			msg: msg, title: title, buttons: Ext.Msg.YESNOCANCEL,
 			fn: function (aBtn) {
 				if (aBtn === 'cancel') {
 					return;
 				}
-				
+
 				if (aoImagesNavigationHandler.inProsthesisMode === true && aPictureID == 61) {
 					aSide = '3';
 				}
-				
+
 				var fractureForm;
 				var windowX = Ext.getCmp(aWindow);
 				var pelvisPanel = windowX.items.items[2];
@@ -4660,12 +4658,12 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 				result.OpenPhyses = aoImagesNavigationHandler.isChildFracture === true ? 1 : 0;
 				result.Open = (aBtn === 'yes' && !isBackFracture(aPictureID)) ? 1 : 0;
 				result.Side = aSide;
-				
-				if(isBackFracture(aPictureID)) {
+
+				if (isBackFracture(aPictureID)) {
 					result.DISHBecht = aBtn === 'yes' ? '1' : '0';
-					result.UpperVertebra     = backHandler.injuredVertebraes[0];
-					result.LowerVertebra     = backHandler.injuredVertebraes[backHandler.injuredVertebraes.length - 1];
-					result.Neurology         = backHandler.neurologi;
+					result.UpperVertebra = backHandler.injuredVertebraes[0];
+					result.LowerVertebra = backHandler.injuredVertebraes[backHandler.injuredVertebraes.length - 1];
+					result.Neurology = backHandler.neurologi;
 					result.NeurologyExtended = backHandler.extendedNeurologi;
 				}
 
@@ -4706,7 +4704,7 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 					if (aoImagesNavigationHandler.inProsthesisMode) {
 						fractureClass = className + aAO + onReturnCodes.extraClassInfo;
 					}
-                    result.Class = fractureClass;
+					result.Class = fractureClass;
 					var tmpCodeThumb = fractureClass;
 					if (aoImagesNavigationHandler.isChildFracture === true) {
 						tmpCodeThumb = fractureClass.replace(onReturnCodes.extraClassInfo, '').replace(ChildClassChars.NERV + '1', '').replace(ChildClassChars.NERV + '2', '').replace(ChildClassChars.NERV + '3', '').replace(ChildClassChars.NERV + '4', '').replace(ChildClassChars.VESSEL + '0', '').replace(ChildClassChars.VESSEL + '1', '').replace(ChildClassChars.FELSTALLNING + '0', '').replace(ChildClassChars.FELSTALLNING + '1', '').replace(ChildClassChars.FELSTALLNING + '2', '').replace(ChildClassChars.FLEX + '0', '').replace(ChildClassChars.FLEX + '1', '').replace(ChildClassChars.FLEX + '2', '');
@@ -4741,21 +4739,21 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 						className = getFractureClassificationName(aPictureID);
 						className = className + '-';
 						var uarCode = className + onReturnCodes.foreArmRadiusAO + '-X' + onReturnCodes.extraClassInfo;
-                        result.Class = uarCode;
+						result.Class = uarCode;
 						aoData = {
 							image: "https://stratum.blob.core.windows.net/sfr/Images/Thumbs/" + uarCode + '-' + sideLetter + "-thumb.png",
 							title: getDomainValueName(4060, uarCode)
 						};
 					}
 					else if (aNoClassification == NO_CLASSIFIABLE_CODE) {
-                        result.Class = "00-XO";
+						result.Class = "00-XO";
 						aoData = {
 							image: "https://stratum.blob.core.windows.net/sfr/Images/Thumbs/00-X0-H-thumb.png",
 							title: ''
 						};
 					}
 					else if (aNoClassification == NO_COMPETENCE_TO_CLASSIFY_CODE) {
-                        result.Class = "0";
+						result.Class = "0";
 						aoData = {
 							image: "https://stratum.blob.core.windows.net/sfr/Images/Thumbs/0-H-thumb.png",
 							title: ''
@@ -5196,7 +5194,7 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 
 				///enableDisableXrayTimeAndDateCmps(fractureForm, isFemurFracture(icd10));
 				if (icd10 != '') {
-                    if(result.Open == 1) {
+					if (result.Open == 1) {
 						icd10 = icd10 + "1";
 					}
 					else {
@@ -5206,8 +5204,8 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 					handleAtypicalFemurFracture.inChangeMode = true;
 				}
 				result.ICD10 = icd10;
-				if(isBackFracture(aPictureID)) {
-  					result.FxS_ICD10 = backHandler.determineICD(result.Open, result.Class)[0];
+				if (isBackFracture(aPictureID)) {
+					result.FxS_ICD10 = backHandler.determineICD(result.Open, result.Class)[0];
 				}
 				if (aoImagesNavigationHandler.inProsthesisMode) {
 					var icdArr;
@@ -5224,48 +5222,48 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 					result.CloseToProsthesis = getProsthesisICD10(icdArr);
 				}
 
-                if (askAboutAtypcialFemurFracture(icd10)) {
-                    var dialogitems = [
-                        {
-                            text: 'Ja',
-                            handler: function () {
-                                msgBox.close();
-                                result.Atypical = 1;
-                                windowX.hide();
-                                app.callback(app.event, result);
-                            }
-                        }, {
-                            text: 'Nej',
-                            handler: function () {
-                                msgBox.close();
-                                result.Atypical = 0;
-                                windowX.hide();
-                                app.callback(app.event, result);
-                            }
-                        }, {
-                            text: 'Oklart',
-                            textAlign: 'left',
-                            handler: function () {
-                                msgBox.close();
-                                result.Atypical = 9;
-                                windowX.hide();
-                                app.callback(app.event, result);
-                            }
-                        }, {
-                            text: 'Avbryt',
-                            handler: function () {
-                                msgBox.close();
-                                windowX.hide();
-                                app.callback(app.event, result);
-                            }
-                        }
-                    ];
-                    msgBox = createDialog('Atypisk fraktur', 'Atypisk fraktur?', dialogitems, true, '(Atypiska frakturer är stressfrakturer med en tvärgående frakturlinje från laterala kortex på frontalbilden. Minst en antydd kallusreaktion (kortical förtjockning) ska ses. Frakturen kan bestå av en spricka enbart, eller vara komplett. Frakturen har ofta samband med bisfosfonatbehandling)', true);
-                    msgBox.show();
-                } else {
-                    windowX.hide();
-                    app.callback(app.event, result);
-                }	
+				if (askAboutAtypcialFemurFracture(icd10)) {
+					var dialogitems = [
+						{
+							text: 'Ja',
+							handler: function () {
+								msgBox.close();
+								result.Atypical = 1;
+								windowX.hide();
+								app.callback(app.event, result);
+							}
+						}, {
+							text: 'Nej',
+							handler: function () {
+								msgBox.close();
+								result.Atypical = 0;
+								windowX.hide();
+								app.callback(app.event, result);
+							}
+						}, {
+							text: 'Oklart',
+							textAlign: 'left',
+							handler: function () {
+								msgBox.close();
+								result.Atypical = 9;
+								windowX.hide();
+								app.callback(app.event, result);
+							}
+						}, {
+							text: 'Avbryt',
+							handler: function () {
+								msgBox.close();
+								windowX.hide();
+								app.callback(app.event, result);
+							}
+						}
+					];
+					msgBox = createDialog('Atypisk fraktur', 'Atypisk fraktur?', dialogitems, true, '(Atypiska frakturer är stressfrakturer med en tvärgående frakturlinje från laterala kortex på frontalbilden. Minst en antydd kallusreaktion (kortical förtjockning) ska ses. Frakturen kan bestå av en spricka enbart, eller vara komplett. Frakturen har ofta samband med bisfosfonatbehandling)', true);
+					msgBox.show();
+				} else {
+					windowX.hide();
+					app.callback(app.event, result);
+				}
 			}
 		});
 	}
@@ -5305,46 +5303,46 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 			return '';
 		}
 		if (backHandler.determineICD === undefined) {
-  backHandler.determineICD = function (openFracture, classification) {
-    var icd10Codes = new Array();
-    if (classification == 'SLI-d-A' || classification == 'SLI-d-C') {
-      icd10Codes.push('S13.0' + openFracture);
-    }
-    else if (classification == 'SLI-d-B') {
-      icd10Codes.push('S13.1' + openFracture);
-    }
-    else {
-      if (backHandler.C0injuried === true) {
-        icd10Codes.push('S02.1' + openFracture);
-      }
-      if (backHandler.C1injuried === true) {
-        icd10Codes.push('S12.0' + openFracture);
-      }
-      if (backHandler.C2injuried === true) {
-        icd10Codes.push('S12.1' + openFracture);
-      }
-      if (backHandler.nrInjuriedC === 1) {
-        icd10Codes.push('S12.2' + openFracture + '.' + getFirstVertebrae('C', backHandler.injuredVertebraes)); //backHandler.injuredVertebraes[0]);
-      }
-      else if (backHandler.nrInjuriedC > 1) {
-        icd10Codes.push('S12.7' + openFracture);
-      }
-      if (backHandler.nrInjuriedT === 1) {
-        icd10Codes.push('S22.0' + openFracture + '.' + getFirstVertebrae('T', backHandler.injuredVertebraes));
-      }
-      else if (backHandler.nrInjuriedT > 1) {
-        icd10Codes.push('S22.1' + openFracture);
-      }
-      if (backHandler.nrInjuriedL === 1) {
-        icd10Codes.push('S32.0' + openFracture + '.' + getFirstVertebrae('L', backHandler.injuredVertebraes));
-      }
-      else if (backHandler.nrInjuriedL > 1) {
-        icd10Codes.push('S32.7' + openFracture + '.L');
-      }
-    }
-    return icd10Codes;
-  }
-}
+			backHandler.determineICD = function (openFracture, classification) {
+				var icd10Codes = new Array();
+				if (classification == 'SLI-d-A' || classification == 'SLI-d-C') {
+					icd10Codes.push('S13.0' + openFracture);
+				}
+				else if (classification == 'SLI-d-B') {
+					icd10Codes.push('S13.1' + openFracture);
+				}
+				else {
+					if (backHandler.C0injuried === true) {
+						icd10Codes.push('S02.1' + openFracture);
+					}
+					if (backHandler.C1injuried === true) {
+						icd10Codes.push('S12.0' + openFracture);
+					}
+					if (backHandler.C2injuried === true) {
+						icd10Codes.push('S12.1' + openFracture);
+					}
+					if (backHandler.nrInjuriedC === 1) {
+						icd10Codes.push('S12.2' + openFracture + '.' + getFirstVertebrae('C', backHandler.injuredVertebraes)); //backHandler.injuredVertebraes[0]);
+					}
+					else if (backHandler.nrInjuriedC > 1) {
+						icd10Codes.push('S12.7' + openFracture);
+					}
+					if (backHandler.nrInjuriedT === 1) {
+						icd10Codes.push('S22.0' + openFracture + '.' + getFirstVertebrae('T', backHandler.injuredVertebraes));
+					}
+					else if (backHandler.nrInjuriedT > 1) {
+						icd10Codes.push('S22.1' + openFracture);
+					}
+					if (backHandler.nrInjuriedL === 1) {
+						icd10Codes.push('S32.0' + openFracture + '.' + getFirstVertebrae('L', backHandler.injuredVertebraes));
+					}
+					else if (backHandler.nrInjuriedL > 1) {
+						icd10Codes.push('S32.7' + openFracture + '.L');
+					}
+				}
+				return icd10Codes;
+			}
+		}
 
 		var spinePanel = app.mySkeletonWindow.items.items[12];
 		var upperCmp = getCmpByName('upperVertebra', spinePanel);
@@ -5443,21 +5441,21 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 			aAO = ao100;
 			if (nrNotClassified === nrInjuries) {
 				var dialogitems = [
-                            {
-                            	tooltip: NO_COMPETENCE_TO_CLASSIFY_TOOLTIP,
-                            	text: NO_COMPETENCE_TO_CLASSIFY_TEXT,
-                            	handler: function () {
-                            		msgBox.close();
-                            		generate_ICD_AO_SubFracturePanels(aParentID, 3, aPictureID, aAO, aWindow, NO_COMPETENCE_TO_CLASSIFY_CODE, aNoClassification, aPanelName);
-                            	}
-                            }, {
-                            	tooltip: NO_CLASSIFIABLE_TOOLTIP,
-                            	text: NO_CLASSIFIABLE_TEXT,
-                            	handler: function () {
-                            		msgBox.close();
-                            		generate_ICD_AO_SubFracturePanels(aParentID, 3, aPictureID, aAO, aWindow, NO_CLASSIFIABLE_CODE, aNoClassification, aPanelName);
-                            	}
-                            }
+					{
+						tooltip: NO_COMPETENCE_TO_CLASSIFY_TOOLTIP,
+						text: NO_COMPETENCE_TO_CLASSIFY_TEXT,
+						handler: function () {
+							msgBox.close();
+							generate_ICD_AO_SubFracturePanels(aParentID, 3, aPictureID, aAO, aWindow, NO_COMPETENCE_TO_CLASSIFY_CODE, aNoClassification, aPanelName);
+						}
+					}, {
+						tooltip: NO_CLASSIFIABLE_TOOLTIP,
+						text: NO_CLASSIFIABLE_TEXT,
+						handler: function () {
+							msgBox.close();
+							generate_ICD_AO_SubFracturePanels(aParentID, 3, aPictureID, aAO, aWindow, NO_CLASSIFIABLE_CODE, aNoClassification, aPanelName);
+						}
+					}
 				]
 				var msgBox = createDialog("Ej kunnat/Ej klassificerbar", NO_CLASSIFIABLE_DIALOG_TEXT, dialogitems);
 				msgBox.show();
@@ -5470,41 +5468,41 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 	function childProxHumerusHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName) {
 		if (aAO == '11-E/1.1' || aAO == '11-E/2.1' || aAO == '11-M/3.1' || aAO == '11-M/3.2') {
 			var dialogitems = [
-                {
-                	text: 'Ingen felställning',
-                	handler: function () {
-                		msgBox.close();
-                		onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '0';
-                		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                	}
-                }, {
-                	text: 'Måttlig felställning',
-                	handler: function () {
-                		msgBox.close();
-                		onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '1';
-                		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                	}
-                }, {
-                	text: 'Kraftig felställning (Glidning > 50% ad latus och/eller > 45 graders vinkelfelställning)',
-                	textAlign: 'left',
-                	handler: function () {
-                		msgBox.close();
-                		onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '2';
-                		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                	}
-                }, {
-                	text: 'Okänt/oklart',
-                	handler: function () {
-                		msgBox.close();
-                		onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '9';
-                		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                	}
-                }, {
-                	text: 'Avbryt',
-                	handler: function () {
-                		msgBox.close();
-                	}
-                }
+				{
+					text: 'Ingen felställning',
+					handler: function () {
+						msgBox.close();
+						onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '0';
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+					}
+				}, {
+					text: 'Måttlig felställning',
+					handler: function () {
+						msgBox.close();
+						onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '1';
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+					}
+				}, {
+					text: 'Kraftig felställning (Glidning > 50% ad latus och/eller > 45 graders vinkelfelställning)',
+					textAlign: 'left',
+					handler: function () {
+						msgBox.close();
+						onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '2';
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+					}
+				}, {
+					text: 'Okänt/oklart',
+					handler: function () {
+						msgBox.close();
+						onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '9';
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+					}
+				}, {
+					text: 'Avbryt',
+					handler: function () {
+						msgBox.close();
+					}
+				}
 			];
 			msgBox = createDialog('Felställning', 'Felställning?', dialogitems, true);
 			msgBox.show();
@@ -5516,33 +5514,33 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 	function childDistEpifysHumerusHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName) {
 		if (aAO == '13-E/3.1/2' || aAO == '13-E/4.1') {
 			var felstallningItems = [
-                 {
-                 	text: 'Nej eller <= 2mm diastas',
-                 	handler: function () {
-                 		felstallningBox.close();
-                 		onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '0';
-                 		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                 	}
-                 }, {
-                 	text: 'Ja, > 2mm diastas',
-                 	handler: function () {
-                 		felstallningBox.close();
-                 		onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '1';
-                 		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                 	}
-                 }, {
-                 	text: 'Okänt/oklart',
-                 	handler: function () {
-                 		felstallningBox.close();
-                 		onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '9';
-                 		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                 	}
-                 }, {
-                 	text: 'Avbryt',
-                 	handler: function () {
-                 		felstallningBox.close();
-                 	}
-                 }
+				{
+					text: 'Nej eller <= 2mm diastas',
+					handler: function () {
+						felstallningBox.close();
+						onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '0';
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+					}
+				}, {
+					text: 'Ja, > 2mm diastas',
+					handler: function () {
+						felstallningBox.close();
+						onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '1';
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+					}
+				}, {
+					text: 'Okänt/oklart',
+					handler: function () {
+						felstallningBox.close();
+						onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '9';
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+					}
+				}, {
+					text: 'Avbryt',
+					handler: function () {
+						felstallningBox.close();
+					}
+				}
 			];
 			var felstallningBox = createDialog('Felställning', 'Felställning?', felstallningItems);
 			felstallningBox.show();
@@ -5554,135 +5552,135 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 	function childDistMetafysHumerusHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName) {
 		var flexValue = '';
 		var vesselitems = [
-            {
-            	text: 'Ja, a radialis ej palpabel',
-            	handler: function () {
-            		vesselBox.close();
-            		onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '1';
-            		nervBox.show();
-            	}
-            }, {
-            	text: 'Nej, a radialis är palpabel',
-            	handler: function () {
-            		vesselBox.close();
-            		onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '0';
-            		nervBox.show();
-            	}
-            }, {
-            	text: 'Avbryt',
-            	handler: function () {
-            		vesselBox.close();
-            	}
-            }
+			{
+				text: 'Ja, a radialis ej palpabel',
+				handler: function () {
+					vesselBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '1';
+					nervBox.show();
+				}
+			}, {
+				text: 'Nej, a radialis är palpabel',
+				handler: function () {
+					vesselBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '0';
+					nervBox.show();
+				}
+			}, {
+				text: 'Avbryt',
+				handler: function () {
+					vesselBox.close();
+				}
+			}
 		];
 		var flexItems = [
-            {
-            	text: 'Extensionstyp',
-            	handler: function () {
-            		flexBox.close();
-            		flexValue = ChildClassChars.FLEX + '1';
-            		vesselBox.show();
-            	}
-            },
-            {
-            	text: 'Flexionstyp',
-            	handler: function () {
-            		flexBox.close();
-            		flexValue = ChildClassChars.FLEX + '2';
-            		vesselBox.show();
-            	}
-            }, {
-            	text: 'Vet ej',
-            	handler: function () {
-            		flexBox.close();
-            		flexValue = ChildClassChars.FLEX + '0';
-            		vesselBox.show();
-            	}
-            }, {
-            	text: 'Avbryt',
-            	handler: function () {
-            		flexBox.close();
-            	}
-            }
+			{
+				text: 'Extensionstyp',
+				handler: function () {
+					flexBox.close();
+					flexValue = ChildClassChars.FLEX + '1';
+					vesselBox.show();
+				}
+			},
+			{
+				text: 'Flexionstyp',
+				handler: function () {
+					flexBox.close();
+					flexValue = ChildClassChars.FLEX + '2';
+					vesselBox.show();
+				}
+			}, {
+				text: 'Vet ej',
+				handler: function () {
+					flexBox.close();
+					flexValue = ChildClassChars.FLEX + '0';
+					vesselBox.show();
+				}
+			}, {
+				text: 'Avbryt',
+				handler: function () {
+					flexBox.close();
+				}
+			}
 		];
 		var felstallningItems = [
-            {
-            	text: 'Nej',
-            	handler: function () {
-            		felstallningBox.close();
-            		onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '0';
-            		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-            	}
-            }, {
-            	text: '<=5mm',
-            	handler: function () {
-            		felstallningBox.close();
-            		onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '1';
-            		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-            	}
-            }, {
-            	text: '>5mm',
-            	handler: function () {
-            		felstallningBox.close();
-            		onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '2';
-            		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-            	}
-            }, {
-            	text: 'Avbryt',
-            	handler: function () {
-            		felstallningBox.close();
-            	}
-            }
+			{
+				text: 'Nej',
+				handler: function () {
+					felstallningBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '0';
+					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+				}
+			}, {
+				text: '<=5mm',
+				handler: function () {
+					felstallningBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '1';
+					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+				}
+			}, {
+				text: '>5mm',
+				handler: function () {
+					felstallningBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '2';
+					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+				}
+			}, {
+				text: 'Avbryt',
+				handler: function () {
+					felstallningBox.close();
+				}
+			}
 		];
 		var nervItems = [
-            {
-            	text: 'Nej',
-            	handler: function () {
-            		nervBox.close();
-            		onReturnCodes.extraClassInfo += ChildClassChars.NERV + '0' + flexValue;
-            		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-            	}
-            }, {
-            	text: 'Påverkan på n radialis',
-            	handler: function () {
-            		nervBox.close();
-            		onReturnCodes.extraClassInfo += ChildClassChars.NERV + '1' + flexValue;;
-            		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-            	}
-            }, {
-            	text: 'Påverkan på n medianus',
-            	handler: function () {
-            		nervBox.close();
-            		onReturnCodes.extraClassInfo += ChildClassChars.NERV + '2' + flexValue;;
-            		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-            	}
-            }, {
-            	text: 'Påverkan på n ulnaris',
-            	handler: function () {
-            		nervBox.close();
-            		onReturnCodes.extraClassInfo += ChildClassChars.NERV + '3' + flexValue;;
-            		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-            	}
-            }, {
-            	text: 'Påverkan på mer än en av ovanstående',
-            	handler: function () {
-            		nervBox.close();
-            		onReturnCodes.extraClassInfo += ChildClassChars.NERV + '4' + flexValue;;
-            		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-            	}
-            }, {
-            	text: 'Okänt/oklart',
-            	handler: function () {
-            		nervBox.close();
-            		onReturnCodes.extraClassInfo += ChildClassChars.NERV + '9' + flexValue;;
-            		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-            	}
-            }, {
-            	text: 'Avbryt',
-            	handler: function () {
-            		nervBox.close();
-            	}
-            }
+			{
+				text: 'Nej',
+				handler: function () {
+					nervBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.NERV + '0' + flexValue;
+					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+				}
+			}, {
+				text: 'Påverkan på n radialis',
+				handler: function () {
+					nervBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.NERV + '1' + flexValue;;
+					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+				}
+			}, {
+				text: 'Påverkan på n medianus',
+				handler: function () {
+					nervBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.NERV + '2' + flexValue;;
+					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+				}
+			}, {
+				text: 'Påverkan på n ulnaris',
+				handler: function () {
+					nervBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.NERV + '3' + flexValue;;
+					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+				}
+			}, {
+				text: 'Påverkan på mer än en av ovanstående',
+				handler: function () {
+					nervBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.NERV + '4' + flexValue;;
+					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+				}
+			}, {
+				text: 'Okänt/oklart',
+				handler: function () {
+					nervBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.NERV + '9' + flexValue;;
+					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+				}
+			}, {
+				text: 'Avbryt',
+				handler: function () {
+					nervBox.close();
+				}
+			}
 		];
 		var felstallningBox = createDialog('Felställning', 'Felställning?', felstallningItems);
 		var nervBox = createDialog('Nervpåverkan', 'Nervpåverkan?', nervItems);
@@ -5704,45 +5702,45 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 	function childProxEpifysFemurHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName) {
 		if (aAO == '31-E/1.1' || aAO == '31-E/2.1') {
 			var caputItems = [
-                 {
-                 	text: 'Ja',
-                 	handler: function () {
-                 		caputBox.close();
-                 		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                 	}
-                 }, {
-                 	text: 'Nej',
-                 	handler: function () {
-                 		caputBox.close();
-                 		var fractureForm = Ext.getCmp(aParentID);
-                 		var parentEventID = getCmpByName('ParentEventID', fractureForm).getValue();
-                 		var eventID = getCmpByName('EventID', fractureForm).getValue();
-                 		if (Ext.isEmpty(eventID)) {
-                 			Ext.Msg.show({
-                 				title: 'Borttagning',
-                 				msg: 'Fraktur- och skadepanel kommer nu att försökas tas bort automatiskt. Om det finns fler frakturer kopplade till detta skadetillfället måste du ta bort denna frakturpanel manuellt', //TODO
-                 				buttons: Ext.Msg.OKCANCEL,
-                 				icon: Ext.Msg.INFO,
-                 				fn: function (btn) {
-                 					if (btn == 'ok') {
-                 						removePanel(aParentID, null, true);
-                 						var injPanel = getPanel(parentEventID);
-                 						removePanel(injPanel.id, parentEventID, true);
-                 					}
-                 				}
-                 			});
+				{
+					text: 'Ja',
+					handler: function () {
+						caputBox.close();
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+					}
+				}, {
+					text: 'Nej',
+					handler: function () {
+						caputBox.close();
+						var fractureForm = Ext.getCmp(aParentID);
+						var parentEventID = getCmpByName('ParentEventID', fractureForm).getValue();
+						var eventID = getCmpByName('EventID', fractureForm).getValue();
+						if (Ext.isEmpty(eventID)) {
+							Ext.Msg.show({
+								title: 'Borttagning',
+								msg: 'Fraktur- och skadepanel kommer nu att försökas tas bort automatiskt. Om det finns fler frakturer kopplade till detta skadetillfället måste du ta bort denna frakturpanel manuellt', //TODO
+								buttons: Ext.Msg.OKCANCEL,
+								icon: Ext.Msg.INFO,
+								fn: function (btn) {
+									if (btn == 'ok') {
+										removePanel(aParentID, null, true);
+										var injPanel = getPanel(parentEventID);
+										removePanel(injPanel.id, parentEventID, true);
+									}
+								}
+							});
 
-                 		} else {
-                 			//TODO
-                 		}
+						} else {
+							//TODO
+						}
 
-                 	}
-                 }, {
-                 	text: 'Avbryt',
-                 	handler: function () {
-                 		caputBox.close();
-                 	}
-                 }
+					}
+				}, {
+					text: 'Avbryt',
+					handler: function () {
+						caputBox.close();
+					}
+				}
 			];
 			var caputBox = createDialog('Caput femorisfyseolys', 'Akut/traumatisk?', caputItems, false, '(Bara säkerställt akuta traumatiska caput femur fyseolyser ska registreras här. Övriga (majoriteten) ska registreras i SPOQ-registret: www.spoq.se)');
 			caputBox.show();
@@ -5755,33 +5753,33 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 	function childDistMetafysFemurHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName) {
 		if (aAO == '33-M/2.1' || aAO == '33-M/3.1' || aAO == '33-M/3.2') {
 			var vesselItems = [
-                 {
-                 	text: 'Ja',
-                 	handler: function () {
-                 		msgBox.close();
-                 		onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '1';
-                 		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                 	}
-                 }, {
-                 	text: 'Nej',
-                 	handler: function () {
-                 		msgBox.close();
-                 		onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '0';
-                 		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                 	}
-                 }, {
-                 	text: 'Okänt/oklart',
-                 	handler: function () {
-                 		msgBox.close();
-                 		onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '9';
-                 		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                 	}
-                 }, {
-                 	text: 'Avbryt',
-                 	handler: function () {
-                 		msgBox.close();
-                 	}
-                 }
+				{
+					text: 'Ja',
+					handler: function () {
+						msgBox.close();
+						onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '1';
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+					}
+				}, {
+					text: 'Nej',
+					handler: function () {
+						msgBox.close();
+						onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '0';
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+					}
+				}, {
+					text: 'Okänt/oklart',
+					handler: function () {
+						msgBox.close();
+						onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '9';
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+					}
+				}, {
+					text: 'Avbryt',
+					handler: function () {
+						msgBox.close();
+					}
+				}
 			];
 			var msgBox = createDialog('Kärlpåverkan', 'Kärlpåverkan?', vesselItems);
 			msgBox.show();
@@ -5794,33 +5792,33 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 
 	function childDistEpifysFemurHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName) {
 		var vesselItems = [
-                {
-                	text: 'Ja',
-                	handler: function () {
-                		msgBox.close();
-                		onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '1';
-                		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                	}
-                }, {
-                	text: 'Nej',
-                	handler: function () {
-                		msgBox.close();
-                		onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '0';
-                		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                	}
-                }, {
-                	text: 'Okänt/oklart',
-                	handler: function () {
-                		msgBox.close();
-                		onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '9';
-                		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-                	}
-                }, {
-                	text: 'Avbryt',
-                	handler: function () {
-                		msgBox.close();
-                	}
-                }
+			{
+				text: 'Ja',
+				handler: function () {
+					msgBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '1';
+					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+				}
+			}, {
+				text: 'Nej',
+				handler: function () {
+					msgBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '0';
+					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+				}
+			}, {
+				text: 'Okänt/oklart',
+				handler: function () {
+					msgBox.close();
+					onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '9';
+					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+				}
+			}, {
+				text: 'Avbryt',
+				handler: function () {
+					msgBox.close();
+				}
+			}
 		];
 		var msgBox = createDialog('Kärlpåverkan', 'Kärlpåverkan?', vesselItems);
 		msgBox.show();
@@ -5845,48 +5843,48 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 				felstallningYesText = 'Ja, >= 2mm';
 			}
 			var vesselItems = [
-                            {
-                            	text: 'Ja',
-                            	handler: function () {
-                            		onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '1';
-                            		vesselBox.close();
-                            		if (showFelstallningDialog) {
-                            			createFelstallningDialog();
-                            		}
-                            		else {
-                            			generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, false, aPanelName);
-                            		}
-                            	}
-                            }, {
-                            	text: 'Nej',
-                            	handler: function () {
-                            		onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '0';
-                            		vesselBox.close();
-                            		if (showFelstallningDialog) {
-                            			createFelstallningDialog();
-                            		}
-                            		else {
-                            			generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, false, aPanelName);
-                            		}
-                            	}
-                            }, {
-                            	text: 'Okänt/oklart',
-                            	handler: function () {
-                            		onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '9';
-                            		vesselBox.close();
-                            		if (showFelstallningDialog) {
-                            			createFelstallningDialog();
-                            		}
-                            		else {
-                            			generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, false, aPanelName);
-                            		}
-                            	}
-                            }, {
-                            	text: 'Avbryt',
-                            	handler: function () {
-                            		vesselBox.close();
-                            	}
-                            }
+				{
+					text: 'Ja',
+					handler: function () {
+						onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '1';
+						vesselBox.close();
+						if (showFelstallningDialog) {
+							createFelstallningDialog();
+						}
+						else {
+							generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, false, aPanelName);
+						}
+					}
+				}, {
+					text: 'Nej',
+					handler: function () {
+						onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '0';
+						vesselBox.close();
+						if (showFelstallningDialog) {
+							createFelstallningDialog();
+						}
+						else {
+							generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, false, aPanelName);
+						}
+					}
+				}, {
+					text: 'Okänt/oklart',
+					handler: function () {
+						onReturnCodes.extraClassInfo += ChildClassChars.VESSEL + '9';
+						vesselBox.close();
+						if (showFelstallningDialog) {
+							createFelstallningDialog();
+						}
+						else {
+							generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, false, aPanelName);
+						}
+					}
+				}, {
+					text: 'Avbryt',
+					handler: function () {
+						vesselBox.close();
+					}
+				}
 			];
 			var vesselBox = createDialog('Kärlpåverkan', 'Kärlpåverkan?', vesselItems);
 			vesselBox.show();
@@ -5899,33 +5897,33 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 
 		function createFelstallningDialog() {
 			var felstallningItems = [
-                        {
-                        	text: felstallningNoText,
-                        	handler: function () {
-                        		onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '0';
-                        		felstallningsBox.close();
-                        		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, false, aPanelName);
-                        	}
-                        }, {
-                        	text: felstallningYesText,
-                        	handler: function () {
-                        		onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '1';
-                        		felstallningsBox.close();
-                        		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, false, aPanelName);
-                        	}
-                        }, {
-                        	text: 'Okänt/oklart',
-                        	handler: function () {
-                        		onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '9';
-                        		felstallningsBox.close();
-                        		generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, false, aPanelName);
-                        	}
-                        }, {
-                        	text: 'Avbryt',
-                        	handler: function () {
-                        		felstallningsBox.close();
-                        	}
-                        }
+				{
+					text: felstallningNoText,
+					handler: function () {
+						onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '0';
+						felstallningsBox.close();
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, false, aPanelName);
+					}
+				}, {
+					text: felstallningYesText,
+					handler: function () {
+						onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '1';
+						felstallningsBox.close();
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, false, aPanelName);
+					}
+				}, {
+					text: 'Okänt/oklart',
+					handler: function () {
+						onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '9';
+						felstallningsBox.close();
+						generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, false, aPanelName);
+					}
+				}, {
+					text: 'Avbryt',
+					handler: function () {
+						felstallningsBox.close();
+					}
+				}
 			];
 			var felstallningsBox = createDialog('Felställning', 'Felställning?', felstallningItems);
 			felstallningsBox.show();
@@ -6373,9 +6371,9 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 			case '41-C1':
 				return 1784;
 				break;
-				/*case '41-C2':
-                    return 1785;
-                    break;*/
+			/*case '41-C2':
+									return 1785;
+									break;*/
 			case '41-C3':
 				return 1786;
 				break;
@@ -6484,43 +6482,43 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 					if (aoImagesNavigationHandler.isChildFracture !== true) {
 						var pID = getXrayImagesPageID(aAoMatrix[i][j], aPictureID);
 						var xrays = {
-							"11-A1"  : {"a": "ap", "b": "ax"}, "11-A2"  : {"a": "ap", "b": "ax"}, "11-A3"  : {"a": "ap", "b": "ax"},
-							"11-B1"  : {"a": "ap", "b": "ax"}, "11-B2"  : {"a": "ap", "b": "ax"}, "11-B3"  : {"a": "ap", "b": "ax"},
-							"11-C1"  : {"a": "ap", "b": "ax"}, "11-C2"  : {"a": "ap", "b": "ax"}, "11-C2.3": {"a": "ap", "b": "ax"}, "11-C3"  : {"a": "ap", "b": "ax"}, 
-							"12-A1"  : {"a": "ap", "b": "ax"}, "12-A2"  : {"a": "ap", "b": "ax"}, "12-A3"  : {"a": "ap", "b": "ax"},
-							"12-B1"  : {"a": "ap", "b": "P2"}, "12-B2"  : {"a": "P1", "b": "P2"}, "12-B3"  : {"a": "P1", "b": "P2"},
-							"12-C1"  : {"a": "P1", "b": "P2"}, "12-C2"  : {"a": "P1", "b": "P2"}, "12-C3"  : {"a": "P1", "b": "P2"},
-							"13-A1"  : {"a": "P1", "b": "P2"}, "13-A2"  : {"a": "P1", "b": "P2"}, "13-A3"  : {"a": "P1", "b": "P2"},
-							"13-B1"  : {"a": "P1", "b": "P2"}, "13-B2"  : {"a": "P1", "b": "P2"}, "13-B3"  : {"a": "P1", "b": "P2"},
-							"13-C1"  : {"a": "P1", "b": "P2"}, "13-C2"  : {"a": "P1", "b": "P2"}, "13-C3"  : {"a": "P1", "b": "P2"},
-							"22-A1"  : {"a": "P1", "b": "P2"}, "22-A2"  : {"a": "P1", "b": "P2"}, "22-A3"  : {"a": "P1", "b": "P2"},
-							"22-B1"  : {"a": "P1", "b": "P2"}, "22-B2"  : {"a": "P1", "b": "P2"}, "22-B3"  : {"a": "P1", "b": "P2"},
-							"22-C1"  : {"a": "P1", "b": "P2"}, "22-C2"  : {"a": "P1", "b": "P2"}, "22-C3"  : {"a": "P1", "b": "P2"},
-							"23-A1"  : {"a": "P1", "b": "P2"}, "23-A2.2": {"a": "P1", "b": "P2"}, "22-A2.3": {"a": "P1", "b": "P2"}, "23-A3"  : {"a": "P1", "b": "P2"},
-							"23-B1"  : {"a": "P1", "b": "P2"}, "23-B2"  : {"a": "P1", "b": "P2"}, "23-B3"  : {"a": "P1", "b": "P2"},
-							"23-C1"  : {"a": "P1", "b": "P2"}, "23-C2"  : {"a": "P1", "b": "P2"}, "23-C3"  : {"a": "P1", "b": "P2"},
-							"31-A1"  : {"a": "ap", "b": "lat"}, "31-A2"  : {"a": "ap", "b": "lat"}, "31-A3"  : {"a": "ap", "b": "lat"},
-							"31-B1"  : {"a": "ap", "b": "lat"}, "31-B2"  : {"a": "ap", "b": "lat"}, "31-B3"  : {"a": "ap", "b": "lat"},
-							"31-C1"  : {"a": "2-3", "b": "2-3"}, 
-							"32-A1"  : {"a": "ap", "b": "lat"}, "32-A2"  : {"a": "ap", "b": "lat"}, "32-A3"  : {"a": "ap", "b": "lat"},
-							"32-B1"  : {"a": "ap", "b": "lat"}, "32-B2"  : {"a": "ap", "b": "lat"}, "32-B3"  : {"a": "ap", "b": "lat"},
-							"32-C1"  : {"a": "ap", "b": "lat"}, "32-C2"  : {"a": "ap", "b": "lat"}, "32-C3"  : {"a": "ap", "b": "lat"},
-							"33-A1"  : {"a": "ap", "b": "lat"}, "33-A2"  : {"a": "ap", "b": "lat"}, "33-A3"  : {"a": "ap", "b": "lat"},
-							"33-B1"  : {"a": "ap", "b": "lat"}, "33-B2"  : {"a": "ap", "b": "lat"}, "33-B3"  : {"a": "und", "b": "lat"},
-							"33-C1"  : {"a": "ap", "b": "lat"}, "33-C2"  : {"a": "ap", "b": "lat"}, "33-C3"  : {"a": "ap", "b": "lat"},
-							"41-A1"  : {"a": "ap", "b": "lat"}, "41-A2"  : {"a": "ap", "b": "lat"}, "41-A3"  : {"a": "ap", "b": "lat"},
-							"41-B1.1": {"a": "ap", "b": "lat"}, "41-B2"  : {"a": "ap", "b": "lat"}, "41-B3"  : {"a": "ap", "b": "lat"},
-							"41-C1"  : {"a": "ap", "b": "lat"}, "41-C2"  : {"a": "ap", "b": "lat"}, "41-C3"  : {"a": "ap", "b": "lat"},
-							"42-A1"  : {"a": "ap", "b": "lat"}, "42-A2"  : {"a": "ap", "b": "lat"}, "42-A3"  : {"a": "ap", "b": "lat"},
-							"42-B1"  : {"a": "ap", "b": "lat"}, "42-B2"  : {"a": "ap", "b": "lat"}, "42-B3"  : {"a": "ap", "b": "lat"},
-							"43-A1"  : {"a": "ap", "b": "lat"}, "43-A2"  : {"a": "ap", "b": "lat"}, "43-A3"  : {"a": "ap", "b": "lat"},
-							"43-B1"  : {"a": "ap", "b": "lat"}, "43-B2"  : {"a": "ap", "b": "lat"}, "43-B3"  : {"a": "ap", "b": "lat"},
-							"43-C3"  : {"a": "ap", "b": "lat"},
-							"44-A1"  : {"a": "ap", "b": "lat"}, "44-A2.1.2"  : {"a": "ap", "b": "lat"}, "44-A3.3"  : {"a": "ap", "b": "lat"},
-							"44-B1"  : {"a": "ap", "b": "lat"}, "44-B2"  : {"a": "ap", "b": "lat"}, "44-B3"  : {"a": "ap", "b": "lat"},
-							"44-C1"  : {"a": "ap", "b": "lat"}, "44-C2"  : {"a": "ap", "b": "lat"}, "44-C3"  : {"a": "ap 1", "b": "lat"},
+							"11-A1": { "a": "ap", "b": "ax" }, "11-A2": { "a": "ap", "b": "ax" }, "11-A3": { "a": "ap", "b": "ax" },
+							"11-B1": { "a": "ap", "b": "ax" }, "11-B2": { "a": "ap", "b": "ax" }, "11-B3": { "a": "ap", "b": "ax" },
+							"11-C1": { "a": "ap", "b": "ax" }, "11-C2": { "a": "ap", "b": "ax" }, "11-C2.3": { "a": "ap", "b": "ax" }, "11-C3": { "a": "ap", "b": "ax" },
+							"12-A1": { "a": "ap", "b": "ax" }, "12-A2": { "a": "ap", "b": "ax" }, "12-A3": { "a": "ap", "b": "ax" },
+							"12-B1": { "a": "ap", "b": "P2" }, "12-B2": { "a": "P1", "b": "P2" }, "12-B3": { "a": "P1", "b": "P2" },
+							"12-C1": { "a": "P1", "b": "P2" }, "12-C2": { "a": "P1", "b": "P2" }, "12-C3": { "a": "P1", "b": "P2" },
+							"13-A1": { "a": "P1", "b": "P2" }, "13-A2": { "a": "P1", "b": "P2" }, "13-A3": { "a": "P1", "b": "P2" },
+							"13-B1": { "a": "P1", "b": "P2" }, "13-B2": { "a": "P1", "b": "P2" }, "13-B3": { "a": "P1", "b": "P2" },
+							"13-C1": { "a": "P1", "b": "P2" }, "13-C2": { "a": "P1", "b": "P2" }, "13-C3": { "a": "P1", "b": "P2" },
+							"22-A1": { "a": "P1", "b": "P2" }, "22-A2": { "a": "P1", "b": "P2" }, "22-A3": { "a": "P1", "b": "P2" },
+							"22-B1": { "a": "P1", "b": "P2" }, "22-B2": { "a": "P1", "b": "P2" }, "22-B3": { "a": "P1", "b": "P2" },
+							"22-C1": { "a": "P1", "b": "P2" }, "22-C2": { "a": "P1", "b": "P2" }, "22-C3": { "a": "P1", "b": "P2" },
+							"23-A1": { "a": "P1", "b": "P2" }, "23-A2.2": { "a": "P1", "b": "P2" }, "22-A2.3": { "a": "P1", "b": "P2" }, "23-A3": { "a": "P1", "b": "P2" },
+							"23-B1": { "a": "P1", "b": "P2" }, "23-B2": { "a": "P1", "b": "P2" }, "23-B3": { "a": "P1", "b": "P2" },
+							"23-C1": { "a": "P1", "b": "P2" }, "23-C2": { "a": "P1", "b": "P2" }, "23-C3": { "a": "P1", "b": "P2" },
+							"31-A1": { "a": "ap", "b": "lat" }, "31-A2": { "a": "ap", "b": "lat" }, "31-A3": { "a": "ap", "b": "lat" },
+							"31-B1": { "a": "ap", "b": "lat" }, "31-B2": { "a": "ap", "b": "lat" }, "31-B3": { "a": "ap", "b": "lat" },
+							"31-C1": { "a": "2-3", "b": "2-3" },
+							"32-A1": { "a": "ap", "b": "lat" }, "32-A2": { "a": "ap", "b": "lat" }, "32-A3": { "a": "ap", "b": "lat" },
+							"32-B1": { "a": "ap", "b": "lat" }, "32-B2": { "a": "ap", "b": "lat" }, "32-B3": { "a": "ap", "b": "lat" },
+							"32-C1": { "a": "ap", "b": "lat" }, "32-C2": { "a": "ap", "b": "lat" }, "32-C3": { "a": "ap", "b": "lat" },
+							"33-A1": { "a": "ap", "b": "lat" }, "33-A2": { "a": "ap", "b": "lat" }, "33-A3": { "a": "ap", "b": "lat" },
+							"33-B1": { "a": "ap", "b": "lat" }, "33-B2": { "a": "ap", "b": "lat" }, "33-B3": { "a": "und", "b": "lat" },
+							"33-C1": { "a": "ap", "b": "lat" }, "33-C2": { "a": "ap", "b": "lat" }, "33-C3": { "a": "ap", "b": "lat" },
+							"41-A1": { "a": "ap", "b": "lat" }, "41-A2": { "a": "ap", "b": "lat" }, "41-A3": { "a": "ap", "b": "lat" },
+							"41-B1.1": { "a": "ap", "b": "lat" }, "41-B2": { "a": "ap", "b": "lat" }, "41-B3": { "a": "ap", "b": "lat" },
+							"41-C1": { "a": "ap", "b": "lat" }, "41-C2": { "a": "ap", "b": "lat" }, "41-C3": { "a": "ap", "b": "lat" },
+							"42-A1": { "a": "ap", "b": "lat" }, "42-A2": { "a": "ap", "b": "lat" }, "42-A3": { "a": "ap", "b": "lat" },
+							"42-B1": { "a": "ap", "b": "lat" }, "42-B2": { "a": "ap", "b": "lat" }, "42-B3": { "a": "ap", "b": "lat" },
+							"43-A1": { "a": "ap", "b": "lat" }, "43-A2": { "a": "ap", "b": "lat" }, "43-A3": { "a": "ap", "b": "lat" },
+							"43-B1": { "a": "ap", "b": "lat" }, "43-B2": { "a": "ap", "b": "lat" }, "43-B3": { "a": "ap", "b": "lat" },
+							"43-C3": { "a": "ap", "b": "lat" },
+							"44-A1": { "a": "ap", "b": "lat" }, "44-A2.1.2": { "a": "ap", "b": "lat" }, "44-A3.3": { "a": "ap", "b": "lat" },
+							"44-B1": { "a": "ap", "b": "lat" }, "44-B2": { "a": "ap", "b": "lat" }, "44-B3": { "a": "ap", "b": "lat" },
+							"44-C1": { "a": "ap", "b": "lat" }, "44-C2": { "a": "ap", "b": "lat" }, "44-C3": { "a": "ap 1", "b": "lat" },
 						};
-						if (typeof xrays[aPictureID+'-'+aAoMatrix[i][j]] !== 'undefined') {
+						if (typeof xrays[aPictureID + '-' + aAoMatrix[i][j]] !== 'undefined') {
 							var dash = aPictureID > 40 ? ' ' : '-';
 							var p1 = aPictureID + '-' + aAoMatrix[i][j] + dash + xrays[aPictureID + '-' + aAoMatrix[i][j]].a;
 							var p2 = aPictureID + '-' + aAoMatrix[i][j] + dash + xrays[aPictureID + '-' + aAoMatrix[i][j]].b;
@@ -6535,7 +6533,7 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 		return s;
 	}
 	showXray = function (a, b) {
-      var lightbox = Ext.create('Ext.window.Window', {
+		var lightbox = Ext.create('Ext.window.Window', {
 			title: 'Röntgen',
 			resizable: false,
 			html: '<img class="sfr-xray" src="https://stratum.blob.core.windows.net/sfr/Images/Radiographs/' + a + '.png"><img class="sfr-xray" src="https://stratum.blob.core.windows.net/sfr/Images/Radiographs/' + b + '.png">',
@@ -6735,7 +6733,7 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 				items: dockedItems
 			}]
 		}
-     );
+		);
 		return dialog;
 	}
 
@@ -7136,8 +7134,8 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 		var ERl1 = getCmpByName('ERlabel1', aFractureForm);
 		var ERl2 = getCmpByName('ERlabel2', aFractureForm);
 		var ERl3 = getCmpByName('ERlabel3', aFractureForm);
-		
-		
+
+
 		if (!erTimeHandlingIsActive(aFractureForm)) {
 			ERt.setVisible(false);
 			ERd.setVisible(false);
@@ -7175,41 +7173,41 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 		if (askAboutAtypcialFemurFracture(icd10)) {
 			enableDisableAtypicalFractureCmps(fractureForm, true);
 			var dialogitems = [
-		{
-			text: 'Ja',
-			handler: function () {
+				{
+					text: 'Ja',
+					handler: function () {
 
-				msgBox.close();
-				atypicalFractureField.setValue(1);
-				if (windowX) {
-					windowX.hide();
-				}
-			}
-		}, {
-			text: 'Nej',
-			handler: function () {
-				msgBox.close();
-				atypicalFractureField.setValue(0);
-				if (windowX) {
-					windowX.hide();
-				}
-			}
-		}, {
-			text: 'Oklart',
-			textAlign: 'left',
-			handler: function () {
-				msgBox.close();
-				atypicalFractureField.setValue(9);
-				if (windowX) {
-					windowX.hide();
-				}
-			}
-		}, {
-			text: 'Avbryt',
-			handler: function () {
-				msgBox.close();
-			}
-		}];
+						msgBox.close();
+						atypicalFractureField.setValue(1);
+						if (windowX) {
+							windowX.hide();
+						}
+					}
+				}, {
+					text: 'Nej',
+					handler: function () {
+						msgBox.close();
+						atypicalFractureField.setValue(0);
+						if (windowX) {
+							windowX.hide();
+						}
+					}
+				}, {
+					text: 'Oklart',
+					textAlign: 'left',
+					handler: function () {
+						msgBox.close();
+						atypicalFractureField.setValue(9);
+						if (windowX) {
+							windowX.hide();
+						}
+					}
+				}, {
+					text: 'Avbryt',
+					handler: function () {
+						msgBox.close();
+					}
+				}];
 			msgBox = createDialog('Atypisk fraktur', 'Atypisk fraktur?', dialogitems, true, '(Atypiska frakturer är stressfrakturer med en tvärgående frakturlinje från laterala kortex på frontalbilden. Minst en antydd kallusreaktion (kortical förtjockning) ska ses. Frakturen kan bestå av en spricka enbart, eller vara komplett. Frakturen har ofta samband med bisfosfonatbehandling)', true);
 			msgBox.show();
 			return false;
@@ -7252,40 +7250,42 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 
 	function scrollVert(aScrollToId, aScroll) {
 		var scrollTo = Ext.get(aScrollToId),
-		scroll = Ext.getDom(aScroll),
-		o = scrollTo.getOffsetsTo(scroll),
-		y = o[1];
+			scroll = Ext.getDom(aScroll),
+			o = scrollTo.getOffsetsTo(scroll),
+			y = o[1];
 
 		window.scrollTo(0, y);
 	}
 
 	function initialize(loadonly) {
-		if(typeof sfrDomainValues !== 'undefined' && !loadonly){
-		  app.myRegisterdomains = sfrDomainValues;
-		  app.mySkeletonWindow = createSkeletonWindow(Ext.getBody());
-		  app.mySkeletonWindow.getLayout().setActiveItem(0);
-		  app.mySkeletonWindow.show();
+		if (typeof sfrDomainValues !== 'undefined' && !loadonly) {
+
+			app.myRegisterdomains = sfrDomainValues;
+			app.mySkeletonWindow = createSkeletonWindow(Ext.getBody());
+			app.mySkeletonWindow.getLayout().setActiveItem(0);
+			app.mySkeletonWindow.show();
 		}
 		else {
-		  app.myRegisterdomains = loadDomains(
-			app.skeletonDomainCodes,
-			function () {
-				if(!loadonly) {
-				  app.mySkeletonWindow = createSkeletonWindow(Ext.getBody());
-				  app.mySkeletonWindow.getLayout().setActiveItem(0);
-				  app.mySkeletonWindow.show();
-				}
-				app.extras = loadDomains(
-					app.delayedDomainCodes,
-					function () {
-						app.myRegisterdomains = Object.assign(app.myRegisterdomains, app.extras);
-						sfrDomainValues = app.myRegisterdomains;
+			app.myRegisterdomains = loadDomains(
+				app.skeletonDomainCodes,
+				function () {
+					if (!loadonly) {
+						app.mySkeletonWindow = createSkeletonWindow(Ext.getBody());
+						app.mySkeletonWindow.getLayout().setActiveItem(0);
+						app.mySkeletonWindow.show();
 					}
-				);
-			}
-		  );
+					app.extras = loadDomains(
+						app.delayedDomainCodes,
+						function () {
+							app.myRegisterdomains = Object.assign(app.myRegisterdomains, app.extras);
+							sfrDomainValues = app.myRegisterdomains;
+						}
+					);
+				}
+			);
 		}
 	}
+	initialize(loadonly);
 };
 
-function start(event, current, callback) {skeletonWidget(event, current, callback)};
+function start(event, current, callback) { skeletonWidget(event, current, callback) };
