@@ -1,9 +1,6 @@
 
 var skeletonWidget = function (event, current, callback, loadonly) {
-	var app = skeletonWidget;
-	app.event = event;
-	app.callback = callback;
-	Ext.tip.QuickTipManager.init();
+	
 	var RINGSKADA_TEXT = 'Ringskada';
 	var BACK_SUBFRACTURE_TEXT = 'Ryggfraktur';
 	var NO_COMPETENCE_TO_CLASSIFY_CODE = 0;
@@ -18,16 +15,1022 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 	var NO_CLASSIFIABLE_BUTTON_TOOLTIP_TITLE = 'Ej kunnat klassificera/ej klassificerbar';
 	var NO_CLASSIFIABLE_DIALOG_TEXT = 'Anledning till att frakturen ej kommer att klassificeras?';
 	var PROSTHESIS_FRACTURE = 'PROSTHESIS_FRACTURE';
-
 	var ChildClassChars = { VESSEL: '-K', CAPUT: '-C', FELSTALLNING: '-F', NERV: '-N', FLEX: '-M' };
+
+	var app = skeletonWidget;
+	app.event = event;
+	app.callback = callback;
 	app.skeletonDomainCodes = [4158, 4159, 5554, 5555, 5563, 5572, 5573];
 	app.delayedDomainCodes = [4060, 5757];
-	app.registerDomainCodes = [4000, 4049, 4051, 4052, 4053, 4056, 4059, 4060, 4061, 4094, 4095, 4096, 4097, 4098, 4006, 4007, 4008, 4009, 4010,
-		4140, 4144, 4145, 4146, 4156, 4157, 4158, 4159, 4188, 4189, 4281, 4311, 4402, 4403, 5545, 5550, 5551, 5552, 5554,
-		5555, 5563, 5572, 5573, 5619, 5620, 5621, 5665, 5690, 5748, 5757];
+	app.registerDomainCodes = [4000, 4049, 4051, 4052, 4053, 4056, 4059, 4060, 4061, 4094, 4095, 4096, 4097, 4098, 4006, 4007, 4008, 4009, 4010, 4140, 4144, 4145, 4146, 4156, 4157, 4158, 4159, 4188, 4189, 4281, 4311, 4402, 4403, 5545, 5550, 5551, 5552, 5554, 5555, 5563, 5572, 5573, 5619, 5620, 5621, 5665, 5690, 5748, 5757];
 	app.showXray = showXray;
+	app.aoImagesNavigationHandler = aoImagesNavigationHandler;
+	app.onReturnCodes = onReturnCodes;
+	Ext.tip.QuickTipManager.init();
+	initialize(loadonly);
 
-	onLoadAOImages = function (aPictureID, aSide, aTargetPanel, gotoPicID) {
+	function onReturnCodes(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName) {
+		onReturnCodes.extraClassInfo = '';
+		if (aoImagesNavigationHandler.inProsthesisMode && aoImagesNavigationHandler.goToProsthesisHandler) {
+			aoImagesNavigationHandler.goToProsthesisHandler = false;
+			prosthesisHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
+		}
+		else if (aPictureID == '11-P') {
+			childProxHumerusHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
+		}
+		else if (aPictureID == '13-M') {
+			childDistMetafysHumerusHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
+		}
+		else if (aPictureID == '13-E') {
+			childDistEpifysHumerusHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
+		}
+		else if (aPictureID == '23') {
+			wristHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
+		}
+		else if (aPictureID == '41-E') {
+			childProxEpifysTibiaHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
+		}
+		else if (aPictureID == '31-E') {
+			childProxEpifysFemurHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
+		}
+		else if (aPictureID == '33-E') {
+			childDistEpifysFemurHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
+		}
+		else if (aPictureID == '33-M') {
+			childDistMetafysFemurHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
+		}
+		else if (aPictureID == '41' || aPictureID == '42' || aPictureID == '43') {
+
+			if (aAO == '4X') {
+				Ext.Msg.show({
+					title: 'Isolerad fibulafraktur?',
+					msg: 'Observera att de enda fibulafrakturer som ska klassas som isolerade (ICD S82.40) är de få som orsakats av ett rent direktvåld. Samtliga övriga fibulafrakturer oavsett nivå på fibula är fotledsfrakturer av B- eller C-typ och ska klassas så',
+					buttons: Ext.Msg.OKCANCEL,
+					fn: function (c) {
+						if (c != 'ok') {
+							return;
+						}
+						if (aPictureID == '42') {
+							diafysTibiaHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
+						}
+						else if (aPictureID == '43') {
+							distalTibiaHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
+						}
+						else {
+							generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
+						}
+
+					},
+					icon: Ext.MessageBox.INFO,
+					width: 600
+				});
+			}
+			else {
+				if (aPictureID == '42') {
+					diafysTibiaHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
+				}
+				else if (aPictureID == '43') {
+					distalTibiaHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
+				}
+				else {
+					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
+				}
+			}
+		}
+		else if (aPictureID == '21-B' || aPictureID == '21-U') {
+			foreArmHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
+		}
+		else if (aPictureID == '101') {
+			backHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
+		}
+		else if (aPictureID == '102') {
+			backHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
+		}
+		else if (aPictureID == '102B') {
+			backHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
+		}
+		else if (aUseHandAO) {
+			handHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
+		}
+		else {
+			generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
+		}
+	}
+
+	function aoImagesNavigationHandler(aBtn, aPictureID, aSide, aPseduoAO, aIsHandPartClick) {
+		onReturnCodes.foreArmRadiusAO = '';
+		var skeletonPanel = app.mySkeletonWindow.items.items[0];
+		var aoPanel = app.mySkeletonWindow.items.items[1];
+		var pelvisPanel = app.mySkeletonWindow.items.items[2];
+		var foreArmRadiusImages = app.mySkeletonWindow.items.items[3];
+		var foreArmUlnaImages = app.mySkeletonWindow.items.items[4];
+		var foreArmRadiusChildImages = app.mySkeletonWindow.items.items[14];
+		var foreArmUlnaChildImages = app.mySkeletonWindow.items.items[15];
+		var footPartImages = app.mySkeletonWindow.items.items[5];
+		var childDistHumerusImages = app.mySkeletonWindow.items.items[7];
+		var childDistForearmImages = app.mySkeletonWindow.items.items[16];
+		var childProxTibiaImages = app.mySkeletonWindow.items.items[8];
+		var childDistTibiaImages = app.mySkeletonWindow.items.items[9];
+		var childProxFemurImages = app.mySkeletonWindow.items.items[10];
+		var childDistFemurImages = app.mySkeletonWindow.items.items[11];
+		var spinePanel = app.mySkeletonWindow.items.items[12];
+		var spine102BImages = app.mySkeletonWindow.items.items[13];
+
+		var vertebraC0Images = app.mySkeletonWindow.items.items[17];
+		var vertebraC1Images = app.mySkeletonWindow.items.items[18];
+		var vertebraC2Images = app.mySkeletonWindow.items.items[19];
+
+		var handSkeleton = app.mySkeletonWindow.items.items[6];
+		var prosthesisImages = app.mySkeletonWindow.items.items[20];
+
+		var buttons = app.mySkeletonWindow.getDockedComponent(1);
+		var nextBtn = getButtonByName('nextBtn', buttons);
+		var previousBtn = getButtonByName('previousBtn', buttons);
+
+		aoImagesNavigationHandler.goToProsthesisHandler = true;
+
+		aoImagesNavigationHandler.inProsthesisMode = false;
+		if (aPseduoAO !== null) {
+
+			if (aPseduoAO == PROSTHESIS_FRACTURE) {
+				aoImagesNavigationHandler.inProsthesisMode = true;
+
+				nextBtn.setDisabled(true);
+				onLoadAOImages(aPictureID, aSide, prosthesisImages, null);
+				app.mySkeletonWindow.getLayout().setActiveItem(20);
+
+				return;
+				/*onLoadAOImages('21-U', aSide, foreArmUlnaChildImages);
+                aoImagesNavigationHandler.pageNrStack.push(14);
+                app.mySkeletonWindow.getLayout().setActiveItem(15);*/
+			} else {
+				onReturnCodes.foreArmRadiusAO = aPseduoAO;
+			}
+
+		}
+		if (aoImagesNavigationHandler.toggleNavigationButton === undefined) {
+			aoImagesNavigationHandler.toggleNavigationButton = function (pelvisPanel) {
+				var pR = getCmpByName('prosthesisRight', pelvisPanel);
+				var pL = getCmpByName('prosthesisLeft', pelvisPanel);
+				var match = onPelvisClick.matchFoundForLightRingInjury(pelvisPanel) || onPelvisClick.matchFoundForSeriousRingInjury(pelvisPanel);
+				if (match) {
+					nextBtn.setDisabled(false);
+					pR.setDisabled(false);
+					pL.setDisabled(false);
+				}
+				else {
+					nextBtn.setDisabled(true);
+					pR.setDisabled(true);
+					pL.setDisabled(true);
+				}
+			};
+		}
+		if (aoImagesNavigationHandler.pageNrStack === undefined || app.mySkeletonWindow.getLayout().getActiveItem() === app.mySkeletonWindow.items.items[0]) {
+			aoImagesNavigationHandler.pageNrStack = new Array();
+		}
+
+
+		var aoTitleText = '';
+		if (aBtn == null) //Skeleton click/AO-image click/handpart click
+		{
+			aoImagesNavigationHandler.inPelvisMode = false;
+			aoImagesNavigationHandler.inHandMode = false;
+			var infoTextA1Radius = getDomainValueName('4158', 1);
+			var infoTextA2Radius = getDomainValueName('4158', 2);
+			var infoTextA3Radius = getDomainValueName('4158', 3);
+			var infoTextB1Radius = getDomainValueName('4158', 4);
+			var infoTextB2Radius = getDomainValueName('4158', 5);
+			var infoTextB3Radius = getDomainValueName('4158', 6);
+			var infoTextC3Radius = getDomainValueName('4158', 0);
+			var infoTextA1Ulna = getDomainValueName('4159', 1);
+			var infoTextA2Ulna = getDomainValueName('4159', 2);
+			var infoTextA3Ulna = getDomainValueName('4159', 3);
+			var infoTextA4Ulna = getDomainValueName('4159', 4);
+			var infoTextB1Ulna = getDomainValueName('4159', 5);
+			var infoTextB2Ulna = getDomainValueName('4159', 6);
+			var infoTextB3Ulna = getDomainValueName('4159', 7);
+			var infoTextC1Ulna = getDomainValueName('4159', 8);
+			var infoTextC2Ulna = getDomainValueName('4159', 9);
+			var infoTextC4Ulna = getDomainValueName('4159', 0);
+			if (aoImagesNavigationHandler.isChildFracture === true && aoImagesNavigationHandler.showNoChildFractureSupportAlert === false) {
+				if (aPictureID == '44') {
+					aPictureID = '43';
+				}
+				if (aPictureID == '11') {
+					onLoadAOImages('11-P', aSide);
+					app.mySkeletonWindow.getLayout().setActiveItem(1);
+				}
+				else if (aPictureID == '12') {
+					onLoadAOImages('12-D', aSide);
+					app.mySkeletonWindow.getLayout().setActiveItem(1);
+				}
+				else if (aPictureID == '13' && aPseduoAO === null) {
+					var sideLetter = getSideLetter(aSide);
+					var data = {
+						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-DistHumerus-" + sideLetter + ".png",
+						side: aSide,
+						PictureId: aPictureID,
+						windowId: app.mySkeletonWindow.id,
+						infoTextA1: 'Distala metafysen',
+						infoTextA2: '',
+						infoTextA3: '',
+						infoTextA4: '',
+						infoTextA5: '',
+						infoTextB1: 'Distala epifysen',
+						infoTextB2: '',
+						infoTextB3: '',
+						infoTextB4: '',
+						infoTextB5: '',
+						infoTextC1: '',
+						infoTextC2: '',
+						infoTextC3: '',
+						infoTextC4: '',
+						infoTextC5: ''
+					};
+					var displayMatrix = createDisplayMatrix(3, 3);
+					displayMatrix[0][1] = displayMatrix[0][2] = displayMatrix[1][1] = displayMatrix[1][2] = displayMatrix[2][0] = displayMatrix[2][1] = displayMatrix[2][2] = false;
+					var aoMatrix = createAoMatrix();
+					currentFracturePanelID = null;
+					var tplContent = initAOtemplate(displayMatrix, aoMatrix, currentFracturePanelID, false, aPictureID, '13');
+					var tpl = new Ext.Template(tplContent);
+					tpl.overwrite(childDistHumerusImages.body, data);
+					app.mySkeletonWindow.getLayout().setActiveItem(7);
+				}
+				else if (aPictureID == '13') {
+					var aoID;
+					switch (aPseduoAO) {
+						case 'A1':
+							aoID = '13-M';
+							break;
+						case 'B1':
+							aoID = '13-E';
+							break;
+					}
+					onLoadAOImages(aoID, aSide);
+					aoImagesNavigationHandler.pageNrStack.push(7);
+					app.mySkeletonWindow.getLayout().setActiveItem(1);
+				}
+				else if (aPictureID == '21') {
+					onLoadAOImages('21-ME', aSide, foreArmRadiusChildImages, '21-U');
+					app.mySkeletonWindow.getLayout().setActiveItem(14);
+				}
+				else if (aPictureID == '21-U') {
+					onLoadAOImages('21-U', aSide, foreArmUlnaChildImages);
+					aoImagesNavigationHandler.pageNrStack.push(14);
+					app.mySkeletonWindow.getLayout().setActiveItem(15);
+				}
+				else if (aPictureID == '22') {
+					onLoadAOImages('22-D', aSide);
+					app.mySkeletonWindow.getLayout().setActiveItem(1);
+				}
+				else if (aPictureID == '23' && aPseduoAO === null) {
+					var sideLetter = getSideLetter(aSide);
+					var data = {
+						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-DistForearm-" + sideLetter + ".png",
+						side: aSide,
+						PictureId: aPictureID,
+						windowId: app.mySkeletonWindow.id,
+						infoTextA1: 'Distala metafysen',
+						infoTextA2: '',
+						infoTextA3: '',
+						infoTextA4: '',
+						infoTextA5: '',
+						infoTextB1: 'Distala epifysen',
+						infoTextB2: '',
+						infoTextB3: '',
+						infoTextB4: '',
+						infoTextB5: '',
+						infoTextC1: '',
+						infoTextC2: '',
+						infoTextC3: '',
+						infoTextC4: '',
+						infoTextC5: ''
+					};
+					var displayMatrix = createDisplayMatrix(3, 3);
+					displayMatrix[0][1] = displayMatrix[0][2] = displayMatrix[1][1] = displayMatrix[1][2] = displayMatrix[2][0] = displayMatrix[2][1] = displayMatrix[2][2] = false;
+					var aoMatrix = createAoMatrix();
+					currentFracturePanelID = null;
+					if (app.onlySkeletonWindow == false) {
+						currentFracturePanelID = app.myCurrentFracturePanel.id;
+					}
+					var tplContent = initAOtemplate(displayMatrix, aoMatrix, currentFracturePanelID, false, aPictureID, '23');
+					var tpl = new Ext.Template(tplContent);
+					tpl.overwrite(childDistForearmImages.body, data);
+					app.mySkeletonWindow.getLayout().setActiveItem(16);
+				}
+				else if (aPictureID == '23') {
+					var aoID;
+					switch (aPseduoAO) {
+						case 'A1':
+							aoID = '23-M';
+							break;
+						case 'B1':
+							aoID = '23-E';
+							break;
+					}
+					onLoadAOImages(aoID, aSide);
+					aoImagesNavigationHandler.pageNrStack.push(16);
+					app.mySkeletonWindow.getLayout().setActiveItem(1);
+				}
+				else if (aPictureID == '31' && aPseduoAO === null) {
+					var sideLetter = getSideLetter(aSide);
+					var data = {
+						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-ProxFemur-" + sideLetter + ".png",
+						side: aSide,
+						PictureId: aPictureID,
+						windowId: app.mySkeletonWindow.id,
+						infoTextA1: 'Proximala epifysen/fysen',
+						infoTextA2: '',
+						infoTextA3: '',
+						infoTextA4: '',
+						infoTextA5: '',
+						infoTextB1: 'Proximala metafysen',
+						infoTextB2: '',
+						infoTextB3: '',
+						infoTextB4: '',
+						infoTextB5: '',
+						infoTextC1: '',
+						infoTextC2: '',
+						infoTextC3: '',
+						infoTextC4: '',
+						infoTextC5: ''
+					};
+					var displayMatrix = createDisplayMatrix(3, 3);
+					displayMatrix[0][1] = displayMatrix[0][2] = displayMatrix[1][1] = displayMatrix[1][2] = displayMatrix[2][0] = displayMatrix[2][1] = displayMatrix[2][2] = false;
+					var aoMatrix = createAoMatrix();
+					currentFracturePanelID = null;
+					if (app.onlySkeletonWindow == false) {
+						currentFracturePanelID = app.myCurrentFracturePanel.id;
+					}
+					var tplContent = initAOtemplate(displayMatrix, aoMatrix, currentFracturePanelID, false, aPictureID, '31');
+					var tpl = new Ext.Template(tplContent);
+					tpl.overwrite(childProxFemurImages.body, data);
+					app.mySkeletonWindow.getLayout().setActiveItem(10);
+				}
+				else if (aPictureID == '31') {
+					var aoID;
+					switch (aPseduoAO) {
+						case 'A1':
+							aoID = '31-E';
+							break;
+						case 'B1':
+							aoID = '31-M';
+							break;
+					}
+					onLoadAOImages(aoID, aSide);
+					aoImagesNavigationHandler.pageNrStack.push(10);
+					app.mySkeletonWindow.getLayout().setActiveItem(1);
+				}
+				else if (aPictureID == '32') {
+					onLoadAOImages('32-D', aSide);
+					app.mySkeletonWindow.getLayout().setActiveItem(1);
+				}
+
+				else if (aPictureID == '33' && aPseduoAO === null) {
+					var sideLetter = getSideLetter(aSide);
+					var data = {
+						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-DistFemur-" + sideLetter + ".png",
+						side: aSide,
+						PictureId: aPictureID,
+						windowId: app.mySkeletonWindow.id,
+						infoTextA1: 'Proximala metafysen',
+						infoTextA2: '',
+						infoTextA3: '',
+						infoTextA4: '',
+						infoTextA5: '',
+						infoTextB1: 'Proximala epifysen/fysen',
+						infoTextB2: '',
+						infoTextB3: '',
+						infoTextB4: '',
+						infoTextB5: '',
+						infoTextC1: '',
+						infoTextC2: '',
+						infoTextC3: '',
+						infoTextC4: '',
+						infoTextC5: ''
+					};
+					var displayMatrix = createDisplayMatrix(3, 3);
+					displayMatrix[0][1] = displayMatrix[0][2] = displayMatrix[1][1] = displayMatrix[1][2] = displayMatrix[2][0] = displayMatrix[2][1] = displayMatrix[2][2] = false;
+					var aoMatrix = createAoMatrix();
+					currentFracturePanelID = null;
+					if (app.onlySkeletonWindow == false) {
+						currentFracturePanelID = app.myCurrentFracturePanel.id;
+					}
+					var tplContent = initAOtemplate(displayMatrix, aoMatrix, currentFracturePanelID, false, aPictureID, '33');
+					var tpl = new Ext.Template(tplContent);
+					tpl.overwrite(childDistFemurImages.body, data);
+					app.mySkeletonWindow.getLayout().setActiveItem(11);
+				}
+				else if (aPictureID == '33') {
+					var aoID;
+					switch (aPseduoAO) {
+						case 'A1':
+							aoID = '33-M';
+							break;
+						case 'B1':
+							aoID = '33-E';
+							break;
+					}
+					onLoadAOImages(aoID, aSide);
+					aoImagesNavigationHandler.pageNrStack.push(11);
+					app.mySkeletonWindow.getLayout().setActiveItem(1);
+				}
+				else if (aPictureID == '41' && aPseduoAO === null) {
+					var sideLetter = getSideLetter(aSide);
+					var data = {
+						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-ProxTibia-" + sideLetter + ".png",
+						side: aSide,
+						PictureId: aPictureID,
+						windowId: app.mySkeletonWindow.id,
+						infoTextA1: 'Proximala epifysen',
+						infoTextA2: '',
+						infoTextA3: '',
+						infoTextA4: '',
+						infoTextA5: '',
+						infoTextB1: 'Proximala metafysen',
+						infoTextB2: '',
+						infoTextB3: '',
+						infoTextB4: '',
+						infoTextB5: '',
+						infoTextC1: '',
+						infoTextC2: '',
+						infoTextC3: '',
+						infoTextC4: '',
+						infoTextC5: ''
+					};
+					var displayMatrix = createDisplayMatrix(3, 3);
+					displayMatrix[0][1] = displayMatrix[0][2] = displayMatrix[1][1] = displayMatrix[1][2] = displayMatrix[2][0] = displayMatrix[2][1] = displayMatrix[2][2] = false;
+					var aoMatrix = createAoMatrix();
+					currentFracturePanelID = null;
+					if (app.onlySkeletonWindow == false) {
+						currentFracturePanelID = app.myCurrentFracturePanel.id;
+					}
+					var tplContent = initAOtemplate(displayMatrix, aoMatrix, currentFracturePanelID, false, aPictureID, '41');
+					var tpl = new Ext.Template(tplContent);
+					tpl.overwrite(childProxTibiaImages.body, data);
+					app.mySkeletonWindow.getLayout().setActiveItem(8);
+				}
+				else if (aPictureID == '41') {
+					var aoID;
+					switch (aPseduoAO) {
+						case 'A1':
+							aoID = '41-E';
+							break;
+						case 'B1':
+							aoID = '41-M';
+							break;
+					}
+					onLoadAOImages(aoID, aSide);
+					aoImagesNavigationHandler.pageNrStack.push(8);
+					app.mySkeletonWindow.getLayout().setActiveItem(1);
+				}
+				else if (aPictureID == '42') {
+					onLoadAOImages('42-D', aSide);
+					app.mySkeletonWindow.getLayout().setActiveItem(1);
+				}
+				else if (aPictureID == '43' && aPseduoAO === null) {
+					var sideLetter = getSideLetter(aSide);
+					var data = {
+						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-DistTibia-" + sideLetter + ".png",
+						side: aSide,
+						PictureId: aPictureID,
+						windowId: app.mySkeletonWindow.id,
+						infoTextA1: 'Distala metafysen',
+						infoTextA2: '',
+						infoTextA3: '',
+						infoTextA4: '',
+						infoTextA5: '',
+						infoTextB1: 'Distala epifysen: Isolerad tibiafraktur',
+						infoTextB2: 'Distala epifysen: Isolerad fibulafraktur',
+						infoTextB3: 'Distala epifysen: Både tibia och fibula',
+						infoTextB4: '',
+						infoTextB5: '',
+						infoTextC1: '',
+						infoTextC2: '',
+						infoTextC3: '',
+						infoTextC4: '',
+						infoTextC5: ''
+					};
+					var displayMatrix = createDisplayMatrix(3, 3);
+					displayMatrix[0][1] = displayMatrix[0][2] = displayMatrix[2][0] = displayMatrix[2][1] = displayMatrix[2][2] = false;
+					var aoMatrix = createAoMatrix();
+					currentFracturePanelID = null;
+					if (app.onlySkeletonWindow == false) {
+						currentFracturePanelID = app.myCurrentFracturePanel.id;
+					}
+					var tplContent = initAOtemplate(displayMatrix, aoMatrix, currentFracturePanelID, false, aPictureID, '43');
+					var tpl = new Ext.Template(tplContent);
+					tpl.overwrite(childDistTibiaImages.body, data);
+					app.mySkeletonWindow.getLayout().setActiveItem(9);
+
+				}
+				else if (aPictureID == '43') {
+					var aoID;
+					switch (aPseduoAO) {
+						case 'A1':
+							aoID = '43-M';
+							break;
+						case 'B1':
+							aoID = '43t-E';
+							break;
+						case 'B2':
+							aoID = '43f-E';
+							break;
+						case 'B3':
+							aoID = '43-E';
+							break;
+					}
+					onLoadAOImages(aoID, aSide);
+					aoImagesNavigationHandler.pageNrStack.push(9);
+					app.mySkeletonWindow.getLayout().setActiveItem(1);
+				}
+				else {
+					aoImagesNavigationHandler.showNoChildFractureSupportAlert = true;
+					aoImagesNavigationHandler.classifyAsAdult = true;
+					aoImagesNavigationHandler(aBtn, aPictureID, aSide, aPseduoAO, aIsHandPartClick);
+
+					/*Ext.Msg.show({
+                        title: 'Öppna fyser',
+                        msg: 'I Frakturregistret kan man tillsvidare inte registrera barnfrakturer i den skelettdel du valt',
+                        buttons: Ext.Msg.OKCANCEL,
+                        fn: function (btn, text) {
+                            if (btn == 'ok') {
+                                aoImagesNavigationHandler.isChildFracture = false;
+                                aoImagesNavigationHandler(aBtn, aPictureID, aSide, aPseduoAO, aIsHandPartClick);
+                            }
+                        },
+                        icon: Ext.MessageBox.INFO,
+                        width: 600
+                    });*/
+				}
+			}
+			else if (aPictureID == '21') {
+				onLoadAOImages('21-A', aSide, foreArmRadiusImages, '21-B');
+				app.mySkeletonWindow.getLayout().setActiveItem(3);
+			}
+			else if (aPictureID == '21-B') {
+				onLoadAOImages('21-B', aSide, foreArmUlnaImages);
+				aoImagesNavigationHandler.pageNrStack.push(3);
+				app.mySkeletonWindow.getLayout().setActiveItem(4);
+				aoImagesNavigationHandler.pageNrStack.push(3);
+			}
+			else if (aPictureID == '61') {
+				aoImagesNavigationHandler.inPelvisMode = true;
+				app.mySkeletonWindow.getLayout().setActiveItem(2);
+			}
+			else if (aPictureID == '7') {
+				aoImagesNavigationHandler.inHandMode = true;
+				handSkeleton.body.update('<div></div>');
+				if (aSide == 1) {
+					var handSkeletonHData = {
+						a: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton.png"
+					};
+					tplHandSkeletonH.overwrite(handSkeleton.body, handSkeletonHData);
+
+				}
+				else if (aSide == 2) {
+					var handSkeletonVData = {
+						a: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton.png"
+					};
+					tplHandSkeletonV.overwrite(handSkeleton.body, handSkeletonVData);
+				}
+				//app.mySkeletonWindow.getLayout().setActiveItem(6); This call is moved to function onLoadHandImgMini
+			}
+			else if (aPictureID == '8' && aPseduoAO === null) {
+				var sideLetter = getSideLetter(aSide);
+				var footPartsData = {
+					image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-Foot-" + sideLetter + ".png",
+					side: aSide,
+					PictureId: aPictureID,
+					windowId: app.mySkeletonWindow.id,
+					infoTextA1: 'Talus',
+					infoTextA2: 'Calcaneus',
+					infoTextA3: '',
+					infoTextA4: '',
+					infoTextA5: '',
+					infoTextB1: 'Navikulare',
+					infoTextB2: 'Cuboideum',
+					infoTextB3: 'Cuneiformeben',
+					infoTextB4: '',
+					infoTextB5: '',
+					infoTextC1: 'Metatarsalben',
+					infoTextC2: 'Falanger',
+					infoTextC3: '',
+					infoTextC4: '',
+					infoTextC5: ''
+				};
+				var displayMatrixFootPart = createDisplayMatrix(3, 3);
+				displayMatrixFootPart[0][2] = displayMatrixFootPart[2][2] = false;
+				var aoMatrixFootPart = createAoMatrix();
+				currentFracturePanelID = null;
+				if (app.onlySkeletonWindow == false) {
+					currentFracturePanelID = app.myCurrentFracturePanel.id;
+				}
+				var tplContentFootPart = initAOtemplate(displayMatrixFootPart, aoMatrixFootPart, currentFracturePanelID, false, aPictureID, '8');
+				var tplFootPart = new Ext.Template(tplContentFootPart);
+				tplFootPart.overwrite(footPartImages.body, footPartsData);
+				app.mySkeletonWindow.getLayout().setActiveItem(5);
+			}
+			else if (aPictureID == '8') {
+				var aoID;
+				switch (aPseduoAO) {
+					case 'A1':
+						aoID = '81';
+						break;
+					case 'A2':
+						aoID = '82';
+						break;
+					case 'B1':
+						aoID = '83';
+						break;
+					case 'B2':
+						aoID = '84';
+						break;
+					case 'B3':
+						aoID = '85';
+						break;
+					case 'C1':
+						aoID = '87';
+						Ext.MessageBox.show({
+							title: 'Påverkan på Lisfrancs led?',
+							msg: 'Om du vill registrera en eller flera metatarsalbensfrakturer som påverkar Lisfrancs led, tryck på ”Föregående”-knappen nere till höger och välj därefter Cuneiformebenen.</br></br>Registrera sedan Lisfrancledsskadan enligt valen under C.',
+							buttons: Ext.Msg.OK
+						});
+						break;
+					case 'C2':
+						aoID = '88';
+						break;
+				}
+				aoPanel.setTitle('Modifierad OTA-klassifikation');
+				onLoadAOImages(aoID, aSide);
+				aoImagesNavigationHandler.pageNrStack.push(5);
+				app.mySkeletonWindow.getLayout().setActiveItem(1);
+			}
+			else if (aPictureID == '100' || aPictureID == '100b' || aPictureID == '101' || aPictureID == '102' || aPictureID == '103') {
+				nextBtn.setDisabled(false);
+				aoImagesNavigationHandler.currentSpinePictureID = aPictureID;
+
+				var segmentNr = 0;
+				switch (aPictureID) {
+					case '100':
+					case '100b':
+						segmentNr = 1;
+						break;
+					case '101':
+						segmentNr = 2;
+						break;
+					case '102':
+						segmentNr = 3;
+						break;
+					case '103':
+						segmentNr = 4;
+						break;
+				}
+				backHandler.currentSegment = segmentNr;
+				var v2 = getCmpByName('v2', spinePanel);
+				var v3 = getCmpByName('v3', spinePanel);
+				var activeItem = app.mySkeletonWindow.getLayout().getActiveItem();
+				if (activeItem == vertebraC0Images) {
+					backHandler.c0Class = aPseduoAO;
+					if (v2.getValue() === true) {
+						onLoadAOImages('100-C1', aSide, vertebraC1Images, '100');
+						app.mySkeletonWindow.getLayout().setActiveItem(18);
+					}
+					else if (v3.getValue() === true) {
+						onLoadAOImages('100-C2', aSide, vertebraC2Images, '100');
+						app.mySkeletonWindow.getLayout().setActiveItem(19);
+					}
+					else {
+						backHandler('', aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, vertebraC0Images.name);
+					}
+				}
+				else if (activeItem == vertebraC1Images) {
+					if (!Ext.isEmpty(aPseduoAO)) {
+						backHandler.c1Class = aPseduoAO;
+					}
+					if (aPictureID == '100' && aPseduoAO !== 'X') { //TODO: 'Typ-A??' X?????? (constant)
+						backHandler.c1Class = aPseduoAO;
+						if (aPseduoAO != 'A' && !Ext.isEmpty(aPseduoAO)) { //TODO: "A" must be made to constant or something.
+							var dialog = Ext.create('Ext.window.Window', {
+								title: 'Massa lateralis',
+								resizable: false,
+								html: '<br/><b>Massa lateralis vidgad 7 mm eller mer (dvs om avstånd a+b är 7 mm eller mer)(anges som gräns för instabil fraktur eftersom lig transversum då anses vara rupturerat)</b><img src="https://stratum.blob.core.windows.net/sfr/Images/Assembled/c1-extra.png"/>',
+								style: 'text-align:center;',
+								width: 400,
+								height: 420,
+								modal: true,
+								dockedItems: [{
+									xtype: 'toolbar',
+									layout: 'vbox',
+									dock: 'bottom',
+									items: [
+										{
+											text: 'JA',
+											handler: function () {
+												dialog.close();
+												backHandler.massaLateralis = true;
+												aoImagesNavigationHandler(null, '100b', '3', null, false);
+												//onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '0';
+												//generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+											}
+										}, {
+											text: 'NEJ',
+											handler: function () {
+												dialog.close();
+												backHandler.massaLateralis = false;
+												aoImagesNavigationHandler(null, '100b', '3', null, false);
+												//onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '1';
+												//generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
+											}
+										}]
+								}]
+							}
+							);
+							dialog.show();
+							return;
+						}
+					}
+					if (v3.getValue() === true) {
+						onLoadAOImages('100-C2', aSide, vertebraC2Images, '100');
+						app.mySkeletonWindow.getLayout().setActiveItem(19);
+					}
+					else {
+						backHandler('', aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, vertebraC1Images.name);
+					}
+				}
+				else if (activeItem == vertebraC2Images) {
+					backHandler.c2Class = aPseduoAO;
+					backHandler('', aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, vertebraC2Images.name);
+				}
+				else {
+					app.mySkeletonWindow.getLayout().setActiveItem(12);
+					activeItem = app.mySkeletonWindow.getLayout().getActiveItem();
+					//activeItem.el.setStyle({ display: 'block', backgroundPosition: '170px 40px', backgroundImage: 'url(ImagesAssembledSpine-S' + segmentNr + '.png)', height: '50', overflow: 'hidden', backgroundRepeat: 'no-repeat'});
+					//activeItem.el.setStyle({ display: 'block', backgroundPosition: '170px 40px', backgroundImage: 'url(Images/Assembled/Spine-S' + segmentNr + '.png)', height: '600', width:'800', overflow: 'hidden', backgroundRepeat: 'no-repeat'});
+					activeItem.setBodyStyle('background-image:url(https://stratum.blob.core.windows.net/sfr/Images/Assembled/Spine-S' + segmentNr + '.png);background-repeat:no-repeat;background-position:170px 15px;');
+					var v1 = getCmpByName('v1', activeItem);
+					var v2 = getCmpByName('v2', activeItem);
+					var v3 = getCmpByName('v3', activeItem);
+					var v4 = getCmpByName('v4', activeItem);
+					var v5 = getCmpByName('v5', activeItem);
+					var v6 = getCmpByName('v6', activeItem);
+					var v7 = getCmpByName('v7', activeItem);
+					var v8 = getCmpByName('v8', activeItem);
+					var v9 = getCmpByName('v9', activeItem);
+
+					v1.setValue(false); v2.setValue(false); v3.setValue(false); v4.setValue(false); v5.setValue(false); v6.setValue(false); v7.setValue(false); v8.setValue(false); v9.setValue(false);
+					v1.setVisible(true); v2.setVisible(true); v3.setVisible(true); v4.setVisible(true); v5.setVisible(true); v6.setVisible(true); v7.setVisible(true); v8.setVisible(true); v9.setVisible(true);
+
+					var neuroCmp = getCmpByName('neurology', activeItem);
+					neuroCmp.setValue(null);
+
+					var neuroExtCmp = getCmpByName('neurologiExtended', activeItem);
+					neuroExtCmp.setValue(null);
+
+					var hideCaudaQuestion = true;
+					if (aPictureID == '100') {
+						v1.setBoxLabel('C0'); v1.aValue = 'C0';
+						v2.setBoxLabel('C1'); v2.aValue = 'C1';
+						v3.setBoxLabel('C2'); v3.aValue = 'C2';
+						v4.setVisible(false);
+						v5.setVisible(false);
+						v6.setVisible(false);
+						v7.setVisible(false);
+						v8.setVisible(false);
+						v9.setVisible(false);
+
+					}
+					else if (aPictureID == '101') {
+						v1.setBoxLabel('C3'); v1.aValue = 'C3';
+						v2.setBoxLabel('C4'); v2.aValue = 'C4';
+						v3.setBoxLabel('C5'); v3.aValue = 'C5';
+						v4.setBoxLabel('C6'); v4.aValue = 'C6';
+						v5.setBoxLabel('C7'); v5.aValue = 'C7';
+						v6.setBoxLabel('Th1'); v6.aValue = 'Th1';
+						v7.setVisible(false);
+						v8.setVisible(false);
+						v9.setVisible(false);
+					}
+					else if (aPictureID == '102') {
+						v1.setBoxLabel('Th2'); v1.aValue = 'Th2';
+						v2.setBoxLabel('Th3'); v2.aValue = 'Th3';
+						v3.setBoxLabel('Th4'); v3.aValue = 'Th4';
+						v4.setBoxLabel('Th5'); v4.aValue = 'Th5';
+						v5.setBoxLabel('Th6'); v5.aValue = 'Th6';
+						v6.setBoxLabel('Th7'); v6.aValue = 'Th7';
+						v7.setBoxLabel('Th8'); v7.aValue = 'Th8';
+						v8.setBoxLabel('Th9'); v8.aValue = 'Th9';
+						v9.setBoxLabel('Th10'); v9.aValue = 'Th10';
+					}
+					else if (aPictureID == '103') {
+						v1.setBoxLabel('Th11'); v1.aValue = 'Th11';
+						v2.setBoxLabel('Th12'); v2.aValue = 'Th12';
+						v3.setBoxLabel('L1'); v3.aValue = 'L1';
+						v4.setBoxLabel('L2'); v4.aValue = 'L2';
+						v5.setBoxLabel('L3'); v5.aValue = 'L3';
+						v6.setBoxLabel('L4'); v6.aValue = 'L4';
+						v7.setBoxLabel('L5'); v7.aValue = 'L5';
+						v8.setVisible(false);
+						v9.setVisible(false);
+						hideCaudaQuestion = false;
+
+					}
+					neuroCmp.getStore().filterBy(Ext.bind(filterNeurologiStore, this, [hideCaudaQuestion], true));
+				}
+			}
+			else if (aPictureID == '102B') {
+				aoImagesNavigationHandler.pageNrStack.push(1);
+				if (aPseduoAO.indexOf('A') == 0) {
+					backHandler.pseudoAO = aPseduoAO;
+					onLoadAOImages('102B', aSide, spine102BImages);
+					app.mySkeletonWindow.getLayout().setActiveItem(13);
+				}
+				else {
+					backHandler.pseudoAO = '';
+					backHandler('', aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, false);
+				}
+
+			}
+			else {
+				if (aIsHandPartClick === true) {
+					aoImagesNavigationHandler.inHandMode = true;
+					aoImagesNavigationHandler.pageNrStack.push(6);
+				}
+				aoTitleText = 'AO-klassifikation';
+				if (aoImagesNavigationHandler.inProsthesisMode) {
+					aoTitleText = 'Klassifikation enligt UCS (Unified Classification System)';
+				}
+				else if (aPictureID == '9') {
+					aoTitleText = 'Robinson-klassifikation';
+				}
+				else if (aPictureID == '10') {
+					aoTitleText = 'Euler-Ruediklassifikation';
+				}
+
+
+				aoPanel.setTitle(aoTitleText);
+				onLoadAOImages(aPictureID, aSide);
+				app.mySkeletonWindow.getLayout().setActiveItem(1);
+			}
+			if (aoImagesNavigationHandler.inPelvisMode === true && onPelvisClick.matchFoundForLightRingInjury !== undefined) {
+				if (onPelvisClick.matchFoundForLightRingInjury(pelvisPanel) || onPelvisClick.matchFoundForSeriousRingInjury(pelvisPanel)) {
+					nextBtn.setDisabled(false);
+				}
+			}
+			else if (isBackFracture(aPictureID)) {
+				nextBtn.setDisabled(false);
+			}
+			else {
+				nextBtn.setDisabled(true);
+			}
+			previousBtn.setDisabled(false);
+			return;
+		}
+		else {
+			if (aBtn === previousBtn) {
+				if (aoImagesNavigationHandler.currentSpinePictureID == '100b') {
+					aoImagesNavigationHandler.currentSpinePictureID = '100';
+				}
+				else if (aoImagesNavigationHandler.currentSpinePictureID == '102B') {
+					aoImagesNavigationHandler.currentSpinePictureID = '102';
+				}
+				if (aoImagesNavigationHandler.pageNrStack.length !== 0) {
+					var pageID = aoImagesNavigationHandler.pageNrStack.pop();
+					if (pageID === 2 || pageID == 12) { //pelvis panel, back panel
+						nextBtn.setDisabled(false);
+					}
+					app.mySkeletonWindow.getLayout().setActiveItem(pageID);
+				} else {
+
+					var layout;
+					layout = app.mySkeletonWindow.getLayout();
+
+					layout.setActiveItem(0);
+					nextBtn.setDisabled(true);
+					previousBtn.setDisabled(true);
+				}
+			}
+			else if (app.mySkeletonWindow.getLayout().activeItem === foreArmRadiusImages) {
+				onReturnCodes.foreArmRadiusAO = 'X';
+				aoImagesNavigationHandler.pageNrStack.push(3);
+
+				var ulnaSide = aoImagesNavigationHandler.side;
+				onLoadAOImages('21-B', ulnaSide, foreArmUlnaImages);
+				app.mySkeletonWindow.getLayout().setActiveItem(4);
+				return;
+			}
+			else if (app.mySkeletonWindow.getLayout().activeItem === pelvisPanel) {
+				var matchFoundForSeriousRingInjury = onPelvisClick.matchFoundForSeriousRingInjury(pelvisPanel);
+				if (matchFoundForSeriousRingInjury) {
+					aoImagesNavigationHandler.pageNrStack.push(2);
+					app.mySkeletonWindow.getLayout().setActiveItem(1);
+					onLoadAOImages('61', 2);
+					nextBtn.setDisabled(true);
+				}
+				else {
+					var fractureForm = app.myCurrentFracturePanel;
+					var side = getSide(pelvisPanel);
+					onReturnCodes('', side, '61', 'A', app.mySkeletonWindow.id, null, false);
+					return;
+				}
+			}
+			else if (app.mySkeletonWindow.getLayout().activeItem === spinePanel) {
+				var neurologiCmp = getCmpByName('neurology', spinePanel);
+				var extendedNeurologiCmp = getCmpByName('neurologiExtended', spinePanel);
+				var v1 = getCmpByName('v1', spinePanel);
+				var v2 = getCmpByName('v2', spinePanel);
+				var v3 = getCmpByName('v3', spinePanel);
+				var v4 = getCmpByName('v4', spinePanel);
+				var v5 = getCmpByName('v5', spinePanel);
+				var v6 = getCmpByName('v6', spinePanel);
+				var v7 = getCmpByName('v7', spinePanel);
+				var v8 = getCmpByName('v8', spinePanel);
+				var v9 = getCmpByName('v9', spinePanel);
+				var errorMsg = '';
+				var vertebraeValuesCombined = v1.getValue() + v2.getValue() + v3.getValue() + v4.getValue() + v5.getValue() + v6.getValue() + v7.getValue() + v8.getValue() + v9.getValue();
+				if (v1.getValue() === false && v2.getValue() === false && v3.getValue() === false && v4.getValue() === false && v5.getValue() === false && v6.getValue() === false && v7.getValue() === false && v8.getValue() === false && v9.getValue() === false) {
+					errorMsg = 'Du måste ange minst en kota.';
+
+				}
+				else if (Ext.isEmpty(neurologiCmp.getValue())) {
+					errorMsg = 'Du måste ange ett värde för Neurologi';
+				}
+				else if (Ext.isEmpty(extendedNeurologiCmp.getValue()) && neurologiCmp.getValue() == '4') {
+					errorMsg = 'Du måste ange ett värde för Inkomplett ryggmärgsskada/conus-skada';
+				}
+				else if (Ext.isEmpty(errorMsg)) {
+					backHandler.pseudoAO = '';
+					var spineTargetPanel = aoPanel;
+					if (aoImagesNavigationHandler.currentSpinePictureID == '100') {
+						backHandler.c0Class = '';
+						backHandler.c1Class = '';
+						backHandler.c2Class = '';
+						var c0Cmp = getCmpByName('v1', spinePanel);
+						var c1Cmp = getCmpByName('v2', spinePanel);
+						var c2Cmp = getCmpByName('v3', spinePanel);
+						var gotoPicID = '';
+
+						if (c0Cmp.getValue() === true) {
+							spineTargetPanel = vertebraC0Images;
+							gotoPicID = '100-C0';
+							aoTitleText = 'Klassifikation enligt Anderson och Montesano (1988, Spine, p 731-736)';
+							aoPanel.setTitle(aoTitleText);
+						}
+						else if (c1Cmp.getValue() === true) {
+							gotoPicID = '100-C1';
+							spineTargetPanel = vertebraC1Images;
+						}
+						else if (c2Cmp.getValue() === true) {
+							gotoPicID = '100-C2';
+							spineTargetPanel = vertebraC2Images;
+						}
+						onLoadAOImages(gotoPicID, 3, spineTargetPanel, '100');
+					}
+					else if (aoImagesNavigationHandler.currentSpinePictureID == '102') {
+						aoTitleText = 'Klassifikationen modifierad från AO-klassifikationen, såsom den beskrivits av<br/>Reinhold et al (Eur Spine J, 2013; sidorna 2184-2201)';
+						aoPanel.setTitle(aoTitleText);
+						onLoadAOImages(aoImagesNavigationHandler.currentSpinePictureID, 3, null, '102B');
+					}
+					else if (aoImagesNavigationHandler.currentSpinePictureID == '103') {
+						aoTitleText = 'Klassifikationen modifierad från AO-klassifikationen, såsom den beskrivits av<br/>Reinhold et al (Eur Spine J, 2013; sidorna 2184-2201)';
+						aoPanel.setTitle(aoTitleText);
+						onLoadAOImages('102', 3, null, '102B');
+					}
+					else {
+						aoTitleText = 'Klassifikation baserad på SLIC; Subaxial cervical spine injury classification system<br/>(Vaccaro et al, Spine, 2007, sidorna 2365-2374)';
+						aoPanel.setTitle(aoTitleText);
+						onLoadAOImages(aoImagesNavigationHandler.currentSpinePictureID, 3, null, null);
+					}
+					aoImagesNavigationHandler.pageNrStack.push(12);
+					app.mySkeletonWindow.getLayout().setActiveItem(spineTargetPanel);
+					nextBtn.setDisabled(true);
+				}
+				if (!Ext.isEmpty(errorMsg)) {
+					Ext.Msg.show({
+						title: 'Värden saknas',
+						msg: errorMsg,
+						buttons: Ext.Msg.OK,
+						icon: Ext.MessageBox.INFO,
+						width: 600
+					});
+				}
+			}
+			else if (app.mySkeletonWindow.getLayout().activeItem == vertebraC0Images) {
+				backHandler.c0Class = 'X';
+				aoImagesNavigationHandler(null, aPictureID, aSide, aPseduoAO, aIsHandPartClick);
+			}
+			else if (app.mySkeletonWindow.getLayout().activeItem == vertebraC1Images) {
+				backHandler.c1Class = 'X';
+				aoImagesNavigationHandler(null, aPictureID, aSide, aPseduoAO, aIsHandPartClick);
+			}
+			else if (app.mySkeletonWindow.getLayout().activeItem == vertebraC2Images) {
+				backHandler.c2Class = 'X';
+				aoImagesNavigationHandler(null, aPictureID, aSide, aPseduoAO, aIsHandPartClick);
+			}
+		}
+	}
+
+	function onLoadAOImages(aPictureID, aSide, aTargetPanel, gotoPicID) {
 		var aoPanel = app.mySkeletonWindow.items.items[1];
 		if (aoImagesNavigationHandler.showNoChildFractureSupportAlert === true && !isBackFracture(aPictureID)) {
 			var t = new Ext.Template("<div></div>");
@@ -1206,1010 +2209,7 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 		else {
 			tplAO.overwrite(aTargetPanel.body, data);
 		}
-	};
-
-	aoImagesNavigationHandler = function (aBtn, aPictureID, aSide, aPseduoAO, aIsHandPartClick) {
-		onReturnCodes.foreArmRadiusAO = '';
-		var skeletonPanel = app.mySkeletonWindow.items.items[0];
-		var aoPanel = app.mySkeletonWindow.items.items[1];
-		var pelvisPanel = app.mySkeletonWindow.items.items[2];
-		var foreArmRadiusImages = app.mySkeletonWindow.items.items[3];
-		var foreArmUlnaImages = app.mySkeletonWindow.items.items[4];
-		var foreArmRadiusChildImages = app.mySkeletonWindow.items.items[14];
-		var foreArmUlnaChildImages = app.mySkeletonWindow.items.items[15];
-		var footPartImages = app.mySkeletonWindow.items.items[5];
-		var childDistHumerusImages = app.mySkeletonWindow.items.items[7];
-		var childDistForearmImages = app.mySkeletonWindow.items.items[16];
-		var childProxTibiaImages = app.mySkeletonWindow.items.items[8];
-		var childDistTibiaImages = app.mySkeletonWindow.items.items[9];
-		var childProxFemurImages = app.mySkeletonWindow.items.items[10];
-		var childDistFemurImages = app.mySkeletonWindow.items.items[11];
-		var spinePanel = app.mySkeletonWindow.items.items[12];
-		var spine102BImages = app.mySkeletonWindow.items.items[13];
-
-		var vertebraC0Images = app.mySkeletonWindow.items.items[17];
-		var vertebraC1Images = app.mySkeletonWindow.items.items[18];
-		var vertebraC2Images = app.mySkeletonWindow.items.items[19];
-
-		var handSkeleton = app.mySkeletonWindow.items.items[6];
-		var prosthesisImages = app.mySkeletonWindow.items.items[20];
-
-		var buttons = app.mySkeletonWindow.getDockedComponent(1);
-		var nextBtn = getButtonByName('nextBtn', buttons);
-		var previousBtn = getButtonByName('previousBtn', buttons);
-
-		aoImagesNavigationHandler.goToProsthesisHandler = true;
-
-		aoImagesNavigationHandler.inProsthesisMode = false;
-		if (aPseduoAO !== null) {
-
-			if (aPseduoAO == PROSTHESIS_FRACTURE) {
-				aoImagesNavigationHandler.inProsthesisMode = true;
-
-				nextBtn.setDisabled(true);
-				onLoadAOImages(aPictureID, aSide, prosthesisImages, null);
-				app.mySkeletonWindow.getLayout().setActiveItem(20);
-
-				return;
-				/*onLoadAOImages('21-U', aSide, foreArmUlnaChildImages);
-                aoImagesNavigationHandler.pageNrStack.push(14);
-                app.mySkeletonWindow.getLayout().setActiveItem(15);*/
-			} else {
-				onReturnCodes.foreArmRadiusAO = aPseduoAO;
-			}
-
-		}
-		if (aoImagesNavigationHandler.toggleNavigationButton === undefined) {
-			aoImagesNavigationHandler.toggleNavigationButton = function (pelvisPanel) {
-				var pR = getCmpByName('prosthesisRight', pelvisPanel);
-				var pL = getCmpByName('prosthesisLeft', pelvisPanel);
-				var match = onPelvisClick.matchFoundForLightRingInjury(pelvisPanel) || onPelvisClick.matchFoundForSeriousRingInjury(pelvisPanel);
-				if (match) {
-					nextBtn.setDisabled(false);
-					pR.setDisabled(false);
-					pL.setDisabled(false);
-				}
-				else {
-					nextBtn.setDisabled(true);
-					pR.setDisabled(true);
-					pL.setDisabled(true);
-				}
-			};
-		}
-		if (aoImagesNavigationHandler.pageNrStack === undefined || app.mySkeletonWindow.getLayout().getActiveItem() === app.mySkeletonWindow.items.items[0]) {
-			aoImagesNavigationHandler.pageNrStack = new Array();
-		}
-
-
-		var aoTitleText = '';
-		if (aBtn == null) //Skeleton click/AO-image click/handpart click
-		{
-			aoImagesNavigationHandler.inPelvisMode = false;
-			aoImagesNavigationHandler.inHandMode = false;
-			var infoTextA1Radius = getDomainValueName('4158', 1);
-			var infoTextA2Radius = getDomainValueName('4158', 2);
-			var infoTextA3Radius = getDomainValueName('4158', 3);
-			var infoTextB1Radius = getDomainValueName('4158', 4);
-			var infoTextB2Radius = getDomainValueName('4158', 5);
-			var infoTextB3Radius = getDomainValueName('4158', 6);
-			var infoTextC3Radius = getDomainValueName('4158', 0);
-			var infoTextA1Ulna = getDomainValueName('4159', 1);
-			var infoTextA2Ulna = getDomainValueName('4159', 2);
-			var infoTextA3Ulna = getDomainValueName('4159', 3);
-			var infoTextA4Ulna = getDomainValueName('4159', 4);
-			var infoTextB1Ulna = getDomainValueName('4159', 5);
-			var infoTextB2Ulna = getDomainValueName('4159', 6);
-			var infoTextB3Ulna = getDomainValueName('4159', 7);
-			var infoTextC1Ulna = getDomainValueName('4159', 8);
-			var infoTextC2Ulna = getDomainValueName('4159', 9);
-			var infoTextC4Ulna = getDomainValueName('4159', 0);
-			if (aoImagesNavigationHandler.isChildFracture === true && aoImagesNavigationHandler.showNoChildFractureSupportAlert === false) {
-				if (aPictureID == '44') {
-					aPictureID = '43';
-				}
-				if (aPictureID == '11') {
-					onLoadAOImages('11-P', aSide);
-					app.mySkeletonWindow.getLayout().setActiveItem(1);
-				}
-				else if (aPictureID == '12') {
-					onLoadAOImages('12-D', aSide);
-					app.mySkeletonWindow.getLayout().setActiveItem(1);
-				}
-				else if (aPictureID == '13' && aPseduoAO === null) {
-					var sideLetter = getSideLetter(aSide);
-					var data = {
-						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-DistHumerus-" + sideLetter + ".png",
-						side: aSide,
-						PictureId: aPictureID,
-						windowId: app.mySkeletonWindow.id,
-						infoTextA1: 'Distala metafysen',
-						infoTextA2: '',
-						infoTextA3: '',
-						infoTextA4: '',
-						infoTextA5: '',
-						infoTextB1: 'Distala epifysen',
-						infoTextB2: '',
-						infoTextB3: '',
-						infoTextB4: '',
-						infoTextB5: '',
-						infoTextC1: '',
-						infoTextC2: '',
-						infoTextC3: '',
-						infoTextC4: '',
-						infoTextC5: ''
-					};
-					var displayMatrix = createDisplayMatrix(3, 3);
-					displayMatrix[0][1] = displayMatrix[0][2] = displayMatrix[1][1] = displayMatrix[1][2] = displayMatrix[2][0] = displayMatrix[2][1] = displayMatrix[2][2] = false;
-					var aoMatrix = createAoMatrix();
-					currentFracturePanelID = null;
-					var tplContent = initAOtemplate(displayMatrix, aoMatrix, currentFracturePanelID, false, aPictureID, '13');
-					var tpl = new Ext.Template(tplContent);
-					tpl.overwrite(childDistHumerusImages.body, data);
-					app.mySkeletonWindow.getLayout().setActiveItem(7);
-				}
-				else if (aPictureID == '13') {
-					var aoID;
-					switch (aPseduoAO) {
-						case 'A1':
-							aoID = '13-M';
-							break;
-						case 'B1':
-							aoID = '13-E';
-							break;
-					}
-					onLoadAOImages(aoID, aSide);
-					aoImagesNavigationHandler.pageNrStack.push(7);
-					app.mySkeletonWindow.getLayout().setActiveItem(1);
-				}
-				else if (aPictureID == '21') {
-					onLoadAOImages('21-ME', aSide, foreArmRadiusChildImages, '21-U');
-					app.mySkeletonWindow.getLayout().setActiveItem(14);
-				}
-				else if (aPictureID == '21-U') {
-					onLoadAOImages('21-U', aSide, foreArmUlnaChildImages);
-					aoImagesNavigationHandler.pageNrStack.push(14);
-					app.mySkeletonWindow.getLayout().setActiveItem(15);
-				}
-				else if (aPictureID == '22') {
-					onLoadAOImages('22-D', aSide);
-					app.mySkeletonWindow.getLayout().setActiveItem(1);
-				}
-				else if (aPictureID == '23' && aPseduoAO === null) {
-					var sideLetter = getSideLetter(aSide);
-					var data = {
-						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-DistForearm-" + sideLetter + ".png",
-						side: aSide,
-						PictureId: aPictureID,
-						windowId: app.mySkeletonWindow.id,
-						infoTextA1: 'Distala metafysen',
-						infoTextA2: '',
-						infoTextA3: '',
-						infoTextA4: '',
-						infoTextA5: '',
-						infoTextB1: 'Distala epifysen',
-						infoTextB2: '',
-						infoTextB3: '',
-						infoTextB4: '',
-						infoTextB5: '',
-						infoTextC1: '',
-						infoTextC2: '',
-						infoTextC3: '',
-						infoTextC4: '',
-						infoTextC5: ''
-					};
-					var displayMatrix = createDisplayMatrix(3, 3);
-					displayMatrix[0][1] = displayMatrix[0][2] = displayMatrix[1][1] = displayMatrix[1][2] = displayMatrix[2][0] = displayMatrix[2][1] = displayMatrix[2][2] = false;
-					var aoMatrix = createAoMatrix();
-					currentFracturePanelID = null;
-					if (app.onlySkeletonWindow == false) {
-						currentFracturePanelID = app.myCurrentFracturePanel.id;
-					}
-					var tplContent = initAOtemplate(displayMatrix, aoMatrix, currentFracturePanelID, false, aPictureID, '23');
-					var tpl = new Ext.Template(tplContent);
-					tpl.overwrite(childDistForearmImages.body, data);
-					app.mySkeletonWindow.getLayout().setActiveItem(16);
-				}
-				else if (aPictureID == '23') {
-					var aoID;
-					switch (aPseduoAO) {
-						case 'A1':
-							aoID = '23-M';
-							break;
-						case 'B1':
-							aoID = '23-E';
-							break;
-					}
-					onLoadAOImages(aoID, aSide);
-					aoImagesNavigationHandler.pageNrStack.push(16);
-					app.mySkeletonWindow.getLayout().setActiveItem(1);
-				}
-				else if (aPictureID == '31' && aPseduoAO === null) {
-					var sideLetter = getSideLetter(aSide);
-					var data = {
-						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-ProxFemur-" + sideLetter + ".png",
-						side: aSide,
-						PictureId: aPictureID,
-						windowId: app.mySkeletonWindow.id,
-						infoTextA1: 'Proximala epifysen/fysen',
-						infoTextA2: '',
-						infoTextA3: '',
-						infoTextA4: '',
-						infoTextA5: '',
-						infoTextB1: 'Proximala metafysen',
-						infoTextB2: '',
-						infoTextB3: '',
-						infoTextB4: '',
-						infoTextB5: '',
-						infoTextC1: '',
-						infoTextC2: '',
-						infoTextC3: '',
-						infoTextC4: '',
-						infoTextC5: ''
-					};
-					var displayMatrix = createDisplayMatrix(3, 3);
-					displayMatrix[0][1] = displayMatrix[0][2] = displayMatrix[1][1] = displayMatrix[1][2] = displayMatrix[2][0] = displayMatrix[2][1] = displayMatrix[2][2] = false;
-					var aoMatrix = createAoMatrix();
-					currentFracturePanelID = null;
-					if (app.onlySkeletonWindow == false) {
-						currentFracturePanelID = app.myCurrentFracturePanel.id;
-					}
-					var tplContent = initAOtemplate(displayMatrix, aoMatrix, currentFracturePanelID, false, aPictureID, '31');
-					var tpl = new Ext.Template(tplContent);
-					tpl.overwrite(childProxFemurImages.body, data);
-					app.mySkeletonWindow.getLayout().setActiveItem(10);
-				}
-				else if (aPictureID == '31') {
-					var aoID;
-					switch (aPseduoAO) {
-						case 'A1':
-							aoID = '31-E';
-							break;
-						case 'B1':
-							aoID = '31-M';
-							break;
-					}
-					onLoadAOImages(aoID, aSide);
-					aoImagesNavigationHandler.pageNrStack.push(10);
-					app.mySkeletonWindow.getLayout().setActiveItem(1);
-				}
-				else if (aPictureID == '32') {
-					onLoadAOImages('32-D', aSide);
-					app.mySkeletonWindow.getLayout().setActiveItem(1);
-				}
-
-				else if (aPictureID == '33' && aPseduoAO === null) {
-					var sideLetter = getSideLetter(aSide);
-					var data = {
-						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-DistFemur-" + sideLetter + ".png",
-						side: aSide,
-						PictureId: aPictureID,
-						windowId: app.mySkeletonWindow.id,
-						infoTextA1: 'Proximala metafysen',
-						infoTextA2: '',
-						infoTextA3: '',
-						infoTextA4: '',
-						infoTextA5: '',
-						infoTextB1: 'Proximala epifysen/fysen',
-						infoTextB2: '',
-						infoTextB3: '',
-						infoTextB4: '',
-						infoTextB5: '',
-						infoTextC1: '',
-						infoTextC2: '',
-						infoTextC3: '',
-						infoTextC4: '',
-						infoTextC5: ''
-					};
-					var displayMatrix = createDisplayMatrix(3, 3);
-					displayMatrix[0][1] = displayMatrix[0][2] = displayMatrix[1][1] = displayMatrix[1][2] = displayMatrix[2][0] = displayMatrix[2][1] = displayMatrix[2][2] = false;
-					var aoMatrix = createAoMatrix();
-					currentFracturePanelID = null;
-					if (app.onlySkeletonWindow == false) {
-						currentFracturePanelID = app.myCurrentFracturePanel.id;
-					}
-					var tplContent = initAOtemplate(displayMatrix, aoMatrix, currentFracturePanelID, false, aPictureID, '33');
-					var tpl = new Ext.Template(tplContent);
-					tpl.overwrite(childDistFemurImages.body, data);
-					app.mySkeletonWindow.getLayout().setActiveItem(11);
-				}
-				else if (aPictureID == '33') {
-					var aoID;
-					switch (aPseduoAO) {
-						case 'A1':
-							aoID = '33-M';
-							break;
-						case 'B1':
-							aoID = '33-E';
-							break;
-					}
-					onLoadAOImages(aoID, aSide);
-					aoImagesNavigationHandler.pageNrStack.push(11);
-					app.mySkeletonWindow.getLayout().setActiveItem(1);
-				}
-				else if (aPictureID == '41' && aPseduoAO === null) {
-					var sideLetter = getSideLetter(aSide);
-					var data = {
-						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-ProxTibia-" + sideLetter + ".png",
-						side: aSide,
-						PictureId: aPictureID,
-						windowId: app.mySkeletonWindow.id,
-						infoTextA1: 'Proximala epifysen',
-						infoTextA2: '',
-						infoTextA3: '',
-						infoTextA4: '',
-						infoTextA5: '',
-						infoTextB1: 'Proximala metafysen',
-						infoTextB2: '',
-						infoTextB3: '',
-						infoTextB4: '',
-						infoTextB5: '',
-						infoTextC1: '',
-						infoTextC2: '',
-						infoTextC3: '',
-						infoTextC4: '',
-						infoTextC5: ''
-					};
-					var displayMatrix = createDisplayMatrix(3, 3);
-					displayMatrix[0][1] = displayMatrix[0][2] = displayMatrix[1][1] = displayMatrix[1][2] = displayMatrix[2][0] = displayMatrix[2][1] = displayMatrix[2][2] = false;
-					var aoMatrix = createAoMatrix();
-					currentFracturePanelID = null;
-					if (app.onlySkeletonWindow == false) {
-						currentFracturePanelID = app.myCurrentFracturePanel.id;
-					}
-					var tplContent = initAOtemplate(displayMatrix, aoMatrix, currentFracturePanelID, false, aPictureID, '41');
-					var tpl = new Ext.Template(tplContent);
-					tpl.overwrite(childProxTibiaImages.body, data);
-					app.mySkeletonWindow.getLayout().setActiveItem(8);
-				}
-				else if (aPictureID == '41') {
-					var aoID;
-					switch (aPseduoAO) {
-						case 'A1':
-							aoID = '41-E';
-							break;
-						case 'B1':
-							aoID = '41-M';
-							break;
-					}
-					onLoadAOImages(aoID, aSide);
-					aoImagesNavigationHandler.pageNrStack.push(8);
-					app.mySkeletonWindow.getLayout().setActiveItem(1);
-				}
-				else if (aPictureID == '42') {
-					onLoadAOImages('42-D', aSide);
-					app.mySkeletonWindow.getLayout().setActiveItem(1);
-				}
-				else if (aPictureID == '43' && aPseduoAO === null) {
-					var sideLetter = getSideLetter(aSide);
-					var data = {
-						image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-DistTibia-" + sideLetter + ".png",
-						side: aSide,
-						PictureId: aPictureID,
-						windowId: app.mySkeletonWindow.id,
-						infoTextA1: 'Distala metafysen',
-						infoTextA2: '',
-						infoTextA3: '',
-						infoTextA4: '',
-						infoTextA5: '',
-						infoTextB1: 'Distala epifysen: Isolerad tibiafraktur',
-						infoTextB2: 'Distala epifysen: Isolerad fibulafraktur',
-						infoTextB3: 'Distala epifysen: Både tibia och fibula',
-						infoTextB4: '',
-						infoTextB5: '',
-						infoTextC1: '',
-						infoTextC2: '',
-						infoTextC3: '',
-						infoTextC4: '',
-						infoTextC5: ''
-					};
-					var displayMatrix = createDisplayMatrix(3, 3);
-					displayMatrix[0][1] = displayMatrix[0][2] = displayMatrix[2][0] = displayMatrix[2][1] = displayMatrix[2][2] = false;
-					var aoMatrix = createAoMatrix();
-					currentFracturePanelID = null;
-					if (app.onlySkeletonWindow == false) {
-						currentFracturePanelID = app.myCurrentFracturePanel.id;
-					}
-					var tplContent = initAOtemplate(displayMatrix, aoMatrix, currentFracturePanelID, false, aPictureID, '43');
-					var tpl = new Ext.Template(tplContent);
-					tpl.overwrite(childDistTibiaImages.body, data);
-					app.mySkeletonWindow.getLayout().setActiveItem(9);
-
-				}
-				else if (aPictureID == '43') {
-					var aoID;
-					switch (aPseduoAO) {
-						case 'A1':
-							aoID = '43-M';
-							break;
-						case 'B1':
-							aoID = '43t-E';
-							break;
-						case 'B2':
-							aoID = '43f-E';
-							break;
-						case 'B3':
-							aoID = '43-E';
-							break;
-					}
-					onLoadAOImages(aoID, aSide);
-					aoImagesNavigationHandler.pageNrStack.push(9);
-					app.mySkeletonWindow.getLayout().setActiveItem(1);
-				}
-				else {
-					aoImagesNavigationHandler.showNoChildFractureSupportAlert = true;
-					aoImagesNavigationHandler.classifyAsAdult = true;
-					aoImagesNavigationHandler(aBtn, aPictureID, aSide, aPseduoAO, aIsHandPartClick);
-
-					/*Ext.Msg.show({
-                        title: 'Öppna fyser',
-                        msg: 'I Frakturregistret kan man tillsvidare inte registrera barnfrakturer i den skelettdel du valt',
-                        buttons: Ext.Msg.OKCANCEL,
-                        fn: function (btn, text) {
-                            if (btn == 'ok') {
-                                aoImagesNavigationHandler.isChildFracture = false;
-                                aoImagesNavigationHandler(aBtn, aPictureID, aSide, aPseduoAO, aIsHandPartClick);
-                            }
-                        },
-                        icon: Ext.MessageBox.INFO,
-                        width: 600
-                    });*/
-				}
-			}
-			else if (aPictureID == '21') {
-				onLoadAOImages('21-A', aSide, foreArmRadiusImages, '21-B');
-				app.mySkeletonWindow.getLayout().setActiveItem(3);
-			}
-			else if (aPictureID == '21-B') {
-				onLoadAOImages('21-B', aSide, foreArmUlnaImages);
-				aoImagesNavigationHandler.pageNrStack.push(3);
-				app.mySkeletonWindow.getLayout().setActiveItem(4);
-				aoImagesNavigationHandler.pageNrStack.push(3);
-			}
-			else if (aPictureID == '61') {
-				aoImagesNavigationHandler.inPelvisMode = true;
-				app.mySkeletonWindow.getLayout().setActiveItem(2);
-			}
-			else if (aPictureID == '7') {
-				aoImagesNavigationHandler.inHandMode = true;
-				handSkeleton.body.update('<div></div>');
-				if (aSide == 1) {
-					var handSkeletonHData = {
-						a: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton.png"
-					};
-					tplHandSkeletonH.overwrite(handSkeleton.body, handSkeletonHData);
-
-				}
-				else if (aSide == 2) {
-					var handSkeletonVData = {
-						a: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton.png"
-					};
-					tplHandSkeletonV.overwrite(handSkeleton.body, handSkeletonVData);
-				}
-				//app.mySkeletonWindow.getLayout().setActiveItem(6); This call is moved to function onLoadHandImgMini
-			}
-			else if (aPictureID == '8' && aPseduoAO === null) {
-				var sideLetter = getSideLetter(aSide);
-				var footPartsData = {
-					image: "https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-Foot-" + sideLetter + ".png",
-					side: aSide,
-					PictureId: aPictureID,
-					windowId: app.mySkeletonWindow.id,
-					infoTextA1: 'Talus',
-					infoTextA2: 'Calcaneus',
-					infoTextA3: '',
-					infoTextA4: '',
-					infoTextA5: '',
-					infoTextB1: 'Navikulare',
-					infoTextB2: 'Cuboideum',
-					infoTextB3: 'Cuneiformeben',
-					infoTextB4: '',
-					infoTextB5: '',
-					infoTextC1: 'Metatarsalben',
-					infoTextC2: 'Falanger',
-					infoTextC3: '',
-					infoTextC4: '',
-					infoTextC5: ''
-				};
-				var displayMatrixFootPart = createDisplayMatrix(3, 3);
-				displayMatrixFootPart[0][2] = displayMatrixFootPart[2][2] = false;
-				var aoMatrixFootPart = createAoMatrix();
-				currentFracturePanelID = null;
-				if (app.onlySkeletonWindow == false) {
-					currentFracturePanelID = app.myCurrentFracturePanel.id;
-				}
-				var tplContentFootPart = initAOtemplate(displayMatrixFootPart, aoMatrixFootPart, currentFracturePanelID, false, aPictureID, '8');
-				var tplFootPart = new Ext.Template(tplContentFootPart);
-				tplFootPart.overwrite(footPartImages.body, footPartsData);
-				app.mySkeletonWindow.getLayout().setActiveItem(5);
-			}
-			else if (aPictureID == '8') {
-				var aoID;
-				switch (aPseduoAO) {
-					case 'A1':
-						aoID = '81';
-						break;
-					case 'A2':
-						aoID = '82';
-						break;
-					case 'B1':
-						aoID = '83';
-						break;
-					case 'B2':
-						aoID = '84';
-						break;
-					case 'B3':
-						aoID = '85';
-						break;
-					case 'C1':
-						aoID = '87';
-						Ext.MessageBox.show({
-							title: 'Påverkan på Lisfrancs led?',
-							msg: 'Om du vill registrera en eller flera metatarsalbensfrakturer som påverkar Lisfrancs led, tryck på ”Föregående”-knappen nere till höger och välj därefter Cuneiformebenen.</br></br>Registrera sedan Lisfrancledsskadan enligt valen under C.',
-							buttons: Ext.Msg.OK
-						});
-						break;
-					case 'C2':
-						aoID = '88';
-						break;
-				}
-				aoPanel.setTitle('Modifierad OTA-klassifikation');
-				onLoadAOImages(aoID, aSide);
-				aoImagesNavigationHandler.pageNrStack.push(5);
-				app.mySkeletonWindow.getLayout().setActiveItem(1);
-			}
-			else if (aPictureID == '100' || aPictureID == '100b' || aPictureID == '101' || aPictureID == '102' || aPictureID == '103') {
-				nextBtn.setDisabled(false);
-				aoImagesNavigationHandler.currentSpinePictureID = aPictureID;
-
-				var segmentNr = 0;
-				switch (aPictureID) {
-					case '100':
-					case '100b':
-						segmentNr = 1;
-						break;
-					case '101':
-						segmentNr = 2;
-						break;
-					case '102':
-						segmentNr = 3;
-						break;
-					case '103':
-						segmentNr = 4;
-						break;
-				}
-				backHandler.currentSegment = segmentNr;
-				var v2 = getCmpByName('v2', spinePanel);
-				var v3 = getCmpByName('v3', spinePanel);
-				var activeItem = app.mySkeletonWindow.getLayout().getActiveItem();
-				if (activeItem == vertebraC0Images) {
-					backHandler.c0Class = aPseduoAO;
-					if (v2.getValue() === true) {
-						onLoadAOImages('100-C1', aSide, vertebraC1Images, '100');
-						app.mySkeletonWindow.getLayout().setActiveItem(18);
-					}
-					else if (v3.getValue() === true) {
-						onLoadAOImages('100-C2', aSide, vertebraC2Images, '100');
-						app.mySkeletonWindow.getLayout().setActiveItem(19);
-					}
-					else {
-						backHandler('', aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, vertebraC0Images.name);
-					}
-				}
-				else if (activeItem == vertebraC1Images) {
-					if (!Ext.isEmpty(aPseduoAO)) {
-						backHandler.c1Class = aPseduoAO;
-					}
-					if (aPictureID == '100' && aPseduoAO !== 'X') { //TODO: 'Typ-A??' X?????? (constant)
-						backHandler.c1Class = aPseduoAO;
-						if (aPseduoAO != 'A' && !Ext.isEmpty(aPseduoAO)) { //TODO: "A" must be made to constant or something.
-							var dialog = Ext.create('Ext.window.Window', {
-								title: 'Massa lateralis',
-								resizable: false,
-								html: '<br/><b>Massa lateralis vidgad 7 mm eller mer (dvs om avstånd a+b är 7 mm eller mer)(anges som gräns för instabil fraktur eftersom lig transversum då anses vara rupturerat)</b><img src="https://stratum.blob.core.windows.net/sfr/Images/Assembled/c1-extra.png"/>',
-								style: 'text-align:center;',
-								width: 400,
-								height: 420,
-								modal: true,
-								dockedItems: [{
-									xtype: 'toolbar',
-									layout: 'vbox',
-									dock: 'bottom',
-									items: [
-										{
-											text: 'JA',
-											handler: function () {
-												dialog.close();
-												backHandler.massaLateralis = true;
-												aoImagesNavigationHandler(null, '100b', '3', null, false);
-												//onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '0';
-												//generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-											}
-										}, {
-											text: 'NEJ',
-											handler: function () {
-												dialog.close();
-												backHandler.massaLateralis = false;
-												aoImagesNavigationHandler(null, '100b', '3', null, false);
-												//onReturnCodes.extraClassInfo += ChildClassChars.FELSTALLNING + '1';
-												//generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aNoClassification, aPanelName);
-											}
-										}]
-								}]
-							}
-							);
-							dialog.show();
-							return;
-						}
-					}
-					if (v3.getValue() === true) {
-						onLoadAOImages('100-C2', aSide, vertebraC2Images, '100');
-						app.mySkeletonWindow.getLayout().setActiveItem(19);
-					}
-					else {
-						backHandler('', aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, vertebraC1Images.name);
-					}
-				}
-				else if (activeItem == vertebraC2Images) {
-					backHandler.c2Class = aPseduoAO;
-					backHandler('', aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, vertebraC2Images.name);
-				}
-				else {
-					app.mySkeletonWindow.getLayout().setActiveItem(12);
-					activeItem = app.mySkeletonWindow.getLayout().getActiveItem();
-					//activeItem.el.setStyle({ display: 'block', backgroundPosition: '170px 40px', backgroundImage: 'url(ImagesAssembledSpine-S' + segmentNr + '.png)', height: '50', overflow: 'hidden', backgroundRepeat: 'no-repeat'});
-					//activeItem.el.setStyle({ display: 'block', backgroundPosition: '170px 40px', backgroundImage: 'url(Images/Assembled/Spine-S' + segmentNr + '.png)', height: '600', width:'800', overflow: 'hidden', backgroundRepeat: 'no-repeat'});
-					activeItem.setBodyStyle('background-image:url(https://stratum.blob.core.windows.net/sfr/Images/Assembled/Spine-S' + segmentNr + '.png);background-repeat:no-repeat;background-position:170px 15px;');
-					var v1 = getCmpByName('v1', activeItem);
-					var v2 = getCmpByName('v2', activeItem);
-					var v3 = getCmpByName('v3', activeItem);
-					var v4 = getCmpByName('v4', activeItem);
-					var v5 = getCmpByName('v5', activeItem);
-					var v6 = getCmpByName('v6', activeItem);
-					var v7 = getCmpByName('v7', activeItem);
-					var v8 = getCmpByName('v8', activeItem);
-					var v9 = getCmpByName('v9', activeItem);
-
-					v1.setValue(false); v2.setValue(false); v3.setValue(false); v4.setValue(false); v5.setValue(false); v6.setValue(false); v7.setValue(false); v8.setValue(false); v9.setValue(false);
-					v1.setVisible(true); v2.setVisible(true); v3.setVisible(true); v4.setVisible(true); v5.setVisible(true); v6.setVisible(true); v7.setVisible(true); v8.setVisible(true); v9.setVisible(true);
-
-					var neuroCmp = getCmpByName('neurology', activeItem);
-					neuroCmp.setValue(null);
-
-					var neuroExtCmp = getCmpByName('neurologiExtended', activeItem);
-					neuroExtCmp.setValue(null);
-
-					var hideCaudaQuestion = true;
-					if (aPictureID == '100') {
-						v1.setBoxLabel('C0'); v1.aValue = 'C0';
-						v2.setBoxLabel('C1'); v2.aValue = 'C1';
-						v3.setBoxLabel('C2'); v3.aValue = 'C2';
-						v4.setVisible(false);
-						v5.setVisible(false);
-						v6.setVisible(false);
-						v7.setVisible(false);
-						v8.setVisible(false);
-						v9.setVisible(false);
-
-					}
-					else if (aPictureID == '101') {
-						v1.setBoxLabel('C3'); v1.aValue = 'C3';
-						v2.setBoxLabel('C4'); v2.aValue = 'C4';
-						v3.setBoxLabel('C5'); v3.aValue = 'C5';
-						v4.setBoxLabel('C6'); v4.aValue = 'C6';
-						v5.setBoxLabel('C7'); v5.aValue = 'C7';
-						v6.setBoxLabel('Th1'); v6.aValue = 'Th1';
-						v7.setVisible(false);
-						v8.setVisible(false);
-						v9.setVisible(false);
-					}
-					else if (aPictureID == '102') {
-						v1.setBoxLabel('Th2'); v1.aValue = 'Th2';
-						v2.setBoxLabel('Th3'); v2.aValue = 'Th3';
-						v3.setBoxLabel('Th4'); v3.aValue = 'Th4';
-						v4.setBoxLabel('Th5'); v4.aValue = 'Th5';
-						v5.setBoxLabel('Th6'); v5.aValue = 'Th6';
-						v6.setBoxLabel('Th7'); v6.aValue = 'Th7';
-						v7.setBoxLabel('Th8'); v7.aValue = 'Th8';
-						v8.setBoxLabel('Th9'); v8.aValue = 'Th9';
-						v9.setBoxLabel('Th10'); v9.aValue = 'Th10';
-					}
-					else if (aPictureID == '103') {
-						v1.setBoxLabel('Th11'); v1.aValue = 'Th11';
-						v2.setBoxLabel('Th12'); v2.aValue = 'Th12';
-						v3.setBoxLabel('L1'); v3.aValue = 'L1';
-						v4.setBoxLabel('L2'); v4.aValue = 'L2';
-						v5.setBoxLabel('L3'); v5.aValue = 'L3';
-						v6.setBoxLabel('L4'); v6.aValue = 'L4';
-						v7.setBoxLabel('L5'); v7.aValue = 'L5';
-						v8.setVisible(false);
-						v9.setVisible(false);
-						hideCaudaQuestion = false;
-
-					}
-					neuroCmp.getStore().filterBy(Ext.bind(filterNeurologiStore, this, [hideCaudaQuestion], true));
-				}
-			}
-			else if (aPictureID == '102B') {
-				aoImagesNavigationHandler.pageNrStack.push(1);
-				if (aPseduoAO.indexOf('A') == 0) {
-					backHandler.pseudoAO = aPseduoAO;
-					onLoadAOImages('102B', aSide, spine102BImages);
-					app.mySkeletonWindow.getLayout().setActiveItem(13);
-				}
-				else {
-					backHandler.pseudoAO = '';
-					backHandler('', aSide, aPictureID, aPseduoAO, app.mySkeletonWindow.id, null, false);
-				}
-
-			}
-			else {
-				if (aIsHandPartClick === true) {
-					aoImagesNavigationHandler.inHandMode = true;
-					aoImagesNavigationHandler.pageNrStack.push(6);
-				}
-				aoTitleText = 'AO-klassifikation';
-				if (aoImagesNavigationHandler.inProsthesisMode) {
-					aoTitleText = 'Klassifikation enligt UCS (Unified Classification System)';
-				}
-				else if (aPictureID == '9') {
-					aoTitleText = 'Robinson-klassifikation';
-				}
-				else if (aPictureID == '10') {
-					aoTitleText = 'Euler-Ruediklassifikation';
-				}
-
-
-				aoPanel.setTitle(aoTitleText);
-				onLoadAOImages(aPictureID, aSide);
-				app.mySkeletonWindow.getLayout().setActiveItem(1);
-			}
-			if (aoImagesNavigationHandler.inPelvisMode === true && onPelvisClick.matchFoundForLightRingInjury !== undefined) {
-				if (onPelvisClick.matchFoundForLightRingInjury(pelvisPanel) || onPelvisClick.matchFoundForSeriousRingInjury(pelvisPanel)) {
-					nextBtn.setDisabled(false);
-				}
-			}
-			else if (isBackFracture(aPictureID)) {
-				nextBtn.setDisabled(false);
-			}
-			else {
-				nextBtn.setDisabled(true);
-			}
-			previousBtn.setDisabled(false);
-			return;
-		}
-		else {
-			if (aBtn === previousBtn) {
-				if (aoImagesNavigationHandler.currentSpinePictureID == '100b') {
-					aoImagesNavigationHandler.currentSpinePictureID = '100';
-				}
-				else if (aoImagesNavigationHandler.currentSpinePictureID == '102B') {
-					aoImagesNavigationHandler.currentSpinePictureID = '102';
-				}
-				if (aoImagesNavigationHandler.pageNrStack.length !== 0) {
-					var pageID = aoImagesNavigationHandler.pageNrStack.pop();
-					if (pageID === 2 || pageID == 12) { //pelvis panel, back panel
-						nextBtn.setDisabled(false);
-					}
-					app.mySkeletonWindow.getLayout().setActiveItem(pageID);
-				} else {
-
-					var layout;
-					layout = app.mySkeletonWindow.getLayout();
-
-					layout.setActiveItem(0);
-					nextBtn.setDisabled(true);
-					previousBtn.setDisabled(true);
-				}
-			}
-			else if (app.mySkeletonWindow.getLayout().activeItem === foreArmRadiusImages) {
-				onReturnCodes.foreArmRadiusAO = 'X';
-				aoImagesNavigationHandler.pageNrStack.push(3);
-
-				var ulnaSide = aoImagesNavigationHandler.side;
-				onLoadAOImages('21-B', ulnaSide, foreArmUlnaImages);
-				app.mySkeletonWindow.getLayout().setActiveItem(4);
-				return;
-			}
-			else if (app.mySkeletonWindow.getLayout().activeItem === pelvisPanel) {
-				var matchFoundForSeriousRingInjury = onPelvisClick.matchFoundForSeriousRingInjury(pelvisPanel);
-				if (matchFoundForSeriousRingInjury) {
-					aoImagesNavigationHandler.pageNrStack.push(2);
-					app.mySkeletonWindow.getLayout().setActiveItem(1);
-					onLoadAOImages('61', 2);
-					nextBtn.setDisabled(true);
-				}
-				else {
-					var fractureForm = app.myCurrentFracturePanel;
-					var side = getSide(pelvisPanel);
-					onReturnCodes('', side, '61', 'A', app.mySkeletonWindow.id, null, false);
-					return;
-				}
-			}
-			else if (app.mySkeletonWindow.getLayout().activeItem === spinePanel) {
-				var neurologiCmp = getCmpByName('neurology', spinePanel);
-				var extendedNeurologiCmp = getCmpByName('neurologiExtended', spinePanel);
-				var v1 = getCmpByName('v1', spinePanel);
-				var v2 = getCmpByName('v2', spinePanel);
-				var v3 = getCmpByName('v3', spinePanel);
-				var v4 = getCmpByName('v4', spinePanel);
-				var v5 = getCmpByName('v5', spinePanel);
-				var v6 = getCmpByName('v6', spinePanel);
-				var v7 = getCmpByName('v7', spinePanel);
-				var v8 = getCmpByName('v8', spinePanel);
-				var v9 = getCmpByName('v9', spinePanel);
-				var errorMsg = '';
-				var vertebraeValuesCombined = v1.getValue() + v2.getValue() + v3.getValue() + v4.getValue() + v5.getValue() + v6.getValue() + v7.getValue() + v8.getValue() + v9.getValue();
-				if (v1.getValue() === false && v2.getValue() === false && v3.getValue() === false && v4.getValue() === false && v5.getValue() === false && v6.getValue() === false && v7.getValue() === false && v8.getValue() === false && v9.getValue() === false) {
-					errorMsg = 'Du måste ange minst en kota.';
-
-				}
-				else if (Ext.isEmpty(neurologiCmp.getValue())) {
-					errorMsg = 'Du måste ange ett värde för Neurologi';
-				}
-				else if (Ext.isEmpty(extendedNeurologiCmp.getValue()) && neurologiCmp.getValue() == '4') {
-					errorMsg = 'Du måste ange ett värde för Inkomplett ryggmärgsskada/conus-skada';
-				}
-				else if (Ext.isEmpty(errorMsg)) {
-					backHandler.pseudoAO = '';
-					var spineTargetPanel = aoPanel;
-					if (aoImagesNavigationHandler.currentSpinePictureID == '100') {
-						backHandler.c0Class = '';
-						backHandler.c1Class = '';
-						backHandler.c2Class = '';
-						var c0Cmp = getCmpByName('v1', spinePanel);
-						var c1Cmp = getCmpByName('v2', spinePanel);
-						var c2Cmp = getCmpByName('v3', spinePanel);
-						var gotoPicID = '';
-
-						if (c0Cmp.getValue() === true) {
-							spineTargetPanel = vertebraC0Images;
-							gotoPicID = '100-C0';
-							aoTitleText = 'Klassifikation enligt Anderson och Montesano (1988, Spine, p 731-736)';
-							aoPanel.setTitle(aoTitleText);
-						}
-						else if (c1Cmp.getValue() === true) {
-							gotoPicID = '100-C1';
-							spineTargetPanel = vertebraC1Images;
-						}
-						else if (c2Cmp.getValue() === true) {
-							gotoPicID = '100-C2';
-							spineTargetPanel = vertebraC2Images;
-						}
-						onLoadAOImages(gotoPicID, 3, spineTargetPanel, '100');
-					}
-					else if (aoImagesNavigationHandler.currentSpinePictureID == '102') {
-						aoTitleText = 'Klassifikationen modifierad från AO-klassifikationen, såsom den beskrivits av<br/>Reinhold et al (Eur Spine J, 2013; sidorna 2184-2201)';
-						aoPanel.setTitle(aoTitleText);
-						onLoadAOImages(aoImagesNavigationHandler.currentSpinePictureID, 3, null, '102B');
-					}
-					else if (aoImagesNavigationHandler.currentSpinePictureID == '103') {
-						aoTitleText = 'Klassifikationen modifierad från AO-klassifikationen, såsom den beskrivits av<br/>Reinhold et al (Eur Spine J, 2013; sidorna 2184-2201)';
-						aoPanel.setTitle(aoTitleText);
-						onLoadAOImages('102', 3, null, '102B');
-					}
-					else {
-						aoTitleText = 'Klassifikation baserad på SLIC; Subaxial cervical spine injury classification system<br/>(Vaccaro et al, Spine, 2007, sidorna 2365-2374)';
-						aoPanel.setTitle(aoTitleText);
-						onLoadAOImages(aoImagesNavigationHandler.currentSpinePictureID, 3, null, null);
-					}
-					aoImagesNavigationHandler.pageNrStack.push(12);
-					app.mySkeletonWindow.getLayout().setActiveItem(spineTargetPanel);
-					nextBtn.setDisabled(true);
-				}
-				if (!Ext.isEmpty(errorMsg)) {
-					Ext.Msg.show({
-						title: 'Värden saknas',
-						msg: errorMsg,
-						buttons: Ext.Msg.OK,
-						icon: Ext.MessageBox.INFO,
-						width: 600
-					});
-				}
-			}
-			else if (app.mySkeletonWindow.getLayout().activeItem == vertebraC0Images) {
-				backHandler.c0Class = 'X';
-				aoImagesNavigationHandler(null, aPictureID, aSide, aPseduoAO, aIsHandPartClick);
-			}
-			else if (app.mySkeletonWindow.getLayout().activeItem == vertebraC1Images) {
-				backHandler.c1Class = 'X';
-				aoImagesNavigationHandler(null, aPictureID, aSide, aPseduoAO, aIsHandPartClick);
-			}
-			else if (app.mySkeletonWindow.getLayout().activeItem == vertebraC2Images) {
-				backHandler.c2Class = 'X';
-				aoImagesNavigationHandler(null, aPictureID, aSide, aPseduoAO, aIsHandPartClick);
-			}
-		}
-	};
-
-	onReturnCodes = function (aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName) {
-		onReturnCodes.extraClassInfo = '';
-		if (aoImagesNavigationHandler.inProsthesisMode && aoImagesNavigationHandler.goToProsthesisHandler) {
-			aoImagesNavigationHandler.goToProsthesisHandler = false;
-			prosthesisHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
-		}
-		else if (aPictureID == '11-P') {
-			childProxHumerusHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
-		}
-		else if (aPictureID == '13-M') {
-			childDistMetafysHumerusHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
-		}
-		else if (aPictureID == '13-E') {
-			childDistEpifysHumerusHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
-		}
-		else if (aPictureID == '23') {
-			wristHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
-		}
-		else if (aPictureID == '41-E') {
-			childProxEpifysTibiaHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
-		}
-		else if (aPictureID == '31-E') {
-			childProxEpifysFemurHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
-		}
-		else if (aPictureID == '33-E') {
-			childDistEpifysFemurHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
-		}
-		else if (aPictureID == '33-M') {
-			childDistMetafysFemurHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
-		}
-		else if (aPictureID == '41' || aPictureID == '42' || aPictureID == '43') {
-
-			if (aAO == '4X') {
-				Ext.Msg.show({
-					title: 'Isolerad fibulafraktur?',
-					msg: 'Observera att de enda fibulafrakturer som ska klassas som isolerade (ICD S82.40) är de få som orsakats av ett rent direktvåld. Samtliga övriga fibulafrakturer oavsett nivå på fibula är fotledsfrakturer av B- eller C-typ och ska klassas så',
-					buttons: Ext.Msg.OKCANCEL,
-					fn: function (c) {
-						if (c != 'ok') {
-							return;
-						}
-						if (aPictureID == '42') {
-							diafysTibiaHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
-						}
-						else if (aPictureID == '43') {
-							distalTibiaHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
-						}
-						else {
-							generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
-						}
-
-					},
-					icon: Ext.MessageBox.INFO,
-					width: 600
-				});
-			}
-			else {
-				if (aPictureID == '42') {
-					diafysTibiaHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
-				}
-				else if (aPictureID == '43') {
-					distalTibiaHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
-				}
-				else {
-					generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
-				}
-			}
-		}
-		else if (aPictureID == '21-B' || aPictureID == '21-U') {
-			foreArmHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
-		}
-		else if (aPictureID == '101') {
-			backHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
-		}
-		else if (aPictureID == '102') {
-			backHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
-		}
-		else if (aPictureID == '102B') {
-			backHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aPanelName);
-		}
-		else if (aUseHandAO) {
-			handHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
-		}
-		else {
-			generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
-		}
 	}
-
-	initialize(loadonly);
 
 	function getToday() {
 		var today = new Date();
@@ -3428,33 +3428,33 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77T-V-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:310px; left:159px;z-index:0;visibility:hidden;" id="img77T" />',
 			'</div>',
 			'<map id="handMap" name="handMap">',
-			'<area title="Pisiforme" shape="polygon" coords="339,437,347,451,371,451,371,419,358,419" onmouseover="onHandSkeletonHover(\'img75P\')" onmouseout="onHandSkeletonUnhover(\'img75P\')" onclick="aoImagesNavigationHandler(null,\'75P\',2,null,true)"/>',
-			'<area title="Triquetrum" shape="polygon" coords="331,431,338,436,353,417,380,417,380,396,354,396" onmouseover="onHandSkeletonHover(\'img75T\')" onmouseout="onHandSkeletonUnhover(\'img75T\')" onclick="aoImagesNavigationHandler(null,\'75T\',2,null,true)"/>',
-			'<area title="Lunatum" shape="polygon" coords="298,449,308,464,348,464,328,435" onmouseover="onHandSkeletonHover(\'img71\')" onmouseout="onHandSkeletonUnhover(\'img71\')" onclick="aoImagesNavigationHandler(null,\'71\',2,null,true)"/>',
-			'<area title="Scaphoideum" shape="polygon" coords="245,438,297,463,297,442,279,415" onmouseover="onHandSkeletonHover(\'img72\')" onmouseout="onHandSkeletonUnhover(\'img72\')" onclick="aoImagesNavigationHandler(null,\'72\',2,null,true)"/>',
-			'<area title="Trapezoideum" shape="polygon" coords="266,399,279,415,287,410,290,390,269,390" onmouseover="onHandSkeletonHover(\'img76T2\')" onmouseout="onHandSkeletonUnhover(\'img76T2\')" onclick="aoImagesNavigationHandler(null,\'76T2\',2,null,true)"/>',
-			'<area title="Capitatum" shape="polygon" coords="281,417,298,443,320,431,311,382" onmouseover="onHandSkeletonHover(\'img73\')" onmouseout="onHandSkeletonUnhover(\'img73\')" onclick="aoImagesNavigationHandler(null,\'73\',2,null,true)"/>',
-			'<area title="Hamatum" shape="polygon" coords="319,395,324,432,353,393,337,376" onmouseover="onHandSkeletonHover(\'img74\')" onmouseout="onHandSkeletonUnhover(\'img74\')" onclick="aoImagesNavigationHandler(null,\'74\',2,null,true)"/>',
-			'<area title="Trapezium" shape="polygon" coords="221,415,247,438,279,416,258,392" onmouseover="onHandSkeletonHover(\'img76T1\')" onmouseout="onHandSkeletonUnhover(\'img76T1\')" onclick="aoImagesNavigationHandler(null,\'76T1\',2,null,true)"/>',
-			'<area title="Metakarpal N" shape="rect" coords="253,235,284,386" onmouseover="onHandSkeletonHover(\'img77N\')" onmouseout="onHandSkeletonUnhover(\'img77N\')" onclick="aoImagesNavigationHandler(null,\'77N\',2,null,true)"/>',
-			'<area title="Metakarpal M" shape="rect" coords="292,235,327,372" onmouseover="onHandSkeletonHover(\'img77M\')" onmouseout="onHandSkeletonUnhover(\'img77M\')" onclick="aoImagesNavigationHandler(null,\'77M\',2,null,true)"/>',
-			'<area title="Metakarpal R" shape="rect" coords="333,247,366,359" onmouseover="onHandSkeletonHover(\'img77R\')" onmouseout="onHandSkeletonUnhover(\'img77R\')" onclick="aoImagesNavigationHandler(null,\'77R\',2,null,true)"/>',
-			'<area title="Metakarpal L" shape="rect" coords="372,270,418,384" onmouseover="onHandSkeletonHover(\'img77L\')" onmouseout="onHandSkeletonUnhover(\'img77L\')" onclick="aoImagesNavigationHandler(null,\'77L\',2,null,true)"/>',
-			'<area title="Proximal falang N" shape="rect" coords="236,134,282,231" onmouseover="onHandSkeletonHover(\'img78N1\')" onmouseout="onHandSkeletonUnhover(\'img78N1\')" onclick="aoImagesNavigationHandler(null,\'78N1\',2,null,true)"/>',
-			'<area title="Proximal falang M" shape="rect" coords="290,124,330,233" onmouseover="onHandSkeletonHover(\'img78M1\')" onmouseout="onHandSkeletonUnhover(\'img78M1\')" onclick="aoImagesNavigationHandler(null,\'78M1\',2,null,true)"/>',
-			'<area title="Proximal falang R" shape="rect" coords="340,145,378,248" onmouseover="onHandSkeletonHover(\'img78R1\')" onmouseout="onHandSkeletonUnhover(\'img78R1\')" onclick="aoImagesNavigationHandler(null,\'78R1\',2,null,true)"/>',
-			'<area title="Proximal falang L" shape="rect" coords="387,195,435,275" onmouseover="onHandSkeletonHover(\'img78L1\')" onmouseout="onHandSkeletonUnhover(\'img78L1\')" onclick="aoImagesNavigationHandler(null,\'78L1\',2,null,true)"/>',
-			'<area title="Mellanfalang N" shape="rect" coords="227,78,282,135" onmouseover="onHandSkeletonHover(\'img78N2\')" onmouseout="onHandSkeletonUnhover(\'img78N2\')" onclick="aoImagesNavigationHandler(null,\'78N2\',2,null,true)"/>',
-			'<area title="Mellanfalang M" shape="rect" coords="290,52,332,121" onmouseover="onHandSkeletonHover(\'img78M2\')" onmouseout="onHandSkeletonUnhover(\'img78M2\')" onclick="aoImagesNavigationHandler(null,\'78M2\',2,null,true)"/>',
-			'<area title="Mellanfalang R" shape="rect" coords="349,77,392,144" onmouseover="onHandSkeletonHover(\'img78R2\')" onmouseout="onHandSkeletonUnhover(\'img78R2\')" onclick="aoImagesNavigationHandler(null,\'78R2\',2,null,true)"/>',
-			'<area title="Mellanfalang L" shape="rect" coords="405,147,450,198" onmouseover="onHandSkeletonHover(\'img78L2\')" onmouseout="onHandSkeletonUnhover(\'img78L2\')" onclick="aoImagesNavigationHandler(null,\'78L2\',2,null,true)"/>',
-			'<area title="Distal falang N" shape="rect" coords="218,37,266,75" onmouseover="onHandSkeletonHover(\'img78N3\')" onmouseout="onHandSkeletonUnhover(\'img78N3\')" onclick="aoImagesNavigationHandler(null,\'78N3\',2,null,true)"/>',
-			'<area title="Distal falang M" shape="rect" coords="291,1,332,52" onmouseover="onHandSkeletonHover(\'img78M3\')" onmouseout="onHandSkeletonUnhover(\'img78M3\')" onclick="aoImagesNavigationHandler(null,\'78M3\',2,null,true)"/>',
-			'<area title="Distal falang R" shape="rect" coords="356,32,392,87" onmouseover="onHandSkeletonHover(\'img78R3\')" onmouseout="onHandSkeletonUnhover(\'img78R3\')" onclick="aoImagesNavigationHandler(null,\'78R3\',2,null,true)"/>',
-			'<area title="Distal falang L" shape="rect" coords="411,109,457,152" onmouseover="onHandSkeletonHover(\'img78L3\')" onmouseout="onHandSkeletonUnhover(\'img78L3\')" onclick="aoImagesNavigationHandler(null,\'78L3\',2,null,true)"/>',
-			'<area title="Distal falang T" shape="rect" coords="76,204,160,251" onmouseover="onHandSkeletonHover(\'img78T2\')" onmouseout="onHandSkeletonUnhover(\'img78T2\')" onclick="aoImagesNavigationHandler(null,\'78T2\',2,null,true)"/>',
-			'<area title="Proximal falang T" shape="rect" coords="114,267,194,316" onmouseover="onHandSkeletonHover(\'img78T1\')" onmouseout="onHandSkeletonUnhover(\'img78T1\')" onclick="aoImagesNavigationHandler(null,\'78T1\',2,null,true)"/>',
-			'<area title="Metakarpal T" shape="rect" coords="160,327,248,396" onmouseover="onHandSkeletonHover(\'img77T\')" onmouseout="onHandSkeletonUnhover(\'img77T\')" onclick="aoImagesNavigationHandler(null,\'77T\',2,null,true)"/>',
+			'<area title="Pisiforme" shape="polygon" coords="339,437,347,451,371,451,371,419,358,419" onmouseover="onHandSkeletonHover(\'img75P\')" onmouseout="onHandSkeletonUnhover(\'img75P\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'75P\',2,null,true)"/>',
+			'<area title="Triquetrum" shape="polygon" coords="331,431,338,436,353,417,380,417,380,396,354,396" onmouseover="onHandSkeletonHover(\'img75T\')" onmouseout="onHandSkeletonUnhover(\'img75T\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'75T\',2,null,true)"/>',
+			'<area title="Lunatum" shape="polygon" coords="298,449,308,464,348,464,328,435" onmouseover="onHandSkeletonHover(\'img71\')" onmouseout="onHandSkeletonUnhover(\'img71\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'71\',2,null,true)"/>',
+			'<area title="Scaphoideum" shape="polygon" coords="245,438,297,463,297,442,279,415" onmouseover="onHandSkeletonHover(\'img72\')" onmouseout="onHandSkeletonUnhover(\'img72\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'72\',2,null,true)"/>',
+			'<area title="Trapezoideum" shape="polygon" coords="266,399,279,415,287,410,290,390,269,390" onmouseover="onHandSkeletonHover(\'img76T2\')" onmouseout="onHandSkeletonUnhover(\'img76T2\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'76T2\',2,null,true)"/>',
+			'<area title="Capitatum" shape="polygon" coords="281,417,298,443,320,431,311,382" onmouseover="onHandSkeletonHover(\'img73\')" onmouseout="onHandSkeletonUnhover(\'img73\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'73\',2,null,true)"/>',
+			'<area title="Hamatum" shape="polygon" coords="319,395,324,432,353,393,337,376" onmouseover="onHandSkeletonHover(\'img74\')" onmouseout="onHandSkeletonUnhover(\'img74\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'74\',2,null,true)"/>',
+			'<area title="Trapezium" shape="polygon" coords="221,415,247,438,279,416,258,392" onmouseover="onHandSkeletonHover(\'img76T1\')" onmouseout="onHandSkeletonUnhover(\'img76T1\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'76T1\',2,null,true)"/>',
+			'<area title="Metakarpal N" shape="rect" coords="253,235,284,386" onmouseover="onHandSkeletonHover(\'img77N\')" onmouseout="onHandSkeletonUnhover(\'img77N\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'77N\',2,null,true)"/>',
+			'<area title="Metakarpal M" shape="rect" coords="292,235,327,372" onmouseover="onHandSkeletonHover(\'img77M\')" onmouseout="onHandSkeletonUnhover(\'img77M\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'77M\',2,null,true)"/>',
+			'<area title="Metakarpal R" shape="rect" coords="333,247,366,359" onmouseover="onHandSkeletonHover(\'img77R\')" onmouseout="onHandSkeletonUnhover(\'img77R\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'77R\',2,null,true)"/>',
+			'<area title="Metakarpal L" shape="rect" coords="372,270,418,384" onmouseover="onHandSkeletonHover(\'img77L\')" onmouseout="onHandSkeletonUnhover(\'img77L\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'77L\',2,null,true)"/>',
+			'<area title="Proximal falang N" shape="rect" coords="236,134,282,231" onmouseover="onHandSkeletonHover(\'img78N1\')" onmouseout="onHandSkeletonUnhover(\'img78N1\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78N1\',2,null,true)"/>',
+			'<area title="Proximal falang M" shape="rect" coords="290,124,330,233" onmouseover="onHandSkeletonHover(\'img78M1\')" onmouseout="onHandSkeletonUnhover(\'img78M1\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78M1\',2,null,true)"/>',
+			'<area title="Proximal falang R" shape="rect" coords="340,145,378,248" onmouseover="onHandSkeletonHover(\'img78R1\')" onmouseout="onHandSkeletonUnhover(\'img78R1\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78R1\',2,null,true)"/>',
+			'<area title="Proximal falang L" shape="rect" coords="387,195,435,275" onmouseover="onHandSkeletonHover(\'img78L1\')" onmouseout="onHandSkeletonUnhover(\'img78L1\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78L1\',2,null,true)"/>',
+			'<area title="Mellanfalang N" shape="rect" coords="227,78,282,135" onmouseover="onHandSkeletonHover(\'img78N2\')" onmouseout="onHandSkeletonUnhover(\'img78N2\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78N2\',2,null,true)"/>',
+			'<area title="Mellanfalang M" shape="rect" coords="290,52,332,121" onmouseover="onHandSkeletonHover(\'img78M2\')" onmouseout="onHandSkeletonUnhover(\'img78M2\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78M2\',2,null,true)"/>',
+			'<area title="Mellanfalang R" shape="rect" coords="349,77,392,144" onmouseover="onHandSkeletonHover(\'img78R2\')" onmouseout="onHandSkeletonUnhover(\'img78R2\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78R2\',2,null,true)"/>',
+			'<area title="Mellanfalang L" shape="rect" coords="405,147,450,198" onmouseover="onHandSkeletonHover(\'img78L2\')" onmouseout="onHandSkeletonUnhover(\'img78L2\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78L2\',2,null,true)"/>',
+			'<area title="Distal falang N" shape="rect" coords="218,37,266,75" onmouseover="onHandSkeletonHover(\'img78N3\')" onmouseout="onHandSkeletonUnhover(\'img78N3\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78N3\',2,null,true)"/>',
+			'<area title="Distal falang M" shape="rect" coords="291,1,332,52" onmouseover="onHandSkeletonHover(\'img78M3\')" onmouseout="onHandSkeletonUnhover(\'img78M3\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78M3\',2,null,true)"/>',
+			'<area title="Distal falang R" shape="rect" coords="356,32,392,87" onmouseover="onHandSkeletonHover(\'img78R3\')" onmouseout="onHandSkeletonUnhover(\'img78R3\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78R3\',2,null,true)"/>',
+			'<area title="Distal falang L" shape="rect" coords="411,109,457,152" onmouseover="onHandSkeletonHover(\'img78L3\')" onmouseout="onHandSkeletonUnhover(\'img78L3\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78L3\',2,null,true)"/>',
+			'<area title="Distal falang T" shape="rect" coords="76,204,160,251" onmouseover="onHandSkeletonHover(\'img78T2\')" onmouseout="onHandSkeletonUnhover(\'img78T2\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78T2\',2,null,true)"/>',
+			'<area title="Proximal falang T" shape="rect" coords="114,267,194,316" onmouseover="onHandSkeletonHover(\'img78T1\')" onmouseout="onHandSkeletonUnhover(\'img78T1\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78T1\',2,null,true)"/>',
+			'<area title="Metakarpal T" shape="rect" coords="160,327,248,396" onmouseover="onHandSkeletonHover(\'img77T\')" onmouseout="onHandSkeletonUnhover(\'img77T\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'77T\',2,null,true)"/>',
 			'</map>'
 		);
 
@@ -3491,33 +3491,33 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 			'<img onload="onLoadHandImgMini()" src="https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-hand-77T-H-mini.png?_' + (new Date().getTime()) + '" style="position:absolute;top:310px; left:319px;z-index:0;visibility:hidden;" id="img77T" />',
 			'</div>',
 			'<map id="handMap" name="handMap">',
-			'<area title="Pisiforme" shape="polygon" coords="208,427, 217,447, 237,447, 241,442, 239 ,422" onmouseover="onHandSkeletonHover(\'img75P\')" onmouseout="onHandSkeletonUnhover(\'img75P\')" onclick="aoImagesNavigationHandler(null,\'75P\',1,null,true)"/>',
-			'<area title="Triquetrum" shape="polygon" coords="203,405, 203,418, 221,418, 238,437, 246,431, 217,399" onmouseover="onHandSkeletonHover(\'img75T\')" onmouseout="onHandSkeletonUnhover(\'img75T\')" onclick="aoImagesNavigationHandler(null,\'75T\',1,null,true)"/>',
-			'<area title="Lunatum" shape="polygon" coords="230,465, 271,465, 278,445, 251,435" onmouseover="onHandSkeletonHover(\'img71\')" onmouseout="onHandSkeletonUnhover(\'img71\')" onclick="aoImagesNavigationHandler(null,\'71\',1,null,true)"/>',
-			'<area title="Scaphoideum" shape="polygon" coords="297,416, 289,431, 282,445, 282,470, 332,439" onmouseover="onHandSkeletonHover(\'img72\')" onmouseout="onHandSkeletonUnhover(\'img72\')" onclick="aoImagesNavigationHandler(null,\'72\',1,null,true)"/>',
-			'<area title="Trapezoideum" shape="polygon" coords="287,394, 287,410, 297,415, 315,392" onmouseover="onHandSkeletonHover(\'img76T2\')" onmouseout="onHandSkeletonUnhover(\'img76T2\')" onclick="aoImagesNavigationHandler(null,\'76T2\',1,null,true)"/>',
-			'<area title="Capitatum" shape="polygon" coords="260,397, 257,436, 278,443, 296,416" onmouseover="onHandSkeletonHover(\'img73\')" onmouseout="onHandSkeletonUnhover(\'img73\')" onclick="aoImagesNavigationHandler(null,\'73\',1,null,true)"/>',
-			'<area title="Hamatum" shape="polygon" coords="217,399, 248,430, 259,403, 238,380" onmouseover="onHandSkeletonHover(\'img74\')" onmouseout="onHandSkeletonUnhover(\'img74\')" onclick="aoImagesNavigationHandler(null,\'74\',1,null,true)"/>',
-			'<area title="Trapezium" shape="polygon" coords="320,397, 299,417, 312,429, 335,432, 347,413" onmouseover="onHandSkeletonHover(\'img76T1\')" onmouseout="onHandSkeletonUnhover(\'img76T1\')" onclick="aoImagesNavigationHandler(null,\'76T1\',1,null,true)"/>',
-			'<area title="Metakarpal N" shape="rect" coords="292,235,327,372" onmouseover="onHandSkeletonHover(\'img77N\')" onmouseout="onHandSkeletonUnhover(\'img77N\')" onclick="aoImagesNavigationHandler(null,\'77N\',1,null,true)"/>',
-			'<area title="Metakarpal M" shape="rect" coords="253,235,284,386" onmouseover="onHandSkeletonHover(\'img77M\')" onmouseout="onHandSkeletonUnhover(\'img77M\')" onclick="aoImagesNavigationHandler(null,\'77M\',1,null,true)"/>',
-			'<area title="Metakarpal R" shape="rect" coords="206,246,251,386" onmouseover="onHandSkeletonHover(\'img77R\')" onmouseout="onHandSkeletonUnhover(\'img77R\')" onclick="aoImagesNavigationHandler(null,\'77R\',1,null,true)"/>',
-			'<area title="Metakarpal L" shape="rect" coords="165,286,210,376" onmouseover="onHandSkeletonHover(\'img77L\')" onmouseout="onHandSkeletonUnhover(\'img77L\')" onclick="aoImagesNavigationHandler(null,\'77L\',1,null,true)"/>',
-			'<area title="Proximal falang N" shape="rect" coords="296,132,346,232" onmouseover="onHandSkeletonHover(\'img78N1\')" onmouseout="onHandSkeletonUnhover(\'img78N1\')" onclick="aoImagesNavigationHandler(null,\'78N1\',1,null,true)"/>',
-			'<area title="Proximal falang M" shape="rect" coords="247,131,284,232" onmouseover="onHandSkeletonHover(\'img78M1\')" onmouseout="onHandSkeletonUnhover(\'img78M1\')" onclick="aoImagesNavigationHandler(null,\'78M1\',1,null,true)"/>',
-			'<area title="Proximal falang R" shape="rect" coords="193,148,235,242" onmouseover="onHandSkeletonHover(\'img78R1\')" onmouseout="onHandSkeletonUnhover(\'img78R1\')" onclick="aoImagesNavigationHandler(null,\'78R1\',1,null,true)"/>',
-			'<area title="Proximal falang L" shape="rect" coords="144,197,189,272" onmouseover="onHandSkeletonHover(\'img78L1\')" onmouseout="onHandSkeletonUnhover(\'img78L1\')" onclick="aoImagesNavigationHandler(null,\'78L1\',1,null,true)"/>',
-			'<area title="Mellanfalang N" shape="rect" coords="309,80,346,130" onmouseover="onHandSkeletonHover(\'img78N2\')" onmouseout="onHandSkeletonUnhover(\'img78N2\')" onclick="aoImagesNavigationHandler(null,\'78N2\',1,null,true)"/>',
-			'<area title="Mellanfalang M" shape="rect" coords="248,56,286,122" onmouseover="onHandSkeletonHover(\'img78M2\')" onmouseout="onHandSkeletonUnhover(\'img78M2\')" onclick="aoImagesNavigationHandler(null,\'78M2\',1,null,true)"/>',
-			'<area title="Mellanfalang R" shape="rect" coords="189,87,224 146" onmouseover="onHandSkeletonHover(\'img78R2\')" onmouseout="onHandSkeletonUnhover(\'img78R2\')" onclick="aoImagesNavigationHandler(null,\'78R2\',1,null,true)"/>',
-			'<area title="Mellanfalang L" shape="rect" coords="136,152,169,190" onmouseover="onHandSkeletonHover(\'img78L2\')" onmouseout="onHandSkeletonUnhover(\'img78L2\')" onclick="aoImagesNavigationHandler(null,\'78L2\',1,null,true)"/>',
-			'<area title="Distal falang N" shape="rect" coords="315,37,343,75" onmouseover="onHandSkeletonHover(\'img78N3\')" onmouseout="onHandSkeletonUnhover(\'img78N3\')" onclick="aoImagesNavigationHandler(null,\'78N3\',1,null,true)"/>',
-			'<area title="Distal falang M" shape="rect" coords="246,2,278,47" onmouseover="onHandSkeletonHover(\'img78M3\')" onmouseout="onHandSkeletonUnhover(\'img78M3\')" onclick="aoImagesNavigationHandler(null,\'78M3\',1,null,true)"/>',
-			'<area title="Distal falang R" shape="rect" coords="186,39,214,79" onmouseover="onHandSkeletonHover(\'img78R3\')" onmouseout="onHandSkeletonUnhover(\'img78R3\')" onclick="aoImagesNavigationHandler(null,\'78R3\',1,null,true)"/>',
-			'<area title="Distal falang L" shape="rect" coords="126,116,159,142" onmouseover="onHandSkeletonHover(\'img78L3\')" onmouseout="onHandSkeletonUnhover(\'img78L3\')" onclick="aoImagesNavigationHandler(null,\'78L3\',1,null,true)"/>',
-			'<area title="Distal falang T" shape="rect" coords="418,201,480,270" onmouseover="onHandSkeletonHover(\'img78T2\')" onmouseout="onHandSkeletonUnhover(\'img78T2\')" onclick="aoImagesNavigationHandler(null,\'78T2\',1,null,true)"/>',
-			'<area title="Proximal falang T" shape="rect" coords="383,248,460,337" onmouseover="onHandSkeletonHover(\'img78T1\')" onmouseout="onHandSkeletonUnhover(\'img78T1\')" onclick="aoImagesNavigationHandler(null,\'78T1\',1,null,true)"/>',
-			'<area title="Metakarpal T" shape="rect" coords="336,326,410,403" onmouseover="onHandSkeletonHover(\'img77T\')" onmouseout="onHandSkeletonUnhover(\'img77T\')" onclick="aoImagesNavigationHandler(null,\'77T\',1,null,true)"/>',
+			'<area title="Pisiforme" shape="polygon" coords="208,427, 217,447, 237,447, 241,442, 239 ,422" onmouseover="onHandSkeletonHover(\'img75P\')" onmouseout="onHandSkeletonUnhover(\'img75P\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'75P\',1,null,true)"/>',
+			'<area title="Triquetrum" shape="polygon" coords="203,405, 203,418, 221,418, 238,437, 246,431, 217,399" onmouseover="onHandSkeletonHover(\'img75T\')" onmouseout="onHandSkeletonUnhover(\'img75T\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'75T\',1,null,true)"/>',
+			'<area title="Lunatum" shape="polygon" coords="230,465, 271,465, 278,445, 251,435" onmouseover="onHandSkeletonHover(\'img71\')" onmouseout="onHandSkeletonUnhover(\'img71\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'71\',1,null,true)"/>',
+			'<area title="Scaphoideum" shape="polygon" coords="297,416, 289,431, 282,445, 282,470, 332,439" onmouseover="onHandSkeletonHover(\'img72\')" onmouseout="onHandSkeletonUnhover(\'img72\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'72\',1,null,true)"/>',
+			'<area title="Trapezoideum" shape="polygon" coords="287,394, 287,410, 297,415, 315,392" onmouseover="onHandSkeletonHover(\'img76T2\')" onmouseout="onHandSkeletonUnhover(\'img76T2\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'76T2\',1,null,true)"/>',
+			'<area title="Capitatum" shape="polygon" coords="260,397, 257,436, 278,443, 296,416" onmouseover="onHandSkeletonHover(\'img73\')" onmouseout="onHandSkeletonUnhover(\'img73\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'73\',1,null,true)"/>',
+			'<area title="Hamatum" shape="polygon" coords="217,399, 248,430, 259,403, 238,380" onmouseover="onHandSkeletonHover(\'img74\')" onmouseout="onHandSkeletonUnhover(\'img74\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'74\',1,null,true)"/>',
+			'<area title="Trapezium" shape="polygon" coords="320,397, 299,417, 312,429, 335,432, 347,413" onmouseover="onHandSkeletonHover(\'img76T1\')" onmouseout="onHandSkeletonUnhover(\'img76T1\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'76T1\',1,null,true)"/>',
+			'<area title="Metakarpal N" shape="rect" coords="292,235,327,372" onmouseover="onHandSkeletonHover(\'img77N\')" onmouseout="onHandSkeletonUnhover(\'img77N\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'77N\',1,null,true)"/>',
+			'<area title="Metakarpal M" shape="rect" coords="253,235,284,386" onmouseover="onHandSkeletonHover(\'img77M\')" onmouseout="onHandSkeletonUnhover(\'img77M\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'77M\',1,null,true)"/>',
+			'<area title="Metakarpal R" shape="rect" coords="206,246,251,386" onmouseover="onHandSkeletonHover(\'img77R\')" onmouseout="onHandSkeletonUnhover(\'img77R\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'77R\',1,null,true)"/>',
+			'<area title="Metakarpal L" shape="rect" coords="165,286,210,376" onmouseover="onHandSkeletonHover(\'img77L\')" onmouseout="onHandSkeletonUnhover(\'img77L\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'77L\',1,null,true)"/>',
+			'<area title="Proximal falang N" shape="rect" coords="296,132,346,232" onmouseover="onHandSkeletonHover(\'img78N1\')" onmouseout="onHandSkeletonUnhover(\'img78N1\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78N1\',1,null,true)"/>',
+			'<area title="Proximal falang M" shape="rect" coords="247,131,284,232" onmouseover="onHandSkeletonHover(\'img78M1\')" onmouseout="onHandSkeletonUnhover(\'img78M1\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78M1\',1,null,true)"/>',
+			'<area title="Proximal falang R" shape="rect" coords="193,148,235,242" onmouseover="onHandSkeletonHover(\'img78R1\')" onmouseout="onHandSkeletonUnhover(\'img78R1\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78R1\',1,null,true)"/>',
+			'<area title="Proximal falang L" shape="rect" coords="144,197,189,272" onmouseover="onHandSkeletonHover(\'img78L1\')" onmouseout="onHandSkeletonUnhover(\'img78L1\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78L1\',1,null,true)"/>',
+			'<area title="Mellanfalang N" shape="rect" coords="309,80,346,130" onmouseover="onHandSkeletonHover(\'img78N2\')" onmouseout="onHandSkeletonUnhover(\'img78N2\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78N2\',1,null,true)"/>',
+			'<area title="Mellanfalang M" shape="rect" coords="248,56,286,122" onmouseover="onHandSkeletonHover(\'img78M2\')" onmouseout="onHandSkeletonUnhover(\'img78M2\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78M2\',1,null,true)"/>',
+			'<area title="Mellanfalang R" shape="rect" coords="189,87,224 146" onmouseover="onHandSkeletonHover(\'img78R2\')" onmouseout="onHandSkeletonUnhover(\'img78R2\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78R2\',1,null,true)"/>',
+			'<area title="Mellanfalang L" shape="rect" coords="136,152,169,190" onmouseover="onHandSkeletonHover(\'img78L2\')" onmouseout="onHandSkeletonUnhover(\'img78L2\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78L2\',1,null,true)"/>',
+			'<area title="Distal falang N" shape="rect" coords="315,37,343,75" onmouseover="onHandSkeletonHover(\'img78N3\')" onmouseout="onHandSkeletonUnhover(\'img78N3\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78N3\',1,null,true)"/>',
+			'<area title="Distal falang M" shape="rect" coords="246,2,278,47" onmouseover="onHandSkeletonHover(\'img78M3\')" onmouseout="onHandSkeletonUnhover(\'img78M3\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78M3\',1,null,true)"/>',
+			'<area title="Distal falang R" shape="rect" coords="186,39,214,79" onmouseover="onHandSkeletonHover(\'img78R3\')" onmouseout="onHandSkeletonUnhover(\'img78R3\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78R3\',1,null,true)"/>',
+			'<area title="Distal falang L" shape="rect" coords="126,116,159,142" onmouseover="onHandSkeletonHover(\'img78L3\')" onmouseout="onHandSkeletonUnhover(\'img78L3\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78L3\',1,null,true)"/>',
+			'<area title="Distal falang T" shape="rect" coords="418,201,480,270" onmouseover="onHandSkeletonHover(\'img78T2\')" onmouseout="onHandSkeletonUnhover(\'img78T2\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78T2\',1,null,true)"/>',
+			'<area title="Proximal falang T" shape="rect" coords="383,248,460,337" onmouseover="onHandSkeletonHover(\'img78T1\')" onmouseout="onHandSkeletonUnhover(\'img78T1\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'78T1\',1,null,true)"/>',
+			'<area title="Metakarpal T" shape="rect" coords="336,326,410,403" onmouseover="onHandSkeletonHover(\'img77T\')" onmouseout="onHandSkeletonUnhover(\'img77T\')" onclick="skeletonWidget.aoImagesNavigationHandler(null,\'77T\',1,null,true)"/>',
 			'</map>'
 		);
 		onHover = function (aEl, aNumber) {
@@ -5695,13 +5695,13 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 					var onClickText = '';
 
 					if (!Ext.isEmpty(gotoPicID)) {
-						onClickText = 'aoImagesNavigationHandler(null,\'' + gotoPicID + '\',{side},' + '\'' + aAoMatrix[i][j] + '\',false' + ')';
+						onClickText = 'skeletonWidget.aoImagesNavigationHandler(null,\'' + gotoPicID + '\',{side},' + '\'' + aAoMatrix[i][j] + '\',false' + ')';
 					}
 					else if (aAoMatrix[i][j] == PROSTHESIS_FRACTURE) {
-						onClickText = 'aoImagesNavigationHandler(null,\'' + aPictureID + '\',{side},' + '\'' + aAoMatrix[i][j] + '\',false' + ')';
+						onClickText = 'skeletonWidget.aoImagesNavigationHandler(null,\'' + aPictureID + '\',{side},' + '\'' + aAoMatrix[i][j] + '\',false' + ')';
 					}
 					else {
-						onClickText = 'onReturnCodes(\'' + ownerFormPanelID + '\',{side},\'{PictureId}\',\'' + aAoMatrix[i][j] + '\',\'{windowId}\',null,' + useHandAOStr + ')';
+						onClickText = 'skeletonWidget.onReturnCodes(\'' + ownerFormPanelID + '\',{side},\'{PictureId}\',\'' + aAoMatrix[i][j] + '\',\'{windowId}\',null,' + useHandAOStr + ')';
 					}
 
 					s += '<div class="AO ' + currentLetter + (j + 1) + extCss + '"><a title="{infoText' + currentLetter + (j + 1) + '}" onclick = "' + onClickText + '"></a></div>';
