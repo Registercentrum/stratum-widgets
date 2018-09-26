@@ -294,6 +294,7 @@ var SfrSearchList = function (anEntity, aQuery) {
               patientSearchSettings.specialFractureVal = specialFracturesOptionsCmp.getValue();
               patientSearchSettings.injuryGroupVal = injuryGroupCmp.getValue();
               Stratum.ManagerForSubjects.search(record.data.PersonNr);
+              window.scrollToTop();
             }
           }
         })
