@@ -271,9 +271,9 @@ var SfrSearchList = function (anEntity, aQuery) {
           dataIndex: 'ReOp',
           width: 60
         }, {
-          header: 'Skadetillf. reggat på annan klinik',
+          header: 'Skadetillfälle registrerat på annan klinik',
           dataIndex: 'DifferentInjuryClinic',
-          width: 250
+          width: 300
         }],
         selModel: Ext.create('Ext.selection.RowModel', {
           listeners: {
@@ -320,7 +320,7 @@ var SfrSearchList = function (anEntity, aQuery) {
       
       var prom0OptionsCmp = Ext.create('Ext.form.ComboBox', {
         parameterKey: SfrWidget.ParameterKeys.PROM0_OPTIONS,
-        width: 500,
+        width: '50%',
         mode: 'local',
         valueField: 'ValueCode',
         displayField: 'ValueName',
@@ -351,7 +351,7 @@ var SfrSearchList = function (anEntity, aQuery) {
 
       var prom1OptionsCmp = Ext.create('Ext.form.ComboBox', {
         parameterKey: SfrWidget.ParameterKeys.PROM1OPTIONS,
-        width: 500,
+        width: '50%',
         mode: 'local',
         valueField: 'ValueCode',
         displayField: 'ValueName',
@@ -387,7 +387,7 @@ var SfrSearchList = function (anEntity, aQuery) {
       
       var fractureTreatOptionsCmp = Ext.create('Ext.form.ComboBox', {
         parameterKey: SfrWidget.ParameterKeys.FRACTURE_TREAT_OPTIONS,
-        width: 500,
+        width: '50%',
         mode: 'local',
         valueField: 'ValueCode',
         displayField: 'ValueName',
@@ -415,7 +415,7 @@ var SfrSearchList = function (anEntity, aQuery) {
       
       var emptyInjuryFormOptionsCmp = Ext.create('Ext.form.ComboBox', {
         parameterKey: SfrWidget.ParameterKeys.INJURYFORM_OPTIONS,
-        width: 500,
+        width: '50%',
         mode: 'local',
         valueField: 'ValueCode',
         displayField: 'ValueName',
@@ -448,7 +448,7 @@ var SfrSearchList = function (anEntity, aQuery) {
 
       var specialFractureOptionsCmp = Ext.create('Ext.form.ComboBox', {
         parameterKey: SfrWidget.ParameterKeys.SPECIAL_FRACTURE_OPTIONS,
-        width: 500,
+        width: '50%',
         mode: 'local',
         valueField: 'ValueCode',
         displayField: 'ValueName',

@@ -875,7 +875,7 @@ var SfrWidget = {
       var startDateField = Ext.create('Ext.form.DateField', {
         format: 'Y-m-d',
         altFormats: "Ymd|ymd",
-        width: 258,
+        width: 150,
         editable: true,
         allowBlank: false,
         maxValue: new Date(),
@@ -892,7 +892,7 @@ var SfrWidget = {
         altFormats: "Ymd|ymd",
         allowBlank: false,
         editable: true,
-        width: 258,
+        width: 150,
         value: new Date(),
         parameterKey: parameters.to_dat
       });
@@ -907,7 +907,7 @@ var SfrWidget = {
       var startDateField = Ext.create('Ext.form.DateField', {
         format: 'Y-m-d',
         altFormats: "Ymd|ymd",
-        width: 110,
+        width: 150,
         editable: false,
         allowBlank: false,
         maxValue: new Date(),
@@ -922,7 +922,7 @@ var SfrWidget = {
         altFormats: "Ymd|ymd",
         allowBlank: false,
         editable: false,
-        width: 110,
+        width: 150,
         x: 297,
         y: 0,
         value: new Date(),
@@ -1065,13 +1065,18 @@ var SfrWidget = {
         itemId: key,
         parameterKey: key,
         store: store,
-        width: 258,
+        width: '50%',
         queryMode: 'local',
         sortfield: 'ValueName',
         displayField: 'ValueName',
         valueField: 'ValueCode',
         editable: false,
         value: config.default,
+        listConfig: {
+          getInnerTpl: function(displayField) {
+           return '<tpl if="xindex%2==0"><div class="odd"></tpl><tpl  if="xindex%2==1"><div class="even"></tpl> {' + displayField + '} </div>';
+          }
+        },
         listeners: {
           select: config.onselect || function() {return;},
         },
@@ -1094,7 +1099,7 @@ var SfrWidget = {
       var comboParamsBox = Ext.create('Ext.form.ComboBox', {
         itemId: parameterKey,
         store: comboParamsStore,
-        width: 258,
+        width: '50%',
         queryMode: 'local',
         displayField: 'ValueName',
         valueField: 'ValueCode',
@@ -1109,32 +1114,6 @@ var SfrWidget = {
         noSelectionObject: getNoSelectionObject('')
       });
       
-      /*
-      if (isNaN(reportID)) {
-        Ext.Ajax.request({
-          url: '/api/' + reportID, //TODO:
-          method: 'GET',
-          success: function (response, opts) {
-            var responseData = Ext.decode(response.responseText).data;
-            var noSelectObj = comboParamsBox.noSelectionObject;
-            var data = responseData['DomainValues'];
-            data.splice(0, 0, noSelectObj);
-            comboParamsStore.loadData(data);
-          }
-        });
-      }
-      else {
-        
-        if (dependencyCmps == null) {
-          ReportManagement.GetReport(reportID, null, function (e, r) {
-            if (r.result.success) {
-              var noSelectObj = comboParamsBox.noSelectionObject;
-              r.result.data.splice(0, 0, noSelectObj);
-              comboParamsStore.loadData(r.result.data);
-            }
-          });
-        }
-      }*/
       return comboParamsBox;
     }
   },
@@ -1272,7 +1251,7 @@ var SfrWidget = {
       }
       else {
       if(dependentComponents[i].parameterKey === 'icd10'){
-        var query = parameters.replace(/icd10ALL=[0-9]&/, '').replace(/icd10=0&/, '').replace(/trtgrpALL=[0-9]&/, '').replace(/trtgrp=[0-9]&/, '').replace(/fxclassgroupALL=[0-9]&/, '').replace(/fxclassgroup=[0-9]&/, '').replace(/bodypartALL=[0-9]&/, '').replace(/bodypart=0&/, '').replace(/&$/, '');
+        var query = parameters.replace(new RegExp('icd10ALL=[0-9]&'), '').replace(new RegExp('icd10=0&'), '').replace(new RegExp('trtgrpALL=[0-9]&'), '').replace(new RegExp('trtgrp=[0-9]&'), '').replace(new RegExp('fxclassgroupALL=[0-9]&'), '').replace(('fxclassgroup=[0-9]&'), '').replace(new RegExp('bodypartALL=[0-9]&'), '').replace(new RegExp('bodypart=0&'), '').replace(new RegExp('&$'), '');
         if(query!=='')query='&'+query;
         var componentIcd10 = dependentComponents[i];
         Ext.Ajax.request({
@@ -1287,7 +1266,7 @@ var SfrWidget = {
         });
       }
       if(dependentComponents[i].parameterKey === 'fxclass'){
-        var query = parameters.replace(new RegExp(/[a-zA-Z0-9]*ALL=1&/, 'g'),'').replace(new RegExp(/[a-zA-Z0-9]*=0&/, 'g'), '').replace(new RegExp(/fxclass/, 'g'), 'aoclass').replace(/&$/, '');
+        var query = parameters.replace(new RegExp('[a-zA-Z0-9]*ALL=1&', 'g'),'').replace(new RegExp('[a-zA-Z0-9]*=0&', 'g'), '').replace(new RegExp('fxclass', 'g'), 'aoclass').replace(new RegExp('&$'), '');
         if(query!=='')query='&'+query;
         var componentFxClass = dependentComponents[i];
         Ext.Ajax.request({
@@ -1301,7 +1280,7 @@ var SfrWidget = {
         });
       }
       if(dependentComponents[i].parameterKey === 'trtgrp'){
-        var query = parameters.replace(new RegExp(/[a-zA-Z0-9]*ALL=1&/, 'g'),'').replace(new RegExp(/[a-zA-Z0-9]*=0&/, 'g'), '').replace(/&$/, '');
+        var query = parameters.replace(new RegExp('[a-zA-Z0-9]*ALL=1&', 'g'),'').replace(new RegExp('[a-zA-Z0-9]*=0&', 'g'), '').replace(new RegExp('&$'), '');
         if(query!=='')query='&'+query;
         var componentTreatmentGroup = dependentComponents[i];
         Ext.Ajax.request({
@@ -1315,7 +1294,7 @@ var SfrWidget = {
         });
       }
       if(dependentComponents[i].parameterKey === 'trtcode'){
-        var query = parameters.replace(new RegExp(/[a-zA-Z0-9]*ALL=1&/, 'g'),'').replace(new RegExp(/[a-zA-Z0-9]*=0&/, 'g'), '').replace(new RegExp(/trtgrp/), 'treatmentgroup').replace(/&$/, '');
+        var query = parameters.replace(new RegExp('[a-zA-Z0-9]*ALL=1&', 'g'),'').replace(new RegExp('[a-zA-Z0-9]*=0&', 'g'), '').replace(new RegExp('trtgrp'), 'treatmentgroup').replace(new RegExp('&$'), '');
         if(query.indexOf('treatmentgroup')<0)return;
         if(query!=='')query='&'+query;
 
