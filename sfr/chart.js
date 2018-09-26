@@ -11,6 +11,9 @@ Ext.util.CSS.createStyleSheet(''
 + '.sfr-charts label {'
 + '  font-weight: 400;'
 + '}'
++ '.sfr-odd, .sfr-even {'
++ '  border-bottom: 1px solid #e8e8e8;'
++ '}'
 , 'sfr-chart');
 
 var SfrWidget = {
@@ -1072,11 +1075,6 @@ var SfrWidget = {
         valueField: 'ValueCode',
         editable: false,
         value: config.default,
-        listConfig: {
-          getInnerTpl: function(displayField) {
-           return '<tpl if="xindex%2==0"><div class="odd"></tpl><tpl  if="xindex%2==1"><div class="even"></tpl> {' + displayField + '} </div>';
-          }
-        },
         listeners: {
           select: config.onselect || function() {return;},
         },
@@ -1111,7 +1109,12 @@ var SfrWidget = {
 
         forceSelection: true,
         editable: false,
-        noSelectionObject: getNoSelectionObject('')
+        noSelectionObject: getNoSelectionObject(''),
+        listConfig: {
+          getInnerTpl: function(displayField) {
+           return '<tpl if="xindex%2==0"><div class="sfr-odd"></tpl><tpl  if="xindex%2==1"><div class="sfr-even"></tpl> {' + displayField + '} </div>';
+          }
+        },
       });
       
       return comboParamsBox;
