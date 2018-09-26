@@ -131,6 +131,7 @@ Ext.util.CSS.createStyleSheet(''
       // height: 400,
       itemId: 'sfr-treatment-panel',
       modal: true,
+      draggable: true,
       floating: true,
       frame: true,
       layout: 'vbox',
@@ -151,14 +152,13 @@ Ext.util.CSS.createStyleSheet(''
               if (this.hasCls('hiddenview')) {
                 this.removeCls('hiddenview');
                 Ext.ComponentQuery.query('#sfr-treatment-panel').pop().removeCls('sfr-fix');
-                //this.el.down('.x-item-selected').removeCls('x-item-selected')
                 var view = this;
                 setTimeout(function () { view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('secondStore').setData({}, 0) });
               } else {
                 this.el.addCls('hiddenview');
                 Ext.ComponentQuery.query('#sfr-treatment-panel').pop().addCls('sfr-fix');
                 var code = record.data.ValueCode;
-                var children = record.data.Children;
+                var children = record.data.ValueName === record.data.Children[0].ValueName ? record.data.Children[0].Children : record.data.Children;
                 setTimeout(function () { Ext.StoreManager.lookup('secondStore').setData(children); }, 0);
 
               }
@@ -185,7 +185,14 @@ Ext.util.CSS.createStyleSheet(''
                 this.addCls('hiddenview');
                 var code = record.data.ValueCode;
                 var children = record.data.Children;
-                setTimeout(function () { Ext.StoreManager.lookup('thirdStore').setData(children) }, 0);
+                if(children){
+                  setTimeout(function () { Ext.StoreManager.lookup('thirdStore').setData(children) }, 0);
+                } else {
+                  treatmentWidget.result.Trt_Code = code;
+                  callback(treatmentWidget.event, treatmentWidget.result);
+                  this.up().hide();
+                  return;
+                }
               }
             }
           }
@@ -279,8 +286,7 @@ Ext.util.CSS.createStyleSheet(''
             }
           }
         }
-      ],
-      // renderTo: Ext.getBody()
+      ]
     });
     filterValues();
 
