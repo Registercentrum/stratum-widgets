@@ -1,5 +1,5 @@
 
-Ext.util.CSS.removeStyleSheet('sfr-charts');
+Ext.util.CSS.removeStyleSheet('sfr-chart');
 Ext.util.CSS.createStyleSheet(''
 + '.sfr-charts .x-panel-body {'
 + '  border-width: 0px;'
@@ -11,7 +11,7 @@ Ext.util.CSS.createStyleSheet(''
 + '.sfr-charts label {'
 + '  font-weight: 400;'
 + '}'
-, 'sfr-charts');
+, 'sfr-chart');
 
 var SfrWidget = {
   parameters: {
@@ -935,24 +935,17 @@ var SfrWidget = {
       filterComponents.push(endDateField);
     }
     
+    function getIcd10() {
+      filterComponents.push(Ext.create('Ext.form.Label', {text: 'ICD10:'}));
+      filterComponents.push(createParametersCmp(3134, [combo(parameters.bodypart)], parameters.icd10, ''));
+    }
+    
     function getFxClass() {
       filterComponents.push(Ext.create('Ext.form.Label', {text: 'Frakturtyp:'}));
       var dependencies = [];
       combo(parameters.fxclassgroup) && dependencies.push(combo(parameters.fxclassgroup));
       combo(parameters.icd10) && dependencies.push(combo(parameters.icd10));
       filterComponents.push(createParametersCmp(3136, dependencies, parameters.fxclass, ''));
-    }
-    
-    function getIcd10() {
-      filterComponents.push(Ext.create('Ext.form.Label', {text: 'ICD10:'}));
-      filterComponents.push(createParametersCmp(3134, [combo(parameters.bodypart)], parameters.icd10, ''));
-    }
-    
-    function getTreatmentCode() {
-      label = Ext.create('Ext.form.Label', { text: 'Behandlingskod:' });
-      filterComponents.push(label);
-      var treatCodesCmp = createParametersCmp(3138, [combo(parameters.bodypart), combo(parameters.icd10), combo(parameters.trtgrp)], SfrWidget.parameters.trtcode, '');
-      filterComponents.push(treatCodesCmp);
     }
     
     function getTreatmentGroupFilter() {
@@ -964,12 +957,11 @@ var SfrWidget = {
       filterComponents.push(opMethodCmp);
     }
     
-    function getUnit() {
-      label = Ext.create('Ext.form.Label', {
-        text: 'Ytterligare klinik:'
-      });
+    function getTreatmentCode() {
+      label = Ext.create('Ext.form.Label', { text: 'Behandlingskod:' });
       filterComponents.push(label);
-      filterComponents.push(createParametersCmp(3122, null, SfrWidget.parameters.enhet));
+      var treatCodesCmp = createParametersCmp(3138, [combo(parameters.bodypart), combo(parameters.icd10), combo(parameters.trtgrp)], SfrWidget.parameters.trtcode, '');
+      filterComponents.push(treatCodesCmp);
     }
     
     function combo(parameter) {
@@ -1117,7 +1109,7 @@ var SfrWidget = {
         noSelectionObject: getNoSelectionObject('')
       });
       
-      
+      /*
       if (isNaN(reportID)) {
         Ext.Ajax.request({
           url: '/api/' + reportID, //TODO:
@@ -1142,7 +1134,7 @@ var SfrWidget = {
             }
           });
         }
-      }
+      }*/
       return comboParamsBox;
     }
   },
@@ -1279,10 +1271,10 @@ var SfrWidget = {
         ReportManagement.GetReport(dependentComponents[i].reportID, parameters, Ext.bind(getRepFn, this, [dependentComponents[i]], true));
       }
       else {
-      if(dependentComponents[i].reportID===3134){
+      if(dependentComponents[i].parameterKey === 'icd10'){
         var query = parameters.replace(/icd10ALL=[0-9]&/, '').replace(/icd10=0&/, '').replace(/trtgrpALL=[0-9]&/, '').replace(/trtgrp=[0-9]&/, '').replace(/fxclassgroupALL=[0-9]&/, '').replace(/fxclassgroup=[0-9]&/, '').replace(/bodypartALL=[0-9]&/, '').replace(/bodypart=0&/, '').replace(/&$/, '');
         if(query!=='')query='&'+query;
-        var component3134 = dependentComponents[i];
+        var componentIcd10 = dependentComponents[i];
         Ext.Ajax.request({
           url: '/stratum/api/statistics/sfr/ui-diagnoses?apikey=bK3H9bwaG4o%3D' + query,
           method: 'GET',
@@ -1290,51 +1282,51 @@ var SfrWidget = {
             var responseData = Ext.decode(response.responseText).data;
             var noop = {ValueCode: '', ValueName: ''};
             responseData.splice(0, 0 , noop);
-            dropdownCallback(responseData, component3134);
+            dropdownCallback(responseData, componentIcd10);
           }
         });
       }
-      if(dependentComponents[i].reportID===3136){
+      if(dependentComponents[i].parameterKey === 'fxclass'){
         var query = parameters.replace(new RegExp(/[a-zA-Z0-9]*ALL=1&/, 'g'),'').replace(new RegExp(/[a-zA-Z0-9]*=0&/, 'g'), '').replace(new RegExp(/fxclass/, 'g'), 'aoclass').replace(/&$/, '');
         if(query!=='')query='&'+query;
-        var component3136 = dependentComponents[i];
+        var componentFxClass = dependentComponents[i];
         Ext.Ajax.request({
           url: '/stratum/api/statistics/sfr/ui-ao-classes?apikey=bK3H9bwaG4o%3D' + query,
           method: 'GET',
           success: function (response, opts) {
             var responseData = Ext.decode(response.responseText).data;
             responseData.unshift({ValueCode: '', ValueName: ''});
-            dropdownCallback(responseData, component3136);
+            dropdownCallback(responseData, componentFxClass);
           }
         });
       }
-      if(dependentComponents[i].reportID===3137){
+      if(dependentComponents[i].parameterKey === 'trtgrp'){
         var query = parameters.replace(new RegExp(/[a-zA-Z0-9]*ALL=1&/, 'g'),'').replace(new RegExp(/[a-zA-Z0-9]*=0&/, 'g'), '').replace(/&$/, '');
         if(query!=='')query='&'+query;
-        var component3137 = dependentComponents[i];
+        var componentTreatmentGroup = dependentComponents[i];
         Ext.Ajax.request({
           url: '/stratum/api/statistics/sfr/ui-op-methods?apikey=bK3H9bwaG4o%3D' + query,
           method: 'GET',
           success: function (response, opts) {
             var responseData = Ext.decode(response.responseText).data;
             responseData.unshift({ValueCode: '', ValueName: ''});
-            dropdownCallback(responseData, component3137);
+            dropdownCallback(responseData, componentTreatmentGroup);
           }
         });
       }
-      if(dependentComponents[i].reportID===3138){
+      if(dependentComponents[i].parameterKey === 'trtcode'){
         var query = parameters.replace(new RegExp(/[a-zA-Z0-9]*ALL=1&/, 'g'),'').replace(new RegExp(/[a-zA-Z0-9]*=0&/, 'g'), '').replace(new RegExp(/trtgrp/), 'treatmentgroup').replace(/&$/, '');
         if(query.indexOf('treatmentgroup')<0)return;
         if(query!=='')query='&'+query;
 
-        var component3138 = dependentComponents[i];
+        var componentTreatmentCode = dependentComponents[i];
         Ext.Ajax.request({
           url: '/stratum/api/statistics/sfr/ui-treatments?apikey=bK3H9bwaG4o%3D' + query,
           method: 'GET',
           success: function (response, opts) {
             var responseData = Ext.decode(response.responseText).data;
             responseData.unshift({ValueCode: '', ValueName: ''});
-            dropdownCallback(responseData, component3138);
+            dropdownCallback(responseData, componentTreatmentCode);
           }
         });
       }
