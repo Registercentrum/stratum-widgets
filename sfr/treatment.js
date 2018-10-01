@@ -27,7 +27,7 @@ Ext.util.CSS.createStyleSheet(''
   + '.sfr-selector.hiddenview .x-item-selected div {'
   + '  background-color: #7c7c7c;'
   + '  padding-right: 150px;'
-  + '  padding: 5px 150px 5px 0px !important;'
+  + '  padding: 5px 5px 5px 0px !important;'
   + '}'
   + '.sfr-selector {'
   + '  cursor: pointer;'
@@ -69,8 +69,7 @@ Ext.util.CSS.createStyleSheet(''
   , 'sfr-treatment'
 );
 
-  var treatmentWidget = function (e, current, callback, loadonly) {
-    treatmentWidget.event = e;
+  var treatmentWidget = function (current, callback, loadonly) {
     treatmentWidget.result = {};
     treatmentWidget.valueGroups = treatmentWidget.valueGroups || [];
     treatmentWidget.icd10 = current.Parent.Fx_ICD10;
@@ -189,7 +188,7 @@ Ext.util.CSS.createStyleSheet(''
                   setTimeout(function () { Ext.StoreManager.lookup('thirdStore').setData(children) }, 0);
                 } else {
                   treatmentWidget.result.Trt_Code = code;
-                  callback(treatmentWidget.event, treatmentWidget.result);
+                  callback(treatmentWidget.result);
                   this.up().hide();
                   return;
                 }
@@ -216,7 +215,7 @@ Ext.util.CSS.createStyleSheet(''
                 this.up().down('#viewTwo').addCls('all');
                 var code = record.data.ValueCode;
                 treatmentWidget.result.Trt_Code = code;
-                callback(treatmentWidget.event, treatmentWidget.result);
+                callback(treatmentWidget.result);
                 this.up().hide();
                 return;
               }
@@ -253,7 +252,7 @@ Ext.util.CSS.createStyleSheet(''
                   } else {
                     treatmentWidget.result.Inj_Activity = code;
                   }
-                  callback(treatmentWidget.event, treatmentWidget.result);
+                  callback(treatmentWidget.result);
                   this.up().hide();
                   return;
                 }
@@ -280,7 +279,7 @@ Ext.util.CSS.createStyleSheet(''
               this.addCls('hiddenview');
               var code = record.data.ValueCode;
               treatmentWidget.result.Inj_Place = code;
-              callback(treatmentWidget.event, treatmentWidget.result);
+              callback(treatmentWidget.result);
               this.up().hide();
               return;
             }

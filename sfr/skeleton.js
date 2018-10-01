@@ -1,5 +1,5 @@
 
-var skeletonWidget = function (event, current, callback, loadonly) {
+var skeletonWidget = function (current, callback, loadonly) {
 	
 	var RINGSKADA_TEXT = 'Ringskada';
 	var BACK_SUBFRACTURE_TEXT = 'Ryggfraktur';
@@ -18,7 +18,6 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 	var ChildClassChars = { VESSEL: '-K', CAPUT: '-C', FELSTALLNING: '-F', NERV: '-N', FLEX: '-M' };
 
 	var app = skeletonWidget;
-	app.event = event;
 	app.callback = callback;
 	app.skeletonDomainCodes = [4158, 4159, 5554, 5555, 5563, 5572, 5573];
 	app.delayedDomainCodes = [4060, 5757];
@@ -4214,6 +4213,9 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 					result.DISHBecht = aBtn === 'yes' ? '1' : '0';
 					result.UpperVertebra = backHandler.injuredVertebraes[0];
 					result.LowerVertebra = backHandler.injuredVertebraes[backHandler.injuredVertebraes.length - 1];
+					backHandler.injuredVertebraes.forEach(function(vertebrae) {
+						result['Fx_' + vertebrae] = true;
+					});
 					result.Neurology = backHandler.neurologi;
 					result.NeurologyExtended = backHandler.extendedNeurologi;
 				}
@@ -4780,7 +4782,7 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 								msgBox.close();
 								result.Atypical = 1;
 								windowX.hide();
-								app.callback(app.event, result);
+								app.callback(result);
 							}
 						}, {
 							text: 'Nej',
@@ -4788,7 +4790,7 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 								msgBox.close();
 								result.Atypical = 0;
 								windowX.hide();
-								app.callback(app.event, result);
+								app.callback(result);
 							}
 						}, {
 							text: 'Oklart',
@@ -4797,14 +4799,14 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 								msgBox.close();
 								result.Atypical = 9;
 								windowX.hide();
-								app.callback(app.event, result);
+								app.callback(result);
 							}
 						}, {
 							text: 'Avbryt',
 							handler: function () {
 								msgBox.close();
 								windowX.hide();
-								app.callback(app.event, result);
+								app.callback(result);
 							}
 						}
 					];
@@ -4812,7 +4814,7 @@ var skeletonWidget = function (event, current, callback, loadonly) {
 					msgBox.show();
 				} else {
 					windowX.hide();
-					app.callback(app.event, result);
+					app.callback(result);
 				}
 			}
 		});

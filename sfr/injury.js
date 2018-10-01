@@ -26,7 +26,7 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
   + '.sfr-selector.hiddenview .x-item-selected div {'
   + '  background-color: #7c7c7c;'
-  + '  padding: 5px 150px 5px 0px !important;'
+  + '  padding: 5px 5px 5px 0px !important;'
   + '}'
   + '.sfr-selector {'
   + '  cursor: pointer;'
@@ -68,8 +68,7 @@ Ext.util.CSS.createStyleSheet(''
   , 'sfr-injury'
 );
 
-var injuryWidget = function (e, callback) {
-  injuryWidget.event = e;
+var injuryWidget = function (callback) {
   injuryWidget.result = {};
 
   Ext.create('Ext.data.Store', {
@@ -153,7 +152,7 @@ var injuryWidget = function (e, callback) {
               var code = record.data.ValueCode;
               if (code.indexOf('M') === 0 && code.indexOf('M84.4') !== 0) {
                 injuryWidget.result.Inj_Cause = code;
-                callback(injuryWidget.event, injuryWidget.result);
+                callback(injuryWidget.result);
                 this.up().hide();
                 return;
               }
@@ -189,7 +188,7 @@ var injuryWidget = function (e, callback) {
               var code = record.data.ValueCode;
               if (code.indexOf('M') === 0) {
                 injuryWidget.result.Inj_Cause = code;
-                callback(injuryWidget.event, injuryWidget.result);
+                callback(injuryWidget.result);
                 this.up().hide();
                 return;
               }
@@ -235,7 +234,7 @@ var injuryWidget = function (e, callback) {
               }
               if (!domainId) {
                 injuryWidget.result.Inj_Cause = code;
-                callback(injuryWidget.event, injuryWidget.result);
+                callback(injuryWidget.result);
                 this.up().hide();
                 return;
               }
@@ -281,7 +280,7 @@ var injuryWidget = function (e, callback) {
                 } else {
                   injuryWidget.result.Inj_Activity = code;
                 }
-                callback(injuryWidget.event, injuryWidget.result);
+                callback(injuryWidget.result);
                 this.up().hide();
                 return;
               }
@@ -308,7 +307,7 @@ var injuryWidget = function (e, callback) {
             this.addCls('hiddenview');
             var code = record.data.ValueCode;
             injuryWidget.result.Inj_Place = code;
-            callback(injuryWidget.event, injuryWidget.result);
+            callback(injuryWidget.result);
             this.up().hide();
             return;
           }
