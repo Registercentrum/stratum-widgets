@@ -72,6 +72,7 @@ Ext.util.CSS.createStyleSheet(''
   var treatmentWidget = function (current, callback, loadonly) {
     treatmentWidget.result = {};
     treatmentWidget.valueGroups = treatmentWidget.valueGroups || [];
+    treatmentWidget.backups = treatmentWidget.backups || [];
     treatmentWidget.icd10 = current.Parent.Fx_ICD10;
     treatmentWidget.trttype = current.Trt_Type;
     var isBackFracture = current.Parent.Fx_LowerVertebra !== null;
@@ -85,6 +86,11 @@ Ext.util.CSS.createStyleSheet(''
     !treatmentWidget.valueGroups[4188] && fetchValueGroup(4188);
     !treatmentWidget.valueGroups[5665] && fetchValueGroup(5665);
 
+    Ext.create('Ext.data.Store', {
+      id: 'startStore',
+      fields: [],
+    });
+    
     Ext.create('Ext.data.Store', {
       id: 'firstStore',
       fields: [],
@@ -110,7 +116,7 @@ Ext.util.CSS.createStyleSheet(''
       fields: []
     });
     
-    if(loadonly||current.Trt_Type===null)return;
+    if(loadonly) return;
     
     var imageTpl = new Ext.XTemplate(
     '<tpl for=".">',
@@ -136,8 +142,37 @@ Ext.util.CSS.createStyleSheet(''
       layout: 'vbox',
       closable: true,
       cls: 'sfr-modal',
-      title: 'Skadekod',
-      items: [
+      title: 'Behandling',
+       items: [
+        {
+          xtype: 'dataview',
+          itemId: 'viewStart',
+          store: Ext.data.StoreManager.lookup('startStore'),
+          tpl: imageTpl,
+          itemSelector: 'div.sfr-menu-item',
+          selectable: 'simple',
+          cls: 'sfr-selector',
+          listeners: {
+            itemclick: function (el, record) {
+              if (this.hasCls('hiddenview')) {
+                this.removeCls('hiddenview');
+                Ext.ComponentQuery.query('#sfr-treatment-panel').pop().removeCls('sfr-fix');
+                var view = this;
+                treatmentWidget.valueGroups[4188] = Ext.decode(treatmentWidget.backups[4188]).data;
+                treatmentWidget.valueGroups[4157] = Ext.decode(treatmentWidget.backups[4157]).data;
+                attachChildren(4188);
+                setTimeout(function () { view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('firstStore').setData({}, 0) });
+              } else {
+                this.el.addCls('hiddenview');
+                Ext.ComponentQuery.query('#sfr-treatment-panel').pop().addCls('sfr-fix');
+                treatmentWidget.trttype = record.data.ValueCode;
+                treatmentWidget.result.Trt_Type = treatmentWidget.trttype;
+                filterAllValues();
+                setTimeout(function () { Ext.StoreManager.lookup('firstStore').setData(treatmentWidget.valueGroups[4188]); }, 0);
+              }
+            }
+          }
+        },
         {
           xtype: 'dataview',
           itemId: 'viewOne',
@@ -150,12 +185,13 @@ Ext.util.CSS.createStyleSheet(''
             itemclick: function (el, record) {
               if (this.hasCls('hiddenview')) {
                 this.removeCls('hiddenview');
-                Ext.ComponentQuery.query('#sfr-treatment-panel').pop().removeCls('sfr-fix');
+                this.el.down('.x-item-selected').removeCls('x-item-selected')
+                this.up().down('#viewStart').removeCls('all');
                 var view = this;
                 setTimeout(function () { view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('secondStore').setData({}, 0) });
               } else {
                 this.el.addCls('hiddenview');
-                Ext.ComponentQuery.query('#sfr-treatment-panel').pop().addCls('sfr-fix');
+                this.up().down('#viewStart').addCls('all');
                 var code = record.data.ValueCode;
                 var children = record.data.ValueName === record.data.Children[0].ValueName ? record.data.Children[0].Children : record.data.Children;
                 setTimeout(function () { Ext.StoreManager.lookup('secondStore').setData(children); }, 0);
@@ -288,13 +324,13 @@ Ext.util.CSS.createStyleSheet(''
       ]
     });
     filterValues();
-
     function fetchValueGroup(domain) {
       Ext.Ajax.request({
         url: '/stratum/api/metadata/domainvalues/domain/' + domain + '?apikey=J6b-GSKrkfk=',
         success: function (response) {
           var items = Ext.decode(response.responseText).data;
           treatmentWidget.valueGroups[domain] = items;
+          treatmentWidget.backups[domain] = response.responseText;
         }
       });
     }
@@ -305,10 +341,9 @@ Ext.util.CSS.createStyleSheet(''
         setTimeout(function () { filterValues(); }, 100);
         return;
       }
-      filterTreatments();
+      
       attachChildren(4188);
-      filterAllValues();
-      Ext.StoreManager.lookup('firstStore').setData(treatmentWidget.valueGroups[4188]);
+      Ext.StoreManager.lookup('startStore').setData(treatmentWidget.valueGroups[4056]);
       treatmentWidget.window.show();
     }
 
