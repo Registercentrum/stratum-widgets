@@ -4759,6 +4759,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 				if (isBackFracture(aPictureID)) {
 					result.FxS_ICD10 = backHandler.determineICD(result.Open, result.Class)[0];
 				}
+				result.icdCodes = icdCodes.map(function(item){return item + result.Open});
 				if (aoImagesNavigationHandler.inProsthesisMode) {
 					var icdArr;
 					if (!Ext.isEmpty(icd10)) {
@@ -4773,7 +4774,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 					}
 					result.CloseToProsthesis = getProsthesisICD10(icdArr);
 				}
-
+				
 				if (askAboutAtypcialFemurFracture(icd10)) {
 					var dialogitems = [
 						{
