@@ -6,6 +6,7 @@ Ext.define('Boa.store.Report', {
   fields: []
 });
 
+
 Ext.define('Boa.controller.Report', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.report',
@@ -238,7 +239,7 @@ Ext.application({
   viewmodels: ['Report'],
   stores: ['Report'],
   launch: function () {
-    var target = (typeof Stratum !== 'undefined' && Stratum.containers) ? Stratum.containers['BOA/Reports'] : 'output';
+    var target = (typeof Stratum !== 'undefined' && Stratum.containers) ? Stratum.containers['BOA/Reports'] : 'contentPanel';
     Ext.create('Boa.view.Report', {
       id: 'reportView',
       renderTo: target

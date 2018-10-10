@@ -4030,7 +4030,7 @@ Ext.application({
     'OverviewController', 'DetailsController'
   ],
   launch: function () {
-    var target = (typeof Stratum !== 'undefined') ? Stratum.containers['BOA/Statistics'] : 'contentPanel';
+    var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['BOA/Statistics'] : 'contentPanel';
     var mainView = Ext.create('Boa.view.Main', {
       renderTo: target
     });
