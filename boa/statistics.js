@@ -78,7 +78,6 @@ Ext.util.CSS.createStyleSheet(
   + '  }'
 
   + '  .bsw-body {'
-  // +'      font-family: "Open Sans";'
   + '    font-size: 14px;'
   + '    font-weight: normal;'
   + '    font-style: normal;'
@@ -187,12 +186,10 @@ Ext.util.CSS.createStyleSheet(
   + '      border: none;'
   + '      border-radius: 4px 4px 0 0;'
   + '      margin: 8px 0 6px 11px !important;'
-  // +'      top: 8px !important;'
   + '  }'
 
   + '  .bsw-tabs .x-tab-bar-body .x-box-inner {'
   + '      box-shadow: inset 0px -10px 9px -7px rgba(0,0,0,0.2);'
-  // +'      height: 47px !important;'
   + '  }'
 
   + '  .bsw-tabs a:focus {'
@@ -243,7 +240,7 @@ Ext.util.CSS.createStyleSheet(
   + '  .bsw-checkbox {'
   + '      height: 42px;'
   + '      float: left;'
-  + '      min-width: 90px;'
+  + '      min-width: 250px;'
   + '  }'
 
   + '  .bsw-checkbox > div {'
@@ -380,7 +377,6 @@ Ext.util.CSS.createStyleSheet(
   + '      font-style: normal;'
   + '      font-stretch: normal;'
   + '      float: left;'
-  // +'      width: 14%;'
   + '      padding-right: 10px;'
   + '      text-align: right;'
   + '  }'
@@ -444,7 +440,6 @@ Ext.util.CSS.createStyleSheet(
 
   + '  .bsw-secondary-header span {'
   + '    height: 20px;'
-  // +'    font-family: "Open Sans";'
   + '    font-size: 14px;'
   + '    font-weight: normal;'
   + '    font-style: normal;'
@@ -457,7 +452,6 @@ Ext.util.CSS.createStyleSheet(
 
   + '  .bsw-color-legend span {'
   + '    height: 20px;'
-  // +'    font-family: "Open Sans";'
   + '    font-size: 14px;'
   + '    font-weight: normal;'
   + '    font-style: normal;'
@@ -500,10 +494,11 @@ Ext.util.CSS.createStyleSheet(
   + '  .bsw-button, .bsw-button:hover, .bsw-button:active, .bsw-button:focus {'
   + '      width: 200px; '
   + '      height: 40px; '
-  + '      margin-left: 17px;'
+  + '      margin: auto;'
   + '      border-radius: 3px; '
   + '      background-color: #ffffff; '
   + '      border: solid 1px #3e9bbc;'
+  + '      display: block;'
   + '  }'
 
   + '  .bsw-button .x-btn-inner {'
@@ -794,7 +789,6 @@ Ext.util.CSS.createStyleSheet(
   + '  }'
 
   + '  .bsw-table > tbody > tr > td {'
-  // +'      font-family: "Open Sans";'
   + '      font-size: 12px;'
   + '      font-weight: 400;'
   + '      font-style: normal;'
@@ -881,6 +875,29 @@ Ext.util.CSS.createStyleSheet(
   + '          margin: 0cm;'
   + '      }'
 
+  + '      #contentPanel .col-md-1 {'
+  + '          width: 8.33333333% !important;'
+  + '      }'
+
+  + '      #contentPanel .bsw-select {'
+  + '          width: 50%;'
+  + '          float: left;'
+  + '      }'
+
+  + '      #contentPanel .bsw-infobar .x-component {'
+  + '          width: 50%;'
+  + '      }'
+
+  + '      #contentPanel .bsw-chartcontainer {'
+  + '          margin: 40px 0 0 0;'
+  + '          width: 50%;'
+  + '          float: left;'
+  + '      }'
+
+  + '      #contentPanel .bsw-secondary-header .bsw-target-header {'
+  + '          width: 100%;'
+  + '          margin-bottom: 20px;'
+  + '      }'
 
   + '  @media print {'
 
@@ -3251,8 +3268,8 @@ Ext.define('Boa.view.PrimaryGoal', {
     };
 
     var chart = Ext.create('Ext.chart.PolarChart', {
-      width: '240px',
-      height: '240px',
+      width: 240,
+      height: 240,
       cls: 'bsw-polarchart',
       bind: {
         store: {
