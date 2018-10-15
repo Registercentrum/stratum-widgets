@@ -1,4 +1,24 @@
 
+Ext.override(Ext.scroll.Scroller, {
+  privates: {
+    restoreState: function () {
+      var me = this,
+        el = me.getScrollElement(),
+        dom;
+      if (el) {
+        dom = el.dom;
+
+        if (me.trackingScrollTop !== undefined) {
+          me.restoring = true;
+          Ext.defer(function () {
+            me.restoring = false;
+          }, 50);
+        }
+      }
+    }
+  }
+});
+
 Ext.util.CSS.removeStyleSheet('sfr-chart');
 Ext.util.CSS.createStyleSheet(''
 + '.sfr-charts .x-panel-body {'
@@ -13,8 +33,8 @@ Ext.util.CSS.createStyleSheet(''
 + '}'
 + '.sfr-odd, .sfr-even {'
 + '  border-bottom: 1px solid #e8e8e8;'
-+ '}'
-, 'sfr-chart');
++ '}',
+'sfr-chart');
 
 var SfrWidget = {
   parameters: {
@@ -47,36 +67,18 @@ var SfrWidget = {
     trtgrp: 'trtgrp',
     trtcode: 'trtcode',
     from_age: 'from_age',
-    to_age: 'to_age', 
-    gender: 'gender', 
+    to_age: 'to_age',
+    gender: 'gender',
     enhet: 'enhet',
     statOut: 'statOut',
-    to_trt_dat: 'to_trt_dat', 
+    to_trt_dat: 'to_trt_dat',
     to_dat: 'to_dat',
     clinic: 'clinic'
   },
   ParameterKeys: {
-       START_DATE: 'StartDate', END_DATE: 'EndDate', SEX: 'Sex', UPPER_AGE_LIMIT: 'UpperAgeLimit', LOWER_AGE_LIMIT: 'LowerAgeLimit', OPEN_CLOSED: 'OpenClosed', FRACTURE_COUNT: 'FractureCount', KIR_NO_KIR: 'KirNoKir', CLINIC: 'Clinic', PROM0_OPTIONS: 'PROM0Options', PROM1OPTIONS: 'PROM1Options', INJURYFORM_OPTIONS: 'InjuryFormOptions', FRACTURE_TREAT_OPTIONS: 'FractureTreatOptions', SPECIAL_FRACTURE_OPTIONS: 'SpecialFractureOptions', ENERGY_TYPE: 'EnergyType', ICD10_GROUP: 'ICD10Group', ICD10_CODE: 'ICD10CODE', FRACTURE_CLASS: 'FractureClass', TREAT_TYPE: 'TreatType', OPERATOR: 'Operator', OP_METHOD: 'TreatTypeGroup', TREAT_CODE: 'TreatCode', INJURY_GROUP: 'InjuryGroup', SPECIAL_FRACTURES: 'SpecialFractures', SKELETON_SEGMENT: 'SkeletonSegment', PHYSES: 'Physes'
+    START_DATE: 'StartDate', END_DATE: 'EndDate', SEX: 'Sex', UPPER_AGE_LIMIT: 'UpperAgeLimit', LOWER_AGE_LIMIT: 'LowerAgeLimit', OPEN_CLOSED: 'OpenClosed', FRACTURE_COUNT: 'FractureCount', KIR_NO_KIR: 'KirNoKir', CLINIC: 'Clinic', PROM0_OPTIONS: 'PROM0Options', PROM1OPTIONS: 'PROM1Options', INJURYFORM_OPTIONS: 'InjuryFormOptions', FRACTURE_TREAT_OPTIONS: 'FractureTreatOptions', SPECIAL_FRACTURE_OPTIONS: 'SpecialFractureOptions', ENERGY_TYPE: 'EnergyType', ICD10_GROUP: 'ICD10Group', ICD10_CODE: 'ICD10CODE', FRACTURE_CLASS: 'FractureClass', TREAT_TYPE: 'TreatType', OPERATOR: 'Operator', OP_METHOD: 'TreatTypeGroup', TREAT_CODE: 'TreatCode', INJURY_GROUP: 'InjuryGroup', SPECIAL_FRACTURES: 'SpecialFractures', SKELETON_SEGMENT: 'SkeletonSegment', PHYSES: 'Physes'
   },
-  /*
-  init: function (callBackFn) {
-    ReportManagement.GetReport(3082, null, function (e, r) {
-      if (r.result.success) {
-        SfrWidget.init.icd10Groups = r.result.data;
-        Ext.Ajax.request({
-          url: '/api/metadata/domains/4300',
-          method: 'GET',
-          success: function (response, opts) {
-            var responseData = Ext.decode(response.responseText).data;
-            var data = responseData['DomainValues'];
-            SfrWidget.init.opTypeGroups = data;
-            callBackFn();
-          }
-        });
-      }
-    });
-  },
-  */
+
   init: function (callBackFn) {
     Ext.Ajax.request({
       url: '/stratum/api/metadata/domainvalues/domain/4299',
@@ -825,21 +827,20 @@ var SfrWidget = {
     values[parameters.trtmainsurg]      = { text: 'Operatörskategori:', domain: 4059};
     
     // values[parameters.icd10]            = { text: 'ICD10:', domain: 4061 };
-    //values[parameters.fxclass]          = { text: 'Frakturtyp:', domain: 4060, dependencies: ['icd10']}
-    //values[parameters.trtgrp]           = { text: 'Op-metod:', domain: 4059, dependencies: ['bodypart']};
-    //values[parameters.trtcode]          = { text: 'Behandlingskod:', domain: 4059, dependencies: ['bodypart', 'icd10', 'trttype']};
+    // values[parameters.fxclass]          = { text: 'Frakturtyp:', domain: 4060, dependencies: ['icd10']}
+    // values[parameters.trtgrp]           = { text: 'Op-metod:', domain: 4059, dependencies: ['bodypart']};
+    // values[parameters.trtcode]          = { text: 'Behandlingskod:', domain: 4059, dependencies: ['bodypart', 'icd10', 'trttype']};
     
-    // for (var i = 0; i < config.length; i++) {
-    //   var item = config[i];
     var keys = Object.keys(parameters);
     for (var p = 0; p < keys.length; p++) {
-      var item = keys[p];
-      var i = config.indexOf(item);
-      if(i<0) { continue };
+      var parameter = keys[p];
+      var i = config.indexOf(parameter);
+      if (parameter === parameters.tidsper ) i = indexOfTimePeriod(config);
+      if (i < 0) continue;
       var item = config[i];
-      if(config[i].indexOf(':') > 1) {
-        item = item.slice(0, config[i].indexOf(':'));
-        if(item === 'tidsper') values[item].options = getTimePeriods(config[i].slice(config[i].indexOf(':') +1 , config[i].length).split(','));
+      if (item.indexOf(':') > 1) {
+        item = item.slice(0, item.indexOf(':'));
+        if (item === parameters.tidsper) values[item].options = getTimePeriods(config[i].slice(config[i].indexOf(':') +1 , config[i].length).split(','));
       }
       if (item === parameters.from_dat)     getDateFilter();
       if (item === parameters.from_trt_dat) getTreatmentDateFilter();
@@ -870,6 +871,13 @@ var SfrWidget = {
     }
     
     return filterComponents;
+    
+    function indexOfTimePeriod(config) {
+        for(var i = 0; i < config.length; i++) {
+            if (config[i].indexOf('tidsper') > -1) return i;
+        }
+        return -1;
+    }
     
     function getDateFilter() {
       label = Ext.create('Ext.form.Label', { text: 'Fr.o.m. skadedatum:' });
@@ -1327,6 +1335,7 @@ var SfrWidget = {
 
     function dropdownCallback(data, dropdown){
       data.forEach(function(i){ i.ValueName =  i.ValueCode + ' ' + i.ValueName});
+      if(!dropdown.isVisible())return;
       dropdown.getStore().loadData(data);
       dropdown.setDisabled(false);
     }
