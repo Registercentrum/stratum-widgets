@@ -2977,7 +2977,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 				}, {
 					xtype: 'label',
 					text: 'Ilium hö',
-					x: ILEUM_RIGHT_FIRST_BOX_POS_X - 62,
+					x: ILEUM_RIGHT_FIRST_BOX_POS_X - 55,
 					y: ILEUM_FIRST_BOX_POS_Y - HEADER_SPACE_Y,
 					style: HEADER_STYLE
 				}, {
@@ -2989,7 +2989,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 				}, {
 					xtype: 'label',
 					text: 'Sakrum hö',
-					x: SAKRUM_RIGHT_FIRST_BOX_POS_X - 73,
+					x: SAKRUM_RIGHT_FIRST_BOX_POS_X - 75,
 					y: SAKRUM_FIRST_BOX_POS_Y,
 					style: HEADER_STYLE
 				}, {
@@ -3013,7 +3013,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 				}, {
 					xtype: 'label',
 					text: 'OS pubis hö',
-					x: OSPUBIS_RIGHT_FIRST_BOX_POS_X - 81,
+					x: OSPUBIS_RIGHT_FIRST_BOX_POS_X - 85,
 					y: OSPUBIS_FIRST_BOX_POS_Y,
 					style: HEADER_STYLE
 				}, {
@@ -3037,7 +3037,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 				}, {
 					xtype: 'label',
 					text: 'Instabil',
-					x: ILEUM_RIGHT_FIRST_BOX_POS_X - 50,
+					x: ILEUM_RIGHT_FIRST_BOX_POS_X - 48,
 					y: ILEUM_FIRST_BOX_POS_Y + EXTRA_LABEL_SPACE_Y,
 					style: LABEL_STYLE
 				}, {
@@ -3085,7 +3085,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 				}, {
 					xtype: 'label',
 					text: 'Dislocerad',
-					x: ILEUM_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X,
+					x: ILEUM_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X - 3,
 					y: ILEUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y * 2 + EXTRA_LABEL_SPACE_Y),
 					style: DISLOCATED_LABEL_STYLE
 				},
@@ -3098,7 +3098,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 				}, {
 					xtype: 'label',
 					text: 'Dislocerad',
-					x: SILED_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X,
+					x: SILED_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X - 3,
 					y: SILED_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
 					style: DISLOCATED_LABEL_STYLE
 				}, {
@@ -3110,13 +3110,13 @@ var skeletonWidget = function (current, callback, loadonly) {
 				}, {
 					xtype: 'label',
 					text: 'Dislocerad',
-					x: SAKRUM_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X,
+					x: SAKRUM_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X -3,
 					y: SAKRUM_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
 					style: DISLOCATED_LABEL_STYLE
 				}, {
 					xtype: 'label',
 					text: 'Dislocerad',
-					x: OSPUBIS_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X,
+					x: OSPUBIS_RIGHT_FIRST_BOX_POS_X + DISLOCATED_RIGHT_LABEL_SPACE_X - 3,
 					y: OSPUBIS_FIRST_BOX_POS_Y + (BOX_SPACE_Y + EXTRA_LABEL_SPACE_Y),
 					style: DISLOCATED_LABEL_STYLE
 				}, {
@@ -4221,7 +4221,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 					result.Neurology = backHandler.neurologi;
 					result.NeurologyExtended = backHandler.extendedNeurologi;
 				}
-				var isPelvisFracture = onPelvisClick.getSelectedCmps(pelvisPanel).length > 0;
+				var isPelvisFracture = onPelvisClick.getSelectedCmps && onPelvisClick.getSelectedCmps(pelvisPanel).length > 0;
 				if(isPelvisFracture){
 					var mappings = { 
 						IleumV: 'Fx_IliumLeft',
