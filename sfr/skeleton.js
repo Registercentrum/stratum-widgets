@@ -3036,13 +3036,13 @@ var skeletonWidget = function (current, callback, loadonly) {
 					style: HEADER_STYLE
 				}, {
 					xtype: 'label',
-					text: 'Ringskada instabil',
-					x: ILEUM_RIGHT_FIRST_BOX_POS_X - 111,
+					text: 'Instabil',
+					x: ILEUM_RIGHT_FIRST_BOX_POS_X - 50,
 					y: ILEUM_FIRST_BOX_POS_Y + EXTRA_LABEL_SPACE_Y,
 					style: LABEL_STYLE
 				}, {
 					xtype: 'label',
-					text: 'Ringskada instabil',
+					text: 'Instabil',
 					x: ILEUM_LEFT_FIRST_BOX_POS_X + LEFT_LABEL_SPACE_X,
 					y: ILEUM_FIRST_BOX_POS_Y + EXTRA_LABEL_SPACE_Y,
 					style: LABEL_STYLE
@@ -3139,9 +3139,10 @@ var skeletonWidget = function (current, callback, loadonly) {
 					style: DISLOCATED_LABEL_STYLE
 				}, {
 					xtype: 'label',
-					html: 'Börja alltid med att sätta ett kryss för varje skadekomponent samt ytterligare kryss<br/>om dislocerad. Flera kryss är tillåtna. Gå sedan vidare genom att klicka på Nästa. Om frakturen är protesnära klicka istället på knappen Protesnära fraktur för den aktuella sidan.<br/><b>OBS! Acetabulumengagerande frakturer klassificeras i Acetabulum-modulen.</b>',
+					html: 'Börja alltid med att sätta ett kryss för varje skadekomponent samt ytterligare kryss om dislocerad. Flera kryss är tillåtna. Gå sedan vidare genom att klicka på Nästa. Om frakturen är protesnära klicka istället på knappen Protesnära fraktur för den aktuella sidan.<b>OBS! Acetabulumengagerande frakturer klassificeras i Acetabulum-modulen.',
 					x: 20,
-					y: 535,
+					y: 520,
+					cls: 'sfr-pelvis-text',
 					style: DESC_STYLE
 				}, {
 					xtype: 'button',
@@ -3670,14 +3671,14 @@ var skeletonWidget = function (current, callback, loadonly) {
 								text: NO_COMPETENCE_TO_CLASSIFY_TEXT,
 								handler: function () {
 									msgBox.close();
-									foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
+									foreArmHandler(/*app.myCurrentFracturePanel.id, */ '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
 								}
 							}, {
 								tooltip: NO_CLASSIFIABLE_TOOLTIP,
 								text: NO_CLASSIFIABLE_TEXT,
 								handler: function () {
 									msgBox.close();
-									foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, NO_CLASSIFIABLE_CODE, panelName);
+									foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', container.id, NO_CLASSIFIABLE_CODE, panelName);
 								}
 							}
 						]
@@ -3686,7 +3687,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 					}
 					else {
 
-						foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, PARTIAL_NO_CLASSIFIABLE_CODE, panelName);
+						foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', container.id, PARTIAL_NO_CLASSIFIABLE_CODE, panelName);
 					}
 
 				},
@@ -3729,14 +3730,14 @@ var skeletonWidget = function (current, callback, loadonly) {
 								text: NO_COMPETENCE_TO_CLASSIFY_TEXT,
 								handler: function () {
 									msgBox.close();
-									foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
+									foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
 								}
 							}, {
 								tooltip: NO_CLASSIFIABLE_TOOLTIP,
 								text: NO_CLASSIFIABLE_TEXT,
 								handler: function () {
 									msgBox.close();
-									foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, NO_CLASSIFIABLE_CODE, panelName);
+									foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', container.id, NO_CLASSIFIABLE_CODE, panelName);
 								}
 							}
 						]
@@ -3745,7 +3746,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 					}
 					else {
 
-						foreArmHandler(app.myCurrentFracturePanel.id, '', '', '', container.id, PARTIAL_NO_CLASSIFIABLE_CODE, panelName);
+						foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', container.id, PARTIAL_NO_CLASSIFIABLE_CODE, panelName);
 					}
 
 				},
@@ -4139,6 +4140,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 		var pelvisPanel = createPelvisPanel();
 		var container = Ext.create('Ext.window.Window', {
 			renderTo: aBody,
+			cls: 'sfr-plugin-window',
 			x: 40,
 			y: 40,
 			width: 615,
@@ -4219,7 +4221,43 @@ var skeletonWidget = function (current, callback, loadonly) {
 					result.Neurology = backHandler.neurologi;
 					result.NeurologyExtended = backHandler.extendedNeurologi;
 				}
-
+				var isPelvisFracture = onPelvisClick.getSelectedCmps(pelvisPanel).length > 0;
+				if(isPelvisFracture){
+					var mappings = { 
+						IleumV: 'Fx_IliumLeft',
+						IleumDisloceradV: 'Fx_IliumLeftDisplaced',
+						IleumH: 'Fx_IliumRight',
+						IleumDisloceradH: 'Fx_IliumRightDisplaced',
+						Sakrum: 'Fx_Sacrum',
+						SakrumDislocerad: 'Fx_SacrumDisplaced',
+						SakrumV: 'Fx_SacrumLeft',
+						SakrumDisloceradV: 'Fx_SacrumLeftDisplaced',
+						SakrumH: 'Fx_SacrumRight',
+						SakrumDisloceradH: 'Fx_SacrumRightDisplaced',
+						OSPubisV: 'Fx_PubisLeft',
+						OSPubisDisloceradV: 'Fx_PubisLeftDisplaced',
+						OSPubisH: 'Fx_PubisRight',
+						OSPubisDisloceradH: 'Fx_PubisRightDisplaced',
+						SILedV: 'Fx_SIJointLeft',
+						SILedDisloceradV: 'Fx_SIJointLeftDisplaced',
+						SILedH: 'Fx_SIJointRight',
+						SILedDisloceradH: 'Fx_SIJointRightDisplaced',
+						Symfys: 'Fx_Symphysis',
+						SymfysDislocerad: 'Fx_SymphysisDisplaced',
+						SpinopelvinDissociation: 'Fx_Sacrum',
+						Transversell: 'Fx_Sacrum',
+						Coccyx: 'Fx_Sacrum',
+						AlaStabilV: 'Fx_IliumLeft',
+						AlaStabilH: 'Fx_IliumRight',
+						RingskadaInstabilV: 'Fx_IliumLeft',
+						RingskadaInstabilH: 'Fx_IliumRight'
+					}
+					var values = {AlaStabilV: 2, AlaStabilH: 2, Transversell: 2, Coccyx: 3, Default: 1};
+					onPelvisClick.getSelectedCmps(pelvisPanel).forEach(function(component){
+						result[mappings[component.name]] = values[component.name] || values.Default;
+						console.table(result);
+					});
+				}
 				var className = getFractureClassificationName(aPictureID) + '-';
 				var aoData;
 				var fractureClass
@@ -6530,7 +6568,7 @@ Ext.util.CSS.createStyleSheet(''
 	+ '.FormPanelDefault .x-toolbar-footer				{ padding: 10px;margin-top:0px;}'
 	+ '.FormPanelDefaultIcon							{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelGrey.png) !important; } '
 	+ ''
-	+ '.FormPanelSmallFont *							{ font-family: Arial,Helvetica,sans-serif !important; }'
+	+ '.FormPanelSmallFont *							{ font-family: Arial,Helvetica,sans-serif !important; font-weight: 400;}'
 	+ ''
 	+ '.skeleton * {background: transparent url(https://stratum.blob.core.windows.net/sfr/Images/Skeleton/AO-skeleton-transp.png);}'
 	+ '.skeleton a {text-decoration: none; border: none}'
@@ -6803,8 +6841,14 @@ Ext.util.CSS.createStyleSheet(''
 	+ '.sfr-xray-link {'
 	+ '  cursor: pointer;'
 	+ '}'
-	+ '.sfr-skeleton .x-panel-body {'
+	+ '.sfr-plugin-window .x-panel-default-framed, .sfr-plugin-window .x-panel-body-default-framed, .sfr-plugin-window .x-panel-body-default  {'
 	+ '  border-width: 0px;'
+	+ '}'
+	+ '.FormPanelSmallFont {'
+	+ '  padding-left: 10px;'
+	+ '}'
+	+ '.sfr-pelvis-text {'
+	+ '  max-width: 90%;'
 	+ '}'
 	, 'sfr-skeleton'
 );
