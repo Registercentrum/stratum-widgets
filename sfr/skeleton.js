@@ -20,7 +20,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 	var app = skeletonWidget;
 	app.callback = callback;
 	app.skeletonDomainCodes = [4158, 4159, 5554, 5555, 5563, 5572, 5573];
-	app.delayedDomainCodes = [4060, 5757];
+	app.delayedDomainCodes = [4060, 5757, 5620, 5621];
 	app.registerDomainCodes = [4000, 4049, 4051, 4052, 4053, 4056, 4059, 4060, 4061, 4094, 4095, 4096, 4097, 4098, 4006, 4007, 4008, 4009, 4010, 4140, 4144, 4145, 4146, 4156, 4157, 4158, 4159, 4188, 4189, 4281, 4311, 4402, 4403, 5545, 5550, 5551, 5552, 5554, 5555, 5563, 5572, 5573, 5619, 5620, 5621, 5665, 5690, 5748, 5757];
 	app.showXray = showXray;
 	app.aoImagesNavigationHandler = aoImagesNavigationHandler;
@@ -1053,7 +1053,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 					text: 'Ej klassificerad barnfraktur',
 					handler: function () {
 						msgBox.close();
-						generate_ICD_AO_SubFracturePanels(app.myCurrentFracturePanel.id, aSide, aPictureID, '-1', app.mySkeletonWindow.id, null, false, null);
+						generate_ICD_AO_SubFracturePanels(/*app.myCurrentFracturePanel.id*/ '', aSide, aPictureID, '-1', app.mySkeletonWindow.id, null, false, null);
 
 					}
 				}, {
@@ -4255,7 +4255,6 @@ var skeletonWidget = function (current, callback, loadonly) {
 					var values = {AlaStabilV: 2, AlaStabilH: 2, Transversell: 2, Coccyx: 3, Default: 1};
 					onPelvisClick.getSelectedCmps(pelvisPanel).forEach(function(component){
 						result[mappings[component.name]] = values[component.name] || values.Default;
-						console.table(result);
 					});
 				}
 				var className = getFractureClassificationName(aPictureID) + '-';
@@ -6522,7 +6521,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 		if (typeof sfrDomainValues !== 'undefined' && !loadonly) {
 
 			app.myRegisterdomains = sfrDomainValues;
-			app.mySkeletonWindow = createSkeletonWindow(Ext.getBody());
+			app.mySkeletonWindow = app.mySkeletonWindow = app.mySkeletonWindow || createSkeletonWindow(Ext.getBody());
 			app.mySkeletonWindow.getLayout().setActiveItem(0);
 			app.mySkeletonWindow.show();
 		}
@@ -6531,7 +6530,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 				app.skeletonDomainCodes,
 				function () {
 					if (!loadonly) {
-						app.mySkeletonWindow = createSkeletonWindow(Ext.getBody());
+						app.mySkeletonWindow = app.mySkeletonWindow || createSkeletonWindow(Ext.getBody());
 						app.mySkeletonWindow.getLayout().setActiveItem(0);
 						app.mySkeletonWindow.show();
 					}
