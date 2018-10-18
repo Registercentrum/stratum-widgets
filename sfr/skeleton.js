@@ -6521,7 +6521,8 @@ var skeletonWidget = function (current, callback, loadonly) {
 		if (typeof sfrDomainValues !== 'undefined' && !loadonly) {
 
 			app.myRegisterdomains = sfrDomainValues;
-			app.mySkeletonWindow = app.mySkeletonWindow = app.mySkeletonWindow || createSkeletonWindow(Ext.getBody());
+			if (app.mySkeletonWindow) app.mySkeletonWindow.destroy();
+			app.mySkeletonWindow = createSkeletonWindow(Ext.getBody());
 			app.mySkeletonWindow.getLayout().setActiveItem(0);
 			app.mySkeletonWindow.show();
 		}
@@ -6530,7 +6531,8 @@ var skeletonWidget = function (current, callback, loadonly) {
 				app.skeletonDomainCodes,
 				function () {
 					if (!loadonly) {
-						app.mySkeletonWindow = app.mySkeletonWindow || createSkeletonWindow(Ext.getBody());
+						if (app.mySkeletonWindow) app.mySkeletonWindow.destroy();
+						app.mySkeletonWindow = createSkeletonWindow(Ext.getBody());
 						app.mySkeletonWindow.getLayout().setActiveItem(0);
 						app.mySkeletonWindow.show();
 					}
