@@ -517,9 +517,9 @@ Ext.util.CSS.createStyleSheet(
   + '  }'
 
   + '  .bsw-circle {'
-  + '  	border-radius: 50%;'
-  + '  	width: 20px;'
-  + '  	height: 20px; '
+  + '    border-radius: 50%;'
+  + '    width: 20px;'
+  + '    height: 20px; '
   + '      margin-right: 8px;'
   + '  }'
 
@@ -1086,8 +1086,7 @@ Ext.util.CSS.createStyleSheet(
   + '          overflow-x: auto;'
   + '          -webkit-overflow-scrolling: touch;'
   + '      }'
-  + '  }'
-  , 'bsw'
+  + '  }', 'bsw'
 );
 Ext.define('Boa.model.Infobar', {
   extend: 'Ext.data.Model',
@@ -1150,7 +1149,7 @@ Ext.define('Boa.controller.DetailsController', {
 
   updateSelection: function () {
     this.updateChoices();
-    this.redirectTo('#details/' + this.indicator + '/' + this.choosenUnit + '/' + this.interview + '/' + this.sexes + '/' + this.ages + '/' + this.hip + '/' + this.knee + '/' + this. hand + '/' + this.tab);
+    this.redirectTo('#details/' + this.indicator + '/' + this.choosenUnit + '/' + this.interview + '/' + this.sexes + '/' + this.ages + '/' + this.hip + '/' + this.knee + '/' + this.hand + '/' + this.tab);
   },
 
   updateStores: function () {
@@ -1202,7 +1201,7 @@ Ext.define('Boa.controller.DetailsController', {
     this.unitName = this.getView().down('#unitFilter').getRawValue();
     this.indicatorName = this.getView().down('#indicatorFilter').getRawValue();
     if (this.unitName === '') this.unitName = 'Riket';
-    if (!isNaN(this.unitName)) {
+    if (!Number.isNaN(this.unitName)) {
       this.unitName = '';
     }
 
@@ -1323,14 +1322,14 @@ Ext.define('Boa.controller.DetailsController', {
         + 'Socialstyrelsen och Världshälsoorganisationen rekommenderar att vuxna personer är fysiskt aktiva minst 150 minuter per vecka.<br><br>'
         + 'Patienterna skattar själva antal minuter fysisk aktivitet, det vill säga kroppsrörelse som höjer pulsen något och antal minuter träning, det vill säga hårdare belastning där man blir lätt andfådd eller svettas per vecka. '
         + 'En minuts träning räknas som två aktivitetsminuter.',
-      'eqvas': ''
+      eqvas: ''
         + 'Indikatorn mäter andelen patienter som har förbättrat sin skattade hälsa. '
         + 'Målet är att minst 30 % av patienterna ska ha angett en förbättring av sin hälsa vid uppföljningen efter ett år.<br><br>'
         + 'Här används EQ-VAS för att mäta skattad hälsa. Det är en del av instrumentet EQ5D som mäter hälsorelaterad livskvalitet. '
         + 'Man kan likna EQ-VAS vid en stående termometer som går från 0, vilket motsvarar värsta tänkbara tillstånd, till 100 som motsvarar bästa tänkbara tillstånd.<br><br>'
         + 'Ett värde ska ha höjts minst tio enheter för att räknas som förbättrat. Patienter som vid första besöket har angett 90 eller mer och förbättras kommer alltså att räknas som oförändrade. '
         + 'EQ-VAS mäts på gruppnivå och för enheter som har färre än 10 registreringar vid vald mätpunkt visas inget värde. Dessa registreringar bidrar ändå till rikets resultat. ',
-      'eqindex': ''
+      eqindex: ''
         + 'Indikatorn mäter andelen patienter som har fått förbättrad hälsorelaterad livskvalitet. Målet är att minst 30 % av patienterna ska uppvisa en förbättrad hälsorelaterad livskvalitet vid uppföljningen efter ett år.<br><br>'
         + 'Här används instrumentet EQ5D för att mäta hälsorelaterad livskvalitet. Instrumentet har fem frågor som rör rörlighet, hygien, aktivitet, smärta och oro/nedstämdhet. Varje fråga har fem svarsalternativ som går från inga besvär till stora besvär. Dessutom ingår ett mått på skattad hälsa. Baserat på svaren räknas ett index mellan 0 och 1 fram där 0 är lika med död och 1 är lika med full hälsa.<br><br>'
         + 'Ett värde ska ha förbättrats med minst 0,1 för att det ska räknas som en förbättring. Patienter som vid första besök får värdet 0,9 eller högre och förbättras räknad därför som oförändrade.<br><br>'
@@ -1338,10 +1337,10 @@ Ext.define('Boa.controller.DetailsController', {
       'pain-nrs': ''
         + 'Smärta i BOA-registret mäts med Numeric Rating Scale (NRS) där 0 står för ingen smärta och 10 står för värsta tänkbara smärta. BOA-registret använde fram till och med den 31 december 2015 en Visuell analog skala (VAS) som gick från 0-100 och införde därefter NRS. På grund av byte av mätmetod visas indikatorn endast från och med 2016.</br></br>'
         + 'Indikatorn visar andelen patienter som uppger att de har kliniskt betydelsefullt minskad smärta efter ett år. För att en förändring ska vara betydelsefull för patienten behöver den vara av en viss storlek. Minsta kliniskt betydelsefulla förbättring mätt med NRS är 2.',
-      'xray': ''
+      xray: ''
         + 'Indikatorn visar andelen patienter som är röntgade innan de går artrosskola. Målet som är satt av Socialstyrelsen är att högst 50-70 % av patienterna ska vara röntgade.<br><br>'
         + 'Diagnosen artros ska enligt Socialstyrelsen och internationella riktlinjer ställas kliniskt, det vill säga med hjälp av anamnes (sjukhistoria) och en klinisk undersökning. Endast i oklara fall eller där man överväger remiss till ortoped ska röntgen vara en del av diagnostiseringen. Artrossjukdomen startar ofta 10-15 år innan förändringar syns på röntgen och röntgenfynd korrelerar dåligt med de symtom och besvär patienten har.',
-      'age': ''
+      age: ''
         + 'Indikatorn visar medelåldern på patienter som börjar artrosskola. Målet är att medelåldern ska vara högst 58 år.<br><br>'
         + 'Medelåldern på patienter i BOA-registret är hög, runt 66 år. Medelåldern för patienter som får höft- eller knäproteser inopererade är 67-70 år. Artrossjukdomen startar ofta långt innan en protesoperation är aktuell och sannolikt skulle patienterna få bäst effekt av artrosskola vid mycket lägre ålder.',
       'no-prior-medical-joint-help': ''
@@ -1514,10 +1513,10 @@ Ext.define('Boa.controller.DetailsController', {
 
     var content = 'Typ av uppföljning;';
     for (var i = 0; i < data.years.length; i++) {
-      content += data.years[i] + ': Antal' + ';';
-      content += data.years[i] + ': Medel' + ';';
+      content += data.years[i] + ': Antal;';
+      content += data.years[i] + ': Medel;';
     }
-    content = content + '\n';
+    content += '\n';
 
     var areas = { allpatients: 'ALLA PATIENTER', hip: 'HÖFT', knee: 'KNÄ', hand: 'HAND' };
     var periods = { firstvisit: 'Första besök', threemonths: '3 månader', twelvemonths: '1 år' };
@@ -1531,9 +1530,9 @@ Ext.define('Boa.controller.DetailsController', {
         for (i = 0; i < data[area][period].length; i++) {
           content += data[area][period][i] + ';';
         }
-        content = content + '\n';
+        content += '\n';
       }
-      content = content + '\n';
+      content += '\n';
     }
 
     content = '\ufeff' + content;
@@ -1644,7 +1643,7 @@ Ext.define('Boa.controller.OverviewController', {
     this.year = year;
     this.getView().down('#yearFilter').setValue(year);
     this.followups = followups;
-    this.getView().down('#followups').setValue(followups === '1' ? true : false);
+    this.getView().down('#followups').setValue(followups === '1');
     this.getView().down('#' + interview + 'Tab').show();
   },
 
@@ -1662,12 +1661,12 @@ Ext.define('Boa.controller.OverviewController', {
     this.loadInfobar();
 
     if (view.down('#threeMonthTab').isVisible() && this.threemonthParameters !== currentChoices) {
-      this.loadCircles('3manpat', { goalOne: 'fysisk-aktivitet', goalTwo: 'eq5dvas', goalThree: 'eqindex', goalFour: 'pain-nrs'});
+      this.loadCircles('3manpat', { goalOne: 'fysisk-aktivitet', goalTwo: 'eq5dvas', goalThree: 'eqindex', goalFour: 'pain-nrs' });
       this.threemonthParameters = currentChoices;
     }
 
-    if (view.down('#oneYearTab').isVisible() && this.oneyearParameters !== currentChoices ) {
-      this.loadCircles('1arpat', { goalFive: 'fysisk-aktivitet', goalSix: 'eq5dvas', goalSeven: 'eqindex', goalEight: 'pain-nrs'});
+    if (view.down('#oneYearTab').isVisible() && this.oneyearParameters !== currentChoices) {
+      this.loadCircles('1arpat', { goalFive: 'fysisk-aktivitet', goalSix: 'eq5dvas', goalSeven: 'eqindex', goalEight: 'pain-nrs' });
       this.oneyearParameters = currentChoices;
     }
 
@@ -1751,7 +1750,7 @@ Ext.define('Boa.controller.OverviewController', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: this.getBaseUrl() + 'boaw-nyckeltal?' + 'apikey=' + this.getApiKey() + '&year=' + this.year + '&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeFollowUp=' + this.followups,
+      url: this.getBaseUrl() + 'boaw-nyckeltal?apikey=' + this.getApiKey() + '&year=' + this.year + '&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeFollowUp=' + this.followups,
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
         if (!controller.infobar.getViewModel()) return;
@@ -1822,7 +1821,7 @@ Ext.define('Boa.controller.OverviewController', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: this.getBaseUrl() + 'boaw-cirkel-' + indicator + '?' + 'apikey=' + this.getApiKey() + '&rinvoke=1&formulartyp=' + period + '&year=' + this.year + '&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeFollowUp=' + this.followups,
+      url: this.getBaseUrl() + 'boaw-cirkel-' + indicator + '?apikey=' + this.getApiKey() + '&rinvoke=1&formulartyp=' + period + '&year=' + this.year + '&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeFollowUp=' + this.followups,
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
         if (!view.down('#' + component) || !view.down('#' + component).getViewModel()) return;
@@ -1859,7 +1858,7 @@ Ext.define('Boa.controller.OverviewController', {
     var secondaryGoals = this.getView().down('#secondaryGoals');
     var year = view.down('#yearFilter').getValue();
     var followups = view.down('#followups').getValue() === false ? 0 : 1;
-    var goals = {first: { indicator: 'xray', period: '3manpat' }, second: { indicator: 'age', period: ''}, third: { indicator: 'no-prior-medical-joint-help', period: 'forstapat'}, fourth: {indicator: 'stop-medication', period: '3manpat' }, fifth: {indicator: 'completed-school', period: 'forstapat'}};
+    var goals = { first: { indicator: 'xray', period: '3manpat' }, second: { indicator: 'age', period: '' }, third: { indicator: 'no-prior-medical-joint-help', period: 'forstapat' }, fourth: { indicator: 'stop-medication', period: '3manpat' }, fifth: { indicator: 'completed-school', period: 'forstapat' } };
     for (var goal in goals) {
       if (goal === '') continue;
       this.fetchSimpleGoal(secondaryGoals, year, goals[goal].indicator, goals[goal].period, goal, followups);
@@ -1893,7 +1892,8 @@ Ext.define('Boa.controller.OverviewController', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: this.getBaseUrl() + 'boaw-simple-' + indicator + '?' + 'apikey=' + this.getApiKey() + '&rinvoke=1' + formTypeString + '&year=' + year + '&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeFollowUp=' + followups, success: function (response) {
+      url: this.getBaseUrl() + 'boaw-simple-' + indicator + '?apikey=' + this.getApiKey() + '&rinvoke=1' + formTypeString + '&year=' + year + '&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeFollowUp=' + followups, 
+      success: function (response) {
         var result = Ext.decode(response.responseText).data;
         if (!component.getViewModel()) return;
         component.getViewModel().set(goalNumber, result);
@@ -2025,7 +2025,7 @@ Ext.define('Boa.view.Comparison', {
         'rgba(251, 182, 0, ' + opacity + ')',
         'rgba(0, 150, 102, ' + opacity + ')'
       ][value];
-      return {fill: color};
+      return { fill: color };
     },
 
     animation: {
@@ -2555,7 +2555,7 @@ Ext.define('Boa.view.Details', {
                 html: '<table id="table" class="bsw-table table">'
                   + '    <thead>                       '
                   + '      <tr>'
-                  + '        <th colspan="2"></th><th colspan="2">{table.years.0}</th><th colspan="2">{table.years.1}</th><th colspan="2">{table.years.2}</th><th colspan="2">{table.years.3}</th><th colspan="2">{table.years.4}</th>' + '        <th colspan="2">{table.years.5}</th>'
+                  + '        <th colspan="2"></th><th colspan="2">{table.years.0}</th><th colspan="2">{table.years.1}</th><th colspan="2">{table.years.2}</th><th colspan="2">{table.years.3}</th><th colspan="2">{table.years.4}</th><th colspan="2">{table.years.5}</th>'
                   + '      </tr>'
                   + '      <tr>'
                   + '        <th colspan="2">Typ av uppföljning</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th>'
@@ -2998,7 +2998,7 @@ Ext.define('Boa.view.OverView', {
   alias: 'widget.overview',
   controller: 'overview',
   itemId: 'overviewView',
-
+  // eslint-disable-next-line no-unused-vars
   constructor: function (config) {
     var header = {
       xtype: 'container',
@@ -3590,7 +3590,7 @@ Ext.define('Boa.view.Table', {
     html: '<table id="table" class="bsw-table table">'
             + '    <thead>                       '
             + '      <tr>'
-            + '        <th colspan="2"></th><th colspan="2">{table.years.0}</th><th colspan="2">{table.years.1}</th><th colspan="2">{table.years.2}</th><th colspan="2">{table.years.3}</th><th colspan="2">{table.years.4}</th>' + '        <th colspan="2">{table.years.5}</th>'
+            + '        <th colspan="2"></th><th colspan="2">{table.years.0}</th><th colspan="2">{table.years.1}</th><th colspan="2">{table.years.2}</th><th colspan="2">{table.years.3}</th><th colspan="2">{table.years.4}</th><th colspan="2">{table.years.5}</th>'
             + '      </tr>'
             + '      <tr>'
             + '        <th colspan="2">Typ av uppföljning</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th>'
@@ -3775,7 +3775,7 @@ Ext.define('Boa.view.Trend', {
 
       renderer: function (value) {
         var text = ' ';
-        if (isNaN(value)) {
+        if (Number.isNaN(value)) {
           text = 'INGEN DATA';
         }
 
@@ -4098,14 +4098,17 @@ Ext.application({
     }
   },
 
-  onUnmatchedRoute: function (hash) {
+  onUnmatchedRoute: function () {
     this.redirectTo('overview');
   }
 });
 
+/* eslint-disable one-var-declaration-per-line */
+/* eslint-disable one-var */
+/* eslint-disable no-unused-vars */
 Ext.override(Ext.chart.series.Series, {
   showTip: function (item, xy) {
-    var me = this,
+    var me = this, 
       tooltip = me.getTooltip(),
       sprite, surface, surfaceEl, pos, point, bbox, x, y, config, isRtl;
     if (!tooltip) {

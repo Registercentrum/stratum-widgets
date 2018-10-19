@@ -35,7 +35,7 @@ Ext.define('Boa.controller.Report', {
       url: '/stratum/api/statistics/BOA/boaw-rapport?grouptype=' + unitType + '&unitcode=' + unit + '&year=' + year + '&fear=1&wantsurg=1&liked=1&using=1&explanation=1&intervention=1',
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
-        if(!controller.getViewModel())return;
+        if (!controller.getViewModel()) return;
         controller.getViewModel().set('report', result);
         spinner.hide();
         table.show();
@@ -221,9 +221,7 @@ Ext.define('Boa.view.ReportTable', {
     }
     i++;
     html += '<tr><td>{report.Tables.' + i + '.question}</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
-    var fix;
     for (j = 0; j < 6; j++) {
-      //fix = j === 1 ? 2 : j === 2 ? 1 : j;
       html += '<tr><td>{report.Tables.' + i + '.options.' + j + '.option}</td><td>-</td><td>-</td><td>{report.Tables.' + i + '.options.' + j + '.M3PT_.Number}</td><td>{report.Tables.' + i + '.options.' + j + '.M3PT_.Percent}%</td><td>-</td><td>-</td></tr>';
     }
 
@@ -420,7 +418,5 @@ Ext.util.CSS.createStyleSheet(
  + '  .bsw-summary div:nth-child(3) {'
  + '      color: #183136;'
  + '      min-height: 30px;'
- + '  }'
-
-  , 'template'
+ + '  }', 'template'
 );
