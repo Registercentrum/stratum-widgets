@@ -12,7 +12,7 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
   + '.sfr-menu-item:hover {'
   + '  background-color: #e8e8e8;'
-  +'}'
+  + '}'
   + '.sfr-hidden {'
   + '  display: none;'
   + '}'
@@ -64,11 +64,10 @@ Ext.util.CSS.createStyleSheet(''
   + '.sfr-menu-item {'
   + '  border-bottom: 1px solid #eee;'
   + '  padding: 5px 15px 5px 15px !important;'
-  + '}'
-  , 'sfr-injury'
-);
+  + '}',
+'sfr-injury');
 
-var injuryWidget = function (callback) {
+var injuryWidget = function(callback) {
   injuryWidget.result = {};
 
   Ext.create('Ext.data.Store', {
@@ -140,12 +139,12 @@ var injuryWidget = function (callback) {
         itemSelector: 'div.sfr-menu-item',
         cls: 'sfr-selector',
         listeners: {
-          itemclick: function (el, record) {
+          itemclick: function(el, record) {
             if (this.hasCls('hiddenview')) {
               this.removeCls('hiddenview');
               Ext.ComponentQuery.query('#sfr-panel').pop().removeCls('sfr-fix');
               var view = this;
-              setTimeout(function() {view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('secondStore').setData({}, 0)});
+              setTimeout(function() { view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('secondStore').setData({}, 0); });
             } else {
               this.el.addCls('hiddenview');
               Ext.ComponentQuery.query('#sfr-panel').pop().addCls('sfr-fix');
@@ -158,9 +157,9 @@ var injuryWidget = function (callback) {
               }
               Ext.Ajax.request({
                 url: 'stratum/api/metadata/domainvalues/domain/' + record.data.Domain.DomainID + '?apikey=J6b-GSKrkfk=',
-                success: function (response) {
+                success: function(response) {
                   var items = Ext.decode(response.responseText).data;
-                  var children = items.find(function (element) { return element.DomainValueID === record.data.DomainValueID; }).Children;
+                  var children = items.find(function(element) { return element.DomainValueID === record.data.DomainValueID; }).Children;
                   Ext.StoreManager.lookup('secondStore').setData(children);
                 }
               });
@@ -176,12 +175,12 @@ var injuryWidget = function (callback) {
         itemSelector: 'div.sfr-menu-item',
         cls: 'sfr-selector',
         listeners: {
-          itemclick: function (el, record) {
+          itemclick: function(el, record) {
             if (this.hasCls('hiddenview')) {
               this.removeCls('hiddenview');
               this.up().down('#viewOne').removeCls('all');
               var view = this;
-              setTimeout(function() {view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('thirdStore').setData({}, 0)});
+              setTimeout(function() { view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('thirdStore').setData({}, 0); });
             } else {
               this.up().down('#viewOne').addCls('all');
               this.addCls('hiddenview');
@@ -194,9 +193,9 @@ var injuryWidget = function (callback) {
               }
               Ext.Ajax.request({
                 url: 'stratum/api/metadata/domainvalues/domain/' + record.data.Domain.DomainID + '?apikey=J6b-GSKrkfk=',
-                success: function (response) {
+                success: function(response) {
                   var items = Ext.decode(response.responseText).data;
-                  var children = items.find(function (element) { return element.DomainValueID === record.data.DomainValueID; }).Children;
+                  var children = items.find(function(element) { return element.DomainValueID === record.data.DomainValueID; }).Children;
                   Ext.StoreManager.lookup('thirdStore').setData(children);
                 }
               });
@@ -212,12 +211,12 @@ var injuryWidget = function (callback) {
         itemSelector: 'div.sfr-menu-item',
         cls: 'sfr-selector',
         listeners: {
-          itemclick: function (el, record) {
+          itemclick: function(el, record) {
             if (this.hasCls('hiddenview')) {
               this.removeCls('hiddenview');
               this.up().down('#viewTwo').removeCls('all');
               var view = this;
-              setTimeout(function() {view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('fourthStore').setData({}, 0)});
+              setTimeout(function() { view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('fourthStore').setData({}, 0); });
             } else {
               this.addCls('hiddenview');
               this.up().down('#viewTwo').addCls('all');
@@ -241,7 +240,7 @@ var injuryWidget = function (callback) {
               injuryWidget.result.Inj_Cause = code;
               Ext.Ajax.request({
                 url: 'stratum/api/metadata/domainvalues/domain/' + domainId + '?apikey=J6b-GSKrkfk=',
-                success: function (response) {
+                success: function(response) {
                   var items = Ext.decode(response.responseText).data;
                   Ext.StoreManager.lookup('fourthStore').setData(items);
                 }
@@ -258,12 +257,12 @@ var injuryWidget = function (callback) {
         itemSelector: 'div.sfr-menu-item',
         cls: 'sfr-selector',
         listeners: {
-          itemclick: function (element, record) {
+          itemclick: function(element, record) {
             if (this.hasCls('hiddenview')) {
               this.removeCls('hiddenview');
               this.up().down('#viewThree').removeCls('all');
               var view = this;
-              setTimeout(function() {view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('fifthStore').setData({}, 0)});
+              setTimeout(function() { view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('fifthStore').setData({}, 0); });
               injuryWidget.result.Inj_Activity = '';
             } else {
               this.addCls('hiddenview');
@@ -286,7 +285,7 @@ var injuryWidget = function (callback) {
               }
               Ext.Ajax.request({
                 url: 'stratum/api/metadata/domainvalues/domain/' + domainId + '?apikey=J6b-GSKrkfk=',
-                success: function (response) {
+                success: function(response) {
                   var items = Ext.decode(response.responseText).data;
                   Ext.StoreManager.lookup('fifthStore').setData(items);
                 }
@@ -303,13 +302,12 @@ var injuryWidget = function (callback) {
         itemSelector: 'div.sfr-menu-item',
         cls: 'sfr-selector',
         listeners: {
-          itemclick: function (element, record) {
+          itemclick: function(element, record) {
             this.addCls('hiddenview');
             var code = record.data.ValueCode;
             injuryWidget.result.Inj_Place = code;
             callback(injuryWidget.result);
             this.up().hide();
-            return;
           }
         }
       }
