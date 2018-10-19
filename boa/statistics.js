@@ -1201,7 +1201,7 @@ Ext.define('Boa.controller.DetailsController', {
     this.unitName = this.getView().down('#unitFilter').getRawValue();
     this.indicatorName = this.getView().down('#indicatorFilter').getRawValue();
     if (this.unitName === '') this.unitName = 'Riket';
-    if (!Number.isNaN(this.unitName)) {
+    if (!isNaN(this.unitName)) {
       this.unitName = '';
     }
 
@@ -3775,7 +3775,7 @@ Ext.define('Boa.view.Trend', {
 
       renderer: function (value) {
         var text = ' ';
-        if (Number.isNaN(value)) {
+        if (isNaN(value)) {
           text = 'INGEN DATA';
         }
 
