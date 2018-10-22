@@ -101,12 +101,12 @@ var SfrSearchList = function (anEntity, aQuery) {
     app.view.addCls('sfr-charts');
     var parameters = Ext.Object.merge(SfrWidget.parameters, SfrWidget.ParameterKeys);;
     var MAX_NR_OF_PATIENTS = 500;
-    var patientsTitleCmp = Ext.create('Ext.Component', {html: '<h2 align="center">' + 'Skadetillfällen - sök med särskilda kriterier' + '</h1>'});
+    var patientsTitleCmp = Ext.create('Ext.Component', {html: '<h2 align="center">' + 'Hämta patientlista' + '</h1>'});
     var warningLabel = Ext.create('Ext.form.Label', { text: 'OBS! Max ' + MAX_NR_OF_PATIENTS + ' skadetillfällen visas i listan. Exportera listan till Excel för att se hela resultatet', style: 'color:red;' });
     warningLabel.setVisible(false);
     
     var submitButton = Ext.create('Ext.Button', {
-      text: 'Hämta skadetillfällen',
+      text: 'Hämta lista',
       style: {
         marginBottom: '10px',
         marginTop: '10px'
@@ -115,31 +115,39 @@ var SfrSearchList = function (anEntity, aQuery) {
         warningLabel.setVisible(false);
         submitButton.setDisabled(true);
         var paramsString = SfrWidget.getParameters(patientsCmps);
-        paramsString = paramsString.replace(/from_dat/g, 'StartDate');
-        paramsString = paramsString.replace(/to_dat/g, 'EndDate');
-        paramsString = paramsString.replace(/bodypart/g, 'ICD10Group');
-        paramsString = paramsString.replace(/icd10/g, 'ICD10CODE');
-        paramsString = paramsString.replace(/injtype/g, 'EnergyType');
-        paramsString = paramsString.replace(/fxclass/g, 'FractureClass');
-        paramsString = paramsString.replace(/trtgrp/g, 'TreatTypeGroup');
-        paramsString = paramsString.replace(/trttype/g, 'TreatType');
-        paramsString = paramsString.replace(/trtcode/g, 'TreatCode');
-        paramsString = paramsString.replace(/injgroup/g, 'InjuryGroup');
-        paramsString = paramsString.replace(/open/g, 'OpenClosed');
-
-        ReportManagement.GetReport(3059, paramsString, function (e, r) {
-          if (r.result.success) {
-            injuriesHeader.update('<h3 align="center">Skadetillfällen (aktuell klinik): ' + r.result.data.length + ' st</h3>');
-            if (r.result.data.length > MAX_NR_OF_PATIENTS) {
-              r.result.data.splice(MAX_NR_OF_PATIENTS, r.result.data.length - MAX_NR_OF_PATIENTS)
-              storePatients.loadData(r.result.data);
-              warningLabel.setVisible(true);
-            }
-            else {
-              storePatients.loadData(r.result.data);
-            }
+        paramsString = paramsString.replace(new RegExp('[a-zA-Z0-9]*ALL=[0-1]*&', 'g'),'');
+        paramsString = paramsString.replace(new RegExp('[a-zA-Z0-9]*=0&', 'g'), '');
+        paramsString = paramsString.replace(/from_dat/g, 'from_Inj_Dat');
+        paramsString = paramsString.replace(/to_dat/g, 'to_Inj_Dat');
+        paramsString = paramsString.replace(/bodypart/g, 'bodypart');
+        paramsString = paramsString.replace(/icd10/g, 'icd10');
+        paramsString = paramsString.replace(/injtype/g, 'injury_type');
+        paramsString = paramsString.replace(/fxclass/g, 'fracture_type');
+        paramsString = paramsString.replace(/trtgrp/g, 'op_method');
+        paramsString = paramsString.replace(/trttype/g, 'treatment_type');
+        paramsString = paramsString.replace(/trtcode/g, 'treatment_code');
+        paramsString = paramsString.replace(/injgroup/g, 'injury_group');
+        paramsString = paramsString.replace(/open/g, 'open_fracture');
+        paramsString = paramsString.replace(/SpecialFractureOptions/g, 'special_fraktures');
+        paramsString = paramsString.replace(/FractureTreatOptions/g, 'incomplete_registrations');
+        
+        Ext.Ajax.request({
+          url: '/stratum/api/statistics/sfr/get_injury_event?' + paramsString.replace(/&$/, ''),
+          method: 'GET',
+          success: function (response, opts) {
+              var data = Ext.decode(response.responseText).data;
+              data = data[0].Personnummer[0] ? data : [];
+              injuriesHeader.update('<h3 align="center">Skadetillfällen (aktuell klinik): ' + data.length + ' st</h3>');
+              if (data.length > MAX_NR_OF_PATIENTS) {
+                  data.splice(MAX_NR_OF_PATIENTS, data.length - MAX_NR_OF_PATIENTS)
+                  storePatients.loadData(data);
+                  warningLabel.setVisible(true);
+              }
+              else {
+                  storePatients.loadData(data);
+              }
+              submitButton.setDisabled(false);
           }
-          submitButton.setDisabled(false);
         });
         initExportLink(paramsString, patientsPanel);
       }
@@ -223,8 +231,21 @@ var SfrSearchList = function (anEntity, aQuery) {
     }
     
     function initExportLink(paramsString, container) {
-      paramsString += '&ContextID=' + Profile.Context.ContextID;
-      var html = '<a style="text-decoration:underline" href="/stratum/databases/report/3059?' + paramsString + '">Exportera listan till Excel</a>';
+      var paramsString = SfrWidget.getParameters(patientsCmps);
+      paramsString = paramsString.replace(new RegExp('[a-zA-Z0-9]*ALL=[0-1]*&', 'g'),'');
+      paramsString = paramsString.replace(new RegExp('[a-zA-Z0-9]*=0&', 'g'), '');
+      paramsString = paramsString.replace(/from_dat/g, 'from_Inj_Dat');
+      paramsString = paramsString.replace(/to_dat/g, 'to_Inj_Dat');
+      paramsString = paramsString.replace(/bodypart/g, 'bodypart');
+      paramsString = paramsString.replace(/icd10/g, 'icd10');
+      paramsString = paramsString.replace(/injtype/g, 'injury_type');
+      paramsString = paramsString.replace(/fxclass/g, 'fracture_type');
+      paramsString = paramsString.replace(/trtgrp/g, 'op_method');
+      paramsString = paramsString.replace(/trttype/g, 'treatment_type');
+      paramsString = paramsString.replace(/trtcode/g, 'treatment_code');
+      paramsString = paramsString.replace(/injgroup/g, 'injury_group');
+      paramsString = paramsString.replace(/open/g, 'open_fracture');
+      var html = '<a style="text-decoration:underline" href="/stratum/api/statistics/sfr/patientlista?' + paramsString + 'format=csv&returtyp=csv">Exportera listan till Excel</a>';
       if (initExportLink.cmp === undefined) {
         initExportLink.cmp = Ext.create('Ext.Component', { style: { paddingTop: '10px', paddingBottom: '10px' }, html: html, name: 'exportLink' });
         container.add(initExportLink.cmp);
@@ -247,18 +268,18 @@ var SfrSearchList = function (anEntity, aQuery) {
           enableTextSelection: true
         },
         columns: [{
-          header: 'Personnr',
-          dataIndex: 'PersonNr',
-          width: 123,
+          header: 'Personnummer',
+          dataIndex: 'Personnummer',
+          width: 130,
           height: 50
         }, {
-          header: 'Skadedat',
+          header: 'Skadedatum',
           dataIndex: 'Skadedatum',
           xtype: 'datecolumn',
           format: 'Y-m-d',
-          width: 90
+          width: 110
 
-        }, {
+        }, /*{
           header: 'Frakt',
           dataIndex: 'Frakt',
           width: 60
@@ -274,7 +295,7 @@ var SfrSearchList = function (anEntity, aQuery) {
           header: 'Skadetillfälle registrerat på annan klinik',
           dataIndex: 'DifferentInjuryClinic',
           width: 300
-        }],
+        }*/],
         selModel: Ext.create('Ext.selection.RowModel', {
           listeners: {
             select: function (model, record, index, eOpts) {
@@ -293,7 +314,7 @@ var SfrSearchList = function (anEntity, aQuery) {
               patientSearchSettings.treatTypeVal = treatTypeCmp.getValue();
               patientSearchSettings.specialFractureVal = specialFracturesOptionsCmp.getValue();
               patientSearchSettings.injuryGroupVal = injuryGroupCmp.getValue();
-              Stratum.ManagerForSubjects.search(record.data.PersonNr);
+              Stratum.ManagerForSubjects.search(record.data.Personnummer);
               window.scrollToTop();
             }
           }
