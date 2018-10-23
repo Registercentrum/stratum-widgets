@@ -9,7 +9,6 @@ var SfrSearchList = function () {
   }
   
   loadWidget('sfr/chartfactory', function () {
-    initializeTips();
     createApp();
   });
 
@@ -23,6 +22,7 @@ var SfrSearchList = function () {
   }
 
   function createApp() {
+    initializeTips();
     app.max     = 500;
     app.view    = Ext.getCmp('contentPanel');
     app.store   = createStore();
@@ -36,7 +36,7 @@ var SfrSearchList = function () {
     app.title   = Ext.create('Ext.Component', { html: '<h2 align="center">Hämta patientlista</h2>' });
 
     app.panel.add(app.filters);
-    app.panel.items.add(app.button); // Hack to avoid repaint of panel
+    app.panel.items.add(app.button);
     app.panel.add(app.export);
     app.panel.add(app.warning);
     app.panel.add(app.header);
@@ -70,20 +70,94 @@ var SfrSearchList = function () {
   function createFilters() {
     var components = SfrWidget.createFilterComponents(['from_dat', 'bodypart', 'icd10', 'injtype', 'injgroup', 'trtgrp', 'trttype', 'trtcode', 'fxclass', 'fxclassgroup', 'open']);
     var fractureTreatLabel = Ext.create('Ext.form.Label', { text: 'Fraktur/Behandling:' });
-    var fractureTreatComboBox = createFractureTreatFilter();
+    var fractureTreatFilter = createFractureTreatFilter();
     var specialFractureLabel = Ext.create('Ext.form.Label', { text: 'Speciella frakturtyper:' });
-    var specialFractureComboBox = createSpecialFractureFilter();
+    var specialFractureFilter = createSpecialFractureFilter();
 
-    components.splice(4, 0, fractureTreatLabel, fractureTreatComboBox, specialFractureLabel, specialFractureComboBox);
+    components.splice(4, 0, fractureTreatLabel, fractureTreatFilter, specialFractureLabel, specialFractureFilter);
 
     for (var i = 0; i < components.length; i++) {
-      var current = components[i];
-      if (current instanceof Ext.form.ComboBox) {
-        current.getStore().on('datachanged', Ext.bind(SfrWidget.onFilterChanged, this, [current, components], false));
+      var currentCmp = components[i];
+      if (currentCmp instanceof Ext.form.ComboBox) {
+        currentCmp.getStore().on('datachanged', Ext.bind(SfrWidget.onFilterChanged, this, [currentCmp, components], false));
       }
     }
 
     return components;
+  }
+
+  function createFractureTreatFilter() {
+    var fractureTreatOptions = [
+      ['', null],
+      ['Hämta där enbart skadedatum är ifyllt', '1'],
+      ['Hämta där patient har närliggande skadetillfällen (inom 7 dagar)', '2'],
+      ['Hämta där fraktur saknas', '3'],
+      ['Hämta där fraktur ej blivit klassificerad', '4'],
+      ['Hämta där behandling saknas', '5'],
+      ['Hämta där primär behandling saknas men Planerat följdingrepp finns', '6'],
+      ['Hämta där primär behandling saknas men Re-operation/Operation i sent skede finns', '7'],
+      ['Hämta där Icke-kirurgisk behandling saknas men Operation efter icke-kirurgi övergivits finns', '8'],
+      ['Hämta där Operation efter icke-kirurgi övergivits saknas men Icke-kirurgisk behandling tillsammans med Planerat följdingrepp finns', '9'],
+      ['Hämta där patient vid PROM-ifyllande angett att denne reoperats men där endast primäroperationer finns registrerade', '10']
+    ];
+    
+    var fractureTreatStore = Ext.create('Ext.data.ArrayStore', {
+      data: fractureTreatOptions,
+      autoLoad: true,
+      fields: ['ValueName', 'ValueCode'],
+      mode: 'local'
+    });
+    
+    var fractureTreatFilter = Ext.create('Ext.form.ComboBox', {
+      parameterKey: SfrWidget.parameters.imcomplete,
+      width: '50%',
+      mode: 'local',
+      valueField: 'ValueCode',
+      displayField: 'ValueName',
+      editable: false,
+      store: fractureTreatStore
+    });
+
+    return fractureTreatFilter;
+  }
+
+  function createSpecialFractureFilter() {
+    var specialFractureOptions = [
+      ['', null],
+      ['Hämta där skadeorsak är stressfraktur', '1'],
+      ['Hämta där skadeorsak är patologisk fraktur', '2'],
+      ['Hämta där protesnära fraktur förekommer', '3'],
+      ['Hämta där implantatrelaterad fraktur förekommer', '4'],
+      ['Hämta där misstänkt osteoporosfraktur förekommer', '5'],
+      ['Hämta där atypisk fraktur förekommer', '6']];
+      
+    var specialFractureStore = Ext.create('Ext.data.ArrayStore', {
+      data: specialFractureOptions,
+      autoLoad: true,
+      fields: ['ValueName', 'ValueCode'],
+      mode: 'local'
+    });
+
+    var specialFractureFilter = Ext.create('Ext.form.ComboBox', {
+      parameterKey: SfrWidget.parameters.special,
+      width: '50%',
+      mode: 'local',
+      valueField: 'ValueCode',
+      displayField: 'ValueName',
+      editable: false,
+      store: specialFractureStore,
+      listeners: {
+        afterrender: function () {
+          Ext.tip.QuickTipManager.register({
+            target: specialFractureFilter.id,
+            text: 'Misstänkt osteoporosfraktur definieras vid denna utsökning som en fraktur hos patient 50 år eller äldre och som registrerats ha en fraktur av proximala humerus, höft, bäcken, acetabulum, handled eller rygg.',
+            autoHide: false
+          });
+        }
+      }
+    });
+
+    return specialFractureFilter;
   }
 
   function createButton() {
@@ -96,11 +170,9 @@ var SfrSearchList = function () {
       handler: function (button) {
         app.warning.setVisible(false);
         button.setDisabled(true);
-        var paramsString = SfrWidget.getParameters(app.filters);
+        var paramsString = SfrWidget.getParameters(app.filters, {});
         paramsString = paramsString.replace(new RegExp('[a-zA-Z0-9]*ALL=[0-1]*&', 'g'), '');
         paramsString = paramsString.replace(new RegExp('[a-zA-Z0-9]*=0&', 'g'), '');
-        paramsString = paramsString.replace(/from_dat/g, 'from_Inj_Dat');
-        paramsString = paramsString.replace(/to_dat/g, 'to_Inj_Dat');
         paramsString = paramsString.replace(/bodypart/g, 'bodypart');
         paramsString = paramsString.replace(/icd10/g, 'icd10');
         paramsString = paramsString.replace(/injtype/g, 'injury_type');
@@ -113,9 +185,10 @@ var SfrSearchList = function () {
         paramsString = paramsString.replace(/SpecialFractureOptions/g, 'special_fraktures');
         paramsString = paramsString.replace(/FractureTreatOptions/g, 'incomplete_registrations');
         paramsString = paramsString.replace(/fracture_typegroup/g, 'fracture_group');
+        paramsString = paramsString.replace(/^&/, '');
         
         Ext.Ajax.request({
-          url: '/stratum/api/statistics/sfr/get_injury_event?' + paramsString.replace(/&$/, ''),
+          url: '/stratum/api/statistics/sfr/patientlista?' + paramsString,
           method: 'GET',
           success: function (response) {
             var data = Ext.decode(response.responseText).data;
@@ -169,86 +242,12 @@ var SfrSearchList = function () {
   }
 
   function createExport() {
-    var html = '<a style="text-decoration:underline" href="/stratum/api/statistics/sfr/get_injury_event?format=csv&returtyp=csv">Exportera listan till Excel</a>';
+    var html = '<a style="text-decoration:underline" href="/stratum/api/statistics/sfr/patientlista?format=csv&returtyp=csv">Exportera listan till Excel</a>';
     return Ext.create('Ext.Component', { style: { paddingTop: '10px', paddingBottom: '10px' }, html: html, name: 'exportLink' });
   }
 
-  function createFractureTreatFilter() {
-    var fractureTreatOptions = [
-      ['', null],
-      ['Hämta där enbart skadedatum är ifyllt', '1'],
-      ['Hämta där patient har närliggande skadetillfällen (inom 7 dagar)', '2'],
-      ['Hämta där fraktur saknas', '3'],
-      ['Hämta där fraktur ej blivit klassificerad', '4'],
-      ['Hämta där behandling saknas', '5'],
-      ['Hämta där primär behandling saknas men Planerat följdingrepp finns', '6'],
-      ['Hämta där primär behandling saknas men Re-operation/Operation i sent skede finns', '7'],
-      ['Hämta där Icke-kirurgisk behandling saknas men Operation efter icke-kirurgi övergivits finns', '8'],
-      ['Hämta där Operation efter icke-kirurgi övergivits saknas men Icke-kirurgisk behandling tillsammans med Planerat följdingrepp finns', '9'],
-      ['Hämta där patient vid PROM-ifyllande angett att denne reoperats men där endast primäroperationer finns registrerade', '10']
-    ];
-    
-    var fractureTreatStore = Ext.create('Ext.data.ArrayStore', {
-      data: fractureTreatOptions,
-      autoLoad: true,
-      fields: ['ValueName', 'ValueCode'],
-      mode: 'local'
-    });
-    
-    var fractureTreatFilter = Ext.create('Ext.form.ComboBox', {
-      parameterKey: SfrWidget.ParameterKeys.FRACTURE_TREAT_OPTIONS,
-      width: '50%',
-      mode: 'local',
-      valueField: 'ValueCode',
-      displayField: 'ValueName',
-      editable: false,
-      store: fractureTreatStore
-    });
-
-    return fractureTreatFilter;
-  }
-
-  function createSpecialFractureFilter() {
-    var specialFractureOptions = [
-      ['', null],
-      ['Hämta där skadeorsak är stressfraktur', '1'],
-      ['Hämta där skadeorsak är patologisk fraktur', '2'],
-      ['Hämta där protesnära fraktur förekommer', '3'],
-      ['Hämta där implantatrelaterad fraktur förekommer', '4'],
-      ['Hämta där misstänkt osteoporosfraktur förekommer', '5'],
-      ['Hämta där atypisk fraktur förekommer', '6']];
-      
-    var specialFractureStore = Ext.create('Ext.data.ArrayStore', {
-      data: specialFractureOptions,
-      autoLoad: true,
-      fields: ['ValueName', 'ValueCode'],
-      mode: 'local'
-    });
-
-    var specialFractureFilter = Ext.create('Ext.form.ComboBox', {
-      parameterKey: SfrWidget.ParameterKeys.SPECIAL_FRACTURE_OPTIONS,
-      width: '50%',
-      mode: 'local',
-      valueField: 'ValueCode',
-      displayField: 'ValueName',
-      editable: false,
-      store: specialFractureStore,
-      listeners: {
-        afterrender: function () {
-          Ext.tip.QuickTipManager.register({
-            target: specialFractureFilter.id,
-            text: 'Misstänkt osteoporosfraktur definieras vid denna utsökning som en fraktur hos patient 50 år eller äldre och som registrerats ha en fraktur av proximala humerus, höft, bäcken, acetabulum, handled eller rygg.',
-            autoHide: false
-          });
-        }
-      }
-    });
-
-    return specialFractureFilter;
-  }
-
   function updateExport(parameters) {
-    var html = '<a style="text-decoration:underline" href="/stratum/api/statistics/sfr/get_injury_event?' + parameters + 'format=csv&returtyp=csv">Exportera listan till Excel</a>';
+    var html = '<a style="text-decoration:underline" href="/stratum/api/statistics/sfr/patientlista?' + parameters + '&format=csv&returtyp=csv">Exportera listan till Excel</a>';
     app.export.getEl().dom.innerHTML = html;
   }
 
