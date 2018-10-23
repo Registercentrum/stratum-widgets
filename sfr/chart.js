@@ -33,8 +33,8 @@ Ext.util.CSS.createStyleSheet(''
 + '}'
 + '.sfr-odd, .sfr-even {'
 + '  border-bottom: 1px solid #e8e8e8;'
-+ '}',
-'sfr-chart');
++ '}'
+, 'sfr-chart');
 
 var SfrWidget = {
   parameters: {
@@ -67,18 +67,17 @@ var SfrWidget = {
     trtgrp: 'trtgrp',
     trtcode: 'trtcode',
     from_age: 'from_age',
-    to_age: 'to_age',
-    gender: 'gender',
+    to_age: 'to_age', 
+    gender: 'gender', 
     enhet: 'enhet',
     statOut: 'statOut',
-    to_trt_dat: 'to_trt_dat',
+    to_trt_dat: 'to_trt_dat', 
     to_dat: 'to_dat',
-    clinic: 'clinic'
+    clinic: 'clinic',
+    incomplete: 'incomplete_registrations',
+    special: 'special_fraktures'
   },
-  ParameterKeys: {
-    START_DATE: 'StartDate', END_DATE: 'EndDate', SEX: 'Sex', UPPER_AGE_LIMIT: 'UpperAgeLimit', LOWER_AGE_LIMIT: 'LowerAgeLimit', OPEN_CLOSED: 'OpenClosed', FRACTURE_COUNT: 'FractureCount', KIR_NO_KIR: 'KirNoKir', CLINIC: 'Clinic', PROM0_OPTIONS: 'PROM0Options', PROM1OPTIONS: 'PROM1Options', INJURYFORM_OPTIONS: 'InjuryFormOptions', FRACTURE_TREAT_OPTIONS: 'FractureTreatOptions', SPECIAL_FRACTURE_OPTIONS: 'SpecialFractureOptions', ENERGY_TYPE: 'EnergyType', ICD10_GROUP: 'ICD10Group', ICD10_CODE: 'ICD10CODE', FRACTURE_CLASS: 'FractureClass', TREAT_TYPE: 'TreatType', OPERATOR: 'Operator', OP_METHOD: 'TreatTypeGroup', TREAT_CODE: 'TreatCode', INJURY_GROUP: 'InjuryGroup', SPECIAL_FRACTURES: 'SpecialFractures', SKELETON_SEGMENT: 'SkeletonSegment', PHYSES: 'Physes'
-  },
-
+  
   init: function (callBackFn) {
     Ext.Ajax.request({
       url: '/stratum/api/metadata/domainvalues/domain/4299',
@@ -691,6 +690,7 @@ var SfrWidget = {
     
     function getReport(filters) {
       config.submitButton && config.submitButton.setDisabled(true);
+      config.submitButton && config.submitButton.setAutoScroll(false);
       var parameters = SfrWidget.getParameters(filters, config);
       
       if (!chart.isVisible()) {
@@ -1255,15 +1255,11 @@ var SfrWidget = {
     var parameters = '';
     for (var i = 0; i < dependentComponents.length; i++) {
       dependentComponents[i].clearValue();
-      parameters = SfrWidget.getParameters(dependentComponents[i].dependencyCmps);
+      parameters = SfrWidget.getParameters(dependentComponents[i].dependencyCmps, {});
       dependentComponents[i].setDisabled(true);
-      if(typeof fractureApplication !== 'undefined') {
-        ReportManagement.GetReport(dependentComponents[i].reportID, parameters, Ext.bind(getRepFn, this, [dependentComponents[i]], true));
-      }
-      else {
+
       if(dependentComponents[i].parameterKey === 'icd10'){
-        var query = parameters.replace(new RegExp('icd10ALL=[0-9]&'), '').replace(new RegExp('icd10=0&'), '').replace(new RegExp('trtgrpALL=[0-9]&'), '').replace(new RegExp('trtgrp=[0-9]&'), '').replace(new RegExp('fxclassgroupALL=[0-9]&'), '').replace(('fxclassgroup=[0-9]&'), '').replace(new RegExp('bodypartALL=[0-9]&'), '').replace(new RegExp('bodypart=0&'), '').replace(new RegExp('&$'), '');
-        if(query!=='')query='&'+query;
+        var query = parameters;
         var componentIcd10 = dependentComponents[i];
         Ext.Ajax.request({
           url: '/stratum/api/statistics/sfr/ui-diagnoses?apikey=bK3H9bwaG4o%3D' + query,
@@ -1277,8 +1273,7 @@ var SfrWidget = {
         });
       }
       if(dependentComponents[i].parameterKey === 'fxclass'){
-        var query = parameters.replace(new RegExp('[a-zA-Z0-9]*ALL=1&', 'g'),'').replace(new RegExp('[a-zA-Z0-9]*=0&', 'g'), '').replace(new RegExp('fxclass', 'g'), 'aoclass').replace(new RegExp('&$'), '');
-        if(query!=='')query='&'+query;
+        var query = parameters.replace(new RegExp('fxclass', 'g'), 'aoclass');
         var componentFxClass = dependentComponents[i];
         Ext.Ajax.request({
           url: '/stratum/api/statistics/sfr/ui-ao-classes?apikey=bK3H9bwaG4o%3D' + query,
@@ -1291,8 +1286,7 @@ var SfrWidget = {
         });
       }
       if(dependentComponents[i].parameterKey === 'trtgrp'){
-        var query = parameters.replace(new RegExp('[a-zA-Z0-9]*ALL=1&', 'g'),'').replace(new RegExp('[a-zA-Z0-9]*=0&', 'g'), '').replace(new RegExp('&$'), '');
-        if(query!=='')query='&'+query;
+        var query = parameters;
         var componentTreatmentGroup = dependentComponents[i];
         Ext.Ajax.request({
           url: '/stratum/api/statistics/sfr/ui-op-methods?apikey=bK3H9bwaG4o%3D' + query,
@@ -1305,10 +1299,8 @@ var SfrWidget = {
         });
       }
       if(dependentComponents[i].parameterKey === 'trtcode'){
-        var query = parameters.replace(new RegExp('[a-zA-Z0-9]*ALL=1&', 'g'),'').replace(new RegExp('[a-zA-Z0-9]*=0&', 'g'), '').replace(new RegExp('trtgrp'), 'treatmentgroup').replace(new RegExp('&$'), '');
+        var query = parameters.replace(new RegExp('trtgrp'), 'treatmentgroup');
         if(query.indexOf('treatmentgroup')<0)return;
-        if(query!=='')query='&'+query;
-
         var componentTreatmentCode = dependentComponents[i];
         Ext.Ajax.request({
           url: '/stratum/api/statistics/sfr/ui-treatments?apikey=bK3H9bwaG4o%3D' + query,
@@ -1319,7 +1311,6 @@ var SfrWidget = {
             dropdownCallback(responseData, componentTreatmentCode);
           }
         });
-      }
       }
     }
     
@@ -1343,6 +1334,7 @@ var SfrWidget = {
   
   getParameters: function (filterComponents, config) {
     var parameters = '';
+    
     if (filterComponents) {
       for (var i = 0; i < filterComponents.length; i++) {
         var current = filterComponents[i];
@@ -1355,18 +1347,11 @@ var SfrWidget = {
           continue;
         }
         if (current.getValue()) {
-          if (!config) {
-            parameters += current.parameterKey + 'ALL=0&';
-          }
           parameters += current.parameterKey + '=' + current.getValue() + '&';
-        } else {
-          if (!config) {
-            parameters += current.parameterKey + 'ALL=1&';
-            parameters += current.parameterKey + '=0&';
-          }
         }
       }
     }
+    
     if (config) {
       parameters = parameters.slice(0, - 1);
       if (config.createExtraChart) {
@@ -1387,12 +1372,12 @@ var SfrWidget = {
       if (parameters && config.masterSelect ) {
         parameters += '&masterval=' + config.masterSelect.getValue();
       }
-      if (parameters && parameters.substring(0, 1) !== '&') {
+    }
+    if (parameters && parameters.substring(0, 1) !== '&') {
         parameters = '&' + parameters;
       }
-    }
     
-    return parameters || null;
+    return parameters;
   },
   
   getDependentComponents: function (component, filterComponents) {
@@ -1466,9 +1451,9 @@ var SfrWidget = {
       height: 16,
       border: false,
       frame: false,
-      helpNote: aHelpNote, // HttpUtility.JavaScriptStringEncode(aHelpNote),
+      helpNote: aHelpNote, 
       tabIndex: -1,
-      glyph: 0xf0e6, //fa-question-circle=0xf059, 
+      glyph: 0xf0e6, 
       ui: "toolbar",
       cls: "EventFormHelpNoteButton",
       listeners: {
@@ -1490,7 +1475,6 @@ var SfrWidget = {
     aButton.tip = Ext.create('Ext.tip.ToolTip', {
       target: aButton.el,
       cls: 'EventFormHelpNote',
-      //style: 'position: fixed !important',
       shadow: false,
       closable: true,
       draggable: true,
