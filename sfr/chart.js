@@ -1251,67 +1251,24 @@ var SfrWidget = {
   },
   
   onFilterChanged: function (component, filterComponents) {
+    var apis = { icd10: 'ui-diagnoses', fxclass: 'ui-ao-classes', trtgrp: 'ui-op-methods', trtcode: 'ui-treatments' };
     var dependentComponents = SfrWidget.getDependentComponents(component, filterComponents);
-    var parameters = '';
+    
     for (var i = 0; i < dependentComponents.length; i++) {
       dependentComponents[i].clearValue();
-      parameters = SfrWidget.getParameters(dependentComponents[i].dependencyCmps, {});
       dependentComponents[i].setDisabled(true);
 
-      if(dependentComponents[i].parameterKey === 'icd10'){
-        var query = parameters;
-        var componentIcd10 = dependentComponents[i];
-        Ext.Ajax.request({
-          url: '/stratum/api/statistics/sfr/ui-diagnoses?apikey=bK3H9bwaG4o%3D' + query,
-          method: 'GET',
-          success: function (response, opts) {
-            var responseData = Ext.decode(response.responseText).data;
-            var noop = {ValueCode: '', ValueName: ''};
-            responseData.splice(0, 0 , noop);
-            dropdownCallback(responseData, componentIcd10);
-          }
-        });
+      var parameters = SfrWidget.getParameters(dependentComponents[i].dependencyCmps);
+      var api = apis[dependentComponents[i].parameterKey];
+      var component = dependentComponents[i];
+      
+      parameters = parameters.replace(new RegExp('fxclass', 'g'), 'aoclass');
+      if (api==='ui-treatments') {
+        parameters = parameters.replace(new RegExp('trtgrp'), 'treatmentgroup');   
+        if (parameters.indexOf('treatmentgroup') < 0) return;
       }
-      if(dependentComponents[i].parameterKey === 'fxclass'){
-        var query = parameters.replace(new RegExp('fxclass', 'g'), 'aoclass');
-        var componentFxClass = dependentComponents[i];
-        Ext.Ajax.request({
-          url: '/stratum/api/statistics/sfr/ui-ao-classes?apikey=bK3H9bwaG4o%3D' + query,
-          method: 'GET',
-          success: function (response, opts) {
-            var responseData = Ext.decode(response.responseText).data;
-            responseData.unshift({ValueCode: '', ValueName: ''});
-            dropdownCallback(responseData, componentFxClass);
-          }
-        });
-      }
-      if(dependentComponents[i].parameterKey === 'trtgrp'){
-        var query = parameters;
-        var componentTreatmentGroup = dependentComponents[i];
-        Ext.Ajax.request({
-          url: '/stratum/api/statistics/sfr/ui-op-methods?apikey=bK3H9bwaG4o%3D' + query,
-          method: 'GET',
-          success: function (response, opts) {
-            var responseData = Ext.decode(response.responseText).data;
-            responseData.unshift({ValueCode: '', ValueName: ''});
-            dropdownCallback(responseData, componentTreatmentGroup);
-          }
-        });
-      }
-      if(dependentComponents[i].parameterKey === 'trtcode'){
-        var query = parameters.replace(new RegExp('trtgrp'), 'treatmentgroup');
-        if(query.indexOf('treatmentgroup')<0)return;
-        var componentTreatmentCode = dependentComponents[i];
-        Ext.Ajax.request({
-          url: '/stratum/api/statistics/sfr/ui-treatments?apikey=bK3H9bwaG4o%3D' + query,
-          method: 'GET',
-          success: function (response, opts) {
-            var responseData = Ext.decode(response.responseText).data;
-            responseData.unshift({ValueCode: '', ValueName: ''});
-            dropdownCallback(responseData, componentTreatmentCode);
-          }
-        });
-      }
+      
+      fetchDropdown(api, component, parameters);
     }
     
     function getRepFn(e, r, a, b, cmp) {
@@ -1330,52 +1287,48 @@ var SfrWidget = {
       dropdown.getStore().loadData(data);
       dropdown.setDisabled(false);
     }
+
+    function fetchDropdown(api, component, query) {
+      Ext.Ajax.request({
+          url: '/stratum/api/statistics/sfr/' + api + '?apikey=bK3H9bwaG4o%3D' + query,
+          method: 'GET',
+          success: function (response, opts) {
+            var responseData = Ext.decode(response.responseText).data;
+            var noop = {ValueCode: '', ValueName: ''};
+            responseData.splice(0, 0 , noop);
+            dropdownCallback(responseData, component);
+          }
+      });  
+    }
   },
   
   getParameters: function (filterComponents, config) {
     var parameters = '';
+    config = config || {};
     
-    if (filterComponents) {
-      for (var i = 0; i < filterComponents.length; i++) {
-        var current = filterComponents[i];
-        if (current instanceof Ext.form.Label) continue;
-        if (current.parameterKey === SfrWidget.parameters.clinic || current.parameterKey === SfrWidget.parameters.enhet) {
-          continue;
-        }
-        if (current instanceof Ext.form.field.Date) {
-          parameters += current.parameterKey + '=' + Ext.util.Format.date(current.getValue(), 'Y-m-d') + '&';
-          continue;
-        }
-        if (current.getValue()) {
-          parameters += current.parameterKey + '=' + current.getValue() + '&';
-        }
-      }
+    if (config.masterSelect ) {
+      parameters += '&masterval=' + config.masterSelect.getValue();
     }
     
-    if (config) {
-      parameters = parameters.slice(0, - 1);
-      if (config.createExtraChart) {
-        parameters += '&' + SfrWidget.parameters.enhet + '=' + Profile.Context.Unit.UnitCode;
+    if (config.createExtraChart) {
+      parameters += '&' + SfrWidget.parameters.enhet + '=' + Profile.Context.Unit.UnitCode;
+    }
+    
+    if (!filterComponents) return parameters;
+    
+    for (var i = 0; i < filterComponents.length; i++) {
+      var current = filterComponents[i];
+      if (current instanceof Ext.form.Label || (current.parameterKey === SfrWidget.parameters.enhet && config.extraChartParameterKey === 'ClinicALL')) {
+        continue;
       }
-      if (config.mainChart && filterComponents && config.extraChartParameterKey === SfrWidget.parameters.clinic) {
-        for (var i = 0; i < filterComponents.length; i++) {
-          if (filterComponents[i].parameterKey === SfrWidget.parameters.clinic) {
-            parameters += '&' + config.extraChartParameterKey + '=' + filterComponents[i].getValue();
-          }
-          else if (filterComponents[i].parameterKey === SfrWidget.parameters.enhet) {
-            if (filterComponents[i].getValue()) {
-              parameters += '&' + SfrWidget.parameters.enhet + '=' + filterComponents[i].getValue();
-            }
-          }
-        }
+      if (current instanceof Ext.form.field.Date) {
+        parameters += '&' + current.parameterKey + '=' + Ext.util.Format.date(current.getValue(), 'Y-m-d');
+        continue;
       }
-      if (parameters && config.masterSelect ) {
-        parameters += '&masterval=' + config.masterSelect.getValue();
+      if (current.getValue()) {
+        parameters += '&' + current.parameterKey + '=' + current.getValue();
       }
     }
-    if (parameters && parameters.substring(0, 1) !== '&') {
-        parameters = '&' + parameters;
-      }
     
     return parameters;
   },
