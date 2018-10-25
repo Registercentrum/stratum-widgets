@@ -55,11 +55,9 @@ var SfrWidget = {
     samtidfrakt: 'samtidfrakt', 
     bodypart: 'bodypart', 
     icd10: 'icd10', 
-    skeletonSegment: 'SkeletonSegment',
     open: 'open',
     fxclassgroup: 'fxclassgroup', 
     fxclass: 'fxclass',
-    specialfxtyp: 'specialfxtyp',
     behsekv: 'behsekv', 
     surgery: 'KirNoKir',
     trttype: 'trttype',
@@ -74,11 +72,12 @@ var SfrWidget = {
     to_trt_dat: 'to_trt_dat', 
     to_dat: 'to_dat',
     clinic: 'clinic',
-    incomplete: 'incomplete_registrations',
-    special: 'special_fraktures'
+    incomplete: 'increg',
+    special: 'spcfx'
   },
   
   init: function (callBackFn) {
+      console.clear();
     Ext.Ajax.request({
       url: '/stratum/api/metadata/domainvalues/domain/4299',
       method: 'GET',
@@ -99,6 +98,7 @@ var SfrWidget = {
   },
   
   createDiagram: function (config) {
+    if (!config.mainChart) console.log(config.parameters);
     var isR = config !== undefined && config.reportID !== undefined;
     
     if(!Array.isArray(config.yFields)) {
@@ -504,6 +504,22 @@ var SfrWidget = {
       collapsible: true,
       frame: true,
       collapsed: true,
+      listeners: {
+          beforecollapse: function () {
+              var y = typeof window.scrollY === 'undefined' ? window.pageYOffset : window.scrollY;
+              SfrWidget.scrollYPos = y;
+          },
+          collapse: function () {
+              Ext.defer(function () { scrollTo(0, SfrWidget.scrollYPos); }, 0);
+          },
+          beforeexpand: function () {
+              var y = typeof window.scrollY === 'undefined' ? window.pageYOffset : window.scrollY;
+              SfrWidget.scrollYPos = y;
+          },
+          expand:  function () {
+              Ext.defer( function () { scrollTo(0, SfrWidget.scrollYPos); }, 0);
+          }
+      }
     });
     
     var chartTitle = Ext.create('Ext.Component', {
@@ -586,7 +602,9 @@ var SfrWidget = {
           marginBottom: '4px',
           marginTop: '4px'
         },
+        
         handler: function (a1, a2, a3, a4) {
+            
           if (config.masterSelect) {
             var mSel = config.masterSelect;
             var val = mSel.getValue();
@@ -668,7 +686,9 @@ var SfrWidget = {
       if (config.flipChart) {
         chart.height = (chart.getStore().getData().items.length * 25) + 40;
         var panel = chart.container.component;
+        var scrollsave = typeof window.scrollY === 'undefined' ? window.pageYOffset : window.scrollY;
         panel && panel.updateLayout();
+        scrollTo(0, scrollsave);
       }
       
       if (config.submitButton && SfrWidget.createDiagram.nrStoresToTransform) {
@@ -689,8 +709,9 @@ var SfrWidget = {
     }
     
     function getReport(filters) {
+      if (config.submitButton) config.submitButton.hasFocus = false;
       config.submitButton && config.submitButton.setDisabled(true);
-      config.submitButton && config.submitButton.setAutoScroll(false);
+      
       var parameters = SfrWidget.getParameters(filters, config);
       
       if (!chart.isVisible()) {
@@ -793,11 +814,6 @@ var SfrWidget = {
       { ValueName: 'Öppen',  ValueCode: '1'}, 
       { ValueName: 'Sluten', ValueCode: '0'}
     ]};
-    values[parameters.specialfxtyp] = { text: 'Speciella frakturtyper:', options: [
-      { ValueName: '',       ValueCode: null}, 
-      { ValueName: 'Öppen',  ValueCode: '1'}, 
-      { ValueName: 'Sluten', ValueCode: '0'}
-    ]};
     values[parameters.behsekv] = { text: 'Behandlingssekvens:', options: [
       { ValueName: '',                              ValueCode: null}, 
       { ValueName: 'Icke-kirurgi',                  ValueCode: '1'}, 
@@ -814,17 +830,17 @@ var SfrWidget = {
       { ValueName: 'Medelvärde', ValueCode: '1' }
     ]};
     
-    values[parameters.injyear]          = { text: 'Skadeår:', options: getYears(), domain: null, default: '2017'},
-    values[parameters.to_age]           = { text: 'Patientålder <', options: getAges()},
-    values[parameters.from_age]         = { text: 'Patientålder >=', options: getAges()},
-    values[parameters.tidsper]          = { text: 'Tidsperiod:', default: '3'},
-    values[parameters.enhet]            = { text: 'Annan Klinik', unit: true, sorters: { property: 'ValueName', direction: 'ASC' }},
-    values[parameters.injtype]          = { text: 'Skadetyp:', domain: 4049},
-    values[parameters.bodypart]         = { text: 'Kroppsdel:', domain: 4299},
-    values[parameters.trttype]          = { text: 'Behandlingstyp:', domain: 4056};
-    values[parameters.fxclassgroup]     = { text: 'Frakturtypsgrupp:', domain: 4488};
-    values[parameters.injgroup]         = { text: 'Skadeorsaksgrupp:', domain: 4312},
-    values[parameters.trtmainsurg]      = { text: 'Operatörskategori:', domain: 4059};
+    values[parameters.injyear]      = { text: 'Skadeår:', options: getYears(), domain: null, default: '2017'},
+    values[parameters.to_age]       = { text: 'Patientålder <', options: getAges()},
+    values[parameters.from_age]     = { text: 'Patientålder >=', options: getAges()},
+    values[parameters.tidsper]      = { text: 'Tidsperiod:', default: '3'},
+    values[parameters.enhet]        = { text: 'Annan Klinik', unit: true, sorters: { property: 'ValueName', direction: 'ASC' }},
+    values[parameters.injtype]      = { text: 'Skadetyp:', domain: 4049},
+    values[parameters.bodypart]     = { text: 'Kroppsdel:', domain: 4299},
+    values[parameters.trttype]      = { text: 'Behandlingstyp:', domain: 4056};
+    values[parameters.fxclassgroup] = { text: 'Frakturtypsgrupp:', domain: 4488};
+    values[parameters.injgroup]     = { text: 'Skadeorsaksgrupp:', domain: 4312},
+    values[parameters.trtmainsurg]  = { text: 'Operatörskategori:', domain: 4059};
     
     // values[parameters.icd10]            = { text: 'ICD10:', domain: 4061 };
     // values[parameters.fxclass]          = { text: 'Frakturtyp:', domain: 4060, dependencies: ['icd10']}
