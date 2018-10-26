@@ -1,75 +1,6 @@
-
-Ext.util.CSS.removeStyleSheet('sfr-treatment');
-Ext.util.CSS.createStyleSheet(''
-  + '.sfr-selector.hiddenview > div {'
-  + '  display: none;'
-  + '}'
-  + '.sfr-modal.sfr-fix .x-panel-body .x-box-inner {'
-  + '  background-image: linear-gradient(to bottom, #7c7c7c 30px, white 10px);'
-  + '}'
-  + '.sfr-selector {'
-  + '  background-color: white;'
-  + '}'
-  + '.sfr-menu-item:hover {'
-  + '  background-color: #e8e8e8;'
-  + '}'
-  + '.sfr-hidden {'
-  + '  display: none;'
-  + '}'
-  + '.sfr-modal > div {'
-  + '  border: solid 0px white;'
-  + '}'
-  + '.sfr-selector.hiddenview .x-item-selected {'
-  + '  display: inline !important;'
-  + '  color: white;'
-  + '  padding: 0 !important;'
-  + '}'
-  + '.sfr-selector.hiddenview .x-item-selected div {'
-  + '  background-color: #7c7c7c;'
-  + '  padding-right: 150px;'
-  + '  padding: 5px 5px 5px 0px !important;'
-  + '}'
-  + '.sfr-selector {'
-  + '  cursor: pointer;'
-  + '  padding-top: 0px !important;'
-  + '  user-select: none;'
-  + '}'
-  + '.sfr-selector.hiddenview {'
-  + '  padding-top: 0px;'
-  + '  border-top: none;'
-  + '  top: 0px !important;'
-  + '}'
-  + '.sfr-angle-left {'
-  + '  font-family: FontAwesome;'
-  + '  display: none;'
-  + ' }'
-  + '.sfr-angle-right {'
-  + '  font-family: FontAwesome;'
-  + '  display: inline;'
-  + '  padding-left: 5px;'
-  + '  color: #aaa;'
-  + ' }'
-  + '.x-item-selected .sfr-angle-left {'
-  + '  display: inline;'
-  + '  padding: 0 5px;'
-  + '}'
-  + '.x-item-selected .sfr-angle-right {'
-  + '  display: none;'
-  + '}'
-  + '.x-view-item-focused {'
-  + '  outline: 0 !important;'
-  + '}'
-  + '.sfr-selector.hiddenview.all {'
-  + '  display: none;'
-  + '}'
-  + '.sfr-menu-item {'
-  + '  border-bottom: 1px solid #eee;'
-  + '  padding: 5px 15px 5px 15px !important;'
-  + '}',
-'sfr-treatment');
-
 var treatmentWidget = function (current, callback, loadonly) {
   treatmentWidget.result = {};
+  treatmentWidget.callback = callback;
   treatmentWidget.valueGroups = treatmentWidget.valueGroups || [];
   treatmentWidget.backups = treatmentWidget.backups || [];
   treatmentWidget.icd10 = current.Parent.Fx_ICD10;
@@ -85,239 +16,66 @@ var treatmentWidget = function (current, callback, loadonly) {
   !treatmentWidget.valueGroups[4188] && fetchValueGroup(4188);
   !treatmentWidget.valueGroups[5665] && fetchValueGroup(5665);
 
-  Ext.create('Ext.data.Store', {
-    id: 'startStore',
-    fields: [],
-  });
-
-  Ext.create('Ext.data.Store', {
-    id: 'firstStore',
-    fields: [],
-  });
-
-  Ext.create('Ext.data.Store', {
-    id: 'secondStore',
-    fields: []
-  });
-
-  Ext.create('Ext.data.Store', {
-    id: 'thirdStore',
-    fields: []
-  });
-
-  Ext.create('Ext.data.Store', {
-    id: 'fourthStore',
-    fields: []
-  });
-
-  Ext.create('Ext.data.Store', {
-    id: 'fifthStore',
-    fields: []
-  });
-
   if (loadonly) return;
+  
+  filterValues();
 
-  var imageTpl = new Ext.XTemplate(
-    '<tpl for=".">',
-    '<tpl if="Children.length">',
-    '<div style="margin: 0; padding: 0 15px; overflow: hidden; min-width: 200px;" class="sfr-menu-item">',
-    '<div><span class="sfr-angle-left">&#xf104</span>{ValueName}<span class="sfr-angle-right">&#xf105</span></div>',
-    '<tpl else>',
-    '<div style="margin: 0; padding: 0 15px; overflow: hidden; min-width: 200px;" class="sfr-menu-item">',
-    '<div><span class="sfr-angle-left">&#xf104</span>{ValueName}</div>',
-    '</tpl>',
-    '</div>',
-    '</tpl>'
-  );
-
-  treatmentWidget.window = Ext.create('Ext.panel.Panel', {
-    minwidth: 400,
-    // height: 400,
-    itemId: 'sfr-treatment-panel',
-    modal: true,
-    draggable: true,
-    floating: true,
-    frame: true,
-    layout: 'vbox',
-    closable: true,
-    cls: 'sfr-modal',
-    title: 'Behandling',
-    items: [
+  Ext.create('Rc.component.Selector', {
+    widget: treatmentWidget,
+    levels: [
       {
-        xtype: 'dataview',
-        itemId: 'viewStart',
-        store: Ext.data.StoreManager.lookup('startStore'),
-        tpl: imageTpl,
-        itemSelector: 'div.sfr-menu-item',
-        selectable: 'simple',
-        cls: 'sfr-selector',
-        listeners: {
-          itemclick: function (el, record) {
-            if (this.hasCls('hiddenview')) {
-              this.removeCls('hiddenview');
-              Ext.ComponentQuery.query('#sfr-treatment-panel').pop().removeCls('sfr-fix');
-              var view = this;
-              treatmentWidget.valueGroups[4188] = Ext.decode(treatmentWidget.backups[4188]).data;
-              treatmentWidget.valueGroups[4157] = Ext.decode(treatmentWidget.backups[4157]).data;
-              attachChildren(4188);
-              setTimeout(function () { view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('firstStore').setData({}, 0); });
-            } else {
-              this.el.addCls('hiddenview');
-              Ext.ComponentQuery.query('#sfr-treatment-panel').pop().addCls('sfr-fix');
-              treatmentWidget.trttype = record.data.ValueCode;
-              treatmentWidget.result.Trt_Type = treatmentWidget.trttype;
-              filterAllValues();
-              setTimeout(function () { Ext.StoreManager.lookup('firstStore').setData(treatmentWidget.valueGroups[4188]); }, 0);
-            }
-          }
+        data: treatmentWidget.valueGroups[4056],
+        restore: function () {
+          treatmentWidget.valueGroups[4188] = Ext.decode(treatmentWidget.backups[4188]).data;
+          treatmentWidget.valueGroups[4157] = Ext.decode(treatmentWidget.backups[4157]).data;
+          attachChildren(4188);
+        },
+        click: function (record) {
+          treatmentWidget.trttype = record.data.ValueCode;
+          treatmentWidget.result.Trt_Type = treatmentWidget.trttype;
+          filterAllValues();
+          return { data: treatmentWidget.valueGroups[4188] };
         }
       },
       {
-        xtype: 'dataview',
-        itemId: 'viewOne',
-        store: Ext.data.StoreManager.lookup('firstStore'),
-        tpl: imageTpl,
-        itemSelector: 'div.sfr-menu-item',
-        selectable: 'simple',
-        cls: 'sfr-selector',
-        listeners: {
-          itemclick: function (el, record) {
-            if (this.hasCls('hiddenview')) {
-              this.removeCls('hiddenview');
-              this.el.down('.x-item-selected').removeCls('x-item-selected');
-              this.up().down('#viewStart').removeCls('all');
-              var view = this;
-              setTimeout(function () { view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('secondStore').setData({}, 0); });
-            } else {
-              this.el.addCls('hiddenview');
-              this.up().down('#viewStart').addCls('all');
-              var children = record.data.ValueName === record.data.Children[0].ValueName ? record.data.Children[0].Children : record.data.Children;
-              setTimeout(function () { Ext.StoreManager.lookup('secondStore').setData(children); }, 0);
-            }
+        click: function (record) {
+          var values = {};
+          var code = record.data.ValueCode;
+          if (code.indexOf('M') === 0) {
+            treatmentWidget.result.Inj_Cause = code;
+          } else {
+            values.domainId = record.data.Domain.DomainID;
+            values.domainValueId = record.data.DomainValueID;
           }
+          values.data = record.data.ValueName === record.data.Children[0].ValueName ? record.data.Children[0].Children : record.data.Children;
+          return values;
         }
       },
       {
-        xtype: 'dataview',
-        itemId: 'viewTwo',
-        store: Ext.data.StoreManager.lookup('secondStore'),
-        tpl: imageTpl,
-        itemSelector: 'div.sfr-menu-item',
-        cls: 'sfr-selector',
-        listeners: {
-          itemclick: function (el, record) {
-            if (this.hasCls('hiddenview')) {
-              this.removeCls('hiddenview');
-              this.el.down('.x-item-selected').removeCls('x-item-selected');
-              this.up().down('#viewOne').removeCls('all');
-              var view = this;
-              setTimeout(function () { view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('thirdStore').setData({}, 0); });
-            } else {
-              this.up().down('#viewOne').addCls('all');
-              this.addCls('hiddenview');
-              var code = record.data.ValueCode;
-              var children = record.data.Children;
-              if (children) {
-                setTimeout(function () { Ext.StoreManager.lookup('thirdStore').setData(children); }, 0);
-              } else {
-                treatmentWidget.result.Trt_Code = code;
-                callback(treatmentWidget.result);
-                this.up().hide();
-              }
-            }
+        click: function (record) {
+          var values = {};
+          var code = record.data.ValueCode;
+          var children = record.data.Children;
+          if (children) {
+            values.data = children;
+          } else {
+            treatmentWidget.result.Trt_Code = code;
           }
+          
+          return values;
         }
       },
       {
-        xtype: 'dataview',
-        itemId: 'viewThree',
-        store: Ext.data.StoreManager.lookup('thirdStore'),
-        tpl: imageTpl,
-        itemSelector: 'div.sfr-menu-item',
-        cls: 'sfr-selector',
-        listeners: {
-          itemclick: function (el, record) {
-            if (this.hasCls('hiddenview')) {
-              this.removeCls('hiddenview');
-              this.el.down('.x-item-selected').removeCls('x-item-selected');
-              this.up().down('#viewTwo').removeCls('all');
-              Ext.StoreManager.lookup('fourthStore').setData({});
-            } else {
-              this.addCls('hiddenview');
-              this.up().down('#viewTwo').addCls('all');
-              var code = record.data.ValueCode;
-              treatmentWidget.result.Trt_Code = code;
-              callback(treatmentWidget.result);
-              this.up().hide();
-            }
-          }
-        }
-      },
-      {
-        xtype: 'dataview',
-        itemId: 'viewFour',
-        store: Ext.data.StoreManager.lookup('fourthStore'),
-        tpl: imageTpl,
-        itemSelector: 'div.sfr-menu-item',
-        cls: 'sfr-selector',
-        listeners: {
-          itemclick: function (element, record) {
-            if (this.hasCls('hiddenview')) {
-              this.removeCls('hiddenview');
-              this.el.down('.x-item-selected').removeCls('x-item-selected');
-              this.up().down('#viewThree').removeCls('all');
-              Ext.StoreManager.lookup('fifthStore').setData({});
-              treatmentWidget.result.Inj_Activity = '';
-            } else {
-              this.addCls('hiddenview');
-              this.up().down('#viewThree').addCls('all');
-              var code = record.data.ValueCode;
-              var domainId = 0;
-              if (treatmentWidget.result.Inj_Cause.indexOf('V') !== 0) {
-                domainId = 4098;
-                treatmentWidget.result.Inj_Activity = code;
-              }
-              if (!domainId) {
-                if (treatmentWidget.result.Inj_Cause.indexOf('V') === 0) {
-                  treatmentWidget.result.Inj_Cause += '.' + code;
-                } else {
-                  treatmentWidget.result.Inj_Activity = code;
-                }
-                callback(treatmentWidget.result);
-                this.up().hide();
-                return;
-              }
-              Ext.Ajax.request({
-                url: 'https://stratum.registercentrum.se/api/metadata/domainvalues/domain/' + domainId + '?apikey=J6b-GSKrkfk=',
-                success: function (response) {
-                  var items = Ext.decode(response.responseText).data;
-                  Ext.StoreManager.lookup('fifthStore').setData(items);
-                }
-              });
-            }
-          }
-        }
-      },
-      {
-        xtype: 'dataview',
-        itemId: 'viewFive',
-        store: Ext.data.StoreManager.lookup('fifthStore'),
-        tpl: imageTpl,
-        itemSelector: 'div.sfr-menu-item',
-        cls: 'sfr-selector',
-        listeners: {
-          itemclick: function (element, record) {
-            this.addCls('hiddenview');
-            var code = record.data.ValueCode;
-            treatmentWidget.result.Inj_Place = code;
-            callback(treatmentWidget.result);
-            this.up().hide();
-          }
+        click: function (record) {
+          var values = {};
+          var code = record.data.ValueCode;
+          treatmentWidget.result.Trt_Code = code;
+          return values;
         }
       }
     ]
-  });
-  filterValues();
+  }).show();
+
   function fetchValueGroup(domain) {
     Ext.Ajax.request({
       url: '/stratum/api/metadata/domainvalues/domain/' + domain + '?apikey=J6b-GSKrkfk=',
@@ -341,8 +99,6 @@ var treatmentWidget = function (current, callback, loadonly) {
     }
 
     attachChildren(4188);
-    Ext.StoreManager.lookup('startStore').setData(treatmentWidget.valueGroups[4056]);
-    treatmentWidget.window.show();
   }
 
   function filterAllValues() {
@@ -437,3 +193,170 @@ var treatmentWidget = function (current, callback, loadonly) {
     return treatMatch && icdMatch && childAdultFractureMatch;
   }
 };
+
+Ext.define('Rc.component.Selector', {
+  extend: 'Ext.panel.Panel',
+  alias: 'component.selector',
+  itemId: 'sfr-panel',
+  modal: true,
+  floating: true,
+  frame: true,
+  layout: 'vbox',
+  closable: true,
+  cls: 'sfr-modal',
+  title: 'Välj skadekod:',
+  widget: false,
+  createLevel: function (click, i, template, restore) {
+    return {
+      xtype: 'dataview',
+      itemId: 'view' + i,
+      widget: null,
+      store: Ext.data.StoreManager.lookup('store' + i),
+      itemTpl: template,
+      itemSelector: 'div.sfr-menu-item',
+      cls: 'sfr-selector',
+      click: click,
+      restore: restore,
+      listeners: {
+        itemclick: function (el, record) {
+          if (this.hasCls('hiddenview')) {
+            this.removeCls('hiddenview');
+            i === 0 && Ext.ComponentQuery.query('#sfr-panel').pop().removeCls('sfr-fix');
+            i !== 0 && this.up().down('#view' + (i - 1)).removeCls('all');
+            var view = this;
+            this.restore && this.restore();
+            setTimeout(function () { view.getSelectionModel().deselectAll(); Ext.StoreManager.lookup('store' + (i + 1)).setData({}, 0); });
+          } else {
+            this.el.addCls('hiddenview');
+            i === 0 && Ext.ComponentQuery.query('#sfr-panel').pop().addCls('sfr-fix');
+            i !== 0 && this.up().down('#view' + (i - 1)).addCls('all');
+            var store = 'store' + (i + 1);
+            var next = this.click(record);
+            if (next.data) {
+              setTimeout(function () { (Ext.StoreManager.lookup(store).setData(next.data)); }, 0);
+            } else if (next.domainId) {
+              Ext.Ajax.request({
+                url: 'stratum/api/metadata/domainvalues/domain/' + next.domainId + '?apikey=J6b-GSKrkfk=',
+                success: function (response) {
+                  var items = Ext.decode(response.responseText).data;
+                  items = next.domainValueId ? items.filter(function (element) { return element.DomainValueID === next.domainValueId; })[0].Children : items;
+                  Ext.StoreManager.lookup(store).setData(items);
+                }
+              });
+            } else {
+              this.up().widget.callback(this.up().widget.result);
+              this.up().hide();
+            }
+          }
+        }
+      }
+    };
+  },
+  constructor: function (config) {
+    var tpl = new Ext.XTemplate(
+      '<tpl for=".">',
+      '<tpl if="Children.length">',
+      '<div style="margin: 0; padding: 0 15px; overflow: hidden; min-width: 200px;" class="sfr-menu-item">',
+      '<div><span class="sfr-angle-left">&#xf104</span>{ValueName}<span class="sfr-angle-right">&#xf105</span></div>',
+      '<tpl else>',
+      '<div style="margin: 0; padding: 0 15px; overflow: hidden; min-width: 200px;" class="sfr-menu-item">',
+      '<div><span class="sfr-angle-left">&#xf104</span>{ValueName}</div>',
+      '</tpl>',
+      '</div>',
+      '</tpl>'
+    );
+    var items = [];
+    for (var i = 0; i < config.levels.length; i++) {
+      Ext.create('Ext.data.Store', {
+        id: 'store' + i,
+        autoLoad: typeof config.levels[i].url !== 'undefined',
+        fields: [],
+        data: config.levels[i].data || [],
+        proxy: {
+          type: 'ajax',
+          method: 'get',
+          cors: true,
+          url: config.levels[i].url,
+          reader: {
+            type: 'json',
+            rootProperty: 'data'
+          }
+        }
+      });
+      var click = config.levels[i].click;
+      var restore = config.levels[i].restore;
+      items.push(this.createLevel(click, i, tpl, restore));
+    }
+    config.items = items;
+
+    this.callParent([config]);
+  },
+});
+
+Ext.util.CSS.removeStyleSheet('sfr-selector');
+Ext.util.CSS.createStyleSheet(''
+  + '.sfr-selector.hiddenview .x-dataview-item > div {'
+  + '  display: none;'
+  + '}'
+  + '.sfr-modal.sfr-fix .x-panel-body .x-box-inner {'
+  + '  background-image: linear-gradient(to bottom, #7c7c7c 30px, white 10px);'
+  + '}'
+  + '.sfr-selector {'
+  + '  background-color: white;'
+  + '}'
+  + '.sfr-menu-item:hover {'
+  + '  background-color: #e8e8e8;'
+  + '}'
+  + '.sfr-hidden {'
+  + '  display: none;'
+  + '}'
+  + '.sfr-modal > div {'
+  + '  border: solid 0px white;'
+  + '}'
+  + '.sfr-selector.hiddenview .x-item-selected {'
+  + '  display: inline !important;'
+  + '  color: white;'
+  + '  padding: 0 !important;'
+  + '}'
+  + '.sfr-selector.hiddenview .x-item-selected div {'
+  + '  background-color: #7c7c7c;'
+  + '  padding: 5px 5px 5px 0px !important;'
+  + '}'
+  + '.sfr-selector {'
+  + '  cursor: pointer;'
+  + '  padding-top: 0px !important;'
+  + '  user-select: none;'
+  + '}'
+  + '.sfr-selector.hiddenview {'
+  + '  padding-top: 0px;'
+  + '  border-top: none;'
+  + '  top: 0px !important;'
+  + '}'
+  + '.sfr-angle-left {'
+  + '  font-family: FontAwesome;'
+  + '  display: none;'
+  + ' }'
+  + '.sfr-angle-right {'
+  + '  font-family: FontAwesome;'
+  + '  display: inline;'
+  + '  padding-left: 5px;'
+  + '  color: #aaa;'
+  + ' }'
+  + '.x-item-selected .sfr-angle-left {'
+  + '  display: inline;'
+  + '  padding: 0 5px;'
+  + '}'
+  + '.x-item-selected .sfr-angle-right {'
+  + '  display: none;'
+  + '}'
+  + '.x-view-item-focused {'
+  + '  outline: 0 !important;'
+  + '}'
+  + '.sfr-selector.hiddenview.all {'
+  + '  display: none;'
+  + '}'
+  + '.sfr-menu-item {'
+  + '  border-bottom: 1px solid #eee;'
+  + '  padding: 5px 15px 5px 15px !important;'
+  + '}', 
+'sfr-selector');
