@@ -1,41 +1,4 @@
 
-Ext.override(Ext.scroll.Scroller, {
-  privates: {
-    restoreState: function () {
-      var me = this,
-        el = me.getScrollElement(),
-        dom;
-      if (el) {
-        dom = el.dom;
-
-        if (me.trackingScrollTop !== undefined) {
-          me.restoring = true;
-          Ext.defer(function () {
-            me.restoring = false;
-          }, 50);
-        }
-      }
-    }
-  }
-});
-
-Ext.util.CSS.removeStyleSheet('sfr-chart');
-Ext.util.CSS.createStyleSheet(''
-+ '.sfr-charts .x-panel-body {'
-+ '  border-width: 0px;'
-+ '}'
-+ '.sfr-charts input[readonly] {'
-+ '  color: #333;'
-+ '  background-color: #eee;'
-+ '}'
-+ '.sfr-charts label {'
-+ '  font-weight: 400;'
-+ '}'
-+ '.sfr-odd, .sfr-even {'
-+ '  border-bottom: 1px solid #e8e8e8;'
-+ '}'
-, 'sfr-chart');
-
 var SfrWidget = {
   parameters: {
     openphyses: 'openphyses',
@@ -81,12 +44,12 @@ var SfrWidget = {
     Ext.Ajax.request({
       url: '/stratum/api/metadata/domainvalues/domain/4299',
       method: 'GET',
-      success: function (response, opts) {
+      success: function (response) {
         SfrWidget.init.icd10Groups = Ext.decode(response.responseText).data;
         Ext.Ajax.request({
           url: '/stratum/api/metadata/domains/4300',
           method: 'GET',
-          success: function (response, opts) {
+          success: function (response) {
             var responseData = Ext.decode(response.responseText).data;
             var data = responseData['DomainValues'];
             SfrWidget.init.opTypeGroups = data;
@@ -98,9 +61,6 @@ var SfrWidget = {
   },
   
   createDiagram: function (config) {
-    if (!config.mainChart) console.log(config.parameters);
-    var isR = config !== undefined && config.reportID !== undefined;
-    
     if(!Array.isArray(config.yFields)) {
       config.yFields = [];
     }
@@ -109,7 +69,7 @@ var SfrWidget = {
     }
     var hasMultipleYfields = config.yFields.length > 1;
     
-    var modelName = !config.createExtraChart ? 'model' + config.reportID : modelName = 'model' + config.reportID + '0';
+    var modelName = 'model' + config.reportID;
     if (!Ext.ClassManager.isCreated(modelName)) {
       Ext.define(modelName, {
         extend: 'Ext.data.Model',
@@ -139,9 +99,6 @@ var SfrWidget = {
     
     var store = Ext.create('Ext.data.Store', {
       model: modelName,
-      listeners: {
-        load: function () { }
-      },
       proxy: {
         type: 'memory',
         reader: {
@@ -330,9 +287,6 @@ var SfrWidget = {
             orientation: 'horizontal',
             calloutColor: 'none',
             renderer: function (label, ctx, lastLabel, store, index) {
-              
-              if (hasMultipleYfields)
-              return '';
               label = '';
               
               if (store.store.fractureData[index][config.yFields[0]] == 0) {
@@ -341,9 +295,10 @@ var SfrWidget = {
                   label += '%';
                 }
               }
+
               if (config.isPercentage) {
                 if (!store.store.fractureData[index].Andel) {
-                  label = 'Ingen data';
+                  label = 'Ingen\ndata';
                 }
               }
               
@@ -379,76 +334,13 @@ var SfrWidget = {
           },
         }]
       });
-    } else if (config.chartType == 'pie') {
-      chart = Ext.create('Ext.chart.PolarChart', {
-        width: 640,
-        height: 300,
-        animate: true,
-        layout: 'fit',
-        background: '#F1F1F1',
-        border: false,
-        store: store,
-        legend: {
-          docked: 'right',
-          border: false
-        },
-        insetPadding: { top: 10, left: 10, right: 200, bottom: 10 },
-        series: [{
-          type: 'pie',
-          
-          renderer: function (aSprite, aConfig, aRenderedData, anIndex) {
-            if (aRenderedData == undefined) {
-              return;
-            }
-            var record = aRenderedData.store.getAt(anIndex);
-            if (Ext.isEmpty(record)) {
-              return;
-            }
-            var color = SfrWidget.getColor(record.data.origXname);
-            if (color != '') {
-              aConfig.fillStyle = color;
-            }
-            return { fill: color };
-          },
-          field: config.yFields[0],
-          showInLegend: true,
-          tips: {
-            trackMouse: true,
-            renderer: function (storeItem, item) {
-              if (config.calculatePercentage === true) {
-                this.update(storeItem.data.origXname + ': ' + storeItem.get(config.yFields[0]) + '% (' + storeItem.data.origYvalue + ' st)');
-              } else {
-                this.update(storeItem.data.origXname + ': ' + storeItem.get(config.yFields[0]));
-              }
-            }
-          },
-          label: {
-            field: config.xField,
-            display: 'middle',
-            renderer: function (label) {
-              // this will change the text displayed on the pie                           
-              var index = chart.store.findExact(config.xField, label); // the field containing the current label
-              if (index < 0) {
-                return;
-              }
-              var data = chart.store.getAt(index).data;
-              var percentChar = '';
-              if (config.calculatePercentage === true) {
-                percentChar = '%';
-              }
-              return data[config.yFields[0]] + percentChar; // the field containing the label to display on the chart 
-            }
-          }
-        }]
-      });
     }
     
     var saveButton = Ext.create('Ext.Button', {
       hidden: config.extraChartParameterKey == SfrWidget.parameters.clinic,
       text: 'Spara diagram',
       handler: function () {
-          
-        var title = Ext.query('h1')[0].textContent; // Ext.getCmp('contentPanel').el.query('h1')[0].textContent;
+        var title = Ext.query('h1')[0].textContent;
         title = title.replace(/[å,Å,ä,Ä]/g, 'a');
         title = title.replace(/[Ö,ö]/g, 'o');
         var config = { filename: title };
@@ -501,6 +393,8 @@ var SfrWidget = {
     var indicatorPanel = Ext.create('Ext.panel.Panel', {
       layout: 'vbox',
       width: '100%',
+      margin: '0 1px 0 0',
+      bodyPadding: 10,
       collapsible: true,
       frame: true,
       collapsed: true,
@@ -573,7 +467,7 @@ var SfrWidget = {
             hidden: true,
             id: 'AnnanKlinik' + config.reportID,
             html: '<h3 align="center">' + 'Annan klinik' + '</h3>',
-            width: 640,
+            width: '100%',
             height: 25
           });
           
@@ -626,11 +520,6 @@ var SfrWidget = {
           spin(config.submitButton, 'Hämtar', 120, null);
           SfrWidget.createDiagram.nrStoresToTransform = 1;
           SfrWidget.createDiagram.nrStoresTransformed = 0;
-          for (i = 0; i < filterComponents.length; i++) {
-            if (!Ext.isEmpty(filterComponents[i].parameterKey)) {
-              var paramKey = filterComponents[i].parameterKey;
-            }
-          }
           
           if (chart.extraChartReport) {
             chart.extraChartReport(filterComponents);
@@ -1233,15 +1122,7 @@ var SfrWidget = {
     }
     
     var icd10Groups = SfrWidget.init.icd10Groups;
-    /*
-    for (i = 0; i < icd10Groups.length; i++) {
-      if (xValue == icd10Groups[i].ValueName.toLowerCase().substring(0, xValue.length) || icd10Groups[i].GroupName.toLowerCase() == xValue || xValue == icd10Groups[i].ValueCode.toLowerCase().substring(0, xValue.length)) {
-        if(colors[icd10Groups[i].DomainValueID]){
-          return colors[icd10Groups[i].DomainValueID];
-        }
-      }
-    }
-    */
+    
     for (i = 0; i < icd10Groups.length; i++){
         if(!icd10Groups[i].Children)continue;
         for (var j = 0; j < icd10Groups[i].Children.length; j++){
@@ -1285,16 +1166,6 @@ var SfrWidget = {
       }
       
       fetchDropdown(api, component, parameters);
-    }
-    
-    function getRepFn(e, r, a, b, cmp) {
-      if (r.result.success) {
-        if (cmp.noSelectionObject != undefined) {
-          r.result.data.splice(0, 0, cmp.noSelectionObject);
-        }
-        cmp.getStore().loadData(r.result.data);
-      }
-      cmp.setDisabled(false);
     }
 
     function dropdownCallback(data, dropdown){
@@ -1465,3 +1336,40 @@ var SfrWidget = {
     aButton.tip.show();
   },
 }
+
+Ext.override(Ext.scroll.Scroller, {
+  privates: {
+    restoreState: function () {
+      var me = this,
+        el = me.getScrollElement(),
+        dom;
+      if (el) {
+        dom = el.dom;
+
+        if (me.trackingScrollTop !== undefined) {
+          me.restoring = true;
+          Ext.defer(function () {
+            me.restoring = false;
+          }, 50);
+        }
+      }
+    }
+  }
+});
+
+Ext.util.CSS.removeStyleSheet('sfr-chart');
+Ext.util.CSS.createStyleSheet(''
++ '.sfr-charts .x-panel-body {'
++ '  border-width: 0px;'
++ '}'
++ '.sfr-charts input[readonly] {'
++ '  color: #333;'
++ '  background-color: #eee;'
++ '}'
++ '.sfr-charts label {'
++ '  font-weight: 400;'
++ '}'
++ '.sfr-odd, .sfr-even {'
++ '  border-bottom: 1px solid #e8e8e8;'
++ '}'
+, 'sfr-chart');
