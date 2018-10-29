@@ -1,3 +1,4 @@
+
 var treatmentWidget = function (current, callback, loadonly) {
   treatmentWidget.result = {};
   treatmentWidget.callback = callback;
@@ -18,7 +19,7 @@ var treatmentWidget = function (current, callback, loadonly) {
 
   if (loadonly) return;
   
-  filterValues();
+  initValues();
 
   Ext.create('Rc.component.Selector', {
     widget: treatmentWidget,
@@ -87,14 +88,14 @@ var treatmentWidget = function (current, callback, loadonly) {
     });
   }
 
-  function filterValues() {
+  function initValues() {
     var allLoaded = (treatmentWidget.valueGroups[4056] && treatmentWidget.valueGroups[4056].length > 0)
                  && (treatmentWidget.valueGroups[4061] && treatmentWidget.valueGroups[4061].length > 0)
                  && (treatmentWidget.valueGroups[5665] && treatmentWidget.valueGroups[5665].length > 0)
                  && (treatmentWidget.valueGroups[4188] && treatmentWidget.valueGroups[4188].length > 0)
                  && (treatmentWidget.valueGroups[4157] && treatmentWidget.valueGroups[4157].length > 0);
     if (!allLoaded) {
-      setTimeout(function () { filterValues(); }, 100);
+      setTimeout(function () { initValues(); }, 100);
       return;
     }
 

@@ -72,6 +72,7 @@ var injuryWidget = function (callback) {
   }).show();
 };
 
+
 Ext.define('Rc.component.Selector', {
   extend: 'Ext.panel.Panel',
   alias: 'component.selector',
@@ -171,7 +172,7 @@ Ext.define('Rc.component.Selector', {
   },
 });
 
-Ext.util.CSS.removeStyleSheet('sfr-injury');
+Ext.util.CSS.removeStyleSheet('sfr-selector');
 Ext.util.CSS.createStyleSheet(''
   + '.sfr-selector.hiddenview .x-dataview-item > div {'
   + '  display: none;'
@@ -237,4 +238,4 @@ Ext.util.CSS.createStyleSheet(''
   + '  border-bottom: 1px solid #eee;'
   + '  padding: 5px 15px 5px 15px !important;'
   + '}', 
-'sfr-injury');
+'sfr-selector');
