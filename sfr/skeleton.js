@@ -3671,14 +3671,14 @@ var skeletonWidget = function (current, callback, loadonly) {
 								text: NO_COMPETENCE_TO_CLASSIFY_TEXT,
 								handler: function () {
 									msgBox.close();
-									foreArmHandler(/*app.myCurrentFracturePanel.id, */ '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
+									foreArmHandler(/*app.myCurrentFracturePanel.id, */'', '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
 								}
 							}, {
 								tooltip: NO_CLASSIFIABLE_TOOLTIP,
 								text: NO_CLASSIFIABLE_TEXT,
 								handler: function () {
 									msgBox.close();
-									foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', container.id, NO_CLASSIFIABLE_CODE, panelName);
+									foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', '', container.id, NO_CLASSIFIABLE_CODE, panelName);
 								}
 							}
 						]
@@ -3687,7 +3687,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 					}
 					else {
 
-						foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', container.id, PARTIAL_NO_CLASSIFIABLE_CODE, panelName);
+						foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', '', container.id, PARTIAL_NO_CLASSIFIABLE_CODE, panelName);
 					}
 
 				},
@@ -3730,14 +3730,14 @@ var skeletonWidget = function (current, callback, loadonly) {
 								text: NO_COMPETENCE_TO_CLASSIFY_TEXT,
 								handler: function () {
 									msgBox.close();
-									foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
+									foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', '', container.id, NO_COMPETENCE_TO_CLASSIFY_CODE, panelName);
 								}
 							}, {
 								tooltip: NO_CLASSIFIABLE_TOOLTIP,
 								text: NO_CLASSIFIABLE_TEXT,
 								handler: function () {
 									msgBox.close();
-									foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', container.id, NO_CLASSIFIABLE_CODE, panelName);
+									foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', '', container.id, NO_CLASSIFIABLE_CODE, panelName);
 								}
 							}
 						]
@@ -3746,7 +3746,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 					}
 					else {
 
-						foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', container.id, PARTIAL_NO_CLASSIFIABLE_CODE, panelName);
+						foreArmHandler(/*app.myCurrentFracturePanel.id,*/ '', '', '', '', container.id, PARTIAL_NO_CLASSIFIABLE_CODE, panelName);
 					}
 
 				},
@@ -4216,7 +4216,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 					result.UpperVertebra = backHandler.injuredVertebraes[0];
 					result.LowerVertebra = backHandler.injuredVertebraes[backHandler.injuredVertebraes.length - 1];
 					backHandler.injuredVertebraes.forEach(function(vertebrae) {
-						result['Fx_' + vertebrae] = true;
+						result['Fx_' + vertebrae] = 1;
 					});
 					result.Neurology = backHandler.neurologi;
 					result.NeurologyExtended = backHandler.extendedNeurologi;
@@ -4336,7 +4336,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 						};
 					}
 					else if (aNoClassification == NO_CLASSIFIABLE_CODE) {
-						result.Class = "00-XO";
+						result.Class = "00-X0";
 						aoData = {
 							image: "https://stratum.blob.core.windows.net/sfr/Images/Thumbs/00-X0-H-thumb.png",
 							title: ''
