@@ -43,7 +43,7 @@ var TonsillWidget = function () {
 		+ '.ton-green {background: #68ba8b;}'
 		+ '.ton-orange {background: #ffcb7f;}'
 		+ '.ton-red {background: #ed6154;}'
-		+ '.indicator-2 .ton-par-legend, .indicator-3 .ton-par-legend {'
+		+ '.indicator-1 .ton-par-legend, .indicator-2 .ton-par-legend, .indicator-3 .ton-par-legend, .indicator-4 .ton-par-legend {'
 		+ '    visibility: hidden;'
 		+ '}'
 		, 'ton-defaults');
@@ -538,7 +538,8 @@ var TonsillWidget = function () {
 							backgroundColor: greyish
 						},
 						tpl: [
-							'<div class="x-legend-container"><tpl for="."><div class="x-legend-item"><span class="x-legend-item-marker {[ values.disabled ? Ext.baseCSSPrefix + \'legend-inactive\' : \'\' ]}" style="background:{mark};"></span>{name}</div></tpl><div style="height: 30px; font-size: 13px;"><span class="x-legend-item-marker" style="top: 34px; left:14px; background: rgba(53, 154, 163, 0.5);"></span><span class="x-legend-item-marker" style="top: 34px; left:30px; background: rgba(246, 126, 9, 0.5);"></span><span style="top: 38px; position: absolute; left: 50px;">Inte matchat med PAR</span></div>'
+							// '<div class="x-legend-container"><tpl for="."><div class="x-legend-item"><span class="x-legend-item-marker {[ values.disabled ? Ext.baseCSSPrefix + \'legend-inactive\' : \'\' ]}" style="background:{mark};"></span>{name}</div></tpl><div style="height: 30px; font-size: 13px;"><span class="x-legend-item-marker" style="top: 34px; left:14px; background: rgba(53, 154, 163, 0.5);"></span><span class="x-legend-item-marker" style="top: 34px; left:30px; background: rgba(246, 126, 9, 0.5);"></span><span style="top: 38px; position: absolute; left: 50px;">Inte matchat med PAR</span></div>'
+							'<div class="x-legend-container"><tpl for="."><div class="x-legend-item"><span class="x-legend-item-marker {[ values.disabled ? Ext.baseCSSPrefix + \'legend-inactive\' : \'\' ]}" style="background:{mark};"></span>{name}</div></tpl>'
 						],
 					},
 					axes: [{
@@ -698,9 +699,7 @@ var TonsillWidget = function () {
 						return 'av patienterna som '
 							+ 'opereras finns i '
 							+ 'tonsillregistret. Uppgifterna '
-							+ 'är hämtade från senaste '
-							+ 'matchningen med PAR'
-							+ '(året).';
+							+ 'avser 2017';
 					default:
 						return 'Beskrivning saknas';
 				}
@@ -926,11 +925,12 @@ var TonsillWidget = function () {
 				// Bar chart - return all data
 				// (Group is same as All if 'Riket' is selected)
 				for (key in data) {
+					if(key === '0') continue;
 					noAllData = (data[key].all.fraction === 'NaN');
 					noGroupData = (data[key].group.fraction === 'NaN')  || (data[key].group.fraction === 'NA');
 					item = {
-						label: data[key].period[0] + '\u2013' + data[key].period[1]
-						+ (key === '0' ? '#Matchat, PAR' : '#Utan PAR'),
+						label: data[key].period[0] + '\u2013' + data[key].period[1],
+						// + (key === '0' ? '#Matchat, PAR' : '#Utan PAR'),
 						allNoData: noAllData, // NY
 						allFraction: data[key].all.fraction * 100,
 						allFractionText: Ext.util.Format.number(data[key].all.fraction * 100, '0.0%'),
@@ -1069,7 +1069,6 @@ var TonsillWidget = function () {
 			flex: 1,
 			docked: 'top',
 			tpl: [
-				//'<div class="x-legend-container ton-legend"><tpl for="."><div class="x-legend-item"><span class="x-legend-item-marker {[ values.disabled ? Ext.baseCSSPrefix + \'legend-inactive\' : \'\' ]}" style="background:{mark};"></span>{name}</div></tpl><div style="height: 30px; font-size: 13px;"><span class="x-legend-item-marker" style="top: 34px; left:14px; background: rgba(53, 154, 163, 0.5);"></span><span class="x-legend-item-marker" style="top: 34px; left:30px; background: rgba(246, 126, 9, 0.5);"></span><span style="top: 38px; position: absolute; left: 50px;">Inte matchat med PAR</span></div>'
 				'<div class="x-legend-container ton-legend"><tpl for="."><div class="x-legend-item"><span class="x-legend-item-marker {[ values.disabled ? Ext.baseCSSPrefix + \'legend-inactive\' : \'\' ]}" style="background:{mark};"></span>{name}</div></tpl><div class="ton-par-legend" style="margin-top: 8px;"><span class="x-legend-item-marker" style="top: 31px; left: 13px; background: rgba(53, 154, 163, 0.5);"></span><span class="x-legend-item-marker" style="top: 31px; left:30px; background: rgba(246, 126, 9, 0.5);"></span><span style="margin-left: 50px; font-size: 13px;">Inte matchat med PAR</span></div></div>'
 			],
 			listeners: {
@@ -1165,7 +1164,7 @@ var TonsillWidget = function () {
 							+ 'Svarsfrekvens 6 mån: {4}<br>'
 							+ 'Täckningsgrad: {5}'
 						if (_current.indicatorId === 1)
-							text += '<br>Matchad, PAR: {6}';
+							// text += '<br>Matchad, PAR: {6}';
 
 						var suffix = item.field === 'fraction' ? '' : 'N';
 						var fraction = Ext.util.Format.number(rec.data['fraction' + suffix] * 100, '0.0%');
@@ -1311,9 +1310,9 @@ var TonsillWidget = function () {
 					var isParN = record.data.parN;
 					var color = sprite.attr.fillStyle;
 					var darkGreenish = '#359aa3';
-					var lightGreenish = '#89c1c7';
+					var lightGreenish = '#359aa3' // '#89c1c7';
 					var darkOrangish = '#f67e09';
-					var lightOrangish = '#ebb281';
+					var lightOrangish = '#f67e09' // '#ebb281';
 
 					if (isPar === null) isPar = true;	// Default colors if PAR isn't set
 					if (isParN === null) isParN = true;
@@ -1674,9 +1673,9 @@ var TonsillWidget = function () {
 					if (par === null) par = true;
 					var color = sprite.attr.fillStyle;
 					var darkGreenish = '#359aa3';
-					var lightGreenish = '#89c1c7';
+					var lightGreenish = '#359aa3' // '#89c1c7';
 					var darkOrangish = '#f67e09';
-					var lightOrangish = '#ebb281';
+					var lightOrangish = '#f67e09' // '#ebb281';
 
 					if (color === darkGreenish || color === lightGreenish) {
 						changes.fillStyle = par ? darkGreenish : lightGreenish;
@@ -1750,7 +1749,7 @@ var TonsillWidget = function () {
 					//+ '<br>Up {8}, Low {9}<br>' // TEMP
 					//+ 'UpN {10}, LowN {11}<br>' // TEMP
 					//+ 'FractN {12}' // TEMP
-					+ (_current.indicatorId === 1 ? '<br>Matchad, PAR: {7}' : '')
+					+ (_current.indicatorId === 1 ? /*'<br>Matchad, PAR: {7}'*/ '' : '')
 					+ '</p>';
 
 				var fraction = Ext.util.Format.number(data.fraction * 100, '0.0%');
@@ -2633,7 +2632,7 @@ var TonsillWidget = function () {
 		
 		var allClinicsPanel = Ext.create('Ext.container.Container', {
 			itemId: 'ComparisonTab--',
-			title: 'Alla kliniker (TE+TEA)',
+			title: 'Alla kliniker',
 			width: '100%',
 			items: [
 				{
@@ -2652,7 +2651,7 @@ var TonsillWidget = function () {
 					itemId: 'allClinicsLegend',
 					cls: 'ton-legend-all-clinics',
 					updateLegend: function() {
-						var timeIntervals = ['2013-2015', '2015-2017', '2015-2017', '2013-2015'];
+						var timeIntervals = ['perioden 2015-2017', 'perioden 2015-2017', 'perioden 2015-2017', '2017'];
 						
 						var greenTexts = ['Färre återinläggningar', 'Mindre smärta', 'Högre grad symptomfrihet', 'Bättre täckningsgrad'];
 						var orangeTexts = ['Nära riksnittet', 'Nära riksnittet', 'Nära riksnittet', 'Nära riksnittet'];
@@ -2663,7 +2662,7 @@ var TonsillWidget = function () {
 						var redText = redTexts[_current.indicatorId-1];
 						var timeText = timeIntervals[_current.indicatorId-1];
 
-						this.setHtml('<div class="ton-legend-timeframe">Uppgifterna avser perioden ' + timeText + '. Konfidensintervall 95%: <div class="ton-legend-state-confidence-interval"></div>Rikets<div class="ton-legend-confidence-interval"><div class="ton-legend-confidence-interval-bar"></div></div>Enhetens</div><div class="ton-legend-colors"><div class="ton-circle ton-green"></div>' + greenText + '<div class="ton-circle ton-orange"></div>' + orangeText + '<div class="ton-circle ton-red"></div>' + redText + '</div>');
+						this.setHtml('<div class="ton-legend-timeframe">Uppgifterna avser ' + timeText + '. Konfidensintervall 95%: <div class="ton-legend-state-confidence-interval"></div>Rikets<div class="ton-legend-confidence-interval"><div class="ton-legend-confidence-interval-bar"></div></div>Enhetens</div><div class="ton-legend-colors"><div class="ton-circle ton-green"></div>' + greenText + '<div class="ton-circle ton-orange"></div>' + orangeText + '<div class="ton-circle ton-red"></div>' + redText + '</div>');
 						// console.log('updating legend');
 					}	
 				},
@@ -3083,6 +3082,8 @@ var TonsillWidget = function () {
 						+ 'sjukhus för blödning inom 30 dagar efter operationen.'
 						// + 'av alla patienter som har opererats med tonsillektomi / '
 						//+ 'eller tonsillektomi+abrasio på en klinik.'
+					text2 = '&nbsp;';
+					/*
 					text2 = '<h2 class="upper">Uppgifterna matchas med par</h2>'
 						+ '<p style="font-weight:400">Uppgifterna är hämtade från två nationella register. '
 						+ 'Det ger en mer korrekt sammanställning av hur många '
@@ -3100,6 +3101,7 @@ var TonsillWidget = function () {
 							+ 'Dessa data redovisas för 2012 och framåt, icke matchad data visas '
 							+ 'i blekare staplar i diagrammet ovan. Totalt antal operationer är baserat på matchade data då sådana finns, annars endast operationer rapporterade till kvalitetsregistret.</p>';
 						}
+						*/
 					break;
 				case 2:
 					text1 = '<h2 class="upper">Om indikatorn</h2>'
@@ -3288,5 +3290,6 @@ Ext.onReady(function () {
 	// Create the widget
 	TonsillWidget();
 });
+
 
 //! Tonsills utdata 2017
