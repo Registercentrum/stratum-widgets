@@ -109,7 +109,7 @@ var SfrSearchList = function () {
     });
     
     var fractureTreatFilter = Ext.create('Ext.form.ComboBox', {
-      parameterKey: SfrWidget.parameters.imcomplete,
+      parameterKey: SfrWidget.parameters.incomplete,
       width: '50%',
       mode: 'local',
       valueField: 'ValueCode',
@@ -171,20 +171,6 @@ var SfrSearchList = function () {
         app.warning.setVisible(false);
         button.setDisabled(true);
         var paramsString = SfrWidget.getParameters(app.filters, {});
-        paramsString = paramsString.replace(new RegExp('[a-zA-Z0-9]*ALL=[0-1]*&', 'g'), '');
-        paramsString = paramsString.replace(new RegExp('[a-zA-Z0-9]*=0&', 'g'), '');
-        paramsString = paramsString.replace(/bodypart/g, 'bodypart');
-        paramsString = paramsString.replace(/icd10/g, 'icd10');
-        paramsString = paramsString.replace(/injtype/g, 'injury_type');
-        paramsString = paramsString.replace(/fxclass/g, 'fracture_type');
-        paramsString = paramsString.replace(/trtgrp/g, 'op_method');
-        paramsString = paramsString.replace(/trttype/g, 'treatment_type');
-        paramsString = paramsString.replace(/trtcode/g, 'treatment_code');
-        paramsString = paramsString.replace(/injgroup/g, 'injury_group');
-        paramsString = paramsString.replace(/open/g, 'open_fracture');
-        paramsString = paramsString.replace(/SpecialFractureOptions/g, 'special_fraktures');
-        paramsString = paramsString.replace(/FractureTreatOptions/g, 'incomplete_registrations');
-        paramsString = paramsString.replace(/fracture_typegroup/g, 'fracture_group');
         paramsString = paramsString.replace(/^&/, '');
         
         Ext.Ajax.request({
