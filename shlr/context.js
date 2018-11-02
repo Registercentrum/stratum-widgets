@@ -1,21 +1,22 @@
 
 NewContext = {
-  init:  function () {
+  init: function () {
     this.createForm();
     this.getUnits();
     this.getContexts();
   },
-  
+
   getCookie: function (name) {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
-    if (parts.length == 2) var result = parts.pop().split(";").shift();
-    if (parts.length == 3) var result = parts.pop() && parts.pop().split(";").shift();
+    var value = '; ' + document.cookie;
+    var parts = value.split('; ' + name + '=');
+    var result;
+    if (parts.length === 2) result = parts.pop().split(';').shift();
+    if (parts.length === 3) result = parts.pop() && parts.pop().split(';').shift();
     return result;
   },
 
   getParameterByName: function (name) {
-    var filteredName = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var filteredName = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
     var regex = new RegExp('[\\?&]' + filteredName + '=([^&#]*)', 'i');
     var results = location.hash ? regex.exec(location.hash) : regex.exec(location.search);
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
@@ -35,7 +36,7 @@ NewContext = {
         if (this.readyState === 4 && this.status === 200) {
           var units = Ext.decode(this.responseText);
           Ext.getCmp('combo').getStore().loadRawData(units);
-          var sid = parseInt(me.getParameterByName('sID'));
+          var sid = parseInt(me.getParameterByName('sID'), 10);
           var unit;
           if (me.matchedUnits[sid]) {
             unit = me.matchedUnits[sid];
@@ -54,14 +55,13 @@ NewContext = {
 
   getContexts: function () {
     var baseURL = window.location.hostname;
-    var apikey = this.getApiKey(baseURL);
     if (Profile.Context) {
       var me = this;
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
           var contexts = Ext.decode(this.responseText);
-          me.contexts = contexts.data.filter(function (context) { return context.Unit.Register.RegisterID === 151 })
+          me.contexts = contexts.data.filter(function (context) { return context.Unit.Register.RegisterID === 151; });
         }
       };
       xhttp.open('GET', '//' + baseURL + '/stratum/api/authentication/contexts', true);
@@ -72,7 +72,6 @@ NewContext = {
   login: function (contextId, unitId) {
     document.cookie = 'enhet=' + unitId;
     var baseURL = window.location.hostname;
-    var apikey = this.getApiKey(baseURL);
     if (contextId) {
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function () {
@@ -81,21 +80,20 @@ NewContext = {
             Stratum.setLocation('page', { id: 2265 });
             Stratum.reload(true);
             location.reload();
-
           } else {
             window.location.href = '/registrering/#!page?id=2265';
           }
         }
       };
-      var data = { "Context": { "ContextID": contextId } };
-      data = JSON.stringify(data)
+      var data = { 'Context': { 'ContextID': contextId } };
+      data = JSON.stringify(data);
       xhttp.open('PUT', '//' + baseURL + '/stratum/api/authentication/context', true);
       xhttp.setRequestHeader('Content-Type', 'application/json');
       xhttp.send(data);
     } else {
-      var unitId = parseInt(Ext.getCmp('combo').getValue());
+      unitId = parseInt(Ext.getCmp('combo').getValue(), 10);
       if (!unitId) return;
-      NewContext.ensureContext(unitId); 
+      NewContext.ensureContext(unitId);
     }
   },
 
@@ -114,42 +112,42 @@ NewContext = {
 
     xhttp.open('GET', 'https://stratum.registercentrum.se/api/authentication/context/ensure/' + unitId + cacheBuster, true);
     xhttp.withCredentials = true;
-    xhttp.send(); 
+    xhttp.send();
   },
 
   secureLogin: function (unitId) {
     var cacheBuster = '?_=' + new Date().getTime();
     var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-			var result = this.response && Ext.decode(this.response).data.Unit.UnitID;
-          if(result !== unitId) {
-            NewContext.loadContexts(unitId);
-            return;
-          }
-          if (location.hostname === 'stratum.registercentrum.se') {
-            Stratum.setLocation('page', { id: 2265 });
-            Stratum.reload(true);
-            location.reload();
-          } else {
-            window.location.href = '/registrering/#!page?id=2265';
-          }
+    xhttp.onreadystatechange = function () {
+      if (this.readyState === 4 && this.status === 200) {
+        var result = this.response && Ext.decode(this.response).data.Unit.UnitID;
+        if (result !== unitId) {
+          NewContext.loadContexts(unitId);
+          return;
         }
-      };
-  
-      xhttp.open('GET', 'https://stratum.registercentrum.se/api/authentication/login' + cacheBuster, true);
-      xhttp.withCredentials = true;
-      xhttp.send();
+        if (location.hostname === 'stratum.registercentrum.se') {
+          Stratum.setLocation('page', { id: 2265 });
+          Stratum.reload(true);
+          location.reload();
+        } else {
+          window.location.href = '/registrering/#!page?id=2265';
+        }
+      }
+    };
+
+    xhttp.open('GET', 'https://stratum.registercentrum.se/api/authentication/login' + cacheBuster, true);
+    xhttp.withCredentials = true;
+    xhttp.send();
   },
 
-  loadContexts: function (unitId) {
+  loadContexts: function () {
     var me = this;
-	var baseURL = window.location.hostname;
+    var baseURL = window.location.hostname;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         var contexts = Ext.decode(this.responseText);
-        me.contexts = contexts.data.filter(function (context) { return context.Unit.Register.RegisterID === 151 });
+        me.contexts = contexts.data.filter(function (context) { return context.Unit.Register.RegisterID === 151; });
         var context = NewContext.isUnitAvailable();
         context && NewContext.switchContext(context);
       }
@@ -160,29 +158,28 @@ NewContext = {
 
   switchContext: function (contextId) {
     var xhttp = new XMLHttpRequest();
-	var baseURL = window.location.hostname;
-      xhttp.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-          if (location.hostname === 'stratum.registercentrum.se') {
-            Stratum.setLocation('page', { id: 2265 });
-            Stratum.reload(true);
-            location.reload();
-
-          } else {
-            window.location.href = '/registrering/#!page?id=2265';
-          }
+    var baseURL = window.location.hostname;
+    xhttp.onreadystatechange = function () {
+      if (this.readyState === 4 && this.status === 200) {
+        if (location.hostname === 'stratum.registercentrum.se') {
+          Stratum.setLocation('page', { id: 2265 });
+          Stratum.reload(true);
+          location.reload();
+        } else {
+          window.location.href = '/registrering/#!page?id=2265';
         }
-      };
-      var data = { "Context": { "ContextID": contextId } };
-      data = JSON.stringify(data)
-      xhttp.open('PUT', '//' + baseURL + '/stratum/api/authentication/context', true);
-      xhttp.setRequestHeader('Content-Type', 'application/json');
-      xhttp.send(data);
+      }
+    };
+    var data = { 'Context': { 'ContextID': contextId } };
+    data = JSON.stringify(data);
+    xhttp.open('PUT', '//' + baseURL + '/stratum/api/authentication/context', true);
+    xhttp.setRequestHeader('Content-Type', 'application/json');
+    xhttp.send(data);
   },
-  
+
   isUnitAvailable: function () {
     if (!this.contexts) return false;
-    var validContext = this.contexts.filter(function (context) { return context.Unit.UnitID == Ext.getCmp('combo').getValue() });
+    var validContext = this.contexts.filter(function (context) { return context.Unit.UnitID === Ext.getCmp('combo').getValue(); });
     return validContext[0] && validContext[0].ContextID;
   },
 
@@ -194,11 +191,11 @@ NewContext = {
       renderTo: (typeof Stratum !== 'undefined') && Stratum.containers ? Stratum.containers['SHLR/NewContext'] : 'contentPanel',
       items: [
         {
-          html: 'För att registrera ett hjärtstopp, börja med att legitimera dig.<br/>' +
-                '1. Sätt in ditt SITHS-kort i datorn.<br/>' +
-                '2. Klicka OK i rutan Bekräfta certifikat.<br/>' + 
-                '3. Skriv in SITHS-kortets pinkod för legitimering.</br>' +
-                '4. Sedan väljer du ditt sjukhus.<br/>Välj sjukhus här:<br/>'
+          html: 'För att registrera ett hjärtstopp, börja med att legitimera dig.<br/>' 
+          + '1. Sätt in ditt SITHS-kort i datorn.<br/>'
+          + '2. Klicka OK i rutan Bekräfta certifikat.<br/>'
+          + '3. Skriv in SITHS-kortets pinkod för legitimering.</br>'
+          + '4. Sedan väljer du ditt sjukhus.<br/>Välj sjukhus här:<br/>'
         },
         {
           xtype: 'combobox',
@@ -223,19 +220,19 @@ NewContext = {
               property: 'UnitName',
               direction: 'ASC'
             }],
-          
+
             sortOnLoad: true,
-            
+
           },
           displayField: 'UnitName',
           valueField: 'UnitID'
         },
         {
-          html: 'När du valt sjukhus i rutan ovanför går du vidare till registrering.<br/>' +
-                '<a onclick="NewContext.login(NewContext.isUnitAvailable(), Ext.getCmp(\'combo\').getValue());">Gå vidare till registrering här</a>.<br/>' +
-                'Det kan ta ett par sekunder innan registreringsapplikationen öppnar sig.<br/>' +
-                'Observera att knappen ”Logga in” längst uppe till höger på webbsidan endast används av dem som registrerar Uppföljning och PROM.<br/>' +
-                '<div class="shlrsw-error shlrsw-hidden">Det fungerade inte. Försäkra dig om att ditt SITHS-kort sitter i.</div>',
+          html: 'När du valt sjukhus i rutan ovanför går du vidare till registrering.<br/>' 
+          + '<a onclick="NewContext.login(NewContext.isUnitAvailable(), Ext.getCmp(\'combo\').getValue());">Gå vidare till registrering här</a>.<br/>'
+          + 'Det kan ta ett par sekunder innan registreringsapplikationen öppnar sig.<br/>'
+          + 'Observera att knappen ”Logga in” längst uppe till höger på webbsidan endast används av dem som registrerar Uppföljning och PROM.<br/>'
+          + '<div class="shlrsw-error shlrsw-hidden">Det fungerade inte. Försäkra dig om att ditt SITHS-kort sitter i.</div>',
           cls: 'link-label'
         }
       ]
@@ -334,15 +331,13 @@ NewContext = {
 };
 
 Ext.util.CSS.removeStyleSheet('shlrsw');
-Ext.util.CSS.createStyleSheet(
-  '.shlrsw .shlrsw-selector div {height: 40px; border-radius: 3px; border-color: #5399a4; margin: 10px 0}' +
-  '.shlrsw .link-label {display: inline-block;}' +
-  '.shlrsw .link-label a {cursor: pointer;}' +
-  '.shlrsw .shlrsw-selector input {color: #5399a4}' +
-  '.shlrsw-hidden {visibility: hidden}' +
-  '.shlrsw-error {color: red; margin-top: 5px;}' +
-  '.shlrsw .x-panel-default, .x-panel-body-default{ border:none;}',
-  'shlrsw'
-);
+Ext.util.CSS.createStyleSheet('' 
+  + '.shlrsw .shlrsw-selector div {height: 40px; border-radius: 3px; border-color: #5399a4; margin: 10px 0}'
+  + '.shlrsw .link-label {display: inline-block;}'
+  + '.shlrsw .link-label a {cursor: pointer;}'
+  + '.shlrsw .shlrsw-selector input {color: #5399a4}'
+  + '.shlrsw-hidden {visibility: hidden}'
+  + '.shlrsw-error {color: red; margin-top: 5px;}'
+  + '.shlrsw .x-panel-default, .x-panel-body-default{ border:none;}', 'shlrsw');
 
 NewContext.init();
