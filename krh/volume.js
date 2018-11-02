@@ -3,7 +3,7 @@ Ext.util.CSS.removeStyleSheet('shpr-company');
 Ext.util.CSS.createStyleSheet(''
 
   + '.scw-header {'
-  + '	 width: 100%;'
+  + '  width: 100%;'
   + '  padding: 0 0 0 2px;'
   + '  font-weight: normal;'
   + '  margin: 0 0 18px 0;'
@@ -49,21 +49,17 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
 
   + '.scw-spinner.inactive {'
-  + '	 display: none;'
+  + '  display: none;'
   + '}'
 
   + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(4) {'
-  + '	 border-top: 1px black solid;'
-  + '}'
-
-  + '.scw-download-button {'
-  // + '  visibility: hidden;'
+  + '  border-top: 1px black solid;'
   + '}'
 
   + '.scw-download-button span {'
   + '  font-family: FontAwesome, open_sans;'
-  + '	 font-weight: normal;'
-  + '	 font-size: 13px;'
+  + '  font-weight: normal;'
+  + '  font-size: 13px;'
   + '}'
 
   + '.scw-missing-data-panel {'
@@ -75,7 +71,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  width: 16px;'
   + '  height: 16px;'
   + '  display: inline-block;'
-  + '	 margin-bottom: 10px;'
+  + '  margin-bottom: 10px;'
   + '}'
 
   + '.scw-info {'
@@ -103,10 +99,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  position: absolute;'
   + '  top: -18px;'
   + '  left: 1px;'
-  + '}'
-
-  , 'shpr-company'
-);
+  + '}', 'shpr-company');
 
 Ext.apply(Ext.QuickTips.getQuickTip(), {
   dismissDelay: 0
@@ -118,17 +111,17 @@ Ext.define('shpr.controller.MainController', {
 
   updateGrid: function () {
     var view = this.getView();
-    var clinic        = view.down('#clinicDropdown').getValue();
+    var clinic = view.down('#clinicDropdown').getValue();
     var operationType = view.down('#operationDropdown').getValue();
-    var protesis      = view.down('#protesisDropdown').getValue();
-    var articleType   = view.down('#articleTypeDropdown').getValue();
+    var protesis = view.down('#protesisDropdown').getValue();
+    var articleType = view.down('#articleTypeDropdown').getValue();
     var articleNumber = view.down('#articleNumberDropdown').getValue();
 
     if (clinic === 'Riket') clinic = '1000';
     if (articleNumber === 'Alla') articleNumber = 'alla';
 
     var startDate = view.down('#startDate').getValue().toLocaleDateString();
-    var endDate   = view.down('#endDate').getValue().toLocaleDateString();
+    var endDate = view.down('#endDate').getValue().toLocaleDateString();
 
     /* IE hack */
     startDate = startDate.replace(/[^ -~]/g, '');
@@ -144,7 +137,7 @@ Ext.define('shpr.controller.MainController', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: '/stratum/api/statistics/shpr/supplier-mod1' + '?enhet=' + clinic + '&operationstyp=' + operationType + '&protestyp=' + protesis + '&artikeltyp=' + articleType + '&article_nr=' + articleNumber + '&start_datum=' + startDate + '&slut_datum=' + endDate,
+      url: '/stratum/api/statistics/shpr/supplier-mod1?enhet=' + clinic + '&operationstyp=' + operationType + '&protestyp=' + protesis + '&artikeltyp=' + articleType + '&article_nr=' + articleNumber + '&start_datum=' + startDate + '&slut_datum=' + endDate,
       success: function (response) {
         var data = Ext.decode(response.responseText).data;
         spinner && spinner.hide();
@@ -162,7 +155,7 @@ Ext.define('shpr.controller.MainController', {
   updateStartDate: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
-    var endDate   = view.down('#startDate').getValue();
+    var endDate = view.down('#startDate').getValue();
     if (startDate < new Date('1999-01-01')) view.down('#startDate').setValue(new Date('1999-01-01'));
     if (this.isDifferenceLessThanThirtyDays()) {
       endDate.setTime(startDate.getTime() + 27 * 24 * 60 * 60 * 1000 + 60 * 60 * 1000);
@@ -174,7 +167,7 @@ Ext.define('shpr.controller.MainController', {
   updateEndDate: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
-    var endDate   = view.down('#endDate').getValue();
+    var endDate = view.down('#endDate').getValue();
     if (endDate > new Date()) view.down('#endDate').setValue(new Date());
     if (this.isDifferenceLessThanThirtyDays()) {
       startDate.setTime(endDate.getTime() - 27 * 24 * 60 * 60 * 1000);
@@ -186,14 +179,13 @@ Ext.define('shpr.controller.MainController', {
   isDifferenceLessThanThirtyDays: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
-    var endDate   = view.down('#endDate').getValue();
+    var endDate = view.down('#endDate').getValue();
     var dayInSeconds = 24 * 60 * 60 * 1000;
     var diffDays = Math.round((endDate.getTime() - startDate.getTime()) / (dayInSeconds));
     return diffDays < 27;
   },
 
   exportTable: function (element) {
-    var view = this.getView();
     var tag = element.el.dom;
     if (!tag) return;
     var content = this.createContentToDownload(element.itemId.replace('exportTable', ''));
@@ -222,7 +214,7 @@ Ext.define('shpr.controller.MainController', {
     content += Ext.Date.format(selections.startDate, dateFormat) + ';';
     content += Ext.Date.format(selections.endDate, dateFormat) + ';';
     content += '\n\n';
-    var headers = this.getView().down('#dataPanel');
+    headers = this.getView().down('#dataPanel');
     for (var column in headers.el.component.columns) {
       if (column === '') continue;
       content += headers.el.component.columns[column].titleEl.component.initialConfig.text + ';';
@@ -256,46 +248,46 @@ Ext.define('shpr.controller.MainController', {
   getSelections: function () {
     var selections = {};
     var view = this.getView();
-    selections.clinic      = view.down('#clinicDropdown').getDisplayValue();
-    selections.operation   = view.down('#operationDropdown').getDisplayValue();
-    selections.protesis    = view.down('#protesisDropdown').getDisplayValue();
+    selections.clinic = view.down('#clinicDropdown').getDisplayValue();
+    selections.operation = view.down('#operationDropdown').getDisplayValue();
+    selections.protesis = view.down('#protesisDropdown').getDisplayValue();
     selections.articleType = view.down('#articleTypeDropdown').getDisplayValue();
-    selections.article     = view.down('#articleNumberDropdown').getDisplayValue();
-    selections.startDate   = view.down('#startDate').getValue();
-    selections.endDate     = view.down('#endDate').getValue();
+    selections.article = view.down('#articleNumberDropdown').getDisplayValue();
+    selections.startDate = view.down('#startDate').getValue();
+    selections.endDate = view.down('#endDate').getValue();
     return selections;
   },
 
   categoryTranslations: {
-      "Alla"         : "All",
-      "Antal"        : "Quantity",
-      "Artikel"      : "Item",
-      "Artikelnummer": "Item Number", 
-      "Artikeltyp"   : "Type of Implant", 
-      "Beskrivning"  : "Description", 
-      "Caput"        : "Head",
-      "Caputliner"   : "Dual Mobility Liner",
-      "Enhet"        : "Unit", 
-      "Halv"         : "Hemi",
-      "Klinik"       : "Unit",
-      "Operationstyp": "Type of Surgery", 
-      "Plugg"        : "Plug",
-      "Primär"       : "Primary",
-      "Protestyp"    : "Type of Prothesis",
-      "Riket"        : "Sweden",
-      "Samtliga"     : "All",
-      "Stam"         : "Stem",
-      "Startdatum"   : "Start Date",
-      "Slutdatum"    : "End Date"
-    },
+    'Alla': 'All',
+    'Antal': 'Quantity',
+    'Artikel': 'Item',
+    'Artikelnummer': 'Item Number',
+    'Artikeltyp': 'Type of Implant',
+    'Beskrivning': 'Description',
+    'Caput': 'Head',
+    'Caputliner': 'Dual Mobility Liner',
+    'Enhet': 'Unit',
+    'Halv': 'Hemi',
+    'Klinik': 'Unit',
+    'Operationstyp': 'Type of Surgery',
+    'Plugg': 'Plug',
+    'Primär': 'Primary',
+    'Protestyp': 'Type of Prothesis',
+    'Riket': 'Sweden',
+    'Samtliga': 'All',
+    'Stam': 'Stem',
+    'Startdatum': 'Start Date',
+    'Slutdatum': 'End Date'
+  },
 
-    dataTranslations: {
-      "Riket"        : "Sweden",
-      "caput"        : "head",
-      "stam"         : "stem",
-      "plugg"        : "plug",
-      "caputliner"   : "dual mobility liner",
-    }
+  dataTranslations: {
+    'Riket': 'Sweden',
+    'caput': 'head',
+    'stam': 'stem',
+    'plugg': 'plug',
+    'caputliner': 'dual mobility liner',
+  }
 });
 
 Ext.define('shpr.view.Filter', {

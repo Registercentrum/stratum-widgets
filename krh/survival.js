@@ -34,10 +34,6 @@ Ext.util.CSS.createStyleSheet(''
   + '  padding-right: 0px;'
   + '}'
 
-  + '.scw-download-button {'
- // + '  visibility: hidden;'
-  + '}'
-  
   + '.scw-download-button span, .scw-download-image-button span {'
   + '  font-family: FontAwesome, open_sans;'
   + '  font-weight: normal;'
@@ -134,10 +130,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  position: absolute;'
   + '  top: -18px;'
   + '  left: 1px;'
-  + '}'
-
-  , 'shpr-company'
-);
+  + '}', 'shpr-company');
 
 Ext.define('shpr.controller.MainController', {
   extend: 'Ext.app.ViewController',
@@ -171,7 +164,7 @@ Ext.define('shpr.controller.MainController', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: '/stratum/api/statistics/shpr/supplier-mod3' + '?protestyp=' + protesis + '&stam=' + stem + '&cup=' + cup + '&diagnos=' + diagnosis + '&rev_reason=' + cause + '&rev_type=' + revisiontype + '&method=' + method + '&start_datum=' + startDate + '&slut_datum=' + endDate,
+      url: '/stratum/api/statistics/shpr/supplier-mod3?protestyp=' + protesis + '&stam=' + stem + '&cup=' + cup + '&diagnos=' + diagnosis + '&rev_reason=' + cause + '&rev_type=' + revisiontype + '&method=' + method + '&start_datum=' + startDate + '&slut_datum=' + endDate,
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
         spinner && spinner.hide();
@@ -247,7 +240,7 @@ Ext.define('shpr.controller.MainController', {
   updateStartDate: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
-    var endDate   = view.down('#endDate').getValue();
+    var endDate = view.down('#endDate').getValue();
     if (startDate < new Date('1999-01-01')) view.down('#startDate').setValue(new Date('1999-01-01'));
     if (this.isDifferenceLessThanOneYear()) {
       endDate.setTime(Ext.Date.add(startDate, Ext.Date.YEAR, +1));
@@ -259,7 +252,7 @@ Ext.define('shpr.controller.MainController', {
   updateEndDate: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
-    var endDate   = view.down('#endDate').getValue();
+    var endDate = view.down('#endDate').getValue();
     if (endDate > new Date()) view.down('#endDate').setValue(new Date());
     if (this.isDifferenceLessThanOneYear()) {
       startDate.setTime(Ext.Date.add(endDate, Ext.Date.YEAR, -1));
@@ -271,13 +264,12 @@ Ext.define('shpr.controller.MainController', {
   isDifferenceLessThanOneYear: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
-    var endDate   = view.down('#endDate').getValue();
+    var endDate = view.down('#endDate').getValue();
 
     return startDate > Ext.Date.add(endDate, Ext.Date.YEAR, -1);
   },
 
   exportTable: function (element) {
-    var view = this.getView();
     var tag = element.el.dom;
     if (!tag) return;
     var content = this.createContentToDownload(element.itemId.replace('exportTable', ''));
@@ -311,9 +303,9 @@ Ext.define('shpr.controller.MainController', {
     content += Ext.Date.format(selections.endDate, dateFormat) + ';';
     content += '\n\n';
 
-    var dataHeaders = graph === 'survival' ?
-      'Överlevnad; År(tid); Lägre gräns 95% konfidensintervall; Övre gräns 95% konfidensintervall; At risk; Antal reviderade; Konfidens' :
-      'Andel reviderade; Andel avlidna; År(tid); Reviderade - lägre gräns 95% konfidensintervall; Avlidna - lägre gräns 95% konfidensintervall; Reviderade - övre gräns 95% konfidensintervall; Avlidna - övre gräns 95% konfidensintervall; At risk; Revision - Antal händelser; Dödsfall - Antal händelser';
+    var dataHeaders = graph === 'survival'
+      ? 'Överlevnad; År(tid); Lägre gräns 95% konfidensintervall; Övre gräns 95% konfidensintervall; At risk; Antal reviderade; Konfidens'
+      : 'Andel reviderade; Andel avlidna; År(tid); Reviderade - lägre gräns 95% konfidensintervall; Avlidna - lägre gräns 95% konfidensintervall; Reviderade - övre gräns 95% konfidensintervall; Avlidna - övre gräns 95% konfidensintervall; At risk; Revision - Antal händelser; Dödsfall - Antal händelser';
     content += dataHeaders;
     var data = Ext.data.StoreManager.lookup(graph);
     content += '\n';
@@ -327,14 +319,14 @@ Ext.define('shpr.controller.MainController', {
       content += '\n';
     }
     content += '\n';
-    
-    var choices = this.getView().down('#articleListPanel').html.replace('<div class="scw-article-list-panel">', '').replace('</div>', '').replace(/\<br\/\>/g, '');
+
+    var choices = this.getView().down('#articleListPanel').html.replace('<div class="scw-article-list-panel">', '').replace('</div>', '').replace(/<br\/>/g, '');
     content += choices.replace(/Cupar.*/).replace('undefined');
     content += '\n';
     content += choices.replace(/((?!Cupar).)*/).replace('undefined', '');
     content += '\n';
 
-    content = language === 'Swedish' ? content :  this.translateContent(content);
+    content = language === 'Swedish' ? content : this.translateContent(content);
 
     /* Set BOM to let Excel know what the content is */
     content = '\ufeff' + content;
@@ -344,62 +336,62 @@ Ext.define('shpr.controller.MainController', {
   getSelections: function () {
     var selections = {};
     var view = this.getView();
-    selections.protesis     = view.down('#protesisDropdown').getDisplayValue();
-    selections.stem         = view.down('#stemDropdown').getDisplayValue();
-    selections.cup          = view.down('#cupDropdown').getDisplayValue();
-    selections.diagnosis    = view.down('#diagnosisDropdown').getDisplayValue();
-    selections.cause        = view.down('#causeDropdown').getDisplayValue();
-    selections.method       = view.down('#methodDropdown').getDisplayValue();
+    selections.protesis = view.down('#protesisDropdown').getDisplayValue();
+    selections.stem = view.down('#stemDropdown').getDisplayValue();
+    selections.cup = view.down('#cupDropdown').getDisplayValue();
+    selections.diagnosis = view.down('#diagnosisDropdown').getDisplayValue();
+    selections.cause = view.down('#causeDropdown').getDisplayValue();
+    selections.method = view.down('#methodDropdown').getDisplayValue();
     selections.revisiontype = view.down('#revisionDropdown').getDisplayValue();
-    selections.startDate    = view.down('#startDate').getValue();
-    selections.endDate      = view.down('#endDate').getValue();
+    selections.startDate = view.down('#startDate').getValue();
+    selections.endDate = view.down('#endDate').getValue();
 
     return selections;
   },
 
   translateContent: function (content) {
     var newContent = content;
-    translations = {
-      "Diagnos": "Diagnosis", 
-      "Protestyp": "Type of Prothesis",
-      "Stam": "Stem", 
-      "Revisionstyp": "Type of Revision",
-      "Orsak": "Cause",
-      "Beräkningsmodell": "Calculation Method",
-      "Överlevnad": "Survival",
-      "Lägre gräns 95% konfidensintervall": "Lower limit 95% confidence interval",
-      "Övre gräns 95% konfidensintervall": "Upper limit 95% confidence interval",
-      "Antal reviderade": "Number of revised",
-      "Konfidens": "Confidence",
-      "Primär artros" : "Primary osteoarthritis",
-      "Inflammatorisk ledsjukdom" : "Inflammtory joint disease",
-      "Akut trauma, höftfraktur" : "Acute trauma, hip fracture",
-      "Följdtillstånd barnsjukdom" : "Sequelae childhood hip disease",
-      "Idiopatisk nekros" : "Femoral head necrosis",
-      "Följdtillstånd efter trauma/fraktur" : "Sequelae trauma/fracture",
-      "Tumör" : "Tumor",
-      "Annan sekundär artros" : "Other secondary osteoarthritis",
-      "Akut trauma, övriga" : "Acute trauma, others",
-      "Övrigt" : "Other",
-      "Halv": "Hemi",
-      "Alla företagets": "Company stems",
-      "Andra tillverkare": "Other manufacturers",
-      "Alla förstagångsrevisioner": "All first time revisions",
-      "Första stamrevision": "First stem revision",
-      "Första cuprevision": "First cup revision",
-      "Första revision av annat slag": "First revision of other than stem or cup",
-      "Aseptisk lossning": "Aseptic loosening",
-      "Djup infektion": "Deep infection",
-      "Luxation": "Dislocation",
-      "Alla aseptiska orsaker": "All aseptic causes",
-      "Kumalativ incidens": "Cumulative incidence",
-      "Alla": "All",
-      "År": "Year",
-      "tid": "time",
-      "Startdatum"   : "Start Date",
-      "Slutdatum"    : "End Date",
-      "Stammar": "Stems",
-      "Cupar": "Cups"
+    var translations = {
+      'Diagnos': 'Diagnosis',
+      'Protestyp': 'Type of Prothesis',
+      'Stam': 'Stem',
+      'Revisionstyp': 'Type of Revision',
+      'Orsak': 'Cause',
+      'Beräkningsmodell': 'Calculation Method',
+      'Överlevnad': 'Survival',
+      'Lägre gräns 95% konfidensintervall': 'Lower limit 95% confidence interval',
+      'Övre gräns 95% konfidensintervall': 'Upper limit 95% confidence interval',
+      'Antal reviderade': 'Number of revised',
+      'Konfidens': 'Confidence',
+      'Primär artros': 'Primary osteoarthritis',
+      'Inflammatorisk ledsjukdom': 'Inflammtory joint disease',
+      'Akut trauma, höftfraktur': 'Acute trauma, hip fracture',
+      'Följdtillstånd barnsjukdom': 'Sequelae childhood hip disease',
+      'Idiopatisk nekros': 'Femoral head necrosis',
+      'Följdtillstånd efter trauma/fraktur': 'Sequelae trauma/fracture',
+      'Tumör': 'Tumor',
+      'Annan sekundär artros': 'Other secondary osteoarthritis',
+      'Akut trauma, övriga': 'Acute trauma, others',
+      'Övrigt': 'Other',
+      'Halv': 'Hemi',
+      'Alla företagets': 'Company stems',
+      'Andra tillverkare': 'Other manufacturers',
+      'Alla förstagångsrevisioner': 'All first time revisions',
+      'Första stamrevision': 'First stem revision',
+      'Första cuprevision': 'First cup revision',
+      'Första revision av annat slag': 'First revision of other than stem or cup',
+      'Aseptisk lossning': 'Aseptic loosening',
+      'Djup infektion': 'Deep infection',
+      'Luxation': 'Dislocation',
+      'Alla aseptiska orsaker': 'All aseptic causes',
+      'Kumalativ incidens': 'Cumulative incidence',
+      'Alla': 'All',
+      'År': 'Year',
+      'tid': 'time',
+      'Startdatum': 'Start Date',
+      'Slutdatum': 'End Date',
+      'Stammar': 'Stems',
+      'Cupar': 'Cups'
     };
     for (var item in translations) {
       newContent = newContent.replace(new RegExp(item + '(?![A-z])', 'g'), translations[item]);
@@ -480,7 +472,7 @@ Ext.define('shpr.controller.MainController', {
     this.oldChoices[part] = newChoices;
     if (addition || deletion) {
       if (!window.event.ctrlKey) {
-        var newValue = addition ? addition : deletion;
+        var newValue = addition || deletion;
         this.oldChoices[part] = [];
         this.oldChoices[part].push(newValue);
         this.getView().down('#' + part + 'Dropdown').clearValue();
@@ -1107,8 +1099,7 @@ Ext.define('shpr.view.Main', {
                 + 'Andel reviderade: ' + (record.get('revision') * 100).toFixed(2) + '%<br/>'
                 + 'Tid (år): ' + record.get('year').toFixed(2) + '<br/>'
                 + 'Antal reviderade: ' + record.get('n_event_rev') + '<br/>'
-                + 'Antal patienter ”at risk”: ' + record.get('at_risk') + '<br/>'
-              );
+                + 'Antal patienter ”at risk”: ' + record.get('at_risk') + '<br/>');
             }
           }
         },
@@ -1140,8 +1131,7 @@ Ext.define('shpr.view.Main', {
                 + 'Andel avlidna: ' + (record.get('death') * 100).toFixed(2) + '%<br/>'
                 + 'Tid (år): ' + record.get('year').toFixed(2) + '<br/>'
                 + 'Antal avlidna: ' + record.get('n_event_death') + '<br/>'
-                + 'Antal patienter ”at risk”: ' + record.get('at_risk') + '<br/>'
-              );
+                + 'Antal patienter ”at risk”: ' + record.get('at_risk') + '<br/>');
             }
           }
         }

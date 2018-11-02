@@ -34,10 +34,6 @@ Ext.util.CSS.createStyleSheet(''
   + '  padding-right: 0px;'
   + '}'
 
-  + '.scw-download-button {'
- // + '  visibility: hidden;'
-  + '}'
-  
   + '.scw-download-button span {'
   + '  font-family: FontAwesome, open_sans;'
   + '  font-weight: normal;'
@@ -45,7 +41,7 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
 
   + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(3), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(4), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(5), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(6), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(7) {'
-  + '	 border-top: 1px black solid;'
+  + '  border-top: 1px black solid;'
   + '}'
 
   + '.scw-missing-data-panel {'
@@ -58,14 +54,14 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
 
   + '.scw-spinner.inactive {'
-  + '	 display: none;'
+  + '  display: none;'
   + '}'
 
   + '.scw-qtip {'
   + '  width: 16px;'
   + '  height: 16px;'
   + '  display: inline-block;'
-  + '	 margin-bottom: 10px;'
+  + '  margin-bottom: 10px;'
   + '}'
 
   + '.scw-info {'
@@ -92,10 +88,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  position: absolute;'
   + '  top: -18px;'
   + '  left: 1px;'
-  + '}'
-
-  , 'shpr-companymodule'
-);
+  + '}', 'shpr-companymodule');
 
 Ext.define('shpr.controller.MainController', {
   extend: 'Ext.app.ViewController',
@@ -106,16 +99,16 @@ Ext.define('shpr.controller.MainController', {
     var spinner = Ext.ComponentQuery.query('#spinnerPanel')[0];
     var message = Ext.ComponentQuery.query('#missingDataPanel')[0];
 
-    var operationType  = view.down('#operationDropdown').getValue();
-    var protesis       = view.down('#protesisDropdown').getValue();
-    var revision       = view.down('#revisionDropdown').getValue();
-    var articleType    = view.down('#articleTypeDropdown').getValue();
-    var articleNumber  = view.down('#articleNumberDropdown').getValue();
+    var operationType = view.down('#operationDropdown').getValue();
+    var protesis = view.down('#protesisDropdown').getValue();
+    var revision = view.down('#revisionDropdown').getValue();
+    var articleType = view.down('#articleTypeDropdown').getValue();
+    var articleNumber = view.down('#articleNumberDropdown').getValue();
     var revisionReason = view.down('#causeDropdown').getValue();
     if (articleNumber === 'Alla') articleNumber = 'alla';
 
     var startDate = view.down('#startDate').getValue().toLocaleDateString();
-    var endDate   = view.down('#endDate').getValue().toLocaleDateString();
+    var endDate = view.down('#endDate').getValue().toLocaleDateString();
 
     /* IE hack */
     startDate = startDate.replace(/[^ -~]/g, '');
@@ -129,7 +122,7 @@ Ext.define('shpr.controller.MainController', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: '/stratum/api/statistics/shpr/supplier-mod4' + '?operationstyp=' + operationType + '&protestyp=' + protesis + '&rev_type=' + revision + '&artikeltyp=' + articleType + '&article_nr=' + articleNumber + '&rev_reason=' + revisionReason + '&start_datum=' + startDate + '&slut_datum=' + endDate,
+      url: '/stratum/api/statistics/shpr/supplier-mod4?operationstyp=' + operationType + '&protestyp=' + protesis + '&rev_type=' + revision + '&artikeltyp=' + articleType + '&article_nr=' + articleNumber + '&rev_reason=' + revisionReason + '&start_datum=' + startDate + '&slut_datum=' + endDate,
       success: function (response) {
         spinner && spinner.hide();
         var result = Ext.decode(response.responseText).data;
@@ -149,7 +142,7 @@ Ext.define('shpr.controller.MainController', {
   updateStartDate: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
-    var endDate   = view.down('#endDate').getValue();
+    var endDate = view.down('#endDate').getValue();
     if (startDate < new Date('1999-01-01')) view.down('#startDate').setValue(new Date('1999-01-01'));
     if (this.isDifferenceLessThan28Days()) {
       endDate.setTime(startDate.getTime() + 27 * 24 * 60 * 60 * 1000 + 60 * 60 * 1000);
@@ -161,7 +154,7 @@ Ext.define('shpr.controller.MainController', {
   updateEndDate: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
-    var endDate   = view.down('#endDate').getValue();
+    var endDate = view.down('#endDate').getValue();
     if (endDate > new Date()) view.down('#endDate').setValue(new Date());
     if (this.isDifferenceLessThan28Days()) {
       startDate.setTime(endDate.getTime() - 27 * 24 * 60 * 60 * 1000);
@@ -173,14 +166,13 @@ Ext.define('shpr.controller.MainController', {
   isDifferenceLessThan28Days: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
-    var endDate   = view.down('#endDate').getValue();
+    var endDate = view.down('#endDate').getValue();
     var dayInSeconds = 24 * 60 * 60 * 1000;
     var diffDays = Math.round((endDate.getTime() - startDate.getTime()) / (dayInSeconds));
     return diffDays + 1 < 28;
   },
 
-   exportTable: function (element) {
-    var view = this.getView();
+  exportTable: function (element) {
     var tag = element.el.dom;
     if (!tag) return;
     var content = this.createContentToDownload(element.itemId.replace('exportTable', ''));
@@ -217,7 +209,7 @@ Ext.define('shpr.controller.MainController', {
       content += headers.el.component.columns[column].titleEl.component.initialConfig.text + ';';
     }
     content += '\n';
-    content = language === 'Swedish' ? content :  this.translateContent(content, this.categoryTranslations);
+    content = language === 'Swedish' ? content : this.translateContent(content, this.categoryTranslations);
     var data = Ext.data.StoreManager.lookup('overviewStore');
     for (var i in data.data.items) {
       if (i === '') continue;
@@ -228,7 +220,7 @@ Ext.define('shpr.controller.MainController', {
       }
       content += '\n';
     }
-    content = language === 'Swedish' ? content :  this.translateContent(content, this.dataTranslations);
+    content = language === 'Swedish' ? content : this.translateContent(content, this.dataTranslations);
     /* Set BOM to let Excel know what the content is */
     content = '\ufeff' + content;
     return content;
@@ -237,14 +229,14 @@ Ext.define('shpr.controller.MainController', {
   getSelections: function () {
     var selections = {};
 
-    selections.operation      = this.getView().down('#operationDropdown').getDisplayValue();
-    selections.protesis       = this.getView().down('#protesisDropdown').getDisplayValue();
-    selections.revision       = this.getView().down('#revisionDropdown').getDisplayValue();
-    selections.articleType    = this.getView().down('#articleTypeDropdown').getDisplayValue();
-    selections.article        = this.getView().down('#articleNumberDropdown').getDisplayValue();
+    selections.operation = this.getView().down('#operationDropdown').getDisplayValue();
+    selections.protesis = this.getView().down('#protesisDropdown').getDisplayValue();
+    selections.revision = this.getView().down('#revisionDropdown').getDisplayValue();
+    selections.articleType = this.getView().down('#articleTypeDropdown').getDisplayValue();
+    selections.article = this.getView().down('#articleNumberDropdown').getDisplayValue();
     selections.revisionReason = this.getView().down('#causeDropdown').getDisplayValue();
-    selections.startDate      = this.getView().down('#startDate').getValue();
-    selections.endDate        = this.getView().down('#endDate').getValue();
+    selections.startDate = this.getView().down('#startDate').getValue();
+    selections.endDate = this.getView().down('#endDate').getValue();
     return selections;
   },
 
@@ -257,53 +249,53 @@ Ext.define('shpr.controller.MainController', {
   },
 
   categoryTranslations: {
-      "Alla"         : "All",
-      "Antal"        : "Quantity",
-      "Artikel"      : "Item",
-      "Artikelnummer": "Item Number", 
-      "Artikeltyp"   : "Type of Implant", 
-      "Aseptisk"     : "Aseptic",
-      "aseptiska"    : "aseptic",
-      "av annat slag": "of other than cup or stem",
-      "Beskrivning"  : "Description", 
-      "Caput"        : "Head",
-      "Caputliner"   : "Dual mobility liner",
-      "cuprevision"  : "cup revision",
-      "dagar"        : "days",
-      "Djup"         : "Deep",
-      "Enhet"        : "Unit", 
-      "Första"       : "First",
-      "förstagångsrevisioner": "first time revisions",
-      "Halv"         : "Hemi",
-      "infektion"    : "infection",
-      "Insatta"      : "Inserted",
-      "Klinik"       : "Unit",
-      "lossning"     : "loosening",
-      "Luxation"     : "Dislocation",
-      "Mer"          : "More",
-      "Operationstyp": "Type of Surgery", 
-      "orsaker"      : "causes",
-      "Plugg"        : "Plug",
-      "Primär"       : "Primary",
-      "Protestyp"    : "Type of Prothesis",
-      "Reviderade"   : "Revised",
-      "Revisionsorsak" : "Cause of Revision",
-      "Revisionstyp" : "Type of Revision",
-      "Riket"        : "Sweden",
-      "Samtliga"     : "All",
-      "Stam"         : "Stem",
-      "stamrevision" : "stem revision",
-      "år"           : "years",
-      "än"           : "than",
-      "Startdatum"   : "Start Date",
-      "Slutdatum"    : "End Date"
+    'Alla': 'All',
+    'Antal': 'Quantity',
+    'Artikel': 'Item',
+    'Artikelnummer': 'Item Number',
+    'Artikeltyp': 'Type of Implant',
+    'Aseptisk': 'Aseptic',
+    'aseptiska': 'aseptic',
+    'av annat slag': 'of other than cup or stem',
+    'Beskrivning': 'Description',
+    'Caput': 'Head',
+    'Caputliner': 'Dual mobility liner',
+    'cuprevision': 'cup revision',
+    'dagar': 'days',
+    'Djup': 'Deep',
+    'Enhet': 'Unit',
+    'Första': 'First',
+    'förstagångsrevisioner': 'first time revisions',
+    'Halv': 'Hemi',
+    'infektion': 'infection',
+    'Insatta': 'Inserted',
+    'Klinik': 'Unit',
+    'lossning': 'loosening',
+    'Luxation': 'Dislocation',
+    'Mer': 'More',
+    'Operationstyp': 'Type of Surgery',
+    'orsaker': 'causes',
+    'Plugg': 'Plug',
+    'Primär': 'Primary',
+    'Protestyp': 'Type of Prothesis',
+    'Reviderade': 'Revised',
+    'Revisionsorsak': 'Cause of Revision',
+    'Revisionstyp': 'Type of Revision',
+    'Riket': 'Sweden',
+    'Samtliga': 'All',
+    'Stam': 'Stem',
+    'stamrevision': 'stem revision',
+    'år': 'years',
+    'än': 'than',
+    'Startdatum': 'Start Date',
+    'Slutdatum': 'End Date'
   },
-  
+
   dataTranslations: {
-    "caput"        : "head",
-    "stam"         : "stem",
-    "plugg"        : "plug",
-    "caputliner"   : "dual mobility liner",
+    'caput': 'head',
+    'stam': 'stem',
+    'plugg': 'plug',
+    'caputliner': 'dual mobility liner',
   }
 });
 

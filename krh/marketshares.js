@@ -35,9 +35,9 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
 
   + '.scw-download-button {'
-//  + '  visibility: hidden;'
+  //  + '  visibility: hidden;'
   + '}'
-  
+
   + '.scw-download-button span {'
   + '  font-family: FontAwesome, open_sans;'
   + '  font-weight: normal;'
@@ -45,7 +45,7 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
 
   + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(3), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(4), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(5) {'
-  + '	 border-top: 1px black solid;'
+  + '  border-top: 1px black solid;'
   + '}'
 
   + '.scw-missing-data-panel {'
@@ -58,16 +58,16 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
 
   + '.scw-spinner.inactive {'
-  + '	 display: none;'
+  + '  display: none;'
   + '}'
 
   + '.scw-qtip {'
   + '  width: 16px;'
   + '  height: 16px;'
   + '  display: inline-block;'
-  + '	 margin-bottom: 10px;'
+  + '  margin-bottom: 10px;'
   + '}'
-  
+
   + '.scw-info {'
   + '  position: relative;'
   + '  display: inline-block;'
@@ -92,10 +92,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  position: absolute;'
   + '  top: -18px;'
   + '  left: 1px;'
-  + '}'
-
-  , 'shpr-companymodule'
-);
+  + '}', 'shpr-companymodule');
 
 Ext.apply(Ext.QuickTips.getQuickTip(), {
   dismissDelay: 0
@@ -107,12 +104,12 @@ Ext.define('shpr.controller.MainController', {
 
   updateGrid: function () {
     var view = this.getView();
-    var region      = view.down('#regionDropdown').getValue();
-    var protesis    = view.down('#protesisDropdown').getValue();
+    var region = view.down('#regionDropdown').getValue();
+    var protesis = view.down('#protesisDropdown').getValue();
     var articleType = view.down('#articleTypeDropdown').getValue();
-    var fixation    = view.down('#fixationDropdown').getValue();
-    var startDate   = view.down('#startDate').getValue().toLocaleDateString();
-    var endDate     = view.down('#endDate').getValue().toLocaleDateString();
+    var fixation = view.down('#fixationDropdown').getValue();
+    var startDate = view.down('#startDate').getValue().toLocaleDateString();
+    var endDate = view.down('#endDate').getValue().toLocaleDateString();
 
     /* IE hack */
     startDate = startDate.replace(/[^ -~]/g, '');
@@ -129,7 +126,7 @@ Ext.define('shpr.controller.MainController', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: '/stratum/api/statistics/shpr/supplier-mod2' + '?landsting=' + region + '&protestyp=' + protesis + '&artikeltyp=' + articleType + '&fixation=' + fixation + '&start_datum=' + startDate + '&slut_datum=' + endDate,
+      url: '/stratum/api/statistics/shpr/supplier-mod2?landsting=' + region + '&protestyp=' + protesis + '&artikeltyp=' + articleType + '&fixation=' + fixation + '&start_datum=' + startDate + '&slut_datum=' + endDate,
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
         spinner && spinner.hide();
@@ -145,7 +142,7 @@ Ext.define('shpr.controller.MainController', {
   updateStartDate: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
-    var endDate   = view.down('#endDate').getValue();
+    var endDate = view.down('#endDate').getValue();
     if (startDate < new Date('1999-01-01')) view.down('#startDate').setValue(new Date('1999-01-01'));
     if (this.isDifferenceLessThanThirtyDays()) {
       endDate.setTime(startDate.getTime() + 27 * 24 * 60 * 60 * 1000 + 60 * 60 * 1000);
@@ -157,7 +154,7 @@ Ext.define('shpr.controller.MainController', {
   updateEndDate: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
-    var endDate   = view.down('#endDate').getValue();
+    var endDate = view.down('#endDate').getValue();
     if (endDate > new Date()) view.down('#endDate').setValue(new Date());
     if (this.isDifferenceLessThanThirtyDays()) {
       startDate.setTime(endDate.getTime() - 27 * 24 * 60 * 60 * 1000);
@@ -169,17 +166,16 @@ Ext.define('shpr.controller.MainController', {
   isDifferenceLessThanThirtyDays: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
-    var endDate   = view.down('#endDate').getValue();
+    var endDate = view.down('#endDate').getValue();
     var dayInSeconds = 24 * 60 * 60 * 1000;
     var diffDays = Math.round((endDate.getTime() - startDate.getTime()) / (dayInSeconds));
     return diffDays < 27;
   },
 
   exportTable: function (element) {
-    var view = this.getView();
     var tag = element.el.dom;
     if (!tag) return;
-    
+
     var content = this.createContentToDownload(element.itemId.replace('exportTable', ''));
     var blob = new Blob([content], { type: 'text/html;charset=utf-8' });
     var url = URL.createObjectURL(blob);
@@ -220,7 +216,7 @@ Ext.define('shpr.controller.MainController', {
       }
       content += '\n';
     }
-    content = language === 'Swedish' ? content :  this.translateContent(content);
+    content = language === 'Swedish' ? content : this.translateContent(content);
     /* Set BOM to let Excel know what the content is */
     content = '\ufeff' + content;
     return content;
@@ -229,18 +225,18 @@ Ext.define('shpr.controller.MainController', {
   getSelections: function () {
     var view = this.getView();
     var selections = {};
-    selections.region      = view.down('#regionDropdown').getDisplayValue();
-    selections.protesis    = view.down('#protesisDropdown').getDisplayValue();
+    selections.region = view.down('#regionDropdown').getDisplayValue();
+    selections.protesis = view.down('#protesisDropdown').getDisplayValue();
     selections.articleType = view.down('#articleTypeDropdown').getDisplayValue();
-    selections.fixation    = view.down('#fixationDropdown').getDisplayValue();
-    selections.startDate   = view.down('#startDate').getValue();
-    selections.endDate     = view.down('#endDate').getValue();
+    selections.fixation = view.down('#fixationDropdown').getDisplayValue();
+    selections.startDate = view.down('#startDate').getValue();
+    selections.endDate = view.down('#endDate').getValue();
     return selections;
   },
 
   translateContent: function (content) {
     var newContent = content;
-    translations = this.categoryTranslations;
+    var translations = this.categoryTranslations;
     for (var item in translations) {
       newContent = newContent.replace(new RegExp(item + '(?![A-z])', 'g'), translations[item]);
     }
@@ -248,33 +244,31 @@ Ext.define('shpr.controller.MainController', {
   },
 
   categoryTranslations: {
-      "Artikeltyp": "Type of Implant",
-      "Antal egna": "Quantity Company",
-      "Antal alla": "Quantity All",
-      "Marknadsandel": "Market Share in Sweden",
-      "Protestyp": "Type of Prothesis",
-      "Artikeltyp": "Type of Implant",
-      "Riket": "Sweden",
-      "Samtliga": "All",
-      "Caput": "Head",
-      "caput": "head",
-      "Plugg": "Plug",
-      "plugg": "plug",
-      "Stam": "Stem",
-      "stam": "stem",
-      "Caputliner": "Dual Mobility Liner",
-      "caputliner": "dual mobility liner",
-      "Ocementerad": "Non-cemented",
-      "Cementerad": "Cemented",
-      "Omvänd hybrid": "Reversed hybrid",
-      "Ytersättning": "Resurfacing",
-      "Inte specificerad": "Not specified",
-      "Inte specificerat": "Not specified",
-      "Alla": "All",
-      "Riket": "Sweden",
-      "Startdatum"   : "Start Date",
-      "Slutdatum"    : "End Date"
-    }
+    'Artikeltyp': 'Type of Implant',
+    'Antal egna': 'Quantity Company',
+    'Antal alla': 'Quantity All',
+    'Marknadsandel': 'Market Share in Sweden',
+    'Protestyp': 'Type of Prothesis',
+    'Riket': 'Sweden',
+    'Samtliga': 'All',
+    'Caput': 'Head',
+    'caput': 'head',
+    'Plugg': 'Plug',
+    'plugg': 'plug',
+    'Stam': 'Stem',
+    'stam': 'stem',
+    'Caputliner': 'Dual Mobility Liner',
+    'caputliner': 'dual mobility liner',
+    'Ocementerad': 'Non-cemented',
+    'Cementerad': 'Cemented',
+    'Omvänd hybrid': 'Reversed hybrid',
+    'Ytersättning': 'Resurfacing',
+    'Inte specificerad': 'Not specified',
+    'Inte specificerat': 'Not specified',
+    'Alla': 'All',
+    'Startdatum': 'Start Date',
+    'Slutdatum': 'End Date'
+  }
 
 });
 
