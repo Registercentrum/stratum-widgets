@@ -13,29 +13,31 @@ var treatmentWidget = function (current, callback, loadonly) {
 
   !treatmentWidget.valueGroups[4056] && fetchValueGroup(4056);
   !treatmentWidget.valueGroups[4061] && fetchValueGroup(4061);
-  !treatmentWidget.valueGroups[4157] && fetchValueGroup(4157);
-  !treatmentWidget.valueGroups[4188] && fetchValueGroup(4188);
+  !treatmentWidget.valueGroups[6030] && fetchValueGroup(6030);
+  !treatmentWidget.valueGroups[6031] && fetchValueGroup(6031);
   !treatmentWidget.valueGroups[5665] && fetchValueGroup(5665);
+  !treatmentWidget.valueGroups[4188] && fetchValueGroup(4188);
+  !treatmentWidget.valueGroups[4157] && fetchValueGroup(4157);
 
   if (loadonly) return;
-  
+
   initValues();
 
   Ext.create('Rc.component.Selector', {
     widget: treatmentWidget,
+    addValueCodes: true,
     levels: [
       {
         data: treatmentWidget.valueGroups[4056],
         restore: function () {
-          treatmentWidget.valueGroups[4188] = Ext.decode(treatmentWidget.backups[4188]).data;
-          treatmentWidget.valueGroups[4157] = Ext.decode(treatmentWidget.backups[4157]).data;
-          attachChildren(4188);
+          treatmentWidget.valueGroups[6031] = Ext.decode(treatmentWidget.backups[6031]).data;
+          treatmentWidget.valueGroups[6030] = Ext.decode(treatmentWidget.backups[6030]).data;
         },
         click: function (record) {
           treatmentWidget.trttype = record.data.ValueCode;
           treatmentWidget.result.Trt_Type = treatmentWidget.trttype;
           filterAllValues();
-          return { data: treatmentWidget.valueGroups[4188] };
+          return { data: treatmentWidget.valueGroups[6031] };
         }
       },
       {
@@ -62,7 +64,7 @@ var treatmentWidget = function (current, callback, loadonly) {
           } else {
             treatmentWidget.result.Trt_Code = code;
           }
-          
+
           return values;
         }
       },
@@ -90,51 +92,44 @@ var treatmentWidget = function (current, callback, loadonly) {
 
   function initValues() {
     var allLoaded = (treatmentWidget.valueGroups[4056] && treatmentWidget.valueGroups[4056].length > 0)
-                 && (treatmentWidget.valueGroups[4061] && treatmentWidget.valueGroups[4061].length > 0)
-                 && (treatmentWidget.valueGroups[5665] && treatmentWidget.valueGroups[5665].length > 0)
-                 && (treatmentWidget.valueGroups[4188] && treatmentWidget.valueGroups[4188].length > 0)
-                 && (treatmentWidget.valueGroups[4157] && treatmentWidget.valueGroups[4157].length > 0);
+      && (treatmentWidget.valueGroups[4061] && treatmentWidget.valueGroups[4061].length > 0)
+      && (treatmentWidget.valueGroups[5665] && treatmentWidget.valueGroups[5665].length > 0)
+      && (treatmentWidget.valueGroups[6031] && treatmentWidget.valueGroups[6031].length > 0)
+      && (treatmentWidget.valueGroups[6030] && treatmentWidget.valueGroups[6030].length > 0);
     if (!allLoaded) {
       setTimeout(function () { initValues(); }, 100);
       return;
     }
-
-    attachChildren(4188);
+    treatmentWidget.valueGroups[6031] = Ext.decode(treatmentWidget.backups[6031]).data;
+    treatmentWidget.valueGroups[6030] = Ext.decode(treatmentWidget.backups[6030]).data;
   }
 
   function filterAllValues() {
-    for (var i = 0; i < treatmentWidget.valueGroups[4188].length; i++) {
-      for (var j = 0; j < treatmentWidget.valueGroups[4188][i].Children.length; j++) {
-        for (var k = 0; k < treatmentWidget.valueGroups[4188][i].Children[j].Children.length; k++) {
-          if (!filterSpecificValue(treatmentWidget.valueGroups[4188][i].Children[j].Children[k].DomainValueID, treatmentWidget.trttype, treatmentWidget.icd10, treatmentWidget.isChild)) {
-            treatmentWidget.valueGroups[4188][i].Children[j].Children.splice(k, 1);
-            k--;
+    for (var i = 0; i < treatmentWidget.valueGroups[6031].length; i++) {
+      for (var j = 0; j < treatmentWidget.valueGroups[6031][i].Children.length; j++) {
+        if (!treatmentWidget.valueGroups[6031][i].Children[j].Children) {
+          if (!filterSpecificValue(treatmentWidget.valueGroups[6031][i].Children[j].DomainValueID, treatmentWidget.trttype, treatmentWidget.icd10, treatmentWidget.isChild)) {
+            treatmentWidget.valueGroups[6031][i].Children.splice(j, 1);
+            j--;
+          }
+        } else {
+          for (var k = 0; k < treatmentWidget.valueGroups[6031][i].Children[j].Children.length; k++) {
+            if (!filterSpecificValue(treatmentWidget.valueGroups[6031][i].Children[j].Children[k].DomainValueID, treatmentWidget.trttype, treatmentWidget.icd10, treatmentWidget.isChild)) {
+              treatmentWidget.valueGroups[6031][i].Children[j].Children.splice(k, 1);
+              k--;
+            }
+          }
+          if (treatmentWidget.valueGroups[6031][i].Children[j].Children.length === 0) {
+            treatmentWidget.valueGroups[6031][i].Children.splice(j, 1);
+            j--;
           }
         }
-        if (treatmentWidget.valueGroups[4188][i].Children[j].Children.length === 0) {
-          treatmentWidget.valueGroups[4188][i].Children.splice(j, 1);
-          j--;
-        }
       }
-      if (treatmentWidget.valueGroups[4188][i].Children.length === 0) {
-        treatmentWidget.valueGroups[4188].splice(i, 1);
+      if (treatmentWidget.valueGroups[6031][i].Children.length === 0) {
+        treatmentWidget.valueGroups[6031].splice(i, 1);
         i--;
       }
     }
-  }
-
-  function attachChildren(domain) {
-    for (var i = 0; i < treatmentWidget.valueGroups[domain].length; i++) {
-      if (!treatmentWidget.valueGroups[domain][i].Children) continue;
-      for (var j = 0; j < treatmentWidget.valueGroups[domain][i].Children.length; j++) {
-        treatmentWidget.valueGroups[domain][i].Children[j] = getGrandChildren(treatmentWidget.valueGroups[domain][i].Children[j]);
-      }
-    }
-  }
-
-  function getGrandChildren(item) {
-    var grandChildren = treatmentWidget.valueGroups[4157].filter(function (i) { return i.DomainValueID === item.DomainValueID; });
-    return grandChildren && grandChildren[0];
   }
 
   function filterSpecificValue(aTreatmentCodeID, aTreatType, aICD10, isChildFracture) {
@@ -261,7 +256,7 @@ Ext.define('Rc.component.Selector', {
       '<div><span class="sfr-angle-left">&#xf104</span>{ValueName}<span class="sfr-angle-right">&#xf105</span></div>',
       '<tpl else>',
       '<div style="margin: 0; padding: 0 15px; overflow: hidden; min-width: 200px;" class="sfr-menu-item">',
-      '<div><span class="sfr-angle-left">&#xf104</span>{ValueName}</div>',
+      '<div><span class="sfr-angle-left">&#xf104</span><span class="sfr-value-code">({ValueCode})</span> {ValueName}</div>',
       '</tpl>',
       '</div>',
       '</tpl>'
@@ -289,7 +284,7 @@ Ext.define('Rc.component.Selector', {
       items.push(this.createLevel(click, i, tpl, restore));
     }
     config.items = items;
-
+    config.cls = !config.addValueCodes ? 'sfr-modal' : 'sfr-use-value-codes sfr-modal';
     this.callParent([config]);
   },
 });
@@ -359,5 +354,10 @@ Ext.util.CSS.createStyleSheet(''
   + '.sfr-menu-item {'
   + '  border-bottom: 1px solid #eee;'
   + '  padding: 5px 15px 5px 15px !important;'
-  + '}', 
-'sfr-selector');
+  + '}'
+  + '.sfr-value-code{'
+  + '  display: none;'
+  + '}'
+  + '.sfr-use-value-codes .sfr-value-code {'
+  + '  display: initial;'
+  + '}', 'sfr-selector');

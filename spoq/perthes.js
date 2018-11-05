@@ -8,39 +8,40 @@ var containerHtml = ''
   + '<div id="utdataPerthesOpmethods"></div>'
   + '<div id="utdataPerthesOpmethods2"></div>'
   + '</div>';
+try {
+  Ext.create('Ext.container.Container', {
+    renderTo: (Stratum.containers && Stratum.containers['SPOQ/utdata_perthes']) || Ext.getBody(),
+    html: containerHtml,
+    listeners: {
+      afterRender: function () {
+        var configPerthes = {
+          url: '/stratum/api/statistics/spoq/agesexdistr/?registerid=2190',
+          isPercentage: false,
+          validYnames: ['Pojkar', 'Flickor'],
+          categoryAttrib: 'Ålderskategori',
+          isBarChart: true,
+          legendText: 'Kön',
+          fixedColors: ['#0479A6', '#992B4E'],
+          rotateText: false
+        };
 
-Ext.create('Ext.container.Container', {
-  renderTo: (Stratum.containers && Stratum.containers['SPOQ/utdata_perthes']) || 'main-container',
-  html: containerHtml,
-  listeners: {
-    afterRender: function () {
-      var configPerthes = {
-        url: '/stratum/api/statistics/spoq/agesexdistr/?registerid=2190',
-        isPercentage: false,
-        validYnames: ['Pojkar', 'Flickor'],
-        categoryAttrib: 'Ålderskategori',
-        isBarChart: true,
-        legendText: 'Kön',
-        fixedColors: ['#0479A6', '#992B4E'],
-        rotateText: false
-      };
+        var configPerthesOpMethods = {
+          url: '/stratum/api/statistics/spoq/tmpscreening/?registerid=2190&sortorder=3',
+          isPercentage: false,
+          validYnames: ['n'],
+          categoryAttrib: 'opmetod',
+          isBarChart: true,
+          fixedColors: ['#0075A4'],
+          legendText: '',
+          rotateText: true
+        };
 
-      var configPerthesOpMethods = {
-        url: '/stratum/api/statistics/spoq/tmpscreening/?registerid=2190&sortorder=3',
-        isPercentage: false,
-        validYnames: ['n'],
-        categoryAttrib: 'opmetod',
-        isBarChart: true,
-        fixedColors: ['#0075A4'],
-        legendText: '',
-        rotateText: true
-      };
-      
-      var renderStatistics = Repository.Local.Methods.renderStatistics;
-      renderStatistics(true, 'utdataPerthes', configPerthes);
-      renderStatistics(false, 'utdataPerthes2', configPerthes);
-      renderStatistics(true, 'utdataPerthesOpmethods', configPerthesOpMethods);
-      renderStatistics(false, 'utdataPerthesOpmethods2', configPerthesOpMethods);
+        var renderStatistics = Repository.Local.Methods.renderStatistics;
+        renderStatistics(true, 'utdataPerthes', configPerthes);
+        renderStatistics(false, 'utdataPerthes2', configPerthes);
+        renderStatistics(true, 'utdataPerthesOpmethods', configPerthesOpMethods);
+        renderStatistics(false, 'utdataPerthesOpmethods2', configPerthesOpMethods);
+      },
     },
-  },
-});
+  });
+} catch (error) { location.reload(); }
