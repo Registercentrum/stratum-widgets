@@ -16,8 +16,7 @@ var treatmentWidget = function (current, callback, loadonly) {
   !treatmentWidget.valueGroups[6030] && fetchValueGroup(6030);
   !treatmentWidget.valueGroups[6031] && fetchValueGroup(6031);
   !treatmentWidget.valueGroups[5665] && fetchValueGroup(5665);
-  !treatmentWidget.valueGroups[4188] && fetchValueGroup(4188);
-  !treatmentWidget.valueGroups[4157] && fetchValueGroup(4157);
+  !treatmentWidget.valueGroups[4156] && fetchValueGroup(4156);
 
   if (loadonly) return;
 
@@ -32,6 +31,7 @@ var treatmentWidget = function (current, callback, loadonly) {
         restore: function () {
           treatmentWidget.valueGroups[6031] = Ext.decode(treatmentWidget.backups[6031]).data;
           treatmentWidget.valueGroups[6030] = Ext.decode(treatmentWidget.backups[6030]).data;
+          attachChildren(6031);
         },
         click: function (record) {
           treatmentWidget.trttype = record.data.ValueCode;
@@ -95,13 +95,29 @@ var treatmentWidget = function (current, callback, loadonly) {
       && (treatmentWidget.valueGroups[4061] && treatmentWidget.valueGroups[4061].length > 0)
       && (treatmentWidget.valueGroups[5665] && treatmentWidget.valueGroups[5665].length > 0)
       && (treatmentWidget.valueGroups[6031] && treatmentWidget.valueGroups[6031].length > 0)
-      && (treatmentWidget.valueGroups[6030] && treatmentWidget.valueGroups[6030].length > 0);
+      && (treatmentWidget.valueGroups[6030] && treatmentWidget.valueGroups[6030].length > 0)
+      && (treatmentWidget.valueGroups[4156] && treatmentWidget.valueGroups[4156].length > 0);
     if (!allLoaded) {
       setTimeout(function () { initValues(); }, 100);
       return;
     }
     treatmentWidget.valueGroups[6031] = Ext.decode(treatmentWidget.backups[6031]).data;
     treatmentWidget.valueGroups[6030] = Ext.decode(treatmentWidget.backups[6030]).data;
+    attachChildren(6031);
+  }
+
+  function attachChildren(domain) {
+    for (var i = 0; i < treatmentWidget.valueGroups[domain].length; i++) {
+      if (!treatmentWidget.valueGroups[domain][i].Children) continue;
+      for (var j = 0; j < treatmentWidget.valueGroups[domain][i].Children.length; j++) {
+        treatmentWidget.valueGroups[domain][i].Children[j].Children = getGrandChildren(treatmentWidget.valueGroups[domain][i].Children[j]);
+      }
+    }
+  }
+  
+  function getGrandChildren(item) {
+    var grandChildren = treatmentWidget.valueGroups[6030].filter(function (i) { return i.DomainValueID === item.DomainValueID; });
+    return grandChildren && grandChildren[0] && grandChildren[0].Children;
   }
 
   function filterAllValues() {
@@ -200,7 +216,7 @@ Ext.define('Rc.component.Selector', {
   layout: 'vbox',
   closable: true,
   cls: 'sfr-modal',
-  title: 'Välj skadekod:',
+  title: 'Välj behandling:',
   widget: false,
   createLevel: function (click, i, template, restore) {
     return {

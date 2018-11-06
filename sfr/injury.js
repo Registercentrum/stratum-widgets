@@ -82,6 +82,7 @@ Ext.define('Rc.component.Selector', {
   frame: true,
   layout: 'vbox',
   closable: true,
+  draggable: true,
   cls: 'sfr-modal',
   title: 'Välj skadekod:',
   widget: false,
