@@ -1,5 +1,5 @@
 
-Ext.util.CSS.removeStyleSheet('shpr-company');
+Ext.util.CSS.removeStyleSheet('shpr-companymodule');
 Ext.util.CSS.createStyleSheet(''
 
   + '.scw-header {'
@@ -7,6 +7,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  padding: 0 0 0 2px;'
   + '  font-weight: normal;'
   + '  margin: 0 0 18px 0;'
+  + '  display: inline-block'
   + '}'
 
   + '.scw-label {'
@@ -56,6 +57,10 @@ Ext.util.CSS.createStyleSheet(''
   + '  border-top: 1px black solid;'
   + '}'
 
+  + '.scw-download-button {'
+  // + '  visibility: hidden;'
+  + '}'
+
   + '.scw-download-button span {'
   + '  font-family: FontAwesome, open_sans;'
   + '  font-weight: normal;'
@@ -89,13 +94,11 @@ Ext.util.CSS.createStyleSheet(''
   + '  color: white;'
   + '  font-family: robotoslab;'
   + '  font-size: 10px;'
-  // + '  font-weight: 500;'
   + '  font-style: italic;'
   + '  background: #3e9bbc;'
   + '  display: inline-block;'
   + '  line-height: 10px;'
   + '  padding-right: 2px;'
-  // + '  letter-spacing: 1.5px;'
   + '  position: absolute;'
   + '  top: -18px;'
   + '  left: 1px;'
@@ -105,9 +108,9 @@ Ext.apply(Ext.QuickTips.getQuickTip(), {
   dismissDelay: 0
 });
 
-Ext.define('shpr.controller.MainController', {
+Ext.define('shpr.volume.MainController', {
   extend: 'Ext.app.ViewController',
-  alias: 'controller.main',
+  alias: 'controller.volume.main',
 
   updateGrid: function () {
     var view = this.getView();
@@ -201,23 +204,24 @@ Ext.define('shpr.controller.MainController', {
   },
 
   createContentToDownload: function (language) {
+    var separator = language === 'Swedish' ? ';' : ';';
     var selections = this.getSelections();
     var dateFormat = language === 'Swedish' ? 'Y-m-d' : 'd/m/Y';
     var headers = 'Enhet; Operationstyp; Protestyp; Artikeltyp; Artikel;Startdatum; Slutdatum;\n';
     var content = '';
     content += headers;
-    content += selections.clinic + ';';
-    content += selections.operation + ';';
-    content += selections.protesis + ';';
-    content += selections.articleType + ';';
-    content += selections.article === '' ? 'Alla;' : selections.article + ';';
-    content += Ext.Date.format(selections.startDate, dateFormat) + ';';
-    content += Ext.Date.format(selections.endDate, dateFormat) + ';';
+    content += selections.clinic + separator;
+    content += selections.operation + separator;
+    content += selections.protesis + separator;
+    content += selections.articleType + separator;
+    content += selections.article === '' ? 'Alla;' : selections.article + separator;
+    content += Ext.Date.format(selections.startDate, dateFormat) + separator;
+    content += Ext.Date.format(selections.endDate, dateFormat) + separator;
     content += '\n\n';
     headers = this.getView().down('#dataPanel');
     for (var column in headers.el.component.columns) {
       if (column === '') continue;
-      content += headers.el.component.columns[column].titleEl.component.initialConfig.text + ';';
+      content += headers.el.component.columns[column].titleEl.component.initialConfig.text + separator;
     }
     content += '\n';
     content = language === 'Swedish' ? content : this.translateContent(content, this.categoryTranslations);
@@ -227,7 +231,7 @@ Ext.define('shpr.controller.MainController', {
       for (var item in data.data.items[i].data) {
         if (item === 'id') continue;
         var value = data.data.items[i].data[item];
-        content += value + ';';
+        content += value + separator;
       }
       content += '\n';
     }
@@ -278,8 +282,7 @@ Ext.define('shpr.controller.MainController', {
     'Samtliga': 'All',
     'Stam': 'Stem',
     'Startdatum': 'Start Date',
-    'Slutdatum': 'End Date'
-  },
+    'Slutdatum': 'End Dat' },
 
   dataTranslations: {
     'Riket': 'Sweden',
@@ -312,7 +315,7 @@ Ext.define('shpr.view.Filter', {
 
 Ext.define('shpr.view.Main', {
   extend: 'Ext.container.Container',
-  controller: 'main',
+  controller: 'volume.main',
   id: 'ShprMain',
   items: [
     {
@@ -606,11 +609,8 @@ Ext.define('shpr.view.Main', {
 Ext.application({
   name: 'shpr',
   units: [],
-  viewcontrollers: [
-    'DetailsController'
-  ],
   launch: function () {
-    var target = (typeof Stratum !== 'undefined') ? Stratum.containers['KRH/ComponentsUsed'] : 'output';
+    var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['KRH/ComponentsUsed'] : 'contentPanel';
     var main = Ext.create('shpr.view.Main', {
       renderTo: target
     });

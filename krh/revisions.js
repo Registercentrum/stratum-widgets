@@ -90,9 +90,9 @@ Ext.util.CSS.createStyleSheet(''
   + '  left: 1px;'
   + '}', 'shpr-companymodule');
 
-Ext.define('shpr.controller.MainController', {
+Ext.define('shpr.revisions.MainController', {
   extend: 'Ext.app.ViewController',
-  alias: 'controller.main',
+  alias: 'controller.revisions.main',
 
   updateGrid: function () {
     var view = this.getView();
@@ -288,7 +288,7 @@ Ext.define('shpr.controller.MainController', {
     'år': 'years',
     'än': 'than',
     'Startdatum': 'Start Date',
-    'Slutdatum': 'End Date'
+    'Slutdatum': 'End Dat'
   },
 
   dataTranslations: {
@@ -321,7 +321,7 @@ Ext.define('shpr.view.Filter', {
 
 Ext.define('shpr.view.Main', {
   extend: 'Ext.container.Container',
-  controller: 'main',
+  controller: 'revisions.main',
   itemId: 'mainView',
   items: [
     {
@@ -664,7 +664,7 @@ Ext.application({
     'DetailsController'
   ],
   launch: function () {
-    var target = (typeof Stratum !== 'undefined') ? Stratum.containers['KRH/RevisionScope'] : 'output';
+    var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['KRH/RevisionScope'] : 'contentPanel';
     var main = Ext.create('shpr.view.Main', {
       renderTo: target
     });

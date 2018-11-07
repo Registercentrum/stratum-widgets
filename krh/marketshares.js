@@ -7,6 +7,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  padding: 0 0 0 2px;'
   + '  font-weight: normal;'
   + '  margin: 0 0 18px 0;'
+  + '  display: inline-block'
   + '}'
 
   + '.scw-label {'
@@ -267,9 +268,8 @@ Ext.define('shpr.controller.MainController', {
     'Inte specificerat': 'Not specified',
     'Alla': 'All',
     'Startdatum': 'Start Date',
-    'Slutdatum': 'End Date'
+    'Slutdatum': 'End Dat'
   }
-
 });
 
 Ext.define('shpr.view.Filter', {
@@ -607,7 +607,7 @@ Ext.application({
     'DetailsController'
   ],
   launch: function () {
-    var target = (typeof Stratum !== 'undefined') ? Stratum.containers['KRH/MarketShares'] : 'output';
+    var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['KRH/MarketShares'] : 'contentPanel';
     var main = Ext.create('shpr.view.Main', {
       renderTo: target
     });

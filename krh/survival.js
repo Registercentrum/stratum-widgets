@@ -7,6 +7,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  padding: 0 0 0 2px;'
   + '  font-weight: normal;'
   + '  margin: 0 0 18px 0;'
+  + '  display: inline-block;'
   + '}'
 
   + '.scw-label {'
@@ -132,9 +133,9 @@ Ext.util.CSS.createStyleSheet(''
   + '  left: 1px;'
   + '}', 'shpr-company');
 
-Ext.define('shpr.controller.MainController', {
+Ext.define('shpr.graph.MainController', {
   extend: 'Ext.app.ViewController',
-  alias: 'controller.main',
+  alias: 'controller.graph.main',
   updateGrid: function () {
     var view = this.getView();
     var protesis = view.down('#protesisDropdown').getValue();
@@ -591,7 +592,7 @@ Ext.define('shpr.store.Incidens', {
 
 Ext.define('shpr.view.Main', {
   extend: 'Ext.container.Container',
-  controller: 'main',
+  controller: 'graph.main',
   itemId: 'mainView',
   items: [
     {
@@ -921,7 +922,7 @@ Ext.define('shpr.view.Main', {
     },
     {
       xtype: 'cartesian',
-      controller: 'main',
+      controller: 'graph.main',
       itemId: 'survival',
       width: '100%',
       hidden: true,
@@ -997,7 +998,7 @@ Ext.define('shpr.view.Main', {
     },
     {
       xtype: 'chart',
-      controller: 'main',
+      controller: 'graph.main',
       itemId: 'incidens',
       width: '100%',
       height: 500,
@@ -1180,10 +1181,10 @@ Ext.application({
   name: 'shpr',
   units: [],
   viewcontrollers: [
-    'DetailsController'
+  //  'DetailsController'
   ],
   launch: function () {
-    var target = (typeof Stratum !== 'undefined') ? Stratum.containers['KRH/Graph'] : 'output';
+    var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['KRH/Graph'] : 'contentPanel';
     var main = Ext.create('shpr.view.Main', {
       renderTo: target
     });
