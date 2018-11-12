@@ -308,7 +308,7 @@
                   // config.series = [Ext.apply({
                   config.series = {
                       type: 'gauge',
-                      field: config.valueField,
+                      angleField: config.valueField,
                       donut: 50,
                       colors: ['#3CB6CE', '#ddd'],
                       minimum: 0,
