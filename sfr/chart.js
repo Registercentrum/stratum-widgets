@@ -40,7 +40,6 @@ var SfrWidget = {
   },
   
   init: function (callBackFn) {
-      console.clear();
     Ext.Ajax.request({
       url: '/stratum/api/metadata/domainvalues/domain/4299',
       method: 'GET',
