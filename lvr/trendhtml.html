@@ -1,5 +1,9 @@
+<h1>KOL öppenvård - Indikatorer över tid</h1>
+<div id='main-container'></div>
+    <p style="margin-top: 10px; font-size: 12px;"><strong>*</strong> Alla/landsting/enheter med låg svarsfrekvens (andel svar på indikatorn av rapporterade patienter < 60 %).</p>
+    <p style="margin-top: 10px; font-size: 12px;">Endast landsting/enheter med minst 30 rapporterade patienter och 15 rapporterade svar på indikatorn syns i grafen.</p>
 
-Ext.setEnableKeyboardMode(true);
+<script type="text/javascript">
 ! function() {
     window.LVRMatris = window.LVRMatris = {
         init: function(config) {
@@ -362,7 +366,7 @@ Ext.setEnableKeyboardMode(true);
                 }
             };
         },
-        trendTooltipRenderer: function (tooltip, storeItem, item) {
+        trendTooltipRenderer: function (storeItem, item) {
             var dataArr = Ext.Array.pluck(LVRMatris.getStore({}, false).data.items, "data");
             var period = item.record.data.period;
             var dataObj = Ext.Array.findBy(dataArr, function (i) {return i.period == period && i[item.field];});
@@ -376,7 +380,7 @@ Ext.setEnableKeyboardMode(true);
                     ansFreq
                 );
             }
-            tooltip.update(Ext.String.format(
+            this.update(Ext.String.format(
                 '{0}<br>' + 'År {1} <br>' +
                 'Resultat indikator: {2}<br>{3}',
                 dataObj.displayName,
@@ -499,8 +503,6 @@ Ext.setEnableKeyboardMode(true);
                                 chart.setTitle(Ext.String.format('<span style="font-weight: bold;">{0}</span><br/><em>{1}</em>',
                                     LVRMatris.getIndicatorLabel(indicator),
                                     LVRMatris.getIndicatorDescription(indicator)));
-                                chart.setHeight(chart.getHeight()+1);
-                                chart.redraw();
                                 !conf.trend && chart.setHeight(Math.max(350, count * 30 + 100));
                             }
 
@@ -666,7 +668,6 @@ Ext.setEnableKeyboardMode(true);
                         'border-top-right-radius': '5px'
                     },
                     legend: {
-                        type: 'dom',
                         docked: 'bottom',
                         width: '100%',
                         style: {
@@ -681,7 +682,7 @@ Ext.setEnableKeyboardMode(true);
                         grid: true,
                         maximum: 100,
                         minimum: 0,
-                        renderer: function (cmp, text) {return Ext.util.Format.number(text, '0%');}
+                        renderer: function (text) {return Ext.util.Format.number(text, '0%');}
                     }, {
                         type: 'category',
                         fields: 'period',
@@ -787,7 +788,7 @@ Ext.setEnableKeyboardMode(true);
                         // 		}
                         // 	}
                         // },
-                        renderer: function(cmp, s) {
+                        renderer: function(s) {
                             return Ext.util.Format.number(s, '0%');
                         },
                         increment: 1,
@@ -804,7 +805,7 @@ Ext.setEnableKeyboardMode(true);
                             type: 'numeric',
                             id: 'ratio-axis-top',
                             position: 'top',
-                            renderer: function(cmp, s) {
+                            renderer: function(s) {
                                 return Ext.util.Format.number(s, '0%');
                             }
                         }, {
@@ -815,7 +816,7 @@ Ext.setEnableKeyboardMode(true);
                                 textAlign: 'right'
                             },
                             fields: ['displayName'],
-                            renderer: function(cmp, v) {
+                            renderer: function(v) {
                                 return Ext.util.Format.ellipsis(v, 32, true);
                             }
                         }],
@@ -870,7 +871,7 @@ Ext.setEnableKeyboardMode(true);
 
                         },
                         tooltip: {
-                            renderer: function(tooltip, storeItem, item) {
+                            renderer: function(storeItem, item) {
                                 var ansFreq = Ext.util.Format.number(storeItem.get('svarsfrekv'), '0.0%');
                                 var ansFreqText = '';
                                 if(ansFreq){
@@ -1097,7 +1098,7 @@ Ext.setEnableKeyboardMode(true);
                     },
                     width: 80,
                     dataIndex: 'ratio',
-                    renderer: function(cmp, value) {
+                    renderer: function(value) {
                         return Ext.util.Format.number(value, '0.0%');
                     }
                 }, {
@@ -1107,7 +1108,7 @@ Ext.setEnableKeyboardMode(true);
                     },
                     width: 80,
                     dataIndex: 'svarsfrekv',
-                    renderer: function(cmp, value) {
+                    renderer: function(value) {
                         return Ext.util.Format.number(value, '0.0%');
                     }
                 }, {
@@ -1117,7 +1118,7 @@ Ext.setEnableKeyboardMode(true);
                     },
                     width: 116,
                     dataIndex: 'ci',
-                    renderer: function(cmp, value) {
+                    renderer: function(value) {
                         return value === null ? '' : '&plusmn;' + Ext.util.Format.number(value, '0.0%');
                     }
                 }
@@ -1194,3 +1195,17 @@ Ext.setEnableKeyboardMode(true);
     }
     LVRMatris.init(initConf);
 } ();
+//# sourceURL=LVR/Trend
+</script>
+ <script type="text/javascript">
+    Ext.onReady(function() {
+        LVRMatris.init({
+            // server: 'http://stratum.registercentrum.se',
+            diagnosis: 1,
+	trend: 1
+            //dataRevision: 823,
+            //specRevision: 823,
+            //indicatorRevision: 823
+        });
+    });
+</script>
