@@ -144,6 +144,12 @@
       } catch (e) {
           Ext.log(e);
       }
+      debugger;
+      var newmax = getMaxValue(chart.getStore().getData(), graphFields);
+      if(newmax) {
+        chart.getAxes()[0].setMaximum(newmax);
+        chart.redraw();
+      }
       chart.setSeries({
           type: 'bar',
           // axis: 'left',
@@ -178,7 +184,19 @@
       });
       store.loadData([clinicData, regData]);
       me.scrollToElement(chart.getEl());
+      function getMaxValue(data, fields) {
+        var max = 0;
+        fields.forEach(
+          function(item) {
+              if (data.max(item) > max) {
+                  max = data.max(item);
+              }
+          }
+        );
+        return Math.ceil(max / 10) * 10;
+    };
   },
+  
   getChoiceFromState: function(state, danger, success, standard) {
       return state === 'danger' ? danger : state === 'success' ? success : standard;
   },
