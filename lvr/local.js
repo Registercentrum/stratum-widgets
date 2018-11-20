@@ -144,7 +144,6 @@
       } catch (e) {
           Ext.log(e);
       }
-      debugger;
       var newmax = getMaxValue(chart.getStore().getData(), graphFields);
       if(newmax) {
         chart.getAxes()[0].setMaximum(newmax);
@@ -161,12 +160,12 @@
           title: titles,
           tooltip: {
               // trackMouse: true,
-              renderer: function(record, item) {
+              renderer: function(tooltip, record, item) {
                   var antal = 'antal',
                       field = item.field;
                   if (field.indexOf('andel') === 0) {
                       antal += field.substr(5);
-                      this.setHtml(Ext.String.format('<b>{1}</b><br/>{0} observationer', record.get(antal), Ext.util.Format.number(record.get(item.field), '0.0%')));
+                      tooltip.setHtml(Ext.String.format('<b>{1}</b><br/>{0} observationer', record.get(antal), Ext.util.Format.number(record.get(item.field), '0.0%')));
                   }
               }
           },

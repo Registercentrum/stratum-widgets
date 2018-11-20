@@ -241,8 +241,8 @@
     // var API_KEY = 'bK3H9bwaG4o=';
     // var UNIT_ID = '21';
     // var DIAGNOSIS = '1';
-
-    Ext.define('RatioGaugeModel', {
+    !Ext.ClassManager.classes.RatioGaugeModelNew &&
+    Ext.define('RatioGaugeModelNew', {
         extend: 'Ext.data.Model',
         fields: [
             {name: 'value', type: 'number', mapping: 'Value', convert: function(v) {
@@ -260,6 +260,7 @@
             {name: 'colors'}
         ]
     });
+    !Ext.ClassManager.classes.TableModel &&
     Ext.define('TableModel', {
         extend: 'Ext.data.Model',
         fields: [
@@ -267,6 +268,7 @@
             {name: 'description', mapping: 'V2'}
         ]
     });
+    !Ext.ClassManager.classes.DetailChartModel &&
     Ext.define('DetailChartModel', {
         extend: 'Ext.data.Model',
         fields: [
@@ -346,9 +348,10 @@
             return record.unit === 'Riket' ? -1 : 1;
         }
     });
+    
     Ext.create('Ext.data.Store', {
         storeId: 'ratioGaugeStore',
-        model: 'RatioGaugeModel',
+        model:  'RatioGaugeModelNew',
         proxy: {
             type: 'ajax',
             url: '/stratum/api/statistics/lvr/snabboversikt/',
