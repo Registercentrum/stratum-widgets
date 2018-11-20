@@ -2070,7 +2070,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 		if (codePrefixText == 'OTA' || codePrefixText == 'MAO' || codePrefixText == 'AOR' || codePrefixText == 'SLI' || codePrefixText == 'UCS') {
 			codePrefixText = codePrefixText + '-';
 		}
-		if (aoImagesNavigationHandler.isChildFracture === true) {
+		if (aoImagesNavigationHandler.isChildFracture === true && !aoImagesNavigationHandler.classifyAsAdult) {
 			picIDStr = '';
 		}
 		var i = 0;
