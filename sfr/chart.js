@@ -40,7 +40,6 @@ var SfrWidget = {
   },
   
   init: function (callBackFn) {
-      console.clear();
     Ext.Ajax.request({
       url: '/stratum/api/metadata/domainvalues/domain/4299',
       method: 'GET',
@@ -161,8 +160,8 @@ var SfrWidget = {
                 lineWidth: 1,
               },
             }],
-            renderer: function (v, b, c) {
-              return b.renderer(v) + (config.isPercentage ? '%' : '');
+            renderer: function (axis, label, layoutContext, lastLabel) {
+              return layoutContext.renderer(label) + (config.isPercentage ? '%' : '');
             },
           }, {
             type: 'category',
@@ -173,7 +172,7 @@ var SfrWidget = {
               fontSize: 12,
               x: config.flipChart ? -10 : 0
             },
-            renderer: function (label) {
+            renderer: function (axis, label) {
               if (label.length > 24) {
                 label = label.substring(0, 24) + ' ';
               }
@@ -191,7 +190,7 @@ var SfrWidget = {
           type: 'bar',
           style: {
             strokeStyle: '#000',
-            opacity: 0.7
+            opacity: 0.7,
           },
           highlightCfg: {
             opacity: 1.0,
@@ -199,7 +198,7 @@ var SfrWidget = {
           axis: config.flipChart ? 'top' : 'left',
           tips: {
             trackMouse: true,
-            renderer: function (storeItem, item) {
+            renderer: function (tooltip, storeItem, item) {
               var text = '';
               var attribut = storeItem.get('Attribut');
               var andel = storeItem.get('Andel');
@@ -236,7 +235,7 @@ var SfrWidget = {
                   text += config.yFields[2] + ' : ' + andel3 + '%';
                 }
                 if (andel1 !== undefined) {
-                  this.update(storeItem.get(config.xField) + ': ' + text + '<br/>' + 'n=' + summa);
+                  tooltip.update(storeItem.get(config.xField) + ': ' + text + '<br/>' + 'n=' + summa);
                   return;
                 }
               }
@@ -277,7 +276,7 @@ var SfrWidget = {
               if (attribut !== undefined) {
                 xName = attribut;
               }
-              this.update(xName + ': ' + text);
+              tooltip.update(xName + ': ' + text);
               return;
             }
           },
@@ -285,10 +284,8 @@ var SfrWidget = {
             field: config.yFields,
             display: 'insideEnd',
             orientation: 'horizontal',
-            calloutColor: 'none',
             renderer: function (label, ctx, lastLabel, store, index) {
               label = '';
-              
               if (store.store.fractureData[index][config.yFields[0]] == 0) {
                 label = '0';
                 if (config.isPercentage) {
@@ -335,7 +332,7 @@ var SfrWidget = {
         }]
       });
     }
-    
+    chart.getSeries()[0].getLabel().getTemplate().setCalloutLine({length: 10, color: 'rgba(0,0,0,0)'});
     var saveButton = Ext.create('Ext.Button', {
       hidden: config.extraChartParameterKey == SfrWidget.parameters.clinic,
       text: 'Spara diagram',
