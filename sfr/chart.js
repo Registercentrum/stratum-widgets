@@ -663,7 +663,7 @@ var SfrWidget = {
       { ValueName: 'S72.0-S72.2', ValueCode: 'S72.0-S72.2' }, 
       { ValueName: 'S72.3-S72.4', ValueCode: 'S72.3-S72.4'}
     ]},
-    values[parameters.promindexfotled] = { text: 'PROM-index:', options: [
+    values[parameters.promindexfotled] = { text: 'PROM-index:', default: '1', options: [
       { ValueName: 'Dysfunktion ', ValueCode: '1'}, 
       { ValueName: 'Mobility',     ValueCode: '3'}
     ]},

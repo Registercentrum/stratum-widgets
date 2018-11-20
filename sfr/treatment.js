@@ -25,6 +25,7 @@ var treatmentWidget = function (current, callback, loadonly) {
   Ext.create('Rc.component.Selector', {
     widget: treatmentWidget,
     addValueCodes: true,
+    alignTarget: '',
     levels: [
       {
         data: treatmentWidget.valueGroups[4056],
@@ -215,6 +216,7 @@ Ext.define('Rc.component.Selector', {
   frame: true,
   layout: 'vbox',
   closable: true,
+  draggable: true,
   cls: 'sfr-modal',
   title: 'Välj behandling:',
   widget: false,
@@ -293,7 +295,8 @@ Ext.define('Rc.component.Selector', {
             type: 'json',
             rootProperty: 'data'
           }
-        }
+        },
+        sorters: 'Sequence'
       });
       var click = config.levels[i].click;
       var restore = config.levels[i].restore;
