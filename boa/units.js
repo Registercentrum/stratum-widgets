@@ -67,7 +67,7 @@ Ext.define('Boa.controller.Units', {
       var spinner = this.getView().down('#spinner');
       table.show();
       spinner.hide();
-      var list = []
+      var list = [];
       me.data.units.forEach(function (i) { 
         var countyName = me.data.associations[i.UnitName].County;
         var countyId = Object.keys(me.data.counties.County)[Ext.Object.getValues(me.data.counties.County).indexOf(countyName)];
@@ -75,9 +75,9 @@ Ext.define('Boa.controller.Units', {
           list.push({ id: i.UnitCode, name: i.UnitName, county: countyName, cid: countyId });
         }
       });
-      setTimeout(function () { me.updateExcelLink(list) }, 100);
+      setTimeout(function () { me.updateExcelLink(list); }, 100);
     } else {
-      setTimeout(function () {me.composeTable()}, 500);
+      setTimeout(function () { me.composeTable(); }, 500);
     }
   },
   updateExcelLink: function (data) {
