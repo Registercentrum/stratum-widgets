@@ -1,3 +1,4 @@
+// SPARA INTE ÖVER DENNA WIDGET IFRÅN SWIX!
 ! function() {
 	var RegisterOverview = {
 		clinics: [],
@@ -249,3 +250,4 @@
 	};
 	RegisterOverview.init();
 }();
+// SPARA INTE ÖVER DENNA WIDGET IFRÅN SWIX!
