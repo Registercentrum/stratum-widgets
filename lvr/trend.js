@@ -1,5 +1,3 @@
-
-Ext.setEnableKeyboardMode(true);
 ! function() {
     window.LVRMatris = window.LVRMatris = {
         init: function(config) {
