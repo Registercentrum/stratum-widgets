@@ -1,5 +1,4 @@
 
-
 function displayDenominator (n){
 	var denominatorSpan = Ext.fly('hnsb-denominator');
 	denominatorSpan && denominatorSpan.setHtml(n);
@@ -101,7 +100,7 @@ function go() {
         axes: [{
             type: 'category',
             position: 'left',
-            fields: ['key']
+            fields: 'key'
         }],
         series: [{
             type: 'bar',
@@ -116,10 +115,10 @@ function go() {
             },
             tooltip: {
                 trackMouse: true,
-                renderer: function(tooltip, storeItem, item) {
+                renderer: function(storeItem, item) {
                     var hideUnder = 10,
                         value = storeItem.get('value') < hideUnder ? '<' + hideUnder : storeItem.get('value');
-                    tooltip.update(Ext.String.format('{0}<hr/><b>{1}</b> registreringar.', storeItem.get('key'), value));
+                    this.update(Ext.String.format('{0}<hr/><b>{1}</b> registreringar.', storeItem.get('key'), value));
                 }
             },
             label: {
