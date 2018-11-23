@@ -1,9 +1,3 @@
-<h1>KOL öppenvård - Indikatorer över tid</h1>
-<div id='main-container'></div>
-    <p style="margin-top: 10px; font-size: 12px;"><strong>*</strong> Alla/landsting/enheter med låg svarsfrekvens (andel svar på indikatorn av rapporterade patienter < 60 %).</p>
-    <p style="margin-top: 10px; font-size: 12px;">Endast landsting/enheter med minst 30 rapporterade patienter och 15 rapporterade svar på indikatorn syns i grafen.</p>
-
-<script type="text/javascript">
 ! function() {
     window.LVRMatris = window.LVRMatris = {
         init: function(config) {
@@ -1195,16 +1189,3 @@
     }
     LVRMatris.init(initConf);
 } ();
-</script>
- <script type="text/javascript">
-    Ext.onReady(function() {
-        LVRMatris.init({
-            // server: 'http://stratum.registercentrum.se',
-            diagnosis: 1,
-	trend: 1
-            //dataRevision: 823,
-            //specRevision: 823,
-            //indicatorRevision: 823
-        });
-    });
-</script>
