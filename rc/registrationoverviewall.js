@@ -1,3 +1,4 @@
+// SPARA INTE ÖVER DENNA WIDGET IFRÅN SWIX!
 ! function() {
 	var RegisterOverview = {
 		clinics: [],
@@ -193,6 +194,7 @@
 					right: 10
 				},
 				legend: {
+					type: 'dom',
 					docked: 'right',
 					border: false,
 					width: 220
@@ -209,8 +211,8 @@
 					type: 'category',
 					position: 'bottom',
 					fields: ['month'],
-					renderer: function(v) {
-						return Ext.Date.format(v, 'y/m');
+					renderer: function (axis, label) {
+						return Ext.Date.format(label, 'y/m');
 					},
 					style: {
 						strokeStyle: '#ccc'
@@ -232,8 +234,8 @@
 							yField: clinic,
 							tooltip: {
 								trackMouse: true,
-								renderer: function(storeItem, item) {
-									this.update(Ext.String.capitalize(Ext.Date.format(storeItem.get('month'), 'F Y')) + '<br> ' + (item.field) + '<br/>' + storeItem.get(item.field) + ' registreringar.');
+								renderer: function(tooltip, storeItem, item) {
+									tooltip.update(Ext.String.capitalize(Ext.Date.format(storeItem.get('month'), 'F Y')) + '<br> ' + (item.field) + '<br/>' + storeItem.get(item.field) + ' registreringar.');
 								}
 							},
 							showMarkers: true,
@@ -249,3 +251,4 @@
 	};
 	RegisterOverview.init();
 }();
+// SPARA INTE ÖVER DENNA WIDGET IFRÅN SWIX!
