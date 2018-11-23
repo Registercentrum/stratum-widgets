@@ -8,7 +8,7 @@ function request(aRequestor) {
 		af,	ic;
 
 	if (ep && ep.length > 1) {
-		af = Ext.JSON.decode('{ accessor: function(xl,xi) { return xl[xi].' + ep[1] + ' } }').accessor; // Accessor function for current list item.
+		af = Stratum.JSON.decode('{ accessor: function(xl,xi) { return xl[xi].' + ep[1] + ' } }').accessor; // Accessor function for current list item.
 	}
 	for (ic = 0; ic < ll; ic++) {
 		cr++;
