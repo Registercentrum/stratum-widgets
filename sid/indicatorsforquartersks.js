@@ -1,3 +1,4 @@
+
 (function() {
     if (
         window.Repository &&
@@ -17,7 +18,7 @@
             callback: function(o, success, resp) {
                 var data = Ext.decode(resp.responseText).data;
 
-                var widgetScript = Ext.decode(data.WidgetScript);
+                var widgetScript = Stratum.JSON.decode(data.WidgetScript);
                 widgetScript.relURL = '/stratum/';
                 // widgetScript.APIKey = 'bK3H9bwaG4o=';
                 widgetScript.initializedMethods = true;
@@ -33,7 +34,7 @@
             (window.Stratum &&
                 window.Stratum.containers &&
                 window.Stratum.containers['SID/IndicatorsForQuartersKS']) ||
-            'main-container';
+            'contentPanel';
         Repository.Local.Methods.initialize({
             isWithinYear: function(currentYear, year, period) {
                 var yearDiff = currentYear - year,
@@ -341,8 +342,8 @@
                             minimum: 0,
                             maximum: 100,
                             grid: true,
-                            renderer: function(v) {
-                                return v + '%';
+                            renderer: function(axis, label) {
+                                return label + '%';
                             },
                         },
                         {
@@ -369,25 +370,25 @@
                             tips: {
                                 trackMouse: true,
                                 dismissDelay: 0,
-                                renderer: function(s) {
-                                    if (!s) {
+                                renderer: function(tooltip, record, ctx) {
+                                    if (!record) {
                                         return;
                                     }
-                                    this.update(
+                                    tooltip.update(
                                         Ext.String.format(
-                                            s.get('size')
+                                            record.get('size')
                                                 ? '{0}<br/>{1} observationer.<br/>{2}. Konfidensintervall &plusmn;{3}.'
                                                 : '{0}<br/>{1} observationer.',
                                             _m.mapHospitalCodeToName(
-                                                s.get('hospital')
+                                                record.get('hospital')
                                             ),
-                                            s.get('size'),
+                                            record.get('size'),
                                             Ext.util.Format.number(
-                                                s.get('measure'),
+                                                record.get('measure'),
                                                 '0.0%'
                                             ),
                                             Ext.util.Format.number(
-                                                s.get('deviation'),
+                                                record.get('deviation'),
                                                 '0.0%'
                                             )
                                         )
