@@ -11,7 +11,7 @@ var containerHtml = ''
   + '<div id="utdataKnaOpMethods2"></div>';
 try {
   Ext.create('Ext.container.Container', {
-    renderTo: (Stratum.containers && Stratum.containers['SPOQ/utdata_kna']) || 'main-container',
+    renderTo: (Stratum.containers && Stratum.containers['SPOQ/utdata_kna']) || 'contentPanel',
     html: containerHtml,
     listeners: {
       afterRender: function () {

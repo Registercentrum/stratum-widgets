@@ -4,7 +4,7 @@ try {
     name: 'app',
     units: [],
     launch: function () {
-      var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['SPOQ/utdata_DDH'] : Ext.getBody();
+      var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['SPOQ/utdata_DDH'] : 'contentPanel';
 
       Ext.create('Ext.container.Container', {
         items: {
