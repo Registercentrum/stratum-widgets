@@ -259,8 +259,8 @@
 
       filterStore: function (aCallback, button, text) {
         var store = Ext.data.StoreManager.lookup('overviewStore');
-        var fromDate = this.down('#fromDate').getValue().toISOString();
-        var toDate = this.down('#toDate').getValue().toISOString();
+        var fromDate = this.down('#fromDate').getValue().toLocaleString().replace(/[^ -~]/g, '').slice(0,10) + 'T00:00:00';
+        var toDate = this.down('#toDate').getValue().toLocaleString().replace(/[^ -~]/g, '').slice(0,10) + 'T23:59:59';
 
         Ext.Function.defer(function () {
           store.loadData(createStoreFeed(data.feed, fromDate, toDate));
