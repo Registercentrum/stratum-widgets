@@ -11,7 +11,13 @@
         store,
         chart,
         container,
-        colors = ['#DC143C', '#AAFF7F', '#FFFF00', '#4F81BD', '#B2DFEE', '#9BBB59', '#C0504D', '#333333'];
+        colors = ['#a2ad00', '#3cb6ce',
+					'#e98300', '#fecb00', 
+					'#7a6597', '#5fd2ea', '#ffe736',
+					'#c5bea8', '#dce44d', '#957eb2', '#7eeeff',
+					'#ffb948', '#ffff56', '#e1dac4', '#614d7d', '#aaa38e', '#bfc82f', '#ff9d2b'
+				];
+        // colors = ['#DC143C', '#AAFF7F', '#FFFF00', '#4F81BD', '#B2DFEE', '#9BBB59', '#C0504D', '#333333'];
 
     Profile.APIKey = 'jf64ZLZw15E=';
 
@@ -43,7 +49,8 @@
             type: 'numeric',
             position: 'top',
             grid: true,
-            minimum: 0
+            minimum: 0,
+            maximum: 100
         }, {
             type: 'category',
             position: 'left'
