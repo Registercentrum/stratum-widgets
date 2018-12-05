@@ -1,3 +1,4 @@
+
 Profile.APIKey='jf64ZLZw15E=';
 displayPatientView();
 function displayPatientView() {
@@ -215,7 +216,7 @@ function displayPatientView() {
                     trackMouse: true,
                     width: 210,
                     height: 60,
-                    renderer: function (storeItem, item) {
+                    renderer: function (tooltip, storeItem, item) {
                         var s = Ext.util.Format.number(storeItem.get(item.field), '0.0') + '%';
                         if (item.field == 'unit') {
                             s += ' (' + storeItem.get('unitCount') + '/' + storeItem.get('unitCountTotal') + ' st)';
@@ -223,7 +224,7 @@ function displayPatientView() {
                         else {
                             s += ' (' + storeItem.get('registerCount') + '/' + storeItem.get('registerCountTotal') + ' st)';
                         }                                                                                               
-                        this.update(s);
+                        tooltip.update(s);
                     }
                 },
                 label: {

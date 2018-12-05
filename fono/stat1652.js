@@ -1,3 +1,4 @@
+
 (function() {
 
 	var container = Stratum.containers && Stratum.containers['FONO/stat1652'] || 'mainContainer';
@@ -9,7 +10,8 @@
         MAX_CHARS = 15,
         store,
         chart,
-        container;
+        container,
+        colors = ['#DC143C', '#AAFF7F', '#FFFF00', '#4F81BD', '#B2DFEE', '#9BBB59', '#C0504D', '#333333'];
 
     Profile.APIKey = 'jf64ZLZw15E=';
 
@@ -31,9 +33,10 @@
         height: 1600,
         flipXY: true,
         hidden: true,
-        colors: ['#DC143C', '#AAFF7F', '#FFFF00', '#4F81BD', '#B2DFEE', '#9BBB59', '#C0504D', '#333333'],
+        colors: colors,
         store: store,
         legend: {
+            type: 'dom',
             docked: 'right'
         },
         axes: [{
@@ -51,10 +54,10 @@
             stacked: true,
             tips: {
                 trackMouse: true,
-                renderer: function(storeItem, info) {
+                renderer: function(tooltip, storeItem, info) {
                     var field = info.field,
                         value = storeItem.get(field);
-                    this.setHtml(Ext.String.format('{1}<hr/>{0} observationer', value, origXNames[field] || field));
+                    tooltip.setHtml(Ext.String.format('{1}<hr/>{0} observationer', value, origXNames[field] || field));
                 }
             },
             xField: 'x',
@@ -78,6 +81,7 @@
             }
             yFields.push(NO_DIAGNOSIS);
             store.setFields(Ext.Array.merge(yFields, xField));
+            chart.setColors(colors);
             Ext.Ajax.request({
                 url: '/stratum/api/metadata/units/register/127',
                 method: 'get',
