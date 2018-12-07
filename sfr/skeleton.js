@@ -2145,7 +2145,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 							if (j == 0 && k == 0 && aPictureID == '61') {
 								infoTexts[j][k] = classText;
 							}
-							else if ((j == 1 || j == 2) && k == 2 && aPictureID == '61') {
+							else if (j == 2 && k == 2 && aPictureID == '61') {
 								infoTexts[j][k] = classText;
 							}
 							else if (j == 2 && k == 1 && aPictureID == '61') {
@@ -5739,9 +5739,6 @@ var skeletonWidget = function (current, callback, loadonly) {
 					}
 					else if (aAoMatrix[i][j] == PROSTHESIS_FRACTURE) {
 						onClickText = 'skeletonWidget.aoImagesNavigationHandler(null,\'' + aPictureID + '\',{side},' + '\'' + aAoMatrix[i][j] + '\',false' + ')';
-					}
-					else if ((aAoMatrix[i][j] == 'B3' || aAoMatrix[i][j] == 'C3') && aPictureID == 61) {
-						onClickText = 'skeletonWidget.onReturnCodes(\'' + ownerFormPanelID + '\',3 ,\'{PictureId}\',\'' + aAoMatrix[i][j] + '\',\'{windowId}\',null,' + useHandAOStr + ')';
 					}
 					else {
 						onClickText = 'skeletonWidget.onReturnCodes(\'' + ownerFormPanelID + '\',{side},\'{PictureId}\',\'' + aAoMatrix[i][j] + '\',\'{windowId}\',null,' + useHandAOStr + ')';
