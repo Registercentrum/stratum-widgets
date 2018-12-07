@@ -1176,9 +1176,8 @@
                 + 'Operationsteknik: {2}<br>'
                 + 'Svarsfrekvens 30 d: {3}<br>'
                 + 'Svarsfrekvens 6 mån: {4}<br>'
-                + 'Täckningsgrad: {5}'
-              if (_current.indicatorId === 1)
-                // text += '<br>Matchad, PAR: {6}';
+                + 'Täckningsgrad: {5}';
+              // if (_current.indicatorId === 1) text += '<br>Matchad, PAR: {6}';
   
               var suffix = item.field === 'fraction' ? '' : 'N';
               var fraction = Ext.util.Format.number(rec.data['fraction' + suffix] * 100, '0.0%');
