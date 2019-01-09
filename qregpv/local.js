@@ -1286,7 +1286,7 @@
                       oj, data, tmp = {},
                       newData = [];
                   try {
-                      oj = Ext.decode(aResponse.responseText);
+                      oj = Stratum.JSON.decode(aResponse.responseText);
                       data = oj[this.getRootProperty()];
 
                       Ext.each(data, function (r) {
