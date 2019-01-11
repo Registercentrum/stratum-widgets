@@ -294,7 +294,7 @@ var SfrWidget = {
               }
 
               if (config.isPercentage) {
-                if (!store.store.fractureData[index].Andel) {
+                if (!store.store.fractureData[index].Andel || store.store.fractureData[index].Andel === 'NA') {
                   label = 'Ingen\ndata';
                 }
               }
@@ -613,6 +613,7 @@ var SfrWidget = {
         timeout: 60000,
         success: function (response, opts) {
           var responseData = Ext.decode(response.responseText).data;
+          if(responseData[0].Andel==='NA')responseData[0].Andel="0";
           if (chart.store != null) {
             chart.bindStore(dummyStore);
             store.fractureData = Ext.decode(response.responseText).data;
