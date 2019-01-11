@@ -951,7 +951,6 @@
                                 //, fontStyle: '#999'
                         },
                         renderer: function (axis, label) {
-                            debugger;
                             return Ext.isDate(label) ?
                                 Ext.Date.format(
                                     label,
