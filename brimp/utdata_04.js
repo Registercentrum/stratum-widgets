@@ -119,7 +119,8 @@
 			},
 			store: store,
 			legend: {
-				html: 'Implantatform:',
+				type: 'dom',
+				tpl: '<div class="x-legend-inner"><div class="x-legend-container"><div style="display: inline-block; font-size: 13px; line-height: 13px; padding: 0.4em 1em 0.4em 1.8em;  position: relative; margin: 0;  margin-top: -10px;  overflow: hidden;">Implantatform:</div><tpl for="."><div class="x-legend-item"><span class="x-legend-item-marker {[ values.disabled ? Ext.baseCSSPrefix + \'legend-item-inactive\' : \'\' ]}" style="background:{mark};"></span>{name}</div></tpl></div></div>',
 				toggleable: false
 			},
 			insetPadding: {
@@ -148,7 +149,7 @@
 					stroke: '#ddd'
 				},
 				minimum: 0,
-				renderer: function(label) {
+				renderer: function(axis, label) {
 					// Don't display decimal numbers
 					return label % 1 === 0 ? label : '';
 				}
@@ -159,8 +160,8 @@
 				title: {
 					text: 'Protesvolym',
 				},
-				renderer: function(v) {
-					return v.replace(' ','\n');
+				renderer: function(axis, label) {
+					return label.replace(' ','\n');
 				}
 			}],
 			series: [{
@@ -172,8 +173,8 @@
 				yField: fields,
 				tooltip: {
 					trackMouse: true,
-					renderer: function(rec, item) {
-						this.setTitle(Ext.String.format('Volym: {0}', rec.data.category));
+					renderer: function(tooltip, rec, item) {
+						tooltip.setTitle(Ext.String.format('Volym: {0}', rec.data.category));
 						var text = '';
 						if (rec.data.isNA === true) {
 							text += '<span style="color:red">Det finns färre än 10 registreringar!</span';
@@ -182,7 +183,7 @@
 							text += Ext.String.format('{0}: {1} implantat<br>', rec.data.bl, rec.data.b);
 							text += Ext.String.format('{0}: {1} implantat', rec.data.cl, rec.data.c);
 						}
-						this.setHtml(text);
+						tooltip.setHtml(text);
 					}
 				},
 				renderer: function(sprite, config, renderData, index) {
@@ -258,4 +259,3 @@
 	});
 
 })();
-

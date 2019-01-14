@@ -129,7 +129,7 @@
 					stroke: '#ddd'
 				},
 				minimum: 0,
-				renderer: function(label, layout, lastLabel) {
+				renderer: function(axis, label, layout, lastLabel) {
 					// Don't display decimal numbers
 					return label % 1 === 0 ? label : '';
 				}
@@ -155,11 +155,11 @@
 				},
 				tooltip: {
 					trackMouse: true,
-					renderer: function(rec, item) {
+					renderer: function(tooltip, rec, item) {
 						var text = Ext.String.format('{0}: {1} implantat ({2} av BRIMP)<br/>{3}: {4} implantat',
 							rec.data.year, rec.data.manuQty, Ext.util.Format.number(rec.data.totalShare, '0.0%'),
 							rec.data.yearOld, rec.data.manuQtyOld);
-						this.setHtml(text);
+						tooltip.setHtml(text);
 					}
 				}
 			},{
@@ -174,15 +174,14 @@
 				},
 				tooltip: {
 					trackMouse: true,
-					renderer: function(rec, item) {
+					renderer: function(tooltip, rec, item) {
 						var text = Ext.String.format('{0}: {1} implantat ({2} av BRIMP)<br/>{3}: {4} implantat',
 							rec.data.year, rec.data.manuQty, Ext.util.Format.number(rec.data.totalShare, '0.0%'), 
 							rec.data.yearOld, rec.data.manuQtyOld);
-						this.setHtml(text);
+						tooltip.setHtml(text);
 					}
 				}
 			}]
 		});
 	};
 })();
-
