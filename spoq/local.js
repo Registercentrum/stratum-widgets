@@ -646,7 +646,7 @@ SubjectOverviewLCPD: {
 							stroke: '#ddd'
 						},
 						minimum: 0,						
-						renderer: function (label, layout, lastLabel) {
+						renderer: function (axis, label, layout, lastLabel) {
 							// Don't display decimal numbers
 							return label % 1 === 0 ? label : '';
 						}
@@ -809,12 +809,12 @@ SubjectOverviewLCPD: {
 						showInLegend: true,
 						tooltip: {							
 							trackMouse: true,
-							renderer: function (storeItem, item) {														
+							renderer: function (tooltip, storeItem, item) {														
 								var cat=item.record.data[config.categoryAttrib];
 								var y=item.record.data[config.validYnames[0]];
 								var n=item.record.data['n'];
 								if (cat && y && n){
-									this.update(cat + ':' + Ext.util.Format.number(y, '0.0%') + ' (' + n + ' st)');
+									tooltip.update(cat + ':' + Ext.util.Format.number(y, '0.0%') + ' (' + n + ' st)');
 								}
 							}
 						},
