@@ -2,6 +2,14 @@
 Ext.util.CSS.removeStyleSheet('shpr-companymodule');
 Ext.util.CSS.createStyleSheet(''
 
+  + '#contentPanel ul {'
+  + '  padding: 0;'
+  + '}'
+
+  + '#contentPanel ul>li {'
+  + '  list-style: initial;'
+  + '}'
+  
   + '.scw-header {'
   + '  width: 100%;'
   + '  padding: 0 0 0 2px;'
@@ -29,6 +37,7 @@ Ext.util.CSS.createStyleSheet(''
 
   + '.scw-select div {'
   + '  border-radius: 3px;'
+  + '  vertical-align: top;'
   + '}'
 
   + '.scw-select-last {'
@@ -66,21 +75,21 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
 
   + '.scw-multiselect ul {'
-  + '  min-height: 40px;'
+  // + '  min-height: 40px;'
   + '}'
 
   + '.scw-multiselect .x-tagfield {'
   + '  overflow: hidden !important;'
   + '}'
 
-  + '.scw-multiselect li {'
+  + '#contentPanel .scw-multiselect li {'
   + '  border: none;'
   + '  background-color: transparent;'
   + '  margin: 0px 4px 0px 0;'
   + '}'
 
   + '.scw-multiselect li:first-child {'
-  + '  margin-top: 11px;'
+  //+ '  margin-top: 11px;'
   + '}'
 
   + '.scw-multiselect li:hover {'
@@ -940,7 +949,7 @@ Ext.define('shpr.view.Main', {
         fields: ['lower', 'surv', 'upper', 'confidence'],
         position: 'left',
         grid: false,
-        renderer: function (label) { return (label * 100).toFixed(1) + '%'; }
+        renderer: function (axis, label) { return (label * 100).toFixed(1) + '%'; }
       }, {
         type: 'numeric',
         title: 'Tid (år)',
@@ -974,8 +983,9 @@ Ext.define('shpr.view.Main', {
           marker: {
             opacity: 0,
             scaling: 0.01,
+            radius: 4,
             animation: {
-              duration: 200,
+              duration: 10,
               easing: 'easeOut'
             }
           },
@@ -985,9 +995,9 @@ Ext.define('shpr.view.Main', {
           },
           tooltip: {
             trackMouse: true,
-            renderer: function (record) {
+            renderer: function (tooltip, record) {
               var title = record.get('surv') * 100;
-              this.setHtml('Implantatöverlevnad: ' + title.toFixed(2) + '%<br/>'
+              tooltip.setHtml('Implantatöverlevnad: ' + title.toFixed(2) + '%<br/>'
                 + 'Tid (år): ' + record.get('year').toFixed(2) + '<br/>'
                 + 'Antal reviderade: ' + record.get('n_event') + '<br/>'
                 + 'Antal "at risk": ' + record.get('at_risk'));
@@ -1031,7 +1041,7 @@ Ext.define('shpr.view.Main', {
         fields: ['revision', 'lower_revision', 'upper_revision', 'death', 'lower_death', 'upper_death'],
         position: 'left',
         grid: false,
-        renderer: function (label) { return (label * 100).toFixed(1) + '%'; }
+        renderer: function (axis, label) { return (label * 100).toFixed(1) + '%'; }
       }, {
         type: 'numeric',
         title: 'Tid (år)',
@@ -1095,8 +1105,8 @@ Ext.define('shpr.view.Main', {
           },
           tooltip: {
             trackMouse: true,
-            renderer: function (record) {
-              this.setHtml(''
+            renderer: function (tooltip, record) {
+              tooltip.setHtml(''
                 + 'Andel reviderade: ' + (record.get('revision') * 100).toFixed(2) + '%<br/>'
                 + 'Tid (år): ' + record.get('year').toFixed(2) + '<br/>'
                 + 'Antal reviderade: ' + record.get('n_event_rev') + '<br/>'
@@ -1127,8 +1137,8 @@ Ext.define('shpr.view.Main', {
           },
           tooltip: {
             trackMouse: true,
-            renderer: function (record) {
-              this.setHtml(''
+            renderer: function (tooltip, record) {
+              tooltip.setHtml(''
                 + 'Andel avlidna: ' + (record.get('death') * 100).toFixed(2) + '%<br/>'
                 + 'Tid (år): ' + record.get('year').toFixed(2) + '<br/>'
                 + 'Antal avlidna: ' + record.get('n_event_death') + '<br/>'
@@ -1177,6 +1187,20 @@ Ext.define('shpr.view.Main', {
   ]
 });
 
+Ext.define('Novanti.overrides.chart.legend.SpriteLegend', {
+    override: 'Ext.chart.legend.SpriteLegend',
+
+
+    isXType: function (xtype) {       
+        return xtype === 'sprite';
+    },
+
+
+    getItemId: function () {
+        return this.getId();
+    }
+});
+
 Ext.application({
   name: 'shpr',
   units: [],
@@ -1189,8 +1213,10 @@ Ext.application({
       renderTo: target
     });
     if (!window.navigator.msSaveBlob) {
-      main.down('#exportTableSwedish').setHref(' ');
-      main.down('#exportTableEnglish').setHref(' ');
+      main.down().next('toolbar').down('#exportTableSwedish').setHref(' ');
+      main.down().next('toolbar').down('#exportTableEnglish').setHref(' ');
+      // main.down('#exportTableSwedish').setHref(' ');
+      // main.down('#exportTableEnglish').setHref(' ');
     }
     main.getController().updateGrid();
     var stemChoices = main.down('#stemDropdown');
