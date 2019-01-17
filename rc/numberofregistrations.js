@@ -63,7 +63,7 @@
 		axes: [{
 			type: 'numeric',
 			position: 'left',
-			renderer: Ext.util.Format.numberRenderer('0,0'),
+			renderer: function (axis, label) { return Ext.util.Format.numberRenderer('0,0')(label); },
 			grid: {
 				odd: {
 					opacity: 0.5,
