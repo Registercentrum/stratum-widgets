@@ -137,7 +137,7 @@
                         var indicatorName = _m.getIndicatorName(newValue);
                         dataTable.setTitle(indicatorName);
                         mainChart.setTitle(indicatorName);
-                        dataTable.doLayout();
+                        dataTable.updateLayout();
                     },
                 },
             });
@@ -414,4 +414,3 @@
         });
     }
 })();
-//# sourceURL=QRegPV/OverTimeKS
