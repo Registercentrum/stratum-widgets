@@ -11,14 +11,27 @@ Ext.define('Septum.view.Main', {
     docked: 'bottom',
     width: '100%',
     padding: '10px 10px 40px 0',
-    tpl: '<div class="x-legend-inner"><div class="x-legend-container"><div style="text-align: left; font-size:12px; color: darkslategrey; padding: 0 0 20px 20px;"> Antalet svar fås genom att hålla muspekaren över respektive stapel. * Baserat på de data som kommit in hittills i år.</div><div style="text-align: left; padding: 10px 0 20px 20px;">Aktuell enhet: texttoreplace</div><tpl for="."><div class="x-legend-item"><span class="x-legend-item-marker {[ values.disabled ? Ext.baseCSSPrefix + \'legend-inactive\' : \'\' ]}" style="background:{mark};"></span>{name}</div></tpl></div></div>'
+    tpl: '<div class="x-legend-inner"><div class="x-legend-container"><div style="text-align: left; font-size:12px; color: darkslategrey; margin: 0px; padding: 0 0 20px 10px;"> Antalet svar fås genom att hålla muspekaren över respektive stapel. * Baserat på de data som kommit in hittills i år.</div><div style="text-align: left; padding: 0 0 27px 10px; margin: 0">Aktuell enhet: texttoreplace</div><tpl for="."><div class="x-legend-item"><span class="x-legend-item-marker {[ values.disabled ? Ext.baseCSSPrefix + \'legend-inactive\' : \'\' ]}" style="background:{mark};"></span>{name}</div></tpl></div></div>'
   },
+
+  store: {
+    fields: [],
+    autoLoad: true,
+    proxy: {
+      type: 'ajax',
+      withCredentials: true,
+      reader: {
+        type: 'json',
+        rootProperty: 'data'
+      }
+    },
+  },
+
   axes: [
     {
       type: 'numeric',
       position: 'left',
       grid: true,
-      stacked: false,
       minimum: 0,
       maximum: 100,
       increment: 20,
@@ -34,19 +47,18 @@ Ext.define('Septum.view.Main', {
         color: '#183136',
         // font: 'Open Sans',
         textAlign: 'center'
-      }
+      },
+      fields: 'Operationsår',
     }
   ],
+
   series: {
     type: 'bar',
-    xField: 'Operationsår',
     stacked: false,
     subStyle: { stroke: '#fff' },
     style: { minBarWidth: 12 },
-    renderer: function (sprite, config, attr) {
-      var offsetX = sprite.getField().indexOf('Enhet') > -1 ? 4 : -4;
-      return Ext.apply(attr, { x: config.x + offsetX });
-    },
+    xField: 'Operationsår',
+
     tooltip: {
       trackMouse: true,
       renderer: function (tooltip, record, ctx) {
@@ -63,19 +75,13 @@ Ext.define('Septum.view.Main', {
         tooltip.setHtml(text);
       }
     },
+
+    renderer: function (sprite, config, attr) {
+      var offsetX = sprite.getField().indexOf('Enhet') > -1 ? 4 : -4;
+      return Ext.apply(attr, { x: config.x + offsetX });
+    },
   },
 
-  store: {
-    autoLoad: true,
-    proxy: {
-      type: 'ajax',
-      withCredentials: true,
-      reader: {
-        type: 'json',
-        rootProperty: 'data'
-      }
-    }
-  },
   constructor: function (config) {
     var fields = config.series.yField.map(function (item) { return 'Riket : ' + item; });
     if (!config.restricted) {
@@ -90,7 +96,6 @@ Ext.define('Septum.view.Main', {
 
     this.callParent(arguments);
   }
-
 });
 
 Ext.application({
@@ -107,7 +112,6 @@ Ext.application({
       renderTo: target,
       restricted: restricted,
       unit: unit,
-
       series: {
         yField: WidgetConfig.yField,
         colors: WidgetConfig.colors,
