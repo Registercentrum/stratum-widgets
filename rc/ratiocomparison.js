@@ -1,3 +1,4 @@
+
 /*
  * OBS!	This is required to make the widget work within Keystone Stratum CMS:
  *		Set this widget and specify a global _ratioBarChartConf object in Advanced Settings 
@@ -46,7 +47,7 @@
  *		bar: true //OPTIONAL
  *   }
  */
- (function(conf) {
+(function(conf) {
 	if (conf) {
 		conf.renderTo = (Stratum.containers && Stratum.containers['RC/RatioComparisonWidget']) 
 			? Stratum.containers['RC/RatioComparisonWidget'] : conf.renderTo;
@@ -178,7 +179,7 @@
  				axes: [{
  					type: 'numeric',
  					position: conf.bar ? 'bottom' : 'left',
- 					renderer: Ext.util.Format.numberRenderer('0.0%'),
+ 					renderer: function(axis, label) { return Ext.util.Format.number(label, '0%'); },
  					style: {
  						strokeStyle: '#ccc'
  					},
@@ -205,10 +206,10 @@
  					},
  					tips: {
  						trackMouse: true,
- 						renderer: function(storeItem, item) {
+ 						renderer: function(tooltip, storeItem, item) {
  							var yField = item.field || '',
  								nField = Ext.String.endsWith(yField, '') ? Ext.util.Format.substr(yField, 0, yField.length - 2) : yField;
- 							this.update(Ext.String.format('<b>{0} ({2}):</b><br/>{1} observationer av totalt {3}', storeItem.get('unit'), storeItem.get(nField),
+ 							tooltip.update(Ext.String.format('<b>{0} ({2}):</b><br/>{1} observationer av totalt {3}', storeItem.get('unit'), storeItem.get(nField),
  								Ext.util.Format.number(storeItem.get(yField), '0.0%'), storeItem.get('sum')));
  						}
  					}
