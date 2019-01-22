@@ -4176,7 +4176,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 					return false;
 				},
 				beforedestroy: function () {
-					purgeOrphans(app.mySkeletonWindow);
+					// purgeOrphans(app.mySkeletonWindow);
 				}
 			}
 		});
