@@ -122,7 +122,8 @@
     },
     initializeUnitStore: function () {
         var conf = {
-                model: Ext.define('QRegPV.UnitModel', {
+                model: typeof QRegPV.UnitModel !== 'undefined' ? QRegPV.UnitModel :
+                 Ext.define('QRegPV.UnitModel', {
                     extend: 'Ext.data.Model',
                     fields: [{
                         name: 'UnitID',
@@ -826,7 +827,7 @@
             '.qreg-count-row.x-view-item-focused { outline: 0 !important; }'
         );
   
-        Ext.define('qRegMainModel', {
+        typeof qRegMainModel !== 'undefined' || Ext.define('qRegMainModel', {
             extend: 'Ext.data.Model',
             fields: [{
                     name: 'Q_Indicator',
