@@ -6,12 +6,37 @@ Ext.define('Septum.view.Main', {
   height: 500,
   width: 700,
 
+  captions: {
+    credits: {
+      docked: 'bottom',
+      text: '\n\n\nAktuell enhet: ' + (Profile && Profile.Context !== null ? Profile.Context.Unit.UnitName : 'Riket') + '\n',
+      align: 'left',
+      style: {
+        fontSize: 14,
+        fontFamily: 'open_sans',
+        fontWeight: 400
+      }
+    },
+    figcaption: {
+      docked: 'bottom',
+      text: 'Antalet svar fås genom att hålla muspekaren över respektive stapel. *Baserat på de data som kommit in i år.',
+      align: 'left',
+      style: {
+        fontSize: 12,
+        fontFamily: 'open_sans',
+        fontWeight: 'normal'
+      }
+    },
+
+  },
+
   legend: {
     type: 'dom',
     docked: 'bottom',
-    width: '100%',
-    padding: '10px 10px 40px 0',
-    tpl: '<div class="x-legend-inner"><div class="x-legend-container"><div style="text-align: left; font-size:12px; color: darkslategrey; margin: 0px; padding: 0 0 20px 10px;"> Antalet svar fås genom att hålla muspekaren över respektive stapel. * Baserat på de data som kommit in hittills i år.</div><div style="text-align: left; padding: 0 0 27px 10px; margin: 0">Aktuell enhet: texttoreplace</div><tpl for="."><div class="x-legend-item"><span class="x-legend-item-marker {[ values.disabled ? Ext.baseCSSPrefix + \'legend-inactive\' : \'\' ]}" style="background:{mark};"></span>{name}</div></tpl></div></div>'
+    style: {
+      padding: '0 0 0 42px',
+    },
+    tpl: '<div class="x-legend-inner"><div class="x-legend-container"><tpl for="."><div class="x-legend-item"><span class="x-legend-item-marker {[ values.disabled ? Ext.baseCSSPrefix + \'legend-inactive\' : \'\' ]}" style="background:{mark};"></span>{name}</div></tpl></div></div>'
   },
 
   store: {
@@ -45,7 +70,6 @@ Ext.define('Septum.view.Main', {
       title: { text: '', fontSize: 15 },
       label: {
         color: '#183136',
-        // font: 'Open Sans',
         textAlign: 'center'
       },
       fields: 'Operationsår',
@@ -91,7 +115,7 @@ Ext.define('Septum.view.Main', {
       config.series.colors = [].concat.apply([], extraColors);
     }
     config.legend = {};
-    config.legend.tpl = this.config.legend.tpl.replace('texttoreplace', config.unit);
+    // config.legend.tpl = this.config.legend.tpl.replace('texttoreplace', config.unit);
     config.series.yField = [].concat.apply([], fields);
 
     this.callParent(arguments);
@@ -127,6 +151,7 @@ Ext.util.CSS.createStyleSheet(
   + '  .x-legend-container {'
   + '      width: 520px;'
   + '      height: 140px;'
+  + '      margin: auto;'
   + '  }'
   + '  .x-legend-item {'
   + '    width: 260px;'
