@@ -7,6 +7,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  padding: 0 0 0 2px;'
   + '  font-weight: normal;'
   + '  margin: 0 0 18px 0;'
+  + '  display: inline-block;'
   + '}'
 
   + '.scw-label {'
@@ -32,6 +33,42 @@ Ext.util.CSS.createStyleSheet(''
 
   + '.scw-select-last {'
   + '  padding-right: 0px;'
+  + '}'
+
+  + '.scw-multiselect ul {'
+  + '  min-height: 40px;'
+  + '}'
+
+  + '.scw-multiselect .x-tagfield {'
+  + '  overflow: hidden !important;'
+  + '}'
+
+  + '.scw-multiselect li {'
+  + '  border: none;'
+  + '  background-color: transparent;'
+  + '  margin: 0px 4px 0px 0;'
+  + '}'
+
+  + '.scw-multiselect li:first-child {'
+  + '  margin-top: 11px;'
+  + '}'
+
+  + '.scw-multiselect li:hover {'
+  + '  border: none !important;'
+  + '}'
+
+  + '.scw-multiselect li:last-child {'
+  + '  height: 0;'
+  + '  width: 0;'
+  + '  float: left;'
+  + '}'
+
+  + '.scw-multiselect li div:last-child {'
+  + '   display: none;'
+  + '}'
+
+  + '.scw-multiselect li:hover div:last-child {'
+  + '  display:initial;'
   + '}'
 
   + '.scw-download-button span {'
@@ -105,7 +142,7 @@ Ext.define('shpr.revisions.MainController', {
     var articleType = view.down('#articleTypeDropdown').getValue();
     var articleNumber = view.down('#articleNumberDropdown').getValue();
     var revisionReason = view.down('#causeDropdown').getValue();
-    if (articleNumber === 'Alla') articleNumber = 'alla';
+    if (articleNumber[0] === 'Alla') articleNumber[0] = 'alla';
 
     var startDate = view.down('#startDate').getValue().toLocaleDateString();
     var endDate = view.down('#endDate').getValue().toLocaleDateString();
@@ -118,6 +155,10 @@ Ext.define('shpr.revisions.MainController', {
     spinner && spinner.show();
     message && message.hide();
 
+    view.oldparameters = view.newparameters;
+    view.newparameters = operationType + protesis + revision + articleType + revisionReason + startDate + endDate;
+    if (view.oldparameters !== view.newparameters) articleNumber = 'alla';
+
     Ext.Ajax.request({
       type: 'ajax',
       method: 'get',
@@ -128,8 +169,13 @@ Ext.define('shpr.revisions.MainController', {
         var result = Ext.decode(response.responseText).data;
         var gridData = result[0][0];
         var articles = result[1][0];
-        if (articles.length !== 1) {
+        if (view.oldparameters !== view.newparameters) {
           view.down('#articleNumberDropdown').getStore().loadData(articles);
+          view.oldarticles = articles;
+          view.down('#articleNumberDropdown').select('Alla');
+        }
+
+        if (articles.length !== 1) {
           view.down('#dataPanel').updateGrid(gridData);
           view.down('#dataPanel').view.features[0].collapseAll();
         } else {
@@ -248,6 +294,52 @@ Ext.define('shpr.revisions.MainController', {
     return newContent;
   },
 
+  updatePart: function (record, part) {
+    var newChoices = this.enumerateNewChoices(record, part);
+    var addition = this.checkForAdditions(newChoices, part);
+    var deletion = this.checkForDeletions(newChoices, part);
+    this.oldChoices[part] = newChoices;
+    if (addition || deletion) {
+      if (!window.event.ctrlKey) {
+        var newValue = addition || deletion;
+        this.oldChoices[part] = [];
+        this.oldChoices[part].push(newValue);
+        this.getView().down('#' + part + 'Dropdown').clearValue();
+        this.getView().down('#' + part + 'Dropdown').setValue(newValue);
+        this.getView().down('#' + part + 'Dropdown').collapse();
+      }
+    }
+    this.updateGrid();
+  },
+
+  checkForAdditions: function (record, part) {
+    for (var item in record) {
+      if (!this.oldChoices[part].includes(record[item])) {
+        return record[item];
+      }
+    }
+    return '';
+  },
+
+  checkForDeletions: function (record, part) {
+    for (var item in this.oldChoices[part]) {
+      if (!record.includes(this.oldChoices[part][item])) {
+        return this.oldChoices[part][item];
+      }
+    }
+    return '';
+  },
+
+  enumerateNewChoices: function (record, part) {
+    var newChoices = [];
+    var code = part === 'articleType' ? 'articleTypeCode' : 'artikelnummer';
+    for (var item in record) {
+      if (item === '') continue;
+      newChoices.push(record[item].data[code]);
+    }
+    return newChoices;
+  },
+
   categoryTranslations: {
     'Alla': 'All',
     'Antal': 'Quantity',
@@ -323,337 +415,358 @@ Ext.define('shpr.view.Main', {
   extend: 'Ext.container.Container',
   controller: 'revisions.main',
   itemId: 'mainView',
-  items: [
-    {
-      xtype: 'label',
-      width: '100%',
-      cls: 'scw-header',
-      text: 'Data inmatad efter senast publicerade årsrapport skall användas med stor försiktighet då den inte är komplett eller validerad.'
-    },
-    {
-      xtype: 'label',
-      cls: 'scw-label',
-      text: 'Operationstyp'
-    },
-    {
-      xtype: 'label',
-      cls: 'scw-label',
-      text: 'Protestyp'
-    },
-    {
-      xtype: 'label',
-      cls: 'scw-label',
-      text: 'Revisionstyp'
-    },
-    {
-      xtype: 'label',
-      cls: 'scw-label',
-      text: 'Artikeltyp'
-    },
-    {
-      xtype: 'label',
-      cls: 'scw-label',
-      text: 'Artikel'
-    },
-    {
-      xtype: 'label',
-      cls: 'scw-label',
-      text: 'Revisionsorsak'
-    },
-    {
-      xtype: 'rcfilter',
-      itemId: 'operationDropdown',
-      cls: 'scw-select',
-      valueField: 'operationCode',
-      displayField: 'operationName',
-      value: '1',
-      sortfield: 'operationName',
-      sortdirection: 'DESC',
-      selectCallback: 'updateGrid',
-      store: {
-        fields: ['operationCode', 'operationName'],
-        data: [
-          { operationCode: 1, operationName: 'Primär' },
-          { operationCode: 2, operationName: 'Revision' }
-        ]
-      }
-    },
-    {
-      xtype: 'rcfilter',
-      itemId: 'protesisDropdown',
-      cls: 'scw-select',
-      valueField: 'protesisCode',
-      displayField: 'protesisName',
-      value: '1',
-      sortfield: 'protesisName',
-      sortdirection: 'DESC',
-      selectCallback: 'updateGrid',
-      store: {
-        fields: ['protesisCode', 'protesisName'],
-        data: [
-          { protesisCode: '1', protesisName: 'Total' },
-          { protesisCode: '2', protesisName: 'Halv' }
-        ]
-      }
-    },
-    {
-      xtype: 'rcfilter',
-      itemId: 'revisionDropdown',
-      cls: 'scw-select',
-      valueField: 'rev_type',
-      displayField: 'beskrivning',
-      value: 'alla',
-      sortfield: 'beskrivning',
-      sortdirection: 'DESC',
-      selectCallback: 'updateGrid',
-      store: {
-        fields: ['rev_type', 'beskrivning'],
-        data: [
-          { rev_type: 'alla', beskrivning: 'Alla förstagångsrevisioner' },
-          { rev_type: 1, beskrivning: 'Första stamrevision' },
-          { rev_type: 2, beskrivning: 'Första cuprevision' },
-          { rev_type: 3, beskrivning: 'Första revision av annat slag' }
-        ]
-      }
-    },
-    {
-      xtype: 'rcfilter',
-      itemId: 'articleTypeDropdown',
-      cls: 'scw-select',
-      valueField: 'articleTypeCode',
-      displayField: 'articleTypeName',
-      value: 'alla',
-      sortfield: 'articleTypeName',
-      sortdirection: 'DESC',
-      selectCallback: 'updateGrid',
-      store: {
-        fields: ['articleTypeCode', 'articleTypeName'],
-        data: [
-          { articleTypeCode: 'alla', articleTypeName: 'Alla' },
-          { articleTypeCode: 'caput', articleTypeName: 'Caput' },
-          { articleTypeCode: 'cup', articleTypeName: 'Cup' },
-          { articleTypeCode: 'liner', articleTypeName: 'Liner' },
-          { articleTypeCode: 'stam', articleTypeName: 'Stam' },
-          { articleTypeCode: 'plugg', articleTypeName: 'Plugg' },
-          { articleTypeCode: 'caputliner', articleTypeName: 'Caputliner' }
-        ]
-      }
-    },
-    {
-      xtype: 'rcfilter',
-      itemId: 'articleNumberDropdown',
-      cls: 'scw-select',
-      valueField: 'artikelnummer',
-      displayField: 'artikelnummer',
-      value: 'Alla',
-      sortfield: 'artikelnummer',
-      sortdirection: 'DESC',
-      selectCallback: 'updateGrid',
-      store: {
-        fields: ['artikelnummer']
-      }
-    },
-    {
-      xtype: 'rcfilter',
-      itemId: 'causeDropdown',
-      cls: 'scw-select  scw-select-last',
-      valueField: 'causeCode',
-      displayField: 'causeName',
-      value: 'alla',
-      sortfield: 'causeName',
-      sortdirection: 'DESC',
-      selectCallback: 'updateGrid',
-      store: {
-        fields: ['causeCode', 'causeName'],
-        data: [
-          { causeCode: 'alla', causeName: 'Alla' },
-          { causeCode: 1, causeName: 'Aseptisk lossning' },
-          { causeCode: 2, causeName: 'Djup infektion' },
-          { causeCode: 3, causeName: 'Luxation' },
-          { causeCode: 4, causeName: 'Alla aseptiska orsaker' }
-        ]
-      }
-    },
-    {
-      xtype: 'toolbar',
-      itemId: 'dateToolbar',
-      dock: 'top',
-      layout: {
-        type: 'hbox',
-        align: 'stretch'
-      },
-      filtering: false,
-      items: [{
-        xtype: 'datefield',
-        width: 315,
-        itemId: 'startDate',
-        value: Ext.Date.add(new Date(), Ext.Date.YEAR, -1),
-        fieldLabel: 'Operationsdatum<div class="scw-info"><div data-qtip="De datum som väljs måste utgöra en period på minst ett år och ligga i spannet mellan 1999-01-01 och dagens datum.">i</div></div>mellan',
-        labelWidth: 200,
-        format: 'Y-m-d',
-        altFormats: 'ymd|Ymd',
-        listeners: {
-          change: 'updateStartDate'
-        }
-      },
+  items: [{
+    xtype: 'container',
+    items: [
       {
-        xtype: 'datefield',
-        width: 150,
-        itemId: 'endDate',
-        value: new Date(),
-        fieldLabel: ' och',
-        labelWidth: 35,
-        labelStyle: 'padding: 5px 0 0 0;',
-        format: 'Y-m-d',
-        altFormats: 'ymd|Ymd',
-        listeners: {
-          change: 'updateEndDate'
-        }
+        xtype: 'label',
+        width: '100%',
+        cls: 'scw-header',
+        text: 'Data inmatad efter senast publicerade årsrapport skall användas med stor försiktighet då den inte är komplett eller validerad.'
       },
       {
         xtype: 'label',
-        text: '',
-        style: {
-          border: 'none'
-        },
-        flex: 1
+        cls: 'scw-label',
+        text: 'Operationstyp'
       },
       {
-        xtype: 'button',
-        itemId: 'exportTableSwedish',
-        cls: 'scw-download-button',
-        autoEl: {
-          tag: 'a',
-          download: 'registreringar.csv'
-        },
-        text: '&#xf019 Excel (sv)',
-        listeners: {
-          click: 'exportTable'
+        xtype: 'label',
+        cls: 'scw-label',
+        text: 'Protestyp'
+      },
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        text: 'Revisionstyp'
+      },
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        html: 'Artikeltyp<div class="scw-info"><div data-qtip="För att välja flera komponenter samtidigt, håll inne CTRL-knappen när du gör nästa val.">i</div></div>'
+      },
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        html: 'Artikel<div class="scw-info"><div data-qtip="För att välja flera komponenter samtidigt, håll inne CTRL-knappen när du gör nästa val.">i</div></div>'
+      },
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        text: 'Revisionsorsak'
+      },
+      {
+        xtype: 'rcfilter',
+        itemId: 'operationDropdown',
+        cls: 'scw-select',
+        valueField: 'operationCode',
+        displayField: 'operationName',
+        value: '1',
+        sortfield: 'operationName',
+        sortdirection: 'DESC',
+        selectCallback: 'updateGrid',
+        store: {
+          fields: ['operationCode', 'operationName'],
+          data: [
+            { operationCode: 1, operationName: 'Primär' },
+            { operationCode: 2, operationName: 'Revision' }
+          ]
         }
       },
       {
-        xtype: 'button',
-        itemId: 'exportTableEnglish',
-        cls: 'scw-download-button',
-        autoEl: {
-          tag: 'a',
-          download: 'registrations.csv'
-        },
-        text: '&#xf019 Excel (en)',
-        listeners: {
-          click: 'exportTable'
+        xtype: 'rcfilter',
+        itemId: 'protesisDropdown',
+        cls: 'scw-select',
+        valueField: 'protesisCode',
+        displayField: 'protesisName',
+        value: '1',
+        sortfield: 'protesisName',
+        sortdirection: 'DESC',
+        selectCallback: 'updateGrid',
+        store: {
+          fields: ['protesisCode', 'protesisName'],
+          data: [
+            { protesisCode: '1', protesisName: 'Total' },
+            { protesisCode: '2', protesisName: 'Halv' }
+          ]
         }
-      }
-      ]
-    },
-    {
-      xtype: 'grid',
-      itemId: 'dataPanel',
-      width: '100%',
-      cls: 'scw-grid',
-      store: {
-        storeId: 'overviewStore',
-        groupField: 'artikeltyp',
-        fields: [],
-        data: []
-
       },
-      features: [{
-        id: 'group',
-        ftype: 'groupingsummary',
-        groupHeaderTpl: '{name}',
-        hideGroupedHeader: true,
-        enableGroupingMenu: false,
-        startCollapsed: true
-      }],
-      columns: [
-        {
-          text: 'Artikelnummer',
-          dataIndex: 'artikelnummer',
-          flex: 2
-        },
-        {
-          text: 'Beskrivning',
-          dataIndex: 'beskrivning',
-          flex: 4
-        },
-        {
-          text: 'Artikeltyp',
-          dataIndex: 'artikeltyp',
-          width: 90
-        },
-        {
-          text: 'Insatta',
-          dataIndex: 'antal_insatta',
-          width: 70,
-          field: {
-            xtype: 'numberfield'
-          },
-          summaryType: 'sum'
-        },
-        {
-          text: 'Reviderade',
-          dataIndex: 'antal_reviderade',
-          width: 100,
-          field: {
-            xtype: 'numberfield'
-          },
-          summaryType: 'sum'
-        },
-        {
-          text: '0-90 dagar',
-          dataIndex: 'zero_to_90',
-          width: 95,
-          field: {
-            xtype: 'numberfield'
-          },
-          summaryType: 'sum'
-        },
-        {
-          text: '91 dagar -  2 år',
-          dataIndex: 'ninetyone_to_2yrs',
-          width: 120,
-          field: {
-            xtype: 'numberfield'
-          },
-          summaryType: 'sum'
-        },
-        {
-          text: 'Mer än 2 år',
-          dataIndex: 'over_2yrs',
-          width: 105,
-          field: {
-            xtype: 'numberfield'
-          },
-          summaryType: 'sum'
+      {
+        xtype: 'rcfilter',
+        itemId: 'revisionDropdown',
+        cls: 'scw-select',
+        valueField: 'rev_type',
+        displayField: 'beskrivning',
+        value: 'alla',
+        sortfield: 'beskrivning',
+        sortdirection: 'DESC',
+        selectCallback: 'updateGrid',
+        store: {
+          fields: ['rev_type', 'beskrivning'],
+          data: [
+            { rev_type: 'alla', beskrivning: 'Alla förstagångsrevisioner' },
+            { rev_type: 1, beskrivning: 'Första stamrevision' },
+            { rev_type: 2, beskrivning: 'Första cuprevision' },
+            { rev_type: 3, beskrivning: 'Första revision av annat slag' }
+          ]
         }
-      ],
-      updateGrid: function (data) {
-        var store = {
-          storeId: 'overviewStore',
-          fields: [],
-          groupField: 'artikeltyp',
-          data: data
-        };
-        this.setStore(store);
+      },
+      {
+        xtype: 'tagfield',
+        itemId: 'articleTypeDropdown',
+        cls: 'scw-select scw-multiselect',
+        queryMode: 'local',
+        multiSelect: true,
+        stacked: true,
+        valueField: 'articleTypeCode',
+        displayField: 'articleTypeName',
+        value: 'alla',
+        sortfield: 'articleTypeName',
+        sortdirection: 'DESC',
+        listeners: {
+          select: function (combo, record) {
+            this.up().up().getController().updatePart(record, 'articleType');
+          }
+        },
+        store: {
+          fields: ['articleTypeCode', 'articleTypeName'],
+          data: [
+            { articleTypeCode: 'alla', articleTypeName: 'Alla' },
+            { articleTypeCode: 'caput', articleTypeName: 'Caput' },
+            { articleTypeCode: 'cup', articleTypeName: 'Cup' },
+            { articleTypeCode: 'liner', articleTypeName: 'Liner' },
+            { articleTypeCode: 'stam', articleTypeName: 'Stam' },
+            { articleTypeCode: 'plugg', articleTypeName: 'Plugg' },
+            { articleTypeCode: 'caputliner', articleTypeName: 'Caputliner' }
+          ]
+        }
+      },
+      {
+        xtype: 'tagfield',
+        itemId: 'articleNumberDropdown',
+        cls: 'scw-select scw-multiselect',
+        queryMode: 'local',
+        multiSelect: true,
+        stacked: true,
+        valueField: 'artikelnummer',
+        displayField: 'artikelnummer',
+        value: 'Alla',
+        sortfield: 'artikelnummer',
+        sortdirection: 'DESC',
+        listeners: {
+          select: function (combo, record) {
+            this.up().up().getController().updatePart(record, 'articleNumber');
+          }
+        },
+        store: {
+          fields: ['artikelnummer'],
+          data: [
+            { artikelnummer: 'Alla' }
+          ]
+        }
+      },
+      {
+        xtype: 'rcfilter',
+        itemId: 'causeDropdown',
+        cls: 'scw-select  scw-select-last',
+        valueField: 'causeCode',
+        displayField: 'causeName',
+        value: 'alla',
+        sortfield: 'causeName',
+        sortdirection: 'DESC',
+        selectCallback: 'updateGrid',
+        store: {
+          fields: ['causeCode', 'causeName'],
+          data: [
+            { causeCode: 'alla', causeName: 'Alla' },
+            { causeCode: 1, causeName: 'Aseptisk lossning' },
+            { causeCode: 2, causeName: 'Djup infektion' },
+            { causeCode: 3, causeName: 'Luxation' },
+            { causeCode: 4, causeName: 'Alla aseptiska orsaker' }
+          ]
+        }
+      },
+    ]
+  },
+  {
+    xtype: 'toolbar',
+    itemId: 'dateToolbar',
+    dock: 'top',
+    layout: {
+      type: 'hbox',
+      align: 'stretch'
+    },
+    filtering: false,
+    items: [{
+      xtype: 'datefield',
+      width: 315,
+      itemId: 'startDate',
+      value: Ext.Date.add(new Date(), Ext.Date.YEAR, -1),
+      fieldLabel: 'Operationsdatum<div class="scw-info"><div data-qtip="De datum som väljs måste utgöra en period på minst ett år och ligga i spannet mellan 1999-01-01 och dagens datum.">i</div></div>mellan',
+      labelWidth: 200,
+      format: 'Y-m-d',
+      altFormats: 'ymd|Ymd',
+      listeners: {
+        change: 'updateStartDate'
       }
     },
     {
-      xtype: 'panel',
-      itemId: 'spinnerPanel',
-      height: 162,
-      hidden: true,
-      border: false,
-      html: '<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>'
+      xtype: 'datefield',
+      width: 150,
+      itemId: 'endDate',
+      value: new Date(),
+      fieldLabel: ' och',
+      labelWidth: 35,
+      labelStyle: 'padding: 5px 0 0 0;',
+      format: 'Y-m-d',
+      altFormats: 'ymd|Ymd',
+      listeners: {
+        change: 'updateEndDate'
+      }
     },
     {
-      xtype: 'panel',
-      itemId: 'missingDataPanel',
-      height: 80,
-      hidden: true,
-      border: false,
-      html: '<div class="scw-missing-data-panel">För liten mängd data tillgänglig.</div>'
+      xtype: 'label',
+      text: '',
+      style: {
+        border: 'none'
+      },
+      flex: 1
+    },
+    {
+      xtype: 'button',
+      itemId: 'exportTableSwedish',
+      cls: 'scw-download-button',
+      autoEl: {
+        tag: 'a',
+        download: 'registreringar.csv'
+      },
+      text: '&#xf019 Excel (sv)',
+      listeners: {
+        click: 'exportTable'
+      }
+    },
+    {
+      xtype: 'button',
+      itemId: 'exportTableEnglish',
+      cls: 'scw-download-button',
+      autoEl: {
+        tag: 'a',
+        download: 'registrations.csv'
+      },
+      text: '&#xf019 Excel (en)',
+      listeners: {
+        click: 'exportTable'
+      }
     }
+    ]
+  },
+  {
+    xtype: 'grid',
+    itemId: 'dataPanel',
+    width: '100%',
+    cls: 'scw-grid',
+    store: {
+      storeId: 'overviewStore',
+      groupField: 'artikeltyp',
+      fields: [],
+      data: []
+
+    },
+    features: [{
+      id: 'group',
+      ftype: 'groupingsummary',
+      groupHeaderTpl: '{name}',
+      hideGroupedHeader: true,
+      enableGroupingMenu: false,
+      startCollapsed: true
+    }],
+    columns: [
+      {
+        text: 'Artikelnummer',
+        dataIndex: 'artikelnummer',
+        flex: 2
+      },
+      {
+        text: 'Beskrivning',
+        dataIndex: 'beskrivning',
+        flex: 4
+      },
+      {
+        text: 'Artikeltyp',
+        dataIndex: 'artikeltyp',
+        width: 90
+      },
+      {
+        text: 'Insatta',
+        dataIndex: 'antal_insatta',
+        width: 70,
+        field: {
+          xtype: 'numberfield'
+        },
+        summaryType: 'sum'
+      },
+      {
+        text: 'Reviderade',
+        dataIndex: 'antal_reviderade',
+        width: 100,
+        field: {
+          xtype: 'numberfield'
+        },
+        summaryType: 'sum'
+      },
+      {
+        text: '0-90 dagar',
+        dataIndex: 'zero_to_90',
+        width: 95,
+        field: {
+          xtype: 'numberfield'
+        },
+        summaryType: 'sum'
+      },
+      {
+        text: '91 dagar -  2 år',
+        dataIndex: 'ninetyone_to_2yrs',
+        width: 120,
+        field: {
+          xtype: 'numberfield'
+        },
+        summaryType: 'sum'
+      },
+      {
+        text: 'Mer än 2 år',
+        dataIndex: 'over_2yrs',
+        width: 105,
+        field: {
+          xtype: 'numberfield'
+        },
+        summaryType: 'sum'
+      }
+    ],
+    updateGrid: function (data) {
+      var store = {
+        storeId: 'overviewStore',
+        fields: [],
+        groupField: 'artikeltyp',
+        data: data
+      };
+      this.setStore(store);
+    }
+  },
+  {
+    xtype: 'panel',
+    itemId: 'spinnerPanel',
+    height: 162,
+    hidden: true,
+    border: false,
+    html: '<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>'
+  },
+  {
+    xtype: 'panel',
+    itemId: 'missingDataPanel',
+    height: 80,
+    hidden: true,
+    border: false,
+    html: '<div class="scw-missing-data-panel">För liten mängd data tillgänglig.</div>'
+  }
   ]
 });
 
@@ -672,11 +785,14 @@ Ext.application({
       main.down('#exportTableSwedish').setHref(' ');
       main.down('#exportTableEnglish').setHref(' ');
     }
+    main.getController().oldChoices = {};
+    main.getController().oldChoices.articleType = ['alla'];
+    main.getController().oldChoices.articleNumber = ['Alla'];
     main.getController().updateGrid();
     Ext.apply(Ext.QuickTips.getQuickTip(), {
       dismissDelay: 0
     });
   }
 });
-//
+
 //! SHPRs företagsmodul: revisionsutfall
