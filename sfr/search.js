@@ -68,13 +68,13 @@ var SfrSearchList = function () {
   }
 
   function createFilters() {
-    var components = SfrWidget.createFilterComponents(['from_dat', 'bodypart', 'icd10', 'injtype', 'injgroup', 'trtgrp', 'trttype', 'trtcode', 'fxclass', 'fxclassgroup', 'open']);
+    var components = SfrWidget.createFilterComponents(['from_dat', 'from_fx_savedate', 'bodypart', 'icd10', 'injtype', 'injgroup', 'trtgrp', 'trttype', 'trtcode', 'fxclass', 'fxclassgroup', 'open']);
     var fractureTreatLabel = Ext.create('Ext.form.Label', { text: 'Fraktur/Behandling:' });
     var fractureTreatFilter = createFractureTreatFilter();
     var specialFractureLabel = Ext.create('Ext.form.Label', { text: 'Speciella frakturtyper:' });
     var specialFractureFilter = createSpecialFractureFilter();
 
-    components.splice(4, 0, fractureTreatLabel, fractureTreatFilter, specialFractureLabel, specialFractureFilter);
+    components.splice(8, 0, fractureTreatLabel, fractureTreatFilter, specialFractureLabel, specialFractureFilter);
 
     for (var i = 0; i < components.length; i++) {
       var currentCmp = components[i];
