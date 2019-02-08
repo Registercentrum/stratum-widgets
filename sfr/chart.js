@@ -13,6 +13,7 @@ var SfrWidget = {
     trttype3: 'trttype3', 
     from_dat: 'from_dat', 
     from_trt_dat: 'from_trt_dat', 
+    from_fx_savedate: 'from_fx_savedate',
     injtype: 'injtype',
     injgroup: 'injgroup',
     samtidfrakt: 'samtidfrakt', 
@@ -33,6 +34,7 @@ var SfrWidget = {
     enhet: 'enhet',
     statOut: 'statOut',
     to_trt_dat: 'to_trt_dat', 
+    to_fx_savedate: 'to_fx_savedate',
     to_dat: 'to_dat',
     clinic: 'clinic',
     incomplete: 'increg',
@@ -745,12 +747,13 @@ var SfrWidget = {
         item = item.slice(0, item.indexOf(':'));
         if (item === parameters.tidsper) values[item].options = getTimePeriods(config[i].slice(config[i].indexOf(':') +1 , config[i].length).split(','));
       }
-      if (item === parameters.from_dat)     getDateFilter();
-      if (item === parameters.from_trt_dat) getTreatmentDateFilter();
-      if (item === parameters.icd10)        getIcd10();
-      if (item === parameters.fxclass)      getFxClass();
-      if (item === parameters.trtgrp)       getTreatmentGroupFilter();
-      if (item === parameters.trtcode)      getTreatmentCode();
+      if (item === parameters.from_dat)         getDateFilter();
+      if (item === parameters.from_trt_dat)     getTreatmentDateFilter();
+      if (item === parameters.from_fx_savedate) getSaveDateFilter();
+      if (item === parameters.icd10)            getIcd10();
+      if (item === parameters.fxclass)          getFxClass();
+      if (item === parameters.trtgrp)           getTreatmentGroupFilter();
+      if (item === parameters.trtcode)          getTreatmentCode();
       
       if (values[item]) {
         label = Ext.create('Ext.form.Label', { text: values[item].text });
@@ -809,6 +812,35 @@ var SfrWidget = {
         width: 150,
         value: new Date(),
         parameterKey: parameters.to_dat
+      });
+      filterComponents.push(endDateField);
+    }
+
+    function getSaveDateFilter() {
+      label = Ext.create('Ext.form.Label', { text: 'Fr.o.m. datum för frakturregistrering:' });
+      filterComponents.push(label);
+      
+      var startDateField = Ext.create('Ext.form.DateField', {
+        format: 'Y-m-d',
+        altFormats: "Ymd|ymd",
+        width: 150,
+        editable: true,
+        allowBlank: true,
+        maxValue: new Date(),
+        parameterKey: parameters.from_fx_savedate,
+      });
+      
+      filterComponents.push(startDateField);
+      label = Ext.create('Ext.form.Label', {text: 'T.o.m. datum för frakturregistrering:'});
+      
+      filterComponents.push(label);
+      var endDateField = Ext.create('Ext.form.DateField', {
+        format: 'Y-m-d',
+        altFormats: "Ymd|ymd",
+        allowBlank: true,
+        editable: true,
+        width: 150,
+        parameterKey: parameters.to_fx_savedate
       });
       filterComponents.push(endDateField);
     }
@@ -1207,7 +1239,9 @@ var SfrWidget = {
         continue;
       }
       if (current instanceof Ext.form.field.Date) {
-        parameters += '&' + current.parameterKey + '=' + Ext.util.Format.date(current.getValue(), 'Y-m-d');
+          if(current.getValue()){
+            parameters += '&' + current.parameterKey + '=' + Ext.util.Format.date(current.getValue(), 'Y-m-d');
+          }
         continue;
       }
       if (current.getValue()) {
