@@ -2,11 +2,11 @@
 Ext.util.CSS.removeStyleSheet('shpr-companymodule');
 Ext.util.CSS.createStyleSheet(''
 
-  + '#contentPanel ul {'
+  + '.scw-main ul {'
   + '  padding: 0;'
   + '}'
 
-  + '#contentPanel ul>li {'
+  + '.scw-main ul>li {'
   + '  list-style: initial;'
   + '}'
   
@@ -82,7 +82,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  overflow: hidden !important;'
   + '}'
 
-  + '#contentPanel .scw-multiselect li {'
+  + '.scw-main .scw-multiselect li {'
   + '  border: none;'
   + '  background-color: transparent;'
   + '  margin: 0px 4px 0px 0;'
@@ -422,10 +422,10 @@ Ext.define('shpr.graph.MainController', {
       config = { filename: 'Revision' };
       graph = '#incidens';
     }
-    view.down(graph).setSprites({ type: 'text', text: this.createImageLegend(), x: 95, y: 445, height: 30, textAlign: 'left' });
+    view.down(graph).setSprites({ type: 'text', text: this.createImageLegend(), x: 0, y: 430, height: 30, textAlign: 'left' });
     view.down(graph).redraw();
     view.down(graph).download(config);
-    view.down(graph).setSprites();
+    // view.down(graph).setSprites();
     view.down(graph).redraw();
   },
 
@@ -603,6 +603,7 @@ Ext.define('shpr.view.Main', {
   extend: 'Ext.container.Container',
   controller: 'graph.main',
   itemId: 'mainView',
+  cls: 'scw-main',
   items: [
     {
       xtype: 'label',
@@ -844,7 +845,7 @@ Ext.define('shpr.view.Main', {
           value: new Date(),
           fieldLabel: ' och',
           labelWidth: 30,
-          labelStyle: 'padding: 5px 0 0 0;',
+          labelStyle: 'padding: 8px 0 0 0;',
           format: 'Y-m-d',
           altFormats: 'ymd|Ymd',
           listeners: {
@@ -867,7 +868,7 @@ Ext.define('shpr.view.Main', {
           fieldLabel: 'Y-axel, undre gräns',
           labelWidth: 130,
           allowBlank: false,
-          labelStyle: 'padding: 5px 0 0 0;',
+          labelStyle: 'padding: 8px 0 0 0;',
           listeners: {
             change: 'updateAxes'
           }
@@ -880,7 +881,7 @@ Ext.define('shpr.view.Main', {
           fieldLabel: 'övre gräns',
           labelWidth: 75,
           allowBlank: false,
-          labelStyle: 'padding: 5px 0 0 0;',
+          labelStyle: 'padding: 8px 0 0 0;',
           listeners: {
             change: 'updateAxes'
           }

@@ -36,7 +36,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  padding-right: 0px;'
   + '}'
 
-  + '#contentPanel ul {'
+  + '.scw-main ul {'
   + '  padding: 0;'
   + '}'
 
@@ -48,13 +48,14 @@ Ext.util.CSS.createStyleSheet(''
   + '  overflow: hidden !important;'
   + '}'
 
-  + '#contentPanel .scw-multiselect li {'
+  + '.scw-main .scw-multiselect li {'
   + '  border: none;'
   + '  background-color: transparent;'
   + '  margin: 0px 4px 0px 0;'
   + '}'
 
   + '.scw-multiselect li:first-child {'
+  //+ '  margin-top: 11px;'
   + '}'
 
   + '.scw-multiselect li:hover {'
@@ -419,6 +420,7 @@ Ext.define('shpr.view.Main', {
   extend: 'Ext.container.Container',
   controller: 'revisions.main',
   itemId: 'mainView',
+  cls: 'scw-main',
   items: [{
     xtype: 'container',
     items: [
