@@ -879,7 +879,7 @@
                                         ansFreq
                                     );
                                 }
-                                this.update(Ext.String.format(
+                                tooltip.update(Ext.String.format(
                                     '{0}<br>' +
                                     'Resultat indikator: {1}<br>{2}',
                                     storeItem.get('displayName'),

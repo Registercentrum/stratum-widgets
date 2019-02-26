@@ -6556,6 +6556,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 Object.assign = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 Ext.util.CSS.removeStyleSheet('sfr-skeleton');
 Ext.util.CSS.createStyleSheet(''
+    + '.FormPanelSmallFont .x-form-cb-wrap-default { height:0; min-height:0;}'
 	+ '.FormPanelInRed .x-panel-body					{ background-color: #E9D7D3; padding-bottom:0px; } '
 	+ '.FormPanelInRed .x-toolbar-footer				{ background-color: #E9D7D3; padding: 10px;margin-top:0px;}'
 	+ '.FormPanelInRedIcon								{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelRed.png) !important;}'
@@ -6854,5 +6855,9 @@ Ext.util.CSS.createStyleSheet(''
 	+ '.sfr-pelvis-text {'
 	+ '  max-width: 90%;'
 	+ '}'
+	+ '.FormPanelSmallFont input[type=checkbox] {'
+	+ '  margin: 0;'
+	+ '}'
+	
 	, 'sfr-skeleton'
 );
