@@ -1755,7 +1755,7 @@
           var template = '<p><span style="color:#359aa3">{0}</span><br>'
             + 'Andel: {1}<br>'
             + 'Antal: {2} operationer<br>'
-            + 'Operationsteknik: {3}<br>'
+            + 'Operationsmetod: {3}<br>'
             + (_current.indicatorId === 2 || _current.indicatorId === 3 ? '' : 'Svarsfrekvens 30 d: {4}<br>')
 					  + (_current.indicatorId === 1 ? '' : 'Svarsfrekvens 6 mån: {5}<br>')
             + 'Täckningsgrad: {6}<br>'
@@ -2663,7 +2663,7 @@
             itemId: 'allClinicsLegend',
             cls: 'ton-legend-all-clinics',
             updateLegend: function() {
-              var timeIntervals = ['perioden 2015-2017', 'perioden 2015-2017', 'perioden 2015-2017', '2017'];
+              var timeIntervals = ['perioden 2016-2018', 'perioden 2016-2018', 'perioden 2016-2018', '2017'];
               
               var greenTexts = ['Färre återinläggningar', 'Mindre smärta', 'Högre grad symptomfrihet', 'Bättre täckningsgrad'];
               var orangeTexts = ['Nära riksnittet', 'Nära riksnittet', 'Nära riksnittet', 'Nära riksnittet'];
