@@ -20,7 +20,7 @@ var containerHtml = ''
   + '</div>';
 try {
   Ext.create('Ext.container.Container', {
-    renderTo: (Stratum.containers && Stratum.containers['SPOQ/utdata_PEVA']) || 'main-container',
+    renderTo: (Stratum.containers && Stratum.containers['SPOQ/utdata_PEVA']) || 'contentPanel',
     html: containerHtml,
     listeners: {
       afterRender: function () {

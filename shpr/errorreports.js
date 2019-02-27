@@ -1,3 +1,4 @@
+
 (function() {
 
 	var container = Stratum.containers && Stratum.containers['SHPR/ErrorReports'] || 'sw-rccontainer1';
@@ -52,6 +53,7 @@
 			},
 			
 			constructor: function (aConfig) {
+				if(!Ext.ClassManager.isCreated('Stratum.UnitItem')) {
 				Ext.define('Stratum.UnitItem', {
 					extend: 'Stratum.Unit',
 					idProperty: 'UnitCode',
@@ -61,6 +63,7 @@
 						{ name: 'IsActive', type: 'bool' }
 					]
 				});
+				}
  				this.controlee = {}; // Map of ids to views.
  				this.parameter = {}; // Map of parameter names to values for api call or filtering.
  				this.contexts  = {}; // Map of units to contexts for current users loginable contexts (for impersonation).

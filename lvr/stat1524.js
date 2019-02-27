@@ -136,7 +136,7 @@ Repository.Local.LVRKOL = /*Repository.Local.LVRKOL ||*/ { //Calculates overview
                 minimum: 0,
                 grid: true,
                 dashSize: 0,
-                renderer: Ext.util.Format.numberRenderer('0%')
+                renderer: function(a, b) { return Ext.util.Format.numberRenderer('0%')(b); }
             }, {
                 type: 'category',
                 position: 'bottom',

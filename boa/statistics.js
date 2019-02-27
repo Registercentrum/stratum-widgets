@@ -53,6 +53,10 @@ Ext.util.CSS.createStyleSheet(
   + '      border-radius: 3px;'
   + '  }'
 
+  + '  .bsw-select .x-form-trigger-default:before {'
+  + '    content: ""'
+  + ' }'
+
   + '  .bsw-h1 h1 {'
   + '      font-family: "Roboto Slab";'
   + '      font-size: 30px;'
@@ -192,8 +196,8 @@ Ext.util.CSS.createStyleSheet(
   + '      box-shadow: inset 0px -10px 9px -7px rgba(0,0,0,0.2);'
   + '  }'
 
-  + '  .bsw-tabs a:focus {'
-  + '      outline: none;'
+  + '  .bsw-tabs a:focus, .bsw-tabs .x-tab-focus {'
+  + '      outline: none !important;'
   + '  }'
 
   + '  .bsw-tabs .x-tab.x-tab-active.x-tab-default {'
@@ -240,7 +244,7 @@ Ext.util.CSS.createStyleSheet(
   + '  .bsw-checkbox {'
   + '      height: 42px;'
   + '      float: left;'
-  + '      min-width: 250px;'
+  + '      min-width: 90px;'
   + '  }'
 
   + '  .bsw-checkbox > div {'
@@ -1088,7 +1092,7 @@ Ext.util.CSS.createStyleSheet(
   + '      }'
   + '  }', 'bsw'
 );
-Ext.define('Boa.model.Infobar', {
+typeof Boa === 'undefined' && Ext.define('Boa.model.Infobar', {
   extend: 'Ext.data.Model',
   alias: 'model.infobar',
 
@@ -1135,11 +1139,11 @@ Ext.define('Boa.controller.DetailsController', {
 
     this.indicator = view.down('#indicatorFilter').getValue();
     this.interview = view.down('#interviewFilter').getValue();
-    this.sexes     = view.down('#genderFilter').getValue();
-    this.ages      = view.down('#ageFilter').getValue();
-    this.hip       = view.down('#hipCheckbox').getValue() === false ? 0 : 1;
-    this.knee      = view.down('#kneeCheckbox').getValue() === false ? 0 : 1;
-    this.hand      = view.down('#handCheckbox').getValue() === false ? 0 : 1;
+    this.sexes = view.down('#genderFilter').getValue();
+    this.ages = view.down('#ageFilter').getValue();
+    this.hip = view.down('#hipCheckbox').getValue() === false ? 0 : 1;
+    this.knee = view.down('#kneeCheckbox').getValue() === false ? 0 : 1;
+    this.hand = view.down('#handCheckbox').getValue() === false ? 0 : 1;
     this.showStateComparison = view.down('#showStateComparison').getValue() === false ? 0 : 1;
   },
 
@@ -1244,10 +1248,8 @@ Ext.define('Boa.controller.DetailsController', {
     if (this.trendParameters === this.getChoices() + this.showStateComparison) {
       return;
     }
-    if (this.trendParameters && this.trendParameters.indexOf(this.indicator) < 0) {
-      this.resetCharts();
-    }
-
+    
+    this.resetCharts();
     this.trendParameters = this.getChoices() + this.showStateComparison;
 
     if (this.indicator === 'xray' || this.indicator === 'age' || this.indicator === 'no-prior-medical-joint-help') {
@@ -1298,8 +1300,8 @@ Ext.define('Boa.controller.DetailsController', {
 
   showGraphs: function (oneMonth, threeMonths, twelveMonths, period) {
     var view = this.getView();
-    oneMonth     ? view.down('#oneMonthGraph').removeCls('invisible')    : view.down('#oneMonthGraph').addCls('invisible');
-    threeMonths  ? view.down('#threeMonthGraph').removeCls('invisible')  : view.down('#threeMonthGraph').addCls('invisible');
+    oneMonth ? view.down('#oneMonthGraph').removeCls('invisible') : view.down('#oneMonthGraph').addCls('invisible');
+    threeMonths ? view.down('#threeMonthGraph').removeCls('invisible') : view.down('#threeMonthGraph').addCls('invisible');
     twelveMonths ? view.down('#twelveMonthGraph').removeCls('invisible') : view.down('#twelveMonthGraph').addCls('invisible');
 
     this.period = period;
@@ -1470,8 +1472,8 @@ Ext.define('Boa.controller.DetailsController', {
         result.output.suffix = controller.indicator === 'age' ? ' år' : '%';
         result.output.suffix = controller.indicator === 'eqindex' || controller.indicator === 'eqvas' || controller.indicator === 'pain-nrs' ? '' : result.output.suffix;
 
-        result.output.firstvisit   = result.output.allpatients.firstvisit   ? '' : 'bsw-inactive';
-        result.output.threemonths  = result.output.allpatients.threemonths  ? '' : 'bsw-inactive';
+        result.output.firstvisit = result.output.allpatients.firstvisit ? '' : 'bsw-inactive';
+        result.output.threemonths = result.output.allpatients.threemonths ? '' : 'bsw-inactive';
         result.output.twelvemonths = result.output.allpatients.twelvemonths ? '' : 'bsw-inactive';
 
         var missingvalues = ['n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a', 'n/a'];
@@ -1496,7 +1498,7 @@ Ext.define('Boa.controller.DetailsController', {
           result.output.knee.twelvemonths = missingvalues;
           result.output.hip.twelvemonths = missingvalues;
         }
-        if (!controller.getViewModel())controller.redirectTo('overview');
+        if (!controller.getViewModel()) controller.redirectTo('overview');
         controller.getViewModel().set('table', result.output);
         if (spinner) {
           spinner.classList.add('bsw-inactive');
@@ -1892,7 +1894,7 @@ Ext.define('Boa.controller.OverviewController', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: this.getBaseUrl() + 'boaw-simple-' + indicator + '?apikey=' + this.getApiKey() + '&rinvoke=1' + formTypeString + '&year=' + year + '&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeFollowUp=' + followups, 
+      url: this.getBaseUrl() + 'boaw-simple-' + indicator + '?apikey=' + this.getApiKey() + '&rinvoke=1' + formTypeString + '&year=' + year + '&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeFollowUp=' + followups,
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
         if (!component.getViewModel()) return;
@@ -1925,7 +1927,6 @@ Ext.define('Boa.view.Comparison', {
   flipXY: true,
   // Bashöjd plus 50 x antal poster
   height: 49,
-
   axes: [
     {
       type: 'numeric',
@@ -1936,10 +1937,11 @@ Ext.define('Boa.view.Comparison', {
       minimum: 0,
       maximum: 130,
       increment: 10,
-      renderer: function (v) {
-        if (v === 30) return '0%';
-        if (v > 30 && v < 130 && ((v - 30) % 20) === 0) return v - 30 + '%';
-        if (v > 129) return '100%       ';
+
+      renderer: function (axis, label) {
+        if (label === 30) return '0%';
+        if (label > 30 && label < 130 && ((label - 30) % 20) === 0) return label - 30 + '%';
+        if (label > 129) return '100%       ';
         return '';
       },
       style: {
@@ -1963,11 +1965,11 @@ Ext.define('Boa.view.Comparison', {
     {
       type: 'category',
       position: 'left',
+      hidden: true,
       style: {
         opacity: 0.02,
         majorTickSize: 0
       },
-      titleMargin: -8,
       label: {
         color: '#fff',
         font: 'Open Sans',
@@ -1976,6 +1978,7 @@ Ext.define('Boa.view.Comparison', {
       },
       fields: 'name'
     },
+
     {
       type: 'category',
       position: 'bottom'
@@ -1997,8 +2000,7 @@ Ext.define('Boa.view.Comparison', {
       display: 'insideStart',
       fill: '#183136',
       width: 300,
-      renderer: function (v) {
-        var label = v;
+      renderer: function (label) {
         if (label.length > 30) {
           label = label.substring(0, 30) + '...';
         }
@@ -2032,20 +2034,15 @@ Ext.define('Boa.view.Comparison', {
       duration: 500
     },
     tooltip: {
-      trackMouse: false,
-      height: 28,
-      defaultAlign: 'tl-tl',
-      boaStyle: true,
-      boaOrientation: 'left',
-      anchor: 'left',
-      renderer: function (record, ctx) {
+      trackMouse: true,
+      renderer: function (tooltip, record, ctx) {
         if (ctx.sprite.getField() === 'base') {
-          this.setHtml(record.get('name'));
+          tooltip.setHtml(record.get('name'));
         } else {
           var prefix = record.get('indicator') === 'age' ? 'Medelålder: ' : 'Andel: ';
           var suffix = record.get('indicator') === 'age' ? ' år' : ' %';
           var value = Math.round(record.get('value'));
-          this.setHtml(prefix + '<b>' + value + suffix + '</b>');
+          tooltip.setHtml(prefix + '<b>' + value + suffix + '</b>');
         }
       }
     }
@@ -2077,34 +2074,34 @@ Ext.define('Boa.view.Comparison', {
 
   updateChart: function (output) {
     if (output.indicator === 'age') {
-      this.axes[0].setRenderer(function (v) {
-        if (v === 30) return '0 år';
-        if (v > 30 && v < 130 && ((v - 30) % 20) === 0) return v - 30 + ' år';
-        if (v > 129) return '100 år       ';
+      this.axes[0].setRenderer(function (axis, label) {
+        if (label === 30) return '0 år';
+        if (label > 30 && label < 130 && ((label - 30) % 20) === 0) return label - 30 + ' år';
+        if (label > 129) return '100 år       ';
         return '';
       });
     } else {
-      this.axes[0].setRenderer(function (v) {
-        if (v === 30) return '0%';
-        if (v > 30 && v < 130 && ((v - 30) % 20) === 0) return v - 30 + '%';
-        if (v > 129) return '100%       ';
+      this.axes[0].setRenderer(function (axis, label) {
+        if (label === 30) return '0%';
+        if (label > 30 && label < 130 && ((label - 30) % 20) === 0) return label - 30 + '%';
+        if (label > 129) return '100%       ';
         return '';
       });
     }
 
     var max = output.indicator === 'age' ? 131 : 130;
-    this.axes[0].setMaximum(max);
+    max = this.axes[0].getMaximum() === 130 ? 131 : 130;
 
     var serverdata = output.result;
 
     var data = [];
     var base = 30;
     var multiplier = output.indicator !== 'age' ? 100 : 1;
-    this.getItems().items[7].getItems()[1].hide();
+    this.getItems().items[7].getItems()[1].hide(); // was 7
     var shortname;
     for (var i = serverdata.length - 1; i >= 0; i--) {
       if (serverdata[i].value === 'NA' && i === 0) {
-        this.getItems().items[7].getItems()[1].show();
+        this.getItems().items[7].getItems()[1].show(); // was 7
       }
       if (serverdata[i].value !== 'NA' || i === 0) {
         if (serverdata[i].grupp.length > 25) {
@@ -2122,23 +2119,22 @@ Ext.define('Boa.view.Comparison', {
         });
       }
     }
-
-    this.setHeight(50 + 40 * data.length);
-
-    var store = {
-      fields: ['name', 'value1', 'value2'],
-      data: data
-    };
-
-    this.axes[0].setLimits({
-
+    this.axes[0].setLimits([{
       value: (output.target * multiplier) + 30,
       line: {
         strokeStyle: '#009666',
         lineDash: [2, 2],
         lineWidth: 1
       }
-    });
+    }]);
+    this.axes[0].setMaximum(max);
+    this.updateAxes(this.axes);
+    this.setHeight(50 + 40 * data.length);
+
+    var store = {
+      fields: ['name', 'value1', 'value2'],
+      data: data
+    };
 
     this.setStore(store);
     this.redraw();
@@ -2834,16 +2830,10 @@ Ext.define('Boa.view.GoalYear', {
       duration: 500
     },
     tooltip: {
-      trackMouse: false,
-      height: 28,
-      defaultAlign: 'tl-tl',
-      boaStyle: true,
-      boaWidth: 40,
-      anchor: 'bottom',
-
-      renderer: function (record, ctx) {
+      trackMouse: true,
+      renderer: function (tooltip, record, ctx) {
         if (ctx.index !== 0) {
-          this.setHtml(Math.round(record.get('value') * 100) + '%');
+          tooltip.setHtml(Math.round(record.get('value') * 100) + '%');
         }
       }
     }
@@ -3283,7 +3273,7 @@ Ext.define('Boa.view.PrimaryGoal', {
       series: [
         {
           type: 'pie',
-          xField: 'g1',
+          angleField: 'g1',
           donut: 73,
           style: {
             miterLimit: 10,
@@ -3293,6 +3283,9 @@ Ext.define('Boa.view.PrimaryGoal', {
           subStyle: {
             strokeStyle: ['white', 'white', 'white', 'white', 'white'],
             lineWidth: [1, 2, 1, 1, 1]
+          },
+          label: {
+            field: 'g1'
           }
         }
       ],
@@ -3588,72 +3581,72 @@ Ext.define('Boa.view.Table', {
   height: 800,
   bind: {
     html: '<table id="table" class="bsw-table table">'
-            + '    <thead>                       '
-            + '      <tr>'
-            + '        <th colspan="2"></th><th colspan="2">{table.years.0}</th><th colspan="2">{table.years.1}</th><th colspan="2">{table.years.2}</th><th colspan="2">{table.years.3}</th><th colspan="2">{table.years.4}</th><th colspan="2">{table.years.5}</th>'
-            + '      </tr>'
-            + '      <tr>'
-            + '        <th colspan="2">Typ av uppföljning</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th>'
-            + '      </tr>'
-            + '    </thead>'
-            + '    <tbody>'
-            + '      <tr>'
-            + '         <td colspan="2">ALLA PATIENTER</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>'
-            + '      </tr>'
-            + '      <tr class="{table.firstvisit}">'
-            + '         <td colspan="2">Första besök</td><td>{table.allpatients.firstvisit.0}</td><td>{table.allpatients.firstvisit.1}%</td><td>{table.allpatients.firstvisit.2}</td><td>{table.allpatients.firstvisit.3}%</td><td>{table.allpatients.firstvisit.4}</td><td>{table.allpatients.firstvisit.5}%</td><td>{table.allpatients.firstvisit.6}</td><td>{table.allpatients.firstvisit.7}%</td><td>{table.allpatients.firstvisit.8}</td><td>{table.allpatients.firstvisit.9}%</td><td>{table.allpatients.firstvisit.10}</td><td>{table.allpatients.firstvisit.11}%</td>'
-            + '      </tr>'
-            + '      <tr>'
-            + '         <td colspan="2">3 månader</td><td>{table.allpatients.threemonths.0}</td><td>{table.allpatients.threemonths.1}%</td><td>{table.allpatients.threemonths.2}</td><td>{table.allpatients.threemonths.3}%</td><td>{table.allpatients.threemonths.4}</td><td>{table.allpatients.threemonths.5}%</td><td>{table.allpatients.threemonths.6}</td><td>{table.allpatients.threemonths.7}%</td><td>{table.allpatients.threemonths.8}</td><td>{table.allpatients.threemonths.9}%</td><td>{table.allpatients.threemonths.10}</td><td>{table.allpatients.threemonths.11}%</td>'
-            + '      </tr>'
-            + '      <tr>'
-            + '         <td colspan="2">1 år</td><td>{table.allpatients.twelvemonths.0}</td><td>{table.allpatients.twelvemonths.1}%</td><td>{table.allpatients.twelvemonths.2}</td><td>{table.allpatients.twelvemonths.3}%</td><td>{table.allpatients.twelvemonths.4}</td><td>{table.allpatients.twelvemonths.5}%</td><td>{table.allpatients.twelvemonths.6}</td><td>{table.allpatients.twelvemonths.7}%</td><td>{table.allpatients.twelvemonths.8}</td><td>{table.allpatients.twelvemonths.9}%</td><td>{table.allpatients.twelvemonths.10}</td><td>{table.allpatients.twelvemonths.11}%</td>'
-            + '      </tr>'
-            + '     <tr>'
-            + '         <td colspan="2">HÖFT</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>'
-            + '      </tr>'
-            + '      <tr class="first-visit">'
-            + '         <td colspan="2">Första besök</td><td>{table.hip.firstvisit.0}</td><td>{table.hip.firstvisit.1}%</td><td>{table.hip.firstvisit.2}</td><td>{table.hip.firstvisit.3}%</td><td>{table.hip.firstvisit.4}</td><td>{table.hip.firstvisit.5}%</td><td>{table.hip.firstvisit.6}</td><td>{table.hip.firstvisit.7}%</td><td>{table.hip.firstvisit.8}</td><td>{table.hip.firstvisit.9}%</td><td>{table.hip.firstvisit.10}</td><td>{table.hip.firstvisit.11}%</td>'
-            + '      </tr>'
-            + '      <tr>'
-            + '         <td colspan="2">3 månader</td><td>{table.hip.threemonths.0}</td><td>{table.hip.threemonths.1}%</td><td>{table.hip.threemonths.2}</td><td>{table.hip.threemonths.3}%</td><td>{table.hip.threemonths.4}</td><td>{table.hip.threemonths.5}%</td><td>{table.hip.threemonths.6}</td><td>{table.hip.threemonths.7}%</td><td>{table.hip.threemonths.8}</td><td>{table.hip.threemonths.9}%</td><td>{table.hip.threemonths.10}</td><td>{table.hip.threemonths.11}%</td>'
-            + '      </tr>'
-            + '      <tr>'
-            + '         <td colspan="2">1 år</td><td>{table.hip.twelvemonths.0}</td><td>{table.hip.twelvemonths.1}%</td><td>{table.hip.twelvemonths.2}</td><td>{table.hip.twelvemonths.3}%</td><td>{table.hip.twelvemonths.4}</td><td>{table.hip.twelvemonths.5}%</td><td>{table.hip.twelvemonths.6}</td><td>{table.hip.twelvemonths.7}%</td><td>{table.hip.twelvemonths.8}</td><td>{table.hip.twelvemonths.9}%</td><td>{table.hip.twelvemonths.10}</td><td>{table.hip.twelvemonths.11}%</td>'
-            + '      </tr>'
-            + '     <tr>'
-            + '         <td colspan="2">KNÄ</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>'
-            + '      </tr>'
-            + '      <tr>'
-            + '         <td colspan="2">Första besök</td><td>{table.knee.firstvisit.0}</td><td>{table.knee.firstvisit.1}%</td><td>{table.knee.firstvisit.2}</td><td>{table.knee.firstvisit.3}%</td><td>{table.knee.firstvisit.4}</td><td>{table.knee.firstvisit.5}%</td><td>{table.knee.firstvisit.6}</td><td>{table.knee.firstvisit.7}%</td><td>{table.knee.firstvisit.8}</td><td>{table.knee.firstvisit.9}%</td><td>{table.knee.firstvisit.10}</td><td>{table.knee.firstvisit.11}%</td>'
-            + '      </tr>'
-            + '      <tr>'
-            + '         <td colspan="2">3 månader</td><td>{table.knee.threemonths.0}</td><td>{table.knee.threemonths.1}%</td><td>{table.knee.threemonths.2}</td><td>{table.knee.threemonths.3}%</td><td>{table.knee.threemonths.4}</td><td>{table.knee.threemonths.5}%</td><td>{table.knee.threemonths.6}</td><td>{table.knee.threemonths.7}%</td><td>{table.knee.threemonths.8}</td><td>{table.knee.threemonths.9}%</td><td>{table.knee.threemonths.10}</td><td>{table.knee.threemonths.11}%</td>'
-            + '      </tr>'
-            + '      <tr>'
-            + '         <td colspan="2">1 år</td><td>{table.knee.twelvemonths.0}</td><td>{table.knee.twelvemonths.1}%</td><td>{table.knee.twelvemonths.2}</td><td>{table.knee.twelvemonths.3}%</td><td>{table.knee.twelvemonths.4}</td><td>{table.knee.twelvemonths.5}%</td><td>{table.knee.twelvemonths.6}</td><td>{table.knee.twelvemonths.7}%</td><td>{table.knee.twelvemonths.8}</td><td>{table.knee.twelvemonths.9}%</td><td>{table.knee.twelvemonths.10}</td><td>{table.knee.twelvemonths.11}%</td>'
-            + '      </tr>'
-            + '     <tr>'
-            + '         <td colspan="2">HAND</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>'
-            + '      </tr>'
-            + '      <tr>'
-            + '         <td colspan="2">Första besök</td><td>{table.hand.firstvisit.0}</td><td>{table.hand.firstvisit.1}%</td><td>{table.hand.firstvisit.2}</td><td>{table.hand.firstvisit.3}%</td><td>{table.hand.firstvisit.4}</td><td>{table.hand.firstvisit.5}%</td><td>{table.hand.firstvisit.6}</td><td>{table.hand.firstvisit.7}%</td><td>{table.hand.firstvisit.8}</td><td>{table.hand.firstvisit.9}%</td><td>{table.hand.firstvisit.10}</td><td>{table.hand.firstvisit.11}%</td>'
-            + '      </tr>'
-            + '      <tr>'
-            + '         <td colspan="2">3 månader</td><td>{table.hand.threemonths.0}</td><td>{table.hand.threemonths.1}%</td><td>{table.hand.threemonths.2}</td><td>{table.hand.threemonths.3}%</td><td>{table.hand.threemonths.4}</td><td>{table.hand.threemonths.5}%</td><td>{table.hand.threemonths.6}</td><td>{table.hand.threemonths.7}%</td><td>{table.hand.threemonths.8}</td><td>{table.hand.threemonths.9}%</td><td>{table.hand.threemonths.10}</td><td>{table.hand.threemonths.11}%</td>'
-            + '      </tr>'
-            + '      <tr>'
-            + '         <td colspan="2">1 år</td><td>{table.hand.twelvemonths.0}</td><td>{table.hand.twelvemonths.1}%</td><td>{table.hand.twelvemonths.2}</td><td>{table.hand.twelvemonths.3}%</td><td>{table.hand.twelvemonths.4}</td><td>{table.hand.twelvemonths.5}%</td><td>{table.hand.twelvemonths.6}</td><td>{table.hand.twelvemonths.7}%</td><td>{table.hand.twelvemonths.8}</td><td>{table.hand.twelvemonths.9}%</td><td>{table.hand.twelvemonths.10}</td><td>{table.hand.twelvemonths.11}%</td>'
-            + '      </tr>'
-            + '    </tbody>'
-            + '  </table>'
-            + '<div class="spinner">'
-            + '<div class="rect1"></div>'
-            + '<div class="rect2"></div>'
-            + '<div class="rect3"></div>'
-            + '<div class="rect4"></div>'
-            + '<div class="rect5"></div>'
-            + '</div>'
+      + '    <thead>                       '
+      + '      <tr>'
+      + '        <th colspan="2"></th><th colspan="2">{table.years.0}</th><th colspan="2">{table.years.1}</th><th colspan="2">{table.years.2}</th><th colspan="2">{table.years.3}</th><th colspan="2">{table.years.4}</th><th colspan="2">{table.years.5}</th>'
+      + '      </tr>'
+      + '      <tr>'
+      + '        <th colspan="2">Typ av uppföljning</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th><th>{table.headers.0}</th><th>{table.headers.1}</th>'
+      + '      </tr>'
+      + '    </thead>'
+      + '    <tbody>'
+      + '      <tr>'
+      + '         <td colspan="2">ALLA PATIENTER</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>'
+      + '      </tr>'
+      + '      <tr class="{table.firstvisit}">'
+      + '         <td colspan="2">Första besök</td><td>{table.allpatients.firstvisit.0}</td><td>{table.allpatients.firstvisit.1}%</td><td>{table.allpatients.firstvisit.2}</td><td>{table.allpatients.firstvisit.3}%</td><td>{table.allpatients.firstvisit.4}</td><td>{table.allpatients.firstvisit.5}%</td><td>{table.allpatients.firstvisit.6}</td><td>{table.allpatients.firstvisit.7}%</td><td>{table.allpatients.firstvisit.8}</td><td>{table.allpatients.firstvisit.9}%</td><td>{table.allpatients.firstvisit.10}</td><td>{table.allpatients.firstvisit.11}%</td>'
+      + '      </tr>'
+      + '      <tr>'
+      + '         <td colspan="2">3 månader</td><td>{table.allpatients.threemonths.0}</td><td>{table.allpatients.threemonths.1}%</td><td>{table.allpatients.threemonths.2}</td><td>{table.allpatients.threemonths.3}%</td><td>{table.allpatients.threemonths.4}</td><td>{table.allpatients.threemonths.5}%</td><td>{table.allpatients.threemonths.6}</td><td>{table.allpatients.threemonths.7}%</td><td>{table.allpatients.threemonths.8}</td><td>{table.allpatients.threemonths.9}%</td><td>{table.allpatients.threemonths.10}</td><td>{table.allpatients.threemonths.11}%</td>'
+      + '      </tr>'
+      + '      <tr>'
+      + '         <td colspan="2">1 år</td><td>{table.allpatients.twelvemonths.0}</td><td>{table.allpatients.twelvemonths.1}%</td><td>{table.allpatients.twelvemonths.2}</td><td>{table.allpatients.twelvemonths.3}%</td><td>{table.allpatients.twelvemonths.4}</td><td>{table.allpatients.twelvemonths.5}%</td><td>{table.allpatients.twelvemonths.6}</td><td>{table.allpatients.twelvemonths.7}%</td><td>{table.allpatients.twelvemonths.8}</td><td>{table.allpatients.twelvemonths.9}%</td><td>{table.allpatients.twelvemonths.10}</td><td>{table.allpatients.twelvemonths.11}%</td>'
+      + '      </tr>'
+      + '     <tr>'
+      + '         <td colspan="2">HÖFT</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>'
+      + '      </tr>'
+      + '      <tr class="first-visit">'
+      + '         <td colspan="2">Första besök</td><td>{table.hip.firstvisit.0}</td><td>{table.hip.firstvisit.1}%</td><td>{table.hip.firstvisit.2}</td><td>{table.hip.firstvisit.3}%</td><td>{table.hip.firstvisit.4}</td><td>{table.hip.firstvisit.5}%</td><td>{table.hip.firstvisit.6}</td><td>{table.hip.firstvisit.7}%</td><td>{table.hip.firstvisit.8}</td><td>{table.hip.firstvisit.9}%</td><td>{table.hip.firstvisit.10}</td><td>{table.hip.firstvisit.11}%</td>'
+      + '      </tr>'
+      + '      <tr>'
+      + '         <td colspan="2">3 månader</td><td>{table.hip.threemonths.0}</td><td>{table.hip.threemonths.1}%</td><td>{table.hip.threemonths.2}</td><td>{table.hip.threemonths.3}%</td><td>{table.hip.threemonths.4}</td><td>{table.hip.threemonths.5}%</td><td>{table.hip.threemonths.6}</td><td>{table.hip.threemonths.7}%</td><td>{table.hip.threemonths.8}</td><td>{table.hip.threemonths.9}%</td><td>{table.hip.threemonths.10}</td><td>{table.hip.threemonths.11}%</td>'
+      + '      </tr>'
+      + '      <tr>'
+      + '         <td colspan="2">1 år</td><td>{table.hip.twelvemonths.0}</td><td>{table.hip.twelvemonths.1}%</td><td>{table.hip.twelvemonths.2}</td><td>{table.hip.twelvemonths.3}%</td><td>{table.hip.twelvemonths.4}</td><td>{table.hip.twelvemonths.5}%</td><td>{table.hip.twelvemonths.6}</td><td>{table.hip.twelvemonths.7}%</td><td>{table.hip.twelvemonths.8}</td><td>{table.hip.twelvemonths.9}%</td><td>{table.hip.twelvemonths.10}</td><td>{table.hip.twelvemonths.11}%</td>'
+      + '      </tr>'
+      + '     <tr>'
+      + '         <td colspan="2">KNÄ</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>'
+      + '      </tr>'
+      + '      <tr>'
+      + '         <td colspan="2">Första besök</td><td>{table.knee.firstvisit.0}</td><td>{table.knee.firstvisit.1}%</td><td>{table.knee.firstvisit.2}</td><td>{table.knee.firstvisit.3}%</td><td>{table.knee.firstvisit.4}</td><td>{table.knee.firstvisit.5}%</td><td>{table.knee.firstvisit.6}</td><td>{table.knee.firstvisit.7}%</td><td>{table.knee.firstvisit.8}</td><td>{table.knee.firstvisit.9}%</td><td>{table.knee.firstvisit.10}</td><td>{table.knee.firstvisit.11}%</td>'
+      + '      </tr>'
+      + '      <tr>'
+      + '         <td colspan="2">3 månader</td><td>{table.knee.threemonths.0}</td><td>{table.knee.threemonths.1}%</td><td>{table.knee.threemonths.2}</td><td>{table.knee.threemonths.3}%</td><td>{table.knee.threemonths.4}</td><td>{table.knee.threemonths.5}%</td><td>{table.knee.threemonths.6}</td><td>{table.knee.threemonths.7}%</td><td>{table.knee.threemonths.8}</td><td>{table.knee.threemonths.9}%</td><td>{table.knee.threemonths.10}</td><td>{table.knee.threemonths.11}%</td>'
+      + '      </tr>'
+      + '      <tr>'
+      + '         <td colspan="2">1 år</td><td>{table.knee.twelvemonths.0}</td><td>{table.knee.twelvemonths.1}%</td><td>{table.knee.twelvemonths.2}</td><td>{table.knee.twelvemonths.3}%</td><td>{table.knee.twelvemonths.4}</td><td>{table.knee.twelvemonths.5}%</td><td>{table.knee.twelvemonths.6}</td><td>{table.knee.twelvemonths.7}%</td><td>{table.knee.twelvemonths.8}</td><td>{table.knee.twelvemonths.9}%</td><td>{table.knee.twelvemonths.10}</td><td>{table.knee.twelvemonths.11}%</td>'
+      + '      </tr>'
+      + '     <tr>'
+      + '         <td colspan="2">HAND</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>'
+      + '      </tr>'
+      + '      <tr>'
+      + '         <td colspan="2">Första besök</td><td>{table.hand.firstvisit.0}</td><td>{table.hand.firstvisit.1}%</td><td>{table.hand.firstvisit.2}</td><td>{table.hand.firstvisit.3}%</td><td>{table.hand.firstvisit.4}</td><td>{table.hand.firstvisit.5}%</td><td>{table.hand.firstvisit.6}</td><td>{table.hand.firstvisit.7}%</td><td>{table.hand.firstvisit.8}</td><td>{table.hand.firstvisit.9}%</td><td>{table.hand.firstvisit.10}</td><td>{table.hand.firstvisit.11}%</td>'
+      + '      </tr>'
+      + '      <tr>'
+      + '         <td colspan="2">3 månader</td><td>{table.hand.threemonths.0}</td><td>{table.hand.threemonths.1}%</td><td>{table.hand.threemonths.2}</td><td>{table.hand.threemonths.3}%</td><td>{table.hand.threemonths.4}</td><td>{table.hand.threemonths.5}%</td><td>{table.hand.threemonths.6}</td><td>{table.hand.threemonths.7}%</td><td>{table.hand.threemonths.8}</td><td>{table.hand.threemonths.9}%</td><td>{table.hand.threemonths.10}</td><td>{table.hand.threemonths.11}%</td>'
+      + '      </tr>'
+      + '      <tr>'
+      + '         <td colspan="2">1 år</td><td>{table.hand.twelvemonths.0}</td><td>{table.hand.twelvemonths.1}%</td><td>{table.hand.twelvemonths.2}</td><td>{table.hand.twelvemonths.3}%</td><td>{table.hand.twelvemonths.4}</td><td>{table.hand.twelvemonths.5}%</td><td>{table.hand.twelvemonths.6}</td><td>{table.hand.twelvemonths.7}%</td><td>{table.hand.twelvemonths.8}</td><td>{table.hand.twelvemonths.9}%</td><td>{table.hand.twelvemonths.10}</td><td>{table.hand.twelvemonths.11}%</td>'
+      + '      </tr>'
+      + '    </tbody>'
+      + '  </table>'
+      + '<div class="spinner">'
+      + '<div class="rect1"></div>'
+      + '<div class="rect2"></div>'
+      + '<div class="rect3"></div>'
+      + '<div class="rect4"></div>'
+      + '<div class="rect5"></div>'
+      + '</div>'
   },
 
   createExcelLink: function (data) {
@@ -3698,7 +3691,6 @@ Ext.define('Boa.view.Trend', {
   config: {
     indicator: ''
   },
-
   axes: [
     {
       type: 'numeric',
@@ -3709,7 +3701,7 @@ Ext.define('Boa.view.Trend', {
       minimum: 0,
       maximum: 100,
       increment: 20,
-      renderer: function (v) { return v.toFixed(0) + '%  '; },
+      renderer: function (axis, label) { return label.toFixed(0) + '%  '; },
       style: {
         strokeStyle: '#979797',
         majorTickSize: 0
@@ -3768,7 +3760,7 @@ Ext.define('Boa.view.Trend', {
       fontSize: 10,
       textBaseline: 'bottom',
       translateX: 8,
-      translateY: 10,
+      translateY: -20,
       height: 100,
       width: 300,
       calloutColor: 'none',
@@ -3792,7 +3784,7 @@ Ext.define('Boa.view.Trend', {
         color = (sprite.getField() === 'value1' ? 'rgba(127, 193, 213, 1.0)' : 'rgba(36, 93, 113, 1.0)');
       }
 
-      if (!this.getParent().up('#detailsView').down('#showStateComparison').getValue()) {
+      if (!sprite.getParent().up('#detailsView').down('#showStateComparison').getValue()) {
         width = (sprite.getField() === 'value1' ? config.width * 2 : 0);
         if (config.width === 13) {
           offsetX = (sprite.getField() === 'value1' ? 3 : 0);
@@ -3814,19 +3806,13 @@ Ext.define('Boa.view.Trend', {
       duration: 500
     },
     tooltip: {
-      trackMouse: false,
-      height: 28,
-      defaultAlign: 'tl-tl',
-      boaStyle: true,
-      boaWidth: 45,
-      anchor: 'bottom',
-
-      renderer: function (record, ctx) {
+      trackMouse: true,
+      renderer: function (tooltip, record, ctx) {
         var indicator = record.store.data.items[0].data.indicator;
         if (indicator === 'age') {
-          this.setHtml(Math.round(record.get(ctx.field)) + ' år');
+          tooltip.setHtml(Math.round(record.get(ctx.field)) + ' år');
         } else {
-          this.setHtml(Math.round(record.get(ctx.field)) + '%');
+          tooltip.setHtml(Math.round(record.get(ctx.field)) + '%');
         }
       }
     }
@@ -3961,17 +3947,26 @@ Ext.define('Boa.view.Trend', {
     var multiplier = target < 1 ? 100 : 1;
 
     if (target < 1) {
-      this.axes[0].setRenderer(function (v) { return v.toFixed(0) + '%  '; });
+      this.axes[0].setRenderer(function (axis, label) { return label.toFixed(0) + '%  '; });
     } else {
-      this.axes[0].setRenderer(function (v) {
-        if (v > 100) return '';
-        return v + ' år';
+      this.axes[0].setRenderer(function (axis, label) {
+        if (label > 100) return '';
+        return label + ' år';
       });
     }
 
     var max = target < 1 ? 100.001 : 100.002;
     this.axes[0].setMaximum(max);
-
+    this.axes[0].setLimits({
+      value: target * multiplier,
+      line: {
+        strokeStyle: '#009666',
+        lineDash: [2, 2],
+        lineWidth: 1
+      }
+    });
+    this.getStore().removeAll();
+    // this.getStore().reload();
     var store = {
       fields: ['name', 'value1', 'value2'],
       data: [
@@ -4003,15 +3998,6 @@ Ext.define('Boa.view.Trend', {
         }
       ]
     };
-
-    this.axes[0].setLimits({
-      value: target * multiplier,
-      line: {
-        strokeStyle: '#009666',
-        lineDash: [2, 2],
-        lineWidth: 1
-      }
-    });
 
     var smallScaleFactor = 148;
     var largeScaleFactor = 218;
@@ -4100,59 +4086,6 @@ Ext.application({
 
   onUnmatchedRoute: function () {
     this.redirectTo('overview');
-  }
-});
-
-/* eslint-disable one-var-declaration-per-line */
-/* eslint-disable one-var */
-/* eslint-disable no-unused-vars */
-Ext.override(Ext.chart.series.Series, {
-  showTip: function (item, xy) {
-    var me = this, 
-      tooltip = me.getTooltip(),
-      sprite, surface, surfaceEl, pos, point, bbox, x, y, config, isRtl;
-    if (!tooltip) {
-      return;
-    }
-    clearTimeout(me.tooltipTimeout);
-    config = tooltip.config;
-    if (tooltip.trackMouse) {
-      xy[0] += config.offsetX;
-      xy[1] += config.offsetY;
-    } else {
-      sprite = item.sprite;
-      surface = sprite.getSurface();
-      surfaceEl = Ext.get(surface.getId());
-      if (surfaceEl) {
-        bbox = item.series.getBBoxForItem(item);
-        if (config.boaStyle) {
-          if (config.boaOrientation === 'left') {
-            x = bbox.x + bbox.width / 2 + tooltip.height / 2;
-            y = bbox.y + bbox.height + 5;
-          } else {
-            x = bbox.x + bbox.width / 2 - tooltip.boaWidth / 2;
-            y = bbox.y + bbox.height + tooltip.height + 5;
-          }
-        } else {
-          x = bbox.x + bbox.width / 2;
-          y = bbox.y + bbox.height / 2;
-        }
-        point = surface.matrix.transformPoint([
-          x,
-          y
-        ]);
-        pos = surfaceEl.getXY();
-        isRtl = surface.getInherited().rtl;
-        x = isRtl ? pos[0] + surfaceEl.getWidth() - point[0] : pos[0] + point[0];
-        y = pos[1] + point[1];
-        xy = [
-          x,
-          y
-        ];
-      }
-    }
-    tooltip.config.renderer.call(tooltip, item.record, item);
-    tooltip.show(xy);
   }
 });
 

@@ -83,9 +83,9 @@
               tooltip: {
                   trackMouse: true,
                   cls: 'hnsv-tip',
-                  renderer: function(storeItem, item) {
+                  renderer: function(tooltip, storeItem, item) {
                       var current = storeItem.get(item.field);
-                      this.setHtml(Ext.String.format('{0} <hr/><b>{1}</b> patienter',
+                      tooltip.setHtml(Ext.String.format('{0} <hr/><b>{1}</b> patienter',
                           storeItem.get('UnitName'),
                           current
                       ));

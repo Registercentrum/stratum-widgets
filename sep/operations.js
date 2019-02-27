@@ -28,8 +28,23 @@ Ext.define('Septum.view.Line', {
   },
 
   legend: {
+    // type: 'dom',
     docked: 'bottom',
-    border: false,
+    /*
+    label: {
+      fontSize: 20,
+      fontWeight: 'default',
+      fontFamily: 'default',
+      fillStyle: 'black'
+    },
+    */
+    border: {
+      lineWidth: 0,
+      radius: 4,
+      fillStyle: 'none',
+      strokeStyle: 'white'
+    },
+    background: 'white'
   },
 
   listeners: {
@@ -58,13 +73,13 @@ Ext.define('Septum.view.Line', {
       }
     },
     {
-      type: 'category',
+      type: 'numeric',
       position: 'bottom',
       title: 'Tid (veckor)              ',
       titleMargin: 40,
       fields: 'vecka',
-      renderer: function (v) {
-        return v % 10 === 0 ? v : '';
+      renderer: function (axis, label) {
+        return label % 10 === 0 ? label : '';
       },
       style: {
         strokeStyle: '#ccc'

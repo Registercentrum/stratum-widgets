@@ -138,13 +138,13 @@
 				minimum: 0,
 				maximum: 100,
 				majorTickSteps: 10,
-				renderer:  Ext.util.Format.numberRenderer('0%')
+				renderer:  function(axis, label) {return Ext.util.Format.numberRenderer('0%')(label)}
 			},{
 				type: 'category',
 				position: 'bottom',
 				fields: ['category'],
-				renderer: function(v) {
-					return v.replace(' ','\n');
+				renderer: function(axis, label) {
+					return label.replace(' ','\n');
 				}
 			}],
 			series: [{
@@ -165,8 +165,8 @@
 				},
 				tooltip: {
 					trackMouse: true,
-					renderer: function(rec, item) {
-						this.setTitle(Ext.String.format('{0}', rec.data.category));
+					renderer: function(tooltip, rec, item) {
+						tooltip.setTitle(Ext.String.format('{0}', rec.data.category));
 						var text = '';
 						if (rec.data.isNA === true) {
 							text += '<span style="color:red">Det finns färre än 10 registreringar!</span';
@@ -176,7 +176,7 @@
 							text += Ext.String.format('{0}: {1} ({2} av {3})<br>', rec.data.cl, Ext.util.Format.number(rec.data.cp, '0.0%'), rec.data.c, rec.data.ct);
 							text += Ext.String.format('{0}: {1} ({2} av {3})', rec.data.dl, Ext.util.Format.number(rec.data.dp, '0.0%'), rec.data.d, rec.data.dt);
 						}
-						this.setHtml(text);
+						tooltip.setHtml(text);
 					}
 				},
 				renderer: function(sprite, config, renderData, index) {
@@ -246,4 +246,3 @@
 	});
 
 })();
-

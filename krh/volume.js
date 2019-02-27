@@ -29,29 +29,33 @@ Ext.util.CSS.createStyleSheet(''
 
   + '.scw-select div {'
   + '  border-radius: 3px;'
+  + '  vertical-align: top;'
   + '}'
 
   + '.scw-select-last {'
   + '  padding-right: 0px;'
   + '}'
 
+  + '.scw-main ul {'
+  + '  padding: 0;'
+  + '}'
 
   + '.scw-multiselect ul {'
-  + '  min-height: 40px;'
+  // + '  min-height: 40px;'
   + '}'
 
   + '.scw-multiselect .x-tagfield {'
   + '  overflow: hidden !important;'
   + '}'
 
-  + '.scw-multiselect li {'
+  + '.scw-main .scw-multiselect li {'
   + '  border: none;'
   + '  background-color: transparent;'
   + '  margin: 0px 4px 0px 0;'
   + '}'
 
   + '.scw-multiselect li:first-child {'
-  + '  margin-top: 11px;'
+  //+ '  margin-top: 11px;'
   + '}'
 
   + '.scw-multiselect li:hover {'
@@ -411,6 +415,7 @@ Ext.define('shpr.view.Main', {
   extend: 'Ext.container.Container',
   controller: 'volume.main',
   id: 'ShprMain',
+  cls: 'scw-main',
   items: [{
     xtype: 'container',
     items: [

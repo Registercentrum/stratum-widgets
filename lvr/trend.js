@@ -360,7 +360,7 @@
                 }
             };
         },
-        trendTooltipRenderer: function (storeItem, item) {
+        trendTooltipRenderer: function (tooltip, storeItem, item) {
             var dataArr = Ext.Array.pluck(LVRMatris.getStore({}, false).data.items, "data");
             var period = item.record.data.period;
             var dataObj = Ext.Array.findBy(dataArr, function (i) {return i.period == period && i[item.field];});
@@ -374,7 +374,7 @@
                     ansFreq
                 );
             }
-            this.update(Ext.String.format(
+            tooltip.update(Ext.String.format(
                 '{0}<br>' + 'År {1} <br>' +
                 'Resultat indikator: {2}<br>{3}',
                 dataObj.displayName,
@@ -497,6 +497,8 @@
                                 chart.setTitle(Ext.String.format('<span style="font-weight: bold;">{0}</span><br/><em>{1}</em>',
                                     LVRMatris.getIndicatorLabel(indicator),
                                     LVRMatris.getIndicatorDescription(indicator)));
+                                chart.setHeight(chart.getHeight()+1);
+                                chart.redraw();
                                 !conf.trend && chart.setHeight(Math.max(350, count * 30 + 100));
                             }
 
@@ -662,6 +664,7 @@
                         'border-top-right-radius': '5px'
                     },
                     legend: {
+                        type: 'dom',
                         docked: 'bottom',
                         width: '100%',
                         style: {
@@ -676,7 +679,7 @@
                         grid: true,
                         maximum: 100,
                         minimum: 0,
-                        renderer: function (text) {return Ext.util.Format.number(text, '0%');}
+                        renderer: function (cmp, text) {return Ext.util.Format.number(text, '0%');}
                     }, {
                         type: 'category',
                         fields: 'period',
@@ -782,7 +785,7 @@
                         // 		}
                         // 	}
                         // },
-                        renderer: function(s) {
+                        renderer: function(cmp, s) {
                             return Ext.util.Format.number(s, '0%');
                         },
                         increment: 1,
@@ -799,7 +802,7 @@
                             type: 'numeric',
                             id: 'ratio-axis-top',
                             position: 'top',
-                            renderer: function(s) {
+                            renderer: function(cmp, s) {
                                 return Ext.util.Format.number(s, '0%');
                             }
                         }, {
@@ -810,7 +813,7 @@
                                 textAlign: 'right'
                             },
                             fields: ['displayName'],
-                            renderer: function(v) {
+                            renderer: function(cmp, v) {
                                 return Ext.util.Format.ellipsis(v, 32, true);
                             }
                         }],
@@ -865,7 +868,7 @@
 
                         },
                         tooltip: {
-                            renderer: function(storeItem, item) {
+                            renderer: function(tooltip, storeItem, item) {
                                 var ansFreq = Ext.util.Format.number(storeItem.get('svarsfrekv'), '0.0%');
                                 var ansFreqText = '';
                                 if(ansFreq){
@@ -876,7 +879,7 @@
                                         ansFreq
                                     );
                                 }
-                                this.update(Ext.String.format(
+                                tooltip.update(Ext.String.format(
                                     '{0}<br>' +
                                     'Resultat indikator: {1}<br>{2}',
                                     storeItem.get('displayName'),
@@ -1092,7 +1095,7 @@
                     },
                     width: 80,
                     dataIndex: 'ratio',
-                    renderer: function(value) {
+                    renderer: function(cmp, value) {
                         return Ext.util.Format.number(value, '0.0%');
                     }
                 }, {
@@ -1102,7 +1105,7 @@
                     },
                     width: 80,
                     dataIndex: 'svarsfrekv',
-                    renderer: function(value) {
+                    renderer: function(cmp, value) {
                         return Ext.util.Format.number(value, '0.0%');
                     }
                 }, {
@@ -1112,7 +1115,7 @@
                     },
                     width: 116,
                     dataIndex: 'ci',
-                    renderer: function(value) {
+                    renderer: function(cmp, value) {
                         return value === null ? '' : '&plusmn;' + Ext.util.Format.number(value, '0.0%');
                     }
                 }

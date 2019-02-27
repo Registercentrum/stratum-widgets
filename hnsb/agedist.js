@@ -1,5 +1,4 @@
 
-
 function displayDenominator (n){
 	var denominatorSpan = Ext.fly('hnsb-denominator');
 	denominatorSpan && denominatorSpan.setHtml(n);
@@ -95,8 +94,8 @@ function go() {
             highlight: false,
             tooltip: {
                 trackMouse: true,
-                renderer: function(storeItem) {
-                    this.setHtml(Ext.String.format('{0} år<hr/><b>{1}</b> observationer.', storeItem.get('key'), storeItem.get('value')));
+                renderer: function(tooltip, storeItem) {
+                    tooltip.setHtml(Ext.String.format('{0} år<hr/><b>{1}</b> observationer.', storeItem.get('key'), storeItem.get('value')));
                 }
             },
             // labelOverflowPadding: 0,

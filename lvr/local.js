@@ -144,6 +144,11 @@
       } catch (e) {
           Ext.log(e);
       }
+      var newmax = getMaxValue(chart.getStore().getData(), graphFields);
+      if(newmax) {
+        chart.getAxes()[0].setMaximum(newmax);
+        chart.redraw();
+      }
       chart.setSeries({
           type: 'bar',
           // axis: 'left',
@@ -155,12 +160,12 @@
           title: titles,
           tooltip: {
               // trackMouse: true,
-              renderer: function(record, item) {
+              renderer: function(tooltip, record, item) {
                   var antal = 'antal',
                       field = item.field;
                   if (field.indexOf('andel') === 0) {
                       antal += field.substr(5);
-                      this.setHtml(Ext.String.format('<b>{1}</b><br/>{0} observationer', record.get(antal), Ext.util.Format.number(record.get(item.field), '0.0%')));
+                      tooltip.setHtml(Ext.String.format('<b>{1}</b><br/>{0} observationer', record.get(antal), Ext.util.Format.number(record.get(item.field), '0.0%')));
                   }
               }
           },
@@ -178,7 +183,19 @@
       });
       store.loadData([clinicData, regData]);
       me.scrollToElement(chart.getEl());
+      function getMaxValue(data, fields) {
+        var max = 0;
+        fields.forEach(
+          function(item) {
+              if (data.max(item) > max) {
+                  max = data.max(item);
+              }
+          }
+        );
+        return Math.ceil(max / 10) * 10;
+    };
   },
+  
   getChoiceFromState: function(state, danger, success, standard) {
       return state === 'danger' ? danger : state === 'success' ? success : standard;
   },
@@ -308,7 +325,7 @@
                   // config.series = [Ext.apply({
                   config.series = {
                       type: 'gauge',
-                      field: config.valueField,
+                      angleField: config.valueField,
                       donut: 50,
                       colors: ['#3CB6CE', '#ddd'],
                       minimum: 0,

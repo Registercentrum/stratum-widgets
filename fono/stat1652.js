@@ -1,3 +1,4 @@
+
 (function() {
 
 	var container = Stratum.containers && Stratum.containers['FONO/stat1652'] || 'mainContainer';
@@ -9,7 +10,14 @@
         MAX_CHARS = 15,
         store,
         chart,
-        container;
+        container,
+        colors = ['#a2ad00', '#3cb6ce',
+					'#e98300', '#fecb00', 
+					'#7a6597', '#5fd2ea', '#ffe736',
+					'#c5bea8', '#dce44d', '#957eb2', '#7eeeff',
+					'#ffb948', '#ffff56', '#e1dac4', '#614d7d', '#aaa38e', '#bfc82f', '#ff9d2b'
+				];
+        // colors = ['#DC143C', '#AAFF7F', '#FFFF00', '#4F81BD', '#B2DFEE', '#9BBB59', '#C0504D', '#333333'];
 
     Profile.APIKey = 'jf64ZLZw15E=';
 
@@ -31,16 +39,18 @@
         height: 1600,
         flipXY: true,
         hidden: true,
-        colors: ['#DC143C', '#AAFF7F', '#FFFF00', '#4F81BD', '#B2DFEE', '#9BBB59', '#C0504D', '#333333'],
+        colors: colors,
         store: store,
         legend: {
+            type: 'dom',
             docked: 'right'
         },
         axes: [{
             type: 'numeric',
             position: 'top',
             grid: true,
-            minimum: 0
+            minimum: 0,
+            maximum: 100
         }, {
             type: 'category',
             position: 'left'
@@ -51,10 +61,10 @@
             stacked: true,
             tips: {
                 trackMouse: true,
-                renderer: function(storeItem, info) {
+                renderer: function(tooltip, storeItem, info) {
                     var field = info.field,
                         value = storeItem.get(field);
-                    this.setHtml(Ext.String.format('{1}<hr/>{0} observationer', value, origXNames[field] || field));
+                    tooltip.setHtml(Ext.String.format('{1}<hr/>{0} observationer', value, origXNames[field] || field));
                 }
             },
             xField: 'x',
@@ -78,6 +88,7 @@
             }
             yFields.push(NO_DIAGNOSIS);
             store.setFields(Ext.Array.merge(yFields, xField));
+            chart.setColors(colors);
             Ext.Ajax.request({
                 url: '/stratum/api/metadata/units/register/127',
                 method: 'get',
