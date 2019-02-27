@@ -1173,7 +1173,7 @@
             renderer: function (tooltip, rec, item) {
               var text = 'Andel: {0}<br>'
                 + 'Totalt: {1} operationer<br>'
-                + 'Operationsteknik: {2}<br>'
+                + 'Operationsmetod: {2}<br>'
                 + 'Svarsfrekvens 30 d: {3}<br>'
                 + 'Svarsfrekvens 6 mån: {4}<br>'
                 + 'Täckningsgrad: {5}';
@@ -1756,13 +1756,12 @@
             + 'Andel: {1}<br>'
             + 'Antal: {2} operationer<br>'
             + 'Operationsteknik: {3}<br>'
-            + 'Svarsfrekvens 30 d: {4}<br>'
-            + 'Svarsfrekvens 6 mån: {5}<br>'
+            + (_current.indicatorId === 2 || _current.indicatorId === 3 ? '' : 'Svarsfrekvens 30 d: {4}<br>')
+					  + (_current.indicatorId === 1 ? '' : 'Svarsfrekvens 6 mån: {5}<br>')
             + 'Täckningsgrad: {6}<br>'
             //+ '<br>Up {8}, Low {9}<br>' // TEMP
             //+ 'UpN {10}, LowN {11}<br>' // TEMP
             //+ 'FractN {12}' // TEMP
-            + (_current.indicatorId === 1 ? /*'<br>Matchad, PAR: {7}'*/ '' : '')
             + '</p>';
   
           var fraction = Ext.util.Format.number(data.fraction * 100, '0.0%');
@@ -2257,7 +2256,7 @@
           },
           items: [{
             xtype: 'label',
-            text: 'Operationsteknik:',
+            text: 'Operationsmetod:',
             padding: '11 0 0 0'
           }, {
             xtype: 'checkboxfield',
@@ -2757,7 +2756,7 @@
   
         var mapped = concatenated.map(
           function (i) {
-            i.noData = (i.label.length > 1) && (i.fraction === 0);
+            i.noData = false; // (i.label.length > 1) && (i.fraction === 0);
             i.fraction = i.fraction * 100;
             i.lower = i.lower * 100;
             i.upper = i.upper * 100;
