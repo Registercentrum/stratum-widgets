@@ -355,6 +355,7 @@
                         {
                             type: 'bar',
                             axis: 'left',
+                            label: _m.getChartLabel(),
                             highlight: {
                                 strokeStyle: '#0d4267',
                                 fillStyle: '#006298',
