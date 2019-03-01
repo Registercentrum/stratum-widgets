@@ -287,10 +287,15 @@ Ext.util.CSS.createStyleSheet(
 + '  }'
 
 + '  .bsw-select label {'
-    + '      white-space: nowrap;'
-    + '      vertical-align: middle;'
-    + '      width: 145px !important;'
-    + '  }'
++ '      white-space: nowrap;'
++ '      vertical-align: middle;'
++ '      width: 145px !important;'
++ '  }'
+
++ '.bsw-select .x-form-trigger {'
++ '  vertical-align: middle;'
++ '}'
+
 
 + '  .bsw-report-table.table > thead > tr > th {'
 + '      vertical-align: middle;'
