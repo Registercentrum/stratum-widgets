@@ -9,32 +9,32 @@ Ext.define('Septum.view.Main', {
   captions: {
     credits: {
       docked: 'bottom',
-        text: '\n\n\nAktuell enhet: ' + (Profile && Profile.Context !== null ? Profile.Context.Unit.UnitName : 'Riket') + '\n',
-        align: 'left',
-        style: {
-            fontSize: 14,
-            fontFamily: 'open_sans',
-            fontWeight: 400
-        }
+      text: '\n\n\nAktuell enhet: ' + (Profile && Profile.Context !== null ? Profile.Context.Unit.UnitName : 'Riket') + '\n',
+      align: 'left',
+      style: {
+        fontSize: 14,
+        fontFamily: 'open_sans',
+        fontWeight: 400
+      }
     },
     figcaption: {
       docked: 'bottom',
-        text: 'Antalet svar fås genom att hålla muspekaren över respektive stapel. *Baserat på de data som kommit in i år.',
-        align: 'left',
-        style: {
-            fontSize: 12,
-            fontFamily: 'open_sans',
-            fontWeight: 'normal'
-        }
+      text: 'Antalet svar fås genom att hålla muspekaren över respektive stapel. *Baserat på de data som kommit in i år.',
+      align: 'left',
+      style: {
+        fontSize: 12,
+        fontFamily: 'open_sans',
+        fontWeight: 'normal'
+      }
     },
-    
+
   },
 
   legend: {
     type: 'dom',
     docked: 'bottom',
     style: {
-     padding: '0 0 0 42px', 
+      padding: '0 0 0 42px',
     },
     tpl: '<div class="x-legend-inner"><div class="x-legend-container"><tpl for="."><div class="x-legend-item"><span class="x-legend-item-marker {[ values.disabled ? Ext.baseCSSPrefix + \'legend-inactive\' : \'\' ]}" style="background:{mark};"></span>{name}</div></tpl></div></div>'
   },
