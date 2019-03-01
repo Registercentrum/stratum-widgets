@@ -2250,17 +2250,18 @@
           style: {
             background: '#d3e8ea',
           },
-          padding: '5 10 5 10',
+          padding: '10 5',
           defaults: {
-            padding: '5 5 5 5'
+                padding: '0 10 0 0'
           },
           items: [{
             xtype: 'label',
-            text: 'Operationsmetod:',
-            padding: '11 0 0 0'
+            text: 'Operationsteknik:',
+            margin: '7 0 0 0'
           }, {
             xtype: 'checkboxfield',
             itemId: 'te',
+            cls: 'ton-checkbox',
             boxLabel: 'TE+TEA',
             checked: _current.te,
             listeners: {
@@ -2273,6 +2274,7 @@
           }, {
             xtype: 'checkboxfield',
             itemId: 'tt',
+            cls: 'ton-checkbox',
             boxLabel: 'TT+TTA',
             checked: _current.tt,
             listeners: {
@@ -2285,7 +2287,8 @@
           }, {
             xtype: 'checkboxfield',
             itemId: 'ci',
-            padding: '4 0 0 15',
+            padding: '0 3 0 0',
+            cls: 'ton-checkbox',
             boxLabel: 'Konfidensintervall 95%',
             checked: _current.ci,
             listeners: {
@@ -2296,7 +2299,7 @@
             }
           }, {
             xtype: 'label',
-            style: 'cursor: pointer; color: #359aa3; font-size:12pt',
+            style: 'cursor: pointer; color: #359aa3; font-size:12pt;',
             html: '<span class="fa fa-info-circle" aria-hidden="true" data-qtip="'
             + 'Blödningsresultat visas med konfidensintervall. '
             + 'Konfidensintervallet visar om det finns en statistiskt '
@@ -3023,6 +3026,9 @@
         + '	}'
         + '.ton-tab .x-tab-default-top.x-tab-focus.x-tab-active {'
         + '		box-shadow: none;'
+        + '}'
+        + '.ton-checkbox.x-form-type-checkbox.x-form-cb-checked .x-form-checkbox-default:before {'
+        + '  content: url(../../../stratum/extjs/theme/images/form/checkbox.svg);'
         + '}'
         , 'ton-tabs'
       );
