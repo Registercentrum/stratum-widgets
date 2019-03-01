@@ -250,7 +250,10 @@ var SfrSearchList = function () {
 
 Ext.util.CSS.removeStyleSheet('accidents');
 Ext.util.CSS.createStyleSheet('' 
-+ '.x-panel label {color: darkslategrey;}',
++ '.x-panel label {color: darkslategrey;}'
++ '.sfr-charts .x-grid-item {'
++ '  cursor: pointer;'
++ '}',
 'accidents');
 
 SfrSearchList();
