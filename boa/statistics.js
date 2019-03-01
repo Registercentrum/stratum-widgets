@@ -2,6 +2,9 @@
 Ext.util.CSS.removeStyleSheet('bsw');
 Ext.util.CSS.createStyleSheet(
   ' '
+  + '.bsw-checkbox.x-form-type-checkbox.x-form-cb-checked .x-form-checkbox-default:before {'
+  + '  content: url(/stratum/extjs/theme/images/form/checkbox.svg);'
+  +  '}'
   + ' .bsw-county-item {'
   + '     padding-top: 10px;'
   + '     padding-bottom: 6px;'
