@@ -2696,7 +2696,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 		var OSPUBIS_RIGHT_FIRST_BOX_POS_X = 216;
 		var OSPUBIS_RIGHT_HEADER_POS_X = 248;
 		var OSPUBIS_LEFT_FIRST_BOX_POS_X = 368;
-		var OSPUBIS_FIRST_BOX_POS_Y = 457;
+		var OSPUBIS_FIRST_BOX_POS_Y = 463;
 		var SAKRUM_MIDDLE_FIRST_BOX_POS_X = 280;
 		var SAKRUM_MIDDLE_FIRST_BOX_POS_Y = 282;
 		var SYMFYS_FIRST_BOX_POS_X = 278;
@@ -3141,7 +3141,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 					xtype: 'label',
 					html: 'Börja alltid med att sätta ett kryss för varje skadekomponent samt ytterligare kryss om dislocerad. Flera kryss är tillåtna. Gå sedan vidare genom att klicka på Nästa. Om frakturen är protesnära klicka istället på knappen Protesnära fraktur för den aktuella sidan.<b>OBS! Acetabulumengagerande frakturer klassificeras i Acetabulum-modulen.',
 					x: 20,
-					y: 520,
+					y: 510,
 					cls: 'sfr-pelvis-text',
 					style: DESC_STYLE
 				}, {
@@ -4144,7 +4144,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 			x: 40,
 			y: 40,
 			width: 615,
-			height: 690,
+			height: 722,
 			minWidth: 420,
 			minHeight: 200,
 			constrain: true,
@@ -5526,10 +5526,10 @@ var skeletonWidget = function (current, callback, loadonly) {
 		var dialog = Ext.create('Ext.window.Window', {
 			title: 'Fibulafraktur',
 			resizable: false,
-			html: '<br/><b>Fibulafraktur?</b>',
+			html: '<br/><b>Fibulafraktur?</b><br><br>',
 			style: 'text-align:center;',
 			width: 300,
-			height: 200,
+			// height: 370,
 			modal: true,
 			renderTo: getCmpByName(aPanelName, aWindow),
 			dockedItems: [{
@@ -5621,10 +5621,9 @@ var skeletonWidget = function (current, callback, loadonly) {
 		var dialog = Ext.create('Ext.window.Window', {
 			title: 'Fibulafraktur',
 			resizable: false,
-			html: '<br/><b>Fibulafraktur?</b>',
+			html: '<br><b>Fibulafraktur?</b><br><br>',
 			style: 'text-align:center;',
 			width: 300,
-			height: 200,
 			modal: true,
 			renderTo: getCmpByName(aPanelName, aWindow),
 			dockedItems: {
@@ -5986,15 +5985,15 @@ var skeletonWidget = function (current, callback, loadonly) {
 		}
 		var addedHeight = 0;
 		if (!Ext.isEmpty(extraHeight)) {
-			addedHeight = 30;
+			addedHeight = 90;
 		}
 		var dialog = Ext.create('Ext.window.Window', {
 			title: aTitle,
 			resizable: false,
-			html: '<br/><b>' + aText + '</b><br/>' + extraText,
+			html: '<br/><b>' + aText + '</b><br><br>' + extraText,
 			style: 'text-align:center;',
 			width: width,
-			height: 170 + (dockedItems.length * 17) + addedHeight,
+			// height: 170 + (dockedItems.length * 17) + addedHeight,
 			modal: true,
 			dockedItems: [{
 				xtype: 'toolbar',
@@ -6556,7 +6555,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 Object.assign = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 Ext.util.CSS.removeStyleSheet('sfr-skeleton');
 Ext.util.CSS.createStyleSheet(''
-    + '.FormPanelSmallFont .x-form-cb-wrap-default { height:0; min-height:0;}'
+  + '.FormPanelSmallFont .x-form-cb-wrap-default { height:0; min-height:0;}'
 	+ '.FormPanelInRed .x-panel-body					{ background-color: #E9D7D3; padding-bottom:0px; } '
 	+ '.FormPanelInRed .x-toolbar-footer				{ background-color: #E9D7D3; padding: 10px;margin-top:0px;}'
 	+ '.FormPanelInRedIcon								{ background-image: url(https://stratum.blob.core.windows.net/sfr/Images/IconPanelRed.png) !important;}'
