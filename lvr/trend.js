@@ -1095,7 +1095,7 @@
                     },
                     width: 80,
                     dataIndex: 'ratio',
-                    renderer: function(cmp, value) {
+                    renderer: function(value) {
                         return Ext.util.Format.number(value, '0.0%');
                     }
                 }, {
@@ -1105,7 +1105,7 @@
                     },
                     width: 80,
                     dataIndex: 'svarsfrekv',
-                    renderer: function(cmp, value) {
+                    renderer: function(value) {
                         return Ext.util.Format.number(value, '0.0%');
                     }
                 }, {
@@ -1115,7 +1115,7 @@
                     },
                     width: 116,
                     dataIndex: 'ci',
-                    renderer: function(cmp, value) {
+                    renderer: function(value) {
                         return value === null ? '' : '&plusmn;' + Ext.util.Format.number(value, '0.0%');
                     }
                 }

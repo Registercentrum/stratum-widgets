@@ -463,7 +463,7 @@
 				type: 'numeric',
 				position: 'left',
 				fields: ['observed','expected','total'],
-//				minimum: ro.lower-ro.delta, // Looks best (will never know why).
+				minimum: ro.lower-ro.delta, // Looks best (will never know why).
 				maximum: ro.upper+ro.delta,
 				increment: ro.delta
 			}, {
