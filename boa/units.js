@@ -180,12 +180,14 @@ Ext.util.CSS.createStyleSheet(
 + '}'
 
 + '.bsw-button {'
-+ '  font-family: "Roboto-Slab";'
 + '  color: #245d71;'
 + '  border: 1px solid #245d71;'
-+ '  margin: -6px 0 0 6px;'
++ '  margin: -7px 0 0 6px;'
 + '  line-height: 20px;'
 + '  font-size: 13px;'
++ '}'
 
++ '.bsw-button:hover {'
++ '  text-decoration: none !important;'
 + '}', 'bsw-units'
 );
