@@ -1369,26 +1369,6 @@ var SfrWidget = {
   },
 }
 
-Ext.override(Ext.scroll.Scroller, {
-  privates: {
-    restoreState: function () {
-      var me = this,
-        el = me.getScrollElement(),
-        dom;
-      if (el) {
-        dom = el.dom;
-
-        if (me.trackingScrollTop !== undefined) {
-          me.restoring = true;
-          Ext.defer(function () {
-            me.restoring = false;
-          }, 50);
-        }
-      }
-    }
-  }
-});
-
 Ext.util.CSS.removeStyleSheet('sfr-chart');
 Ext.util.CSS.createStyleSheet(''
 + '.sfr-charts .x-panel-body {'

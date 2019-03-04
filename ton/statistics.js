@@ -2256,7 +2256,7 @@
           },
           items: [{
             xtype: 'label',
-            text: 'Operationsteknik:',
+            text: 'Operationsmetod:',
             margin: '7 0 0 0'
           }, {
             xtype: 'checkboxfield',
