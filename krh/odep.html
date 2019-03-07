@@ -245,7 +245,7 @@
             startDate = startDate.replace(/[^ -~]/g, '');
             endDate = endDate.replace(/[^ -~]/g, '');
             var urlConfig='';		
-            urlConfig+='start_datum=' + startDate + '&slut_datum=' + endDate + '&protestyp=' + protesisType;       					
+            urlConfig+='start_datum=' + startDate + '&slut_datum=' + endDate + '&protestyp=' + protesisType + '&fu=' + fu;       					
             if(stemIsMain){            
                 urlConfig+='&implantat=stam';            
                 urlConfig+='&implant1_fixation=' + stemFix ;
@@ -351,7 +351,11 @@
                 method: 'get',
                 cors: true,
                url: '/stratum/api/statistics/shpr/supplier-mod_odep?' + urlConfig, 
-                success: function (response) {
+               failure: function(response){
+                    spinner && spinner.hide();                    
+                    Ext.Msg.alert('Okänt fel', 'Okänt fel:' + response.statusText, Ext.emptyFn);
+               } ,
+               success: function (response) {
                     var result = Ext.decode(response.responseText).data;
                     spinner && spinner.hide();				
                     if (result.length !== 0) { 
@@ -418,7 +422,7 @@
                                 linerChoices.getStore().loadData(liners);						
                         }			
                     }
-                    else{
+                    else{                       
                         //view.down('#stemArticleDropdown').getStore().loadData(stemDefaults);
                         //view.down('#cupArticleDropdown').getStore().loadData(cupDefaults);
                         //view.down('#capSizeDropdown').getStore().loadData(capSdefaults);
@@ -499,10 +503,10 @@
             var startDate = view.down('#startDate').getValue();
             var endDate = view.down('#endDate').getValue();
             if (startDate < new Date('1999-01-01')) view.down('#startDate').setValue(new Date('1999-01-01'));       
-            if (this.isDifferenceLessThanOneYear()) {
+            /*if (this.isDifferenceLessThanOneYear()) {
                 endDate.setTime(Ext.Date.add(startDate, Ext.Date.YEAR, +1));
                 view.down('#endDate').setValue(endDate);
-            }
+            }*/
             this.update(view.down('#startDate'));
         },
     
@@ -511,10 +515,10 @@
             var startDate = view.down('#startDate').getValue();
             var endDate = view.down('#endDate').getValue();
             if (endDate > new Date()) view.down('#endDate').setValue(new Date());
-            if (this.isDifferenceLessThanOneYear()) {
+            /*if (this.isDifferenceLessThanOneYear()) {
                 startDate.setTime(Ext.Date.add(endDate, Ext.Date.YEAR, -1));
                 view.down('#startDate').setValue(startDate);
-            }		
+            }*/		
             this.update(view.down('#endDate'));
         },	
         isDifferenceLessThanOneYear: function () {
@@ -685,12 +689,12 @@
     var y2=y1+yStep;
     var y3=y2+yStep-50;
     var y4=y3+yStep+10;
-    var y5=y4+yStep;
-    var y6=y5+yStep-30;
-    var y7=y6+yStep+15;
-    var y8=y7+yStep-20;
-    var y9=y8+yStep;
-    var y10=y9+yStep-5;
+    var y5=y4+yStep + 20;
+    var y6=y5+yStep-50;
+    var y7=y6+yStep-30;
+    var y8=y7+yStep;
+    var y9=y8+yStep-30;
+    var y10=y9+yStep-80;
     var labelAlignAdjust=-5;
     Ext.define('shpr.view.Main', {
         extend: 'Ext.container.Container',
@@ -702,7 +706,7 @@
         itemId: 'mainView',
         items: [
             {
-                x:300,
+                x:600,
                 y:1,
                 xtype: 'panel',
                 itemId: 'spinnerPanel',
