@@ -3,7 +3,7 @@ Ext.util.CSS.removeStyleSheet('bsw');
 Ext.util.CSS.createStyleSheet(
   ' '
   + '.bsw-checkbox.x-form-type-checkbox.x-form-cb-checked .x-form-checkbox-default:before {'
-  + '  content: url(/stratum/extjs/theme/images/form/checkbox.svg);'
+  + '  content: url(https://stratum.blob.core.windows.net/boa/checkbox-boa.svg);'
   +  '}'
   + '.x-keyboard-mode .bsw-button.x-btn-focus {'
   + '  background-color: #245d71;'
@@ -4092,25 +4092,5 @@ Ext.application({
 
   onUnmatchedRoute: function () {
     this.redirectTo('overview');
-  }
-});
-
-Ext.override(Ext.scroll.Scroller, {
-  privates: {
-    restoreState: function () {
-      var me = this,
-        el = me.getScrollElement(),
-        dom;
-      if (el) {
-        dom = el.dom;
-
-        if (me.trackingScrollTop !== undefined) {
-          me.restoring = true;
-          Ext.defer(function () {
-            me.restoring = false;
-          }, 50);
-        }
-      }
-    }
   }
 });

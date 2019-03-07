@@ -585,6 +585,10 @@
                 }
               },
               tooltip: {
+                style: {
+                  backgroundColor: '#286d7d',
+                  borderColor: '#286d7d'
+                },
                 trackMouse: true,
                 renderer: function (tooltip, rec, item) {
                   var period = rec.data.label.split('#')[0];
@@ -770,7 +774,7 @@
                   height: 260,
                   colors: ['#2f949e', '#1E667B'], // ljus '#FE9500','#C68311'
                   legend: {
-                        type: 'dom',
+                    type: 'dom',
                     docked: 'top',
                     tpl: ['<div class="x-legend-inner"><div style="width: 180px;" class="x-legend-container">' +
                       '<div  class="x-legend-item">' +
@@ -799,6 +803,10 @@
                       lineWidth: [1, 1, 1, 1, 1]
                     },
                     tooltip: {
+                          style: {
+                                backgroundColor: '#286d7d',
+                                borderColor: '#286d7d'
+                          },
                       trackMouse: true,
                       renderer: function (tooltip, rec, item) {
                         var text = Ext.String.format(
@@ -884,6 +892,7 @@
           chart.setConfig('colors', unitCode === 0
             ? ['#2f949e', '#1E667B']
             : ['#FE9500', '#C68311']);
+            chart.config.colors = unitCode === 0 ? ['#2f949e', '#1E667B'] : ['#FE9500', '#C68311'];
         };
   
         return polarChart;
@@ -1169,6 +1178,10 @@
           },
           */
           tooltip: {
+                style: {
+                                backgroundColor: '#286d7d',
+                                borderColor: '#286d7d'
+                          },
             trackMouse: true,
             renderer: function (tooltip, rec, item) {
               var text = 'Andel: {0}<br>'
@@ -2252,12 +2265,15 @@
           },
           padding: '10 5',
           defaults: {
-                padding: '0 10 0 0'
+                padding: '0 15 0 0'
           },
           items: [{
             xtype: 'label',
             text: 'Operationsmetod:',
-            margin: '7 0 0 0'
+            style: {
+              color: '#286d7d'
+            },
+            margin: '7 0 0 7'
           }, {
             xtype: 'checkboxfield',
             itemId: 'te',
@@ -3027,8 +3043,11 @@
         + '.ton-tab .x-tab-default-top.x-tab-focus.x-tab-active {'
         + '		box-shadow: none;'
         + '}'
+        + '.ton-checkbox label{'
+        + '  color: #286d7d;'
+        + '}'
         + '.ton-checkbox.x-form-type-checkbox.x-form-cb-checked .x-form-checkbox-default:before {'
-        + '  content: url(../../../stratum/extjs/theme/images/form/checkbox.svg);'
+        + '  content: url(https://stratum.blob.core.windows.net/ton/checkbox-ton.svg);'
         + '}'
         , 'ton-tabs'
       );
