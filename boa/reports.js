@@ -296,6 +296,14 @@ Ext.util.CSS.createStyleSheet(
 + '  vertical-align: middle;'
 + '}'
 
++ '.bsw-select .x-form-trigger-default, .bsw-body .x-form-trigger-default.x-form-trigger-over.x-form-trigger-focus {'
++ '  background: white url(https://registercentrum.blob.core.windows.net/boa/r/Utdata-trigger-HyzmEUmve.png) -8px 2px no-repeat !important;'
++ '  width: 28px;'
++ '}'
+
++ '.bsw-select .x-form-trigger-default:before {'
++ '  content: ""'
++ '}'
 
 + '  .bsw-report-table.table > thead > tr > th {'
 + '      vertical-align: middle;'
