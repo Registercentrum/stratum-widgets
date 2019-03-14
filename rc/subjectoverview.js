@@ -479,7 +479,7 @@
     var content = '';
     var headers = Ext.ComponentQuery.query('#dataPanel')[Ext.ComponentQuery.query('#dataPanel').length - 1];
     for (var column in headers.el.component.columns) {
-      content += headers.el.component.columns[column].titleEl.component.initialConfig.header + ';';
+      content += headers.el.component.columns[column].titleEl.component.initialConfig.header.replace(/<[/]*.*?>/g, '') + ';';
     }
     content += '\n';
     var store = Ext.data.StoreManager.lookup('overviewStore');
@@ -487,7 +487,8 @@
       content += store.data.items[i].data.SubjectKey.substring(8, 21) + ';';
       for (var item in store.data.items[i].data) {
         if (Ext.String.startsWith(item, 'F')) {
-          var value = store.data.items[i].data[item].replace(/<span.*?>/, '').replace('</span>', '').replace('&nbsp', ' ');
+          var value = store.data.items[i].data[item];
+          value = value ? store.data.items[i].data[item].replace(/<[/]*.*?>/g, '').replace('&nbsp', ' ') : '';
           content += value + ';';
         }
       }
