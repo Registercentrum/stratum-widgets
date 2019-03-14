@@ -684,7 +684,7 @@
             ? [darkGreenish, greyish]
             : [darkGreenish, darkOrangish]);
           chart.series[0].setConfig('title', unitCode === 0
-            ? ['Riket', '']
+            ? ['Riket', '&nbsp']
             : ['Riket', unitName]);
         };
   
@@ -2540,6 +2540,11 @@
             stroke: 'none',
             barWidth: 28,
           },
+          tooltip: {
+                renderer: function(tooltip, record, ctx) {
+                      return tooltip.setHtml('Andel: ' + record.get('fraction').toFixed(1) + '%');
+                }
+          },
           renderer: function (sprite, config, rendererData, index) {
             var record = rendererData.store.getData().items[index];
             var field = sprite._field;						// Name of current field (source value for the bar)
@@ -2782,7 +2787,7 @@
             return i;
           }
         );
-  
+        mapped = mapped.filter(function(item) {return Ext.isNumber(item.fraction)});
         return mapped;
       }; //transformData
   
