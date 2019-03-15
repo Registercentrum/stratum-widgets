@@ -219,6 +219,7 @@ Ext.define('Rc.component.Selector', {
   draggable: true,
   cls: 'sfr-modal',
   title: 'Välj behandling:',
+  border: false,
   widget: false,
   createLevel: function (click, i, template, restore) {
     return {
