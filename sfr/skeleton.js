@@ -19,8 +19,8 @@ var skeletonWidget = function (current, callback, loadonly) {
 
 	var app = skeletonWidget;
 	app.callback = callback;
-	app.skeletonDomainCodes = [4158, 4159, 5554, 5555, 5563, 5572, 5573];
-	app.delayedDomainCodes = [4060, 5757, 5620, 5621];
+	app.skeletonDomainCodes = [4158, 4159, 5554, 5555, 5563, 5572, 5573, 5757, 5620, 5621, 4060];
+	app.delayedDomainCodes = [5757, 4144];
 	app.registerDomainCodes = [4000, 4049, 4051, 4052, 4053, 4056, 4059, 4060, 4061, 4094, 4095, 4096, 4097, 4098, 4006, 4007, 4008, 4009, 4010, 4140, 4144, 4145, 4146, 4156, 4157, 4158, 4159, 4188, 4189, 4281, 4311, 4402, 4403, 5545, 5550, 5551, 5552, 5554, 5555, 5563, 5572, 5573, 5619, 5620, 5621, 5665, 5690, 5748, 5757];
 	app.showXray = showXray;
 	app.aoImagesNavigationHandler = aoImagesNavigationHandler;
@@ -2642,8 +2642,8 @@ var skeletonWidget = function (current, callback, loadonly) {
 		var j = 0;
 		var valueCode = '';
 		for (i = 0; i < app.myRegisterdomains[4144].DomainValues.length; i++) {
-			for (j = 0; j < app.myRegisterdomains[4144].DomainValues[i].ChildValues.length; j++) {
-				valueCode = app.myRegisterdomains[4144].DomainValues[i].ChildValues[j].ValueCode;
+			for (j = 0; j < app.myRegisterdomains[4144].DomainValues[i].Children.length; j++) {
+				valueCode = app.myRegisterdomains[4144].DomainValues[i].Children[j].ValueCode;
 				if (valueCode == aInjuryCode)
 					return app.myRegisterdomains[4144].DomainValues[i].ValueCode;
 			}
@@ -6331,8 +6331,8 @@ var skeletonWidget = function (current, callback, loadonly) {
 		for (i = 0; i < prosthDomains.DomainValues.length; i++) {
 			var prosthesisICDdomain = prosthDomains.DomainValues[i];
 			var prosthesisICD = prosthesisICDdomain.ValueCode;
-			for (j = 0; j < prosthesisICDdomain.ChildValues.length; j++) {
-				var icd10 = prosthesisICDdomain.ChildValues[j].ValueCode;
+			for (j = 0; j < prosthesisICDdomain.Children.length; j++) {
+				var icd10 = prosthesisICDdomain.Children[j].ValueCode;
 				var k = 0;
 				for (k = 0; k < icd10Array.length; k++) {
 					if (icd10Array[k] == icd10) {
@@ -6529,7 +6529,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 			app.mySkeletonWindow.show();
 		}
 		else {
-			app.myRegisterdomains = loadDomains(
+			app.myRegisterdomains = loadDomainsWithoutChildren(
 				app.skeletonDomainCodes,
 				function () {
 					if (!loadonly) {
