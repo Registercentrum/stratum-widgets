@@ -156,7 +156,7 @@
                 } else if (aValue.Size < 6) {
                     tdCls = 'HeatGridValueSmallSize';
                     m = Ext.String.format(
-                        'Andel visas ej, för få observationer<br/>{0}<br/>{1} observationer.',
+                        'Andel visas ej, för få observationer<br/>{0}<br/>&lt;6 observationer.',
                         Repository.Local.Methods.mapManagementCodeToName(
                             aValue.Administration
                         ),
