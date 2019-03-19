@@ -6529,7 +6529,8 @@ var skeletonWidget = function (current, callback, loadonly) {
 			app.mySkeletonWindow.show();
 		}
 		else {
-			app.myRegisterdomains = loadDomainsWithoutChildren(
+			var loadValues = typeof loadDomainsWithoutChildren === 'function' ? loadDomainsWithoutChildren : loadDomains; 
+			app.myRegisterdomains = loadValues(
 				app.skeletonDomainCodes,
 				function () {
 					if (!loadonly) {
