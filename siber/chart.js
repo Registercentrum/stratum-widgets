@@ -222,7 +222,7 @@ Ext.define('Siber.view.Main', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'trend',
   alias: 'view.trend',
-  height: 500,
+  height: widgetConfig.height || 500,
   width: '100%',
   flipXY: widgetConfig.flipXY,
   border: false,
@@ -251,7 +251,7 @@ Ext.define('Siber.view.Main', {
       position: widgetConfig.flipXY ? 'bottom' : 'left',
       grid: true,
       border: false,
-      renderer: function (axis, label) { if (widgetConfig.asPercentages) { label = Math.round(label * 100); } return label + '%'; }
+      renderer: function (axis, label) { if (widgetConfig.asPercentages) { label = Math.round(label * 100) + '%'; } return label; }
     },
     {
       type: 'category',
