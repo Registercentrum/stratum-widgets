@@ -403,6 +403,9 @@
                             type: 'bar',
                             axis: 'left',
                             stacked: false,
+                            label: _m.getChartLabel({
+                                field: ['admSize', 'vgrSize'],
+                            }),
                             highlight: {
                                 fill: '#276F9C',
                                 stroke: 'none',
