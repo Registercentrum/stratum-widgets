@@ -1,5 +1,5 @@
 
-var skeletonWidget = function (current, callback, loadonly) {
+var skeletonWidget = function (current, callback, loadonly, inFreeMode) {
 	
 	var RINGSKADA_TEXT = 'Ringskada';
 	var BACK_SUBFRACTURE_TEXT = 'Ryggfraktur';
@@ -1031,7 +1031,7 @@ var skeletonWidget = function (current, callback, loadonly) {
 
 	function onLoadAOImages(aPictureID, aSide, aTargetPanel, gotoPicID) {
 		var aoPanel = app.mySkeletonWindow.items.items[1];
-		if (aoImagesNavigationHandler.showNoChildFractureSupportAlert === true && !isBackFracture(aPictureID)) {
+		if (aoImagesNavigationHandler.showNoChildFractureSupportAlert === true && !isBackFracture(aPictureID) && !inFreeMode) {
 			var t = new Ext.Template("<div></div>");
 			if (Ext.isEmpty(aTargetPanel)) {
 				t.overwrite(aoPanel.body, '');
@@ -4184,6 +4184,8 @@ var skeletonWidget = function (current, callback, loadonly) {
 	}
 
 	function generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName) {
+		if(inFreeMode)
+			return;
 		var msg = 'Öppen fraktur?';
 		var title = 'Öppen fraktur';
 		if (isBackFracture(aPictureID)) {
@@ -5942,6 +5944,8 @@ var skeletonWidget = function (current, callback, loadonly) {
 	}
 
 	function getAge() {
+		if(inFreeMode)
+			return 14;
 		return Number(Profile.Person.Age);
 	}
 
@@ -5949,6 +5953,8 @@ var skeletonWidget = function (current, callback, loadonly) {
 		if (isBackFracture(aPictureID)) {
 			return false;
 		}
+		if(inFreeMode)
+			return true;
 		var age = getAge();
 		return age >= 10 && age < 20;
 	}
@@ -6860,3 +6866,6 @@ Ext.util.CSS.createStyleSheet(''
 	
 	, 'sfr-skeleton'
 );
+
+if (typeof g_inFreeMode !== 'undefined') 
+	skeletonWidget(null, null, null, g_inFreeMode); 

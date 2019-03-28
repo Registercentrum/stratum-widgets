@@ -170,14 +170,7 @@
                 view.down('#availableRows').setHtml('' );
                 view.down('#exportTable').setDisabled(true);		
             }
-            function clearValues(view){									
-                /*view.down('#stemArticleDropdown').getStore().removeAll();
-                view.down('#cupArticleDropdown').getStore().removeAll()
-                view.down('#caputArticleDropdown').getStore().removeAll();
-                view.down('#capSizeDropdown').getStore().removeAll();
-                view.down('#linerArticleDropdown').getStore().removeAll();*/
-                
-                
+            function clearValues(view){									                
                 view.down('#stemArticleDropdown').getStore().loadData(stemDefaults);
                 view.down('#cupArticleDropdown').getStore().loadData(cupDefaults);
                 view.down('#capSizeDropdown').getStore().loadData(capSdefaults);		
@@ -196,39 +189,20 @@
                 view.down('#caputArticleDropdown').setDisabled(true);
                 view.down('#capSizeDropdown').setDisabled(true);
                 view.down('#linerArticleDropdown').setDisabled(true);			
-            }
-            
-            
-            
-            var isBaseDataChange=triggerCmp!==undefined && ['fuDropdown' ,'fixationCupDropdown' , 'fixationStemDropdown' , 'cupRadio' , 'stemRadio' , 'protesisDropdown' , 'endDate' , 'startDate'].indexOf(triggerCmp.itemId)>=0;
-            
-            var view = this.getView();		
-            /*var stemDisabled= view.down('#stemArticleDropdown').isDisabled();
-            var cupDisabled= view.down('#cupArticleDropdown').isDisabled();
-            var caputDisabled= view.down('#caputArticleDropdown').isDisabled();
-            var caputSizeDisabled= view.down('#capSizeDropdown').isDisabled();
-            var linerDisabled= view.down('#linerArticleDropdown').isDisabled();
-            
-            view.down('#stemArticleDropdown').setDisabled(true);
-            view.down('#cupArticleDropdown').setDisabled(true);
-            view.down('#caputArticleDropdown').setDisabled(true);
-            view.down('#capSizeDropdown').setDisabled(true);
-            view.down('#linerArticleDropdown').setDisabled(true);*/
-            
+            }                            
+            var isBaseDataChange=triggerCmp!==undefined && ['fuDropdown' ,'fixationCupDropdown' , 'fixationStemDropdown' , 'cupRadio' , 'stemRadio' , 'protesisDropdown' , 'endDate' , 'startDate'].indexOf(triggerCmp.itemId)>=0;          
+            var view = this.getView();		            
             if(!isValidAccordingToFollowup(view)){
                     Ext.Msg.alert('Fr.o.m.-datum', 'Fr.o.m.-datum är för sent med hänseende till vald uppföljningstid', Ext.emptyFn);
                     return;
             }
             if(isBaseDataChange){
                 clearValues(view);
-            }
-            //disableCmps(view);
-            
+            }           
             data1=data2=data3=selections=null;				        	
             var protesisType = view.down('#protesisDropdown').getValue(); //1=hel 2=halv
             if(!protesisType)
-                return;        
-           
+                return;                  
             var stemFix = view.down('#fixationStemDropdown').getValue();
             var cupFix = view.down('#fixationCupDropdown').getValue();
             var fu=view.down('#fuDropdown').getValue();
@@ -238,8 +212,7 @@
             var endDate = view.down('#endDate').getValue().toLocaleDateString();		
             var capSize=view.down('#capSizeDropdown').getValue();															
             var cap=view.down('#caputArticleDropdown').getValue();									
-            var liner=view.down('#linerArticleDropdown').getValue();		
-            
+            var liner=view.down('#linerArticleDropdown').getValue();		         
             var stemIsMain=view.down('#stemRadio').getValue();
             /* IE hack */
             startDate = startDate.replace(/[^ -~]/g, '');
@@ -266,9 +239,7 @@
             }
             urlConfig+='&caput_strl=' + capSize;		
             urlConfig+='&caput=' + cap;							
-            urlConfig+= '&liner=' + liner;	
-            
-              
+            urlConfig+= '&liner=' + liner;	                    
             if(protesisType==HALF){			
                 view.down('#stemRadio').setValue(true);
                 view.down('#cupRadio').setValue(false);
@@ -276,20 +247,17 @@
                 view.down('#linerArticleDropdown').setDisabled(true);
                 view.down('#cupArticleDropdown').setDisabled(true);
                 view.down('#fixationCupDropdown').setDisabled(true);
-                view.down('#cupRadio').setDisabled(true);			
-                //view.down('#linerArticleDropdown').clearValue();			
+                view.down('#cupRadio').setDisabled(true);			                		
                 view.down('#cupArticleDropdown').clearValue();
                 view.down('#fixationCupDropdown').clearValue();   
                 if(!stemFix)
                     return;
             }
             else if(protesisType==TOTAL){	
-                view.down('#fixationCupDropdown').setDisabled(false);
-                //view.down('#cupArticleDropdown').setDisabled(false);
+                view.down('#fixationCupDropdown').setDisabled(false);                
                 view.down('#cupRadio').setDisabled(false);			
                 if(!cupFix || !stemFix)
-                    return;										
-                
+                    return;										                
             }		
             var error=false;
             if(cupFix==CEMENT)
@@ -331,19 +299,13 @@
                 error=true;
             }
             if(invalidCombination(liner)){
-                Ext.Msg.alert('Liner', 'Ogiltig kombination av val. Antingen Alla, Ingen eller en eller flera artikelnr', Ext.emptyFn);
+                Ext.Msg.alert('Liner', 'Ogiltig kombination av val. Antingen Alla, Ingen eller ett/flera artikelnr', Ext.emptyFn);
                 error=true;
             }
-            if (error){		
-                /*view.down('#stemArticleDropdown').setDisabled(stemDisabled);
-                view.down('#cupArticleDropdown').setDisabled(cupDisabled);
-                view.down('#caputArticleDropdown').setDisabled(caputDisabled);
-                view.down('#capSizeDropdown').setDisabled(caputSizeDisabled);
-                view.down('#linerArticleDropdown').setDisabled(linerDisabled);		*/	
+            if (error){		               
                 return;
             }
-            var spinner = view.down('#spinnerPanel');
-            //message && message.hide();
+            var spinner = view.down('#spinnerPanel');          
             spinner && spinner.show();		  		
             urlConfig=urlConfig.replace('Alla', 'alla').replace('Alla', 'alla').replace('Alla', 'alla').replace('Alla', 'alla').replace('Alla', 'alla').replace('Alla', 'alla').replace('Alla', 'alla').replace('Alla', 'alla').replace('Ingen', 'ingen');
             Ext.Ajax.request({
@@ -389,7 +351,8 @@
                             return;
                         }
                         view.down('#exportTable').setDisabled(false);
-                        view.down('#availableRows').setHtml('Antal patienter:<b> ' + data2.TotalNumberOfPatients + '</b><br/>Antal höfter<br/>kvar vid<br/>uppföljnings-<br/>tidens slut: <b>' + data2.NumberOfHipsRemaining + '</b><br/>Antal artiklar:<b>' + data3.length +'</b>' );
+                        var availRowsHtml='Antal patienter: <b>' + data2.TotalNumberOfPatients + '</b><br/>Antal höfter<br/>kvar vid<br/>uppföljnings-<br/>tidens slut: <b>' + data2.NumberOfHipsRemaining + '<br/></b>Antal artiklar: <b>' + data3.length +'</b>';                        
+                        view.down('#availableRows').setHtml(availRowsHtml);
                         if (stems.length > 0) {                    						
                             view.down('#stemArticleDropdown').setDisabled(stems.length<2);
                             var stemChoices = view.down('#stemArticleDropdown');					
@@ -422,16 +385,12 @@
                                 linerChoices.getStore().loadData(liners);						
                         }			
                     }
-                    else{                       
-                        //view.down('#stemArticleDropdown').getStore().loadData(stemDefaults);
-                        //view.down('#cupArticleDropdown').getStore().loadData(cupDefaults);
-                        //view.down('#capSizeDropdown').getStore().loadData(capSdefaults);
+                    else{                                           
                         if(triggerCmp.itemId!='caputArticleDropdown'){
                             view.down('#caputArticleDropdown').getStore().loadData(capDefaults);
                             view.down('#caputArticleDropdown').setValue('Alla');
                             view.down('#caputArticleDropdown').setDisabled(true);
-                        }
-                        //view.down('#linerArticleDropdown').getStore().loadData(linerDefaults);
+                        }                       
                         view.down('#availableRows').setHtml('Antal artiklar: <b>0</b>' );
                     }
                 }
@@ -449,8 +408,7 @@
                 this.oldChoices[part].push(newValue);
                 var articleText='ArticleDropdown';
                 if(part=='capSize')
-                    articleText='Dropdown';
-                
+                    articleText='Dropdown';                
                 this.getView().down('#' + part + articleText).clearValue();
                 this.getView().down('#' + part + articleText).setValue(newValue);
                 this.getView().down('#' + part + articleText).collapse();
@@ -465,8 +423,7 @@
           }
         }
         return '';
-      },
-    
+      },    
       checkForDeletions: function (record, part) {
         for (var item in this.oldChoices[part]) {
           if (!record.includes(this.oldChoices[part][item])) {
@@ -474,9 +431,7 @@
           }
         }
         return '';
-      },
-    
-    
+      },    
       enumerateNewChoices: function (record, part) {
         var newChoices = [];
         var indexName='article_'+ part;
@@ -488,7 +443,6 @@
         }
         return newChoices;
       },
-    
       // IE adds superfluous characters to dates
       stripControlCharacters: function (date) {
         return date.replace(/[^ -~]/g, '');
@@ -502,23 +456,15 @@
             var view = this.getView();
             var startDate = view.down('#startDate').getValue();
             var endDate = view.down('#endDate').getValue();
-            if (startDate < new Date('1999-01-01')) view.down('#startDate').setValue(new Date('1999-01-01'));       
-            /*if (this.isDifferenceLessThanOneYear()) {
-                endDate.setTime(Ext.Date.add(startDate, Ext.Date.YEAR, +1));
-                view.down('#endDate').setValue(endDate);
-            }*/
+            if (startDate < new Date('1999-01-01')) view.down('#startDate').setValue(new Date('1999-01-01'));                   
             this.update(view.down('#startDate'));
-        },
-    
-        updateEndDate: function () {
+        },   
+       updateEndDate: function () {
             var view = this.getView();
             var startDate = view.down('#startDate').getValue();
             var endDate = view.down('#endDate').getValue();
             if (endDate > new Date()) view.down('#endDate').setValue(new Date());
-            /*if (this.isDifferenceLessThanOneYear()) {
-                startDate.setTime(Ext.Date.add(endDate, Ext.Date.YEAR, -1));
-                view.down('#startDate').setValue(startDate);
-            }*/		
+            
             this.update(view.down('#endDate'));
         },	
         isDifferenceLessThanOneYear: function () {
@@ -526,8 +472,7 @@
             var startDate = view.down('#startDate').getValue();
             var endDate = view.down('#endDate').getValue();
             return startDate > Ext.Date.add(endDate, Ext.Date.YEAR, -1);
-        },
-        
+        },       
         exportTable: function (element) {       
             var tag = element.el.dom;
             if (!tag) return;
@@ -541,8 +486,7 @@
                 tag.setAttribute('href', url);
            // }
         },
-        createContentToDownload: function (language) {
-            
+        createContentToDownload: function (language) {          
             if(!data3)
                 return;		
             var content = '';       
@@ -656,8 +600,7 @@
             return selections;
         }
     
-    });
-    
+    });    
     Ext.define('shpr.view.Filter', {
         extend: 'Ext.form.field.ComboBox',
         xtype: 'rcfilter',
@@ -672,7 +615,7 @@
         checkChangeEvents: ['change', 'keyup'],
         constructor: function (config) {
             config.queryMode = 'local';
-            config.listeners = { /*select: config.selectCallback*/ change: config.selectCallback };
+            config.listeners = {change: config.selectCallback };
             this.callParent(arguments);
         }
     });
@@ -686,19 +629,19 @@
     var x7=x6+xStep-70;
     var yStep=70;
     var y1=20;
-    var y2=y1+yStep;
+    var y2=y1+yStep-18;
     var y3=y2+yStep-50;
-    var y4=y3+yStep+10;
-    var y5=y4+yStep + 20;
+    var y4=y3+yStep;
+    var y5=y4+yStep + 7;
     var y6=y5+yStep-50;
-    var y7=y6+yStep-30;
+    var y7=y6+yStep-40;
     var y8=y7+yStep;
     var y9=y8+yStep-30;
     var y10=y9+yStep-80;
     var labelAlignAdjust=-5;
     Ext.define('shpr.view.Main', {
         extend: 'Ext.container.Container',
-        height:700,
+        height:900,
         controller: 'main',
         layout: {
             type: 'absolute'	   
@@ -872,10 +815,7 @@
                     { fixationStemCode: '2', fixationStemName: 'Ocementerad' },
                     { fixationStemCode: '1', fixationStemName: 'Cementerad' }
                   ]
-              }/*,
-              listeners: {
-                   change: 'update'
-               }*/
+              }
           },	    
           {
               x: x2,
@@ -890,8 +830,7 @@
               valueField: 'fixationCupCode',
               displayField: 'fixationCupName',
               value: '',
-              sortfield: 'fixationCupName',
-             // selectCallback: 'update',
+              sortfield: 'fixationCupName',            
               sortdirection: 'DESC',	      
               store: {
                   fields: ['fixationCupCode', 'fixationCupName'],
@@ -907,8 +846,7 @@
                         this.up().getController().update(this);
                     }			   
                }
-          },
-         
+          },         
           {
                xtype: 'component',          
                html: 'Endast komponenter med >50 höfter "at risk" vid slutet av analystiden visas som val i rullgardinerna nedan',
@@ -1022,8 +960,7 @@
                     'ArticleCaput ': 'Alla',
                     'FemCaput': 'Alla'
                 }
-            },
-            
+            },            
             listeners: {
                 select: function(combo, record){					
                         this.up().getController().updatePart(record, 'caput', this);
@@ -1050,8 +987,7 @@
              store: {
                  fields: ['article_liner', ' P_AcetLiner'],
                  data: linerDefaults
-             },
-             
+             },             
              listeners: {
                  select: function(combo, record){					
                         this.up().getController().updatePart(record, 'liner', this);
@@ -1084,14 +1020,12 @@
              html: ''         
          }
         ]
-    });
-    
+    });    
     var main;
     Ext.application({
         name: 'shpr',
         units: [],
-        viewcontrollers: [
-         
+        viewcontrollers: [         
         ],
         launch: function () {
             var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['KRH/ODEP'] : 'contentPanel';
