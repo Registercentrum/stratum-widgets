@@ -1,4 +1,3 @@
-
 (function() {
     if (
         window.Repository &&
@@ -9,8 +8,7 @@
         init();
     } else {
         Ext.Ajax.request({
-            url:
-                '/stratum/api/metadata/registers/123',
+            url: '/stratum/api/metadata/registers/123',
             method: 'GET',
             params: {
                 APIKey: 'bK3H9bwaG4o=',
@@ -19,7 +17,7 @@
                 var data = Ext.decode(resp.responseText).data;
 
                 var widgetScript = Stratum.JSON.decode(data.WidgetScript);
-                widgetScript.relURL = '/stratum/';
+                widgetScript.relURL = '/stratum';
                 // widgetScript.APIKey = 'bK3H9bwaG4o=';
                 widgetScript.initializedMethods = true;
 
@@ -139,6 +137,8 @@
                         return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOctLbvPwAGdALOO4abkgAAAABJRU5ErkJggg==';
                     case 'HeatGridValueML':
                         return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8earxPwAITQNFFwh6zwAAAABJRU5ErkJggg==';
+                    case 'HeatGridValueSmallSize':
+                        return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNs6+j4DwAFyQKXrQr2SAAAAABJRU5ErkJggg==';
                     default:
                         return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
                 }
@@ -153,6 +153,15 @@
                         tdCls = 'HeatGridValueNull';
                         m = '<i>Förväntat värde saknas.</i>';
                     }
+                } else if (aValue.Size < 6) {
+                    tdCls = 'HeatGridValueSmallSize';
+                    m = Ext.String.format(
+                        'Andel visas ej, för få observationer<br/>{0}<br/>&lt;6 observationer.',
+                        Repository.Local.Methods.mapManagementCodeToName(
+                            aValue.Administration
+                        ),
+                        aValue.Size
+                    );
                 } else {
                     if (t.LimitBelow < t.LimitAbove) {
                         // Not the case for reversed indicators.
@@ -240,7 +249,9 @@
                     Repository.Local.Methods.mapTitleCodeToName(aValue) +
                     '</i><br>' +
                     Repository.Local.Methods.mapIndicatorCodeToName(aValue) +
-                    ' [' + aValue + ']'
+                    ' [' +
+                    aValue +
+                    ']'
                 );
             },
             getIsManagementRegistering: function(gridRecord) {
@@ -342,6 +353,8 @@
                     '.HeatGridValueML:hover { color: #333333; background-color: #f5a72d !important; } ' +
                     '.HeatGridValueUL { color: #A9F3A9; background-color: #92ad8e !important; } ' +
                     '.HeatGridValueUL:hover { color: #333333; background-color: #4a7642 !important; } ' +
+                    '.HeatGridValueSmallSize { color: #A9F3A9; background-color: #868888 !important; } ' +
+                    '.HeatGridValueSmallSize:hover { color: #333333; background-color: #656565 !important; } ' +
                     '.multiline-header-grid .x-column-header-inner .x-column-header-text { ' +
                     'white-space: normal; display: table-cell; vertical-align: middle; font-size: 9px; text-align: center; }' +
                     '.multiline-header-grid .x-column-header-inner { line-height: normal; padding: 1px !important; vertical-align: middle; }' +
@@ -367,7 +380,8 @@
                         '    .HeatGridValueNotRegister img,' +
                         '    .HeatGridValueML img,' +
                         '    .HeatGridValueUL img,' +
-                        '    .HeatGridValueLL img {' +
+                        '    .HeatGridValueLL img,' +
+                        '    .HeatGridValueSmallSize img {' +
                         '        display: block !important;' +
                         '        margin-left: 1pt;' +
                         '    }' +
@@ -512,10 +526,23 @@
                             xtype: 'container',
                             html:
                                 '    <div style="margin: 10px 0 0 0; padding-left: 3px">  ' +
-                                '               <p style="display: inline-block; margin-right: 20px;"><img style="width: 10px; height: 10px; border: 1px dotted #999; display: inline-block;" src="' + widget.getLimitColorImage('HeatGridValueUL') +'"> = mål uppnått</p>  ' +
-                                '               <p style="display: inline-block; margin-right: 20px;"><img style="width: 10px; height: 10px; border: 1px dotted #999; display: inline-block;" src="' + widget.getLimitColorImage('HeatGridValueML') +'"> = mål nästan uppnått</p>  ' +
-                                '               <p style="display: inline-block; margin-right: 20px;"><img style="width: 10px; height: 10px; border: 1px dotted #999; display: inline-block;" src="' + widget.getLimitColorImage('HeatGridValueLL') +'"> = mål inte uppnått</p>  ' +
-                                '               <p style="display: inline-block; margin-right: 20px;"><img style="width: 10px; height: 10px; border: 1px dotted #999; display: inline-block;" src="' + widget.getLimitColorImage('HeatGridValueNotRegister') +'"> = inget värde förväntat</p>  ' +
+                                '               <p style="display: inline-block; margin-right: 20px;"><img style="width: 10px; height: 10px; border: 1px dotted #999; display: inline-block;" src="' +
+                                widget.getLimitColorImage('HeatGridValueUL') +
+                                '"> = mål uppnått</p>  ' +
+                                '               <p style="display: inline-block; margin-right: 20px;"><img style="width: 10px; height: 10px; border: 1px dotted #999; display: inline-block;" src="' +
+                                widget.getLimitColorImage('HeatGridValueML') +
+                                '"> = mål nästan uppnått</p>  ' +
+                                '               <p style="display: inline-block; margin-right: 20px;"><img style="width: 10px; height: 10px; border: 1px dotted #999; display: inline-block;" src="' +
+                                widget.getLimitColorImage('HeatGridValueLL') +
+                                '"> = mål inte uppnått</p>  ' +
+                                '               <p style="display: inline-block; margin-right: 20px;"><img style="width: 10px; height: 10px; border: 1px dotted #999; display: inline-block;" src="' +
+                                widget.getLimitColorImage('HeatGridValueSmallSize') +
+                                '"> = för få observationer</p>  ' +
+                                '               <p style="display: inline-block; margin-right: 20px;"><img style="width: 10px; height: 10px; border: 1px dotted #999; display: inline-block;" src="' +
+                                widget.getLimitColorImage(
+                                    'HeatGridValueNotRegister'
+                                ) +
+                                '"> = inget värde förväntat</p>  ' +
                                 '               <p style="display: inline-block; margin-right: 0px;"><img style="width: 10px; height: 10px; border: 1px dotted #999; display: inline-block;" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"> = förväntat värde saknas</p>  ' +
                                 '          </div>  ',
                         },
@@ -689,6 +716,8 @@
                                                     HeatGridValueML: '#f9ca81',
                                                     HeatGridValueLL: '#c37884',
                                                     HeatGridValueUL: '#92ad8e',
+                                                    HeatGridValueSmallSize:
+                                                        '#868888',
                                                     na: '#c5c7c7',
                                                 },
                                                 calcFunc:
@@ -734,4 +763,3 @@
     }
 })();
 //! Tabell över inrapporterade kvalitetsindikatorer per förvaltning för angiven tidsperiod och kön. Infärgning visar måluppfyllelse.
-

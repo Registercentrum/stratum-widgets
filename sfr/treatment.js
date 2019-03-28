@@ -125,13 +125,13 @@ var treatmentWidget = function (current, callback, loadonly) {
     for (var i = 0; i < treatmentWidget.valueGroups[6031].length; i++) {
       for (var j = 0; j < treatmentWidget.valueGroups[6031][i].Children.length; j++) {
         if (!treatmentWidget.valueGroups[6031][i].Children[j].Children) {
-          if (!filterSpecificValue(treatmentWidget.valueGroups[6031][i].Children[j].DomainValueID, treatmentWidget.trttype, treatmentWidget.icd10, treatmentWidget.isChild)) {
+          if (!filterSpecificValue(treatmentWidget.valueGroups[6031][i].Children[j].DomainValueID, treatmentWidget.trttype, treatmentWidget.icd10, treatmentWidget.isChild) || !treatmentWidget.valueGroups[6031][i].Children[j].IsActive) {
             treatmentWidget.valueGroups[6031][i].Children.splice(j, 1);
             j--;
           }
         } else {
           for (var k = 0; k < treatmentWidget.valueGroups[6031][i].Children[j].Children.length; k++) {
-            if (!filterSpecificValue(treatmentWidget.valueGroups[6031][i].Children[j].Children[k].DomainValueID, treatmentWidget.trttype, treatmentWidget.icd10, treatmentWidget.isChild)) {
+            if (!filterSpecificValue(treatmentWidget.valueGroups[6031][i].Children[j].Children[k].DomainValueID, treatmentWidget.trttype, treatmentWidget.icd10, treatmentWidget.isChild)  || !treatmentWidget.valueGroups[6031][i].Children[j].Children[k].IsActive) {
               treatmentWidget.valueGroups[6031][i].Children[j].Children.splice(k, 1);
               k--;
             }
@@ -179,7 +179,7 @@ var treatmentWidget = function (current, callback, loadonly) {
     }
     if (isChildFracture === true) {
       for (i = 0; i < treatmentWidget.valueGroups[5665].length; i++) {
-        if (treatmentWidget.valueGroups[5665].DomainValueID === 60609) {
+        if (treatmentWidget.valueGroups[5665][i].DomainValueID === 60609) {
           if (treatmentWidget.valueGroups[5665][i].Children.length > 0) {
             for (j = 0; j < treatmentWidget.valueGroups[5665][i].Children.length; j++) {
               if (treatmentWidget.valueGroups[5665][i].Children[j].DomainValueID === aTreatmentCodeID) {
@@ -191,7 +191,7 @@ var treatmentWidget = function (current, callback, loadonly) {
       }
     } else if (isChildFracture === false) {
       for (i = 0; i < treatmentWidget.valueGroups[5665].length; i++) {
-        if (treatmentWidget.valueGroups[5665].DomainValueID === 60608) {
+        if (treatmentWidget.valueGroups[5665][i].DomainValueID === 60608) {
           if (treatmentWidget.valueGroups[5665][i].Children.length > 0) {
             for (j = 0; j < treatmentWidget.valueGroups[5665][i].Children.length; j++) {
               if (treatmentWidget.valueGroups[5665][i].Children[j].DomainValueID === aTreatmentCodeID) {
@@ -219,6 +219,7 @@ Ext.define('Rc.component.Selector', {
   draggable: true,
   cls: 'sfr-modal',
   title: 'Välj behandling:',
+  border: false,
   widget: false,
   createLevel: function (click, i, template, restore) {
     return {

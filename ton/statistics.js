@@ -684,7 +684,7 @@
             ? [darkGreenish, greyish]
             : [darkGreenish, darkOrangish]);
           chart.series[0].setConfig('title', unitCode === 0
-            ? ['Riket', '']
+            ? ['Riket', '&nbsp']
             : ['Riket', unitName]);
         };
   
@@ -1320,7 +1320,7 @@
             var percentageSprite = percentageSprites[index];
             if (!percentageSprite) percentageSprite = percentageSprites[index] = surface.add({ type: 'text', fontSize:13, zIndex: 11000, scalingY: -1 });
             var percentageY = maxY ? maxY: config.y;
-            var percentageX = config.x - percentageSprite.attr.bbox.plain.width/2;
+            var percentageX = config.x - 15; // percentageSprite.attr.bbox.plain.width/2;
             percentageSprite.setAttributes({
               x: percentageX + 25,
               y: percentageY + 20,
@@ -1440,6 +1440,11 @@
   
       // Get 5 year data for specified unit and national data recursively
       var updateChart5YearData = function (unitCode, unitData) {
+        var spinner = document.getElementsByClassName('ton-trend-spinner')[0];
+        spinner && spinner.classList.remove('ton-spinner-inactive');
+        Ext.ComponentQuery.query('#FiveYearChart--')[0].hide();
+        Ext.ComponentQuery.query('#OneYearTrend--')[0].hide();
+        Ext.ComponentQuery.query('#chartDescription')[0].hide();
         var isNational = (unitCode === 0);
         var includeTE = _current.te ? 1 : 0;
         var includeTT = _current.tt ? 1 : 0;
@@ -1457,6 +1462,7 @@
             includeTT: includeTT
           },
           success: function (response, opts) {
+            chart5Year.redraw();
             var responseData = Ext.decode(response.responseText).data;
             var myData = transformData(unitCode, responseData, unitData);
   
@@ -1501,12 +1507,17 @@
               //var selectedValue = values[values.length-1];
               //selectYear(selectedValue.year);
               //doClickYearCallback(selectedValue);
+              spinner && spinner.classList.add('ton-spinner-inactive');
+              Ext.ComponentQuery.query('#FiveYearChart--')[0].show();
+              Ext.ComponentQuery.query('#OneYearTrend--')[0].show();
+              Ext.ComponentQuery.query('#chartDescription')[0].show();
             } else {
               // Recursively get the national data and add to the current unit's data
               updateChart5YearData(0, myData);
             }
           },
           failure: function (response, opts) {
+            
             console.log('updateChart5YearData error indicatorId:' + _current.indicatorId + ', unitCode:' + unitCode
               + ' error:' + response.status + ', ' + response.responseText);
           }
@@ -1544,11 +1555,11 @@
       var chart1Year = Ext.create('Ext.chart.CartesianChart', {
         itemId: 'OneYearTrend--',
         width: '25%',
-        height: 250,
+        height: 230,
         align: 'bottom',
-        padding: '20 0 0 0',
+        padding: '0 0 0 0',
         innerPadding: {
-          top: 40
+          top: 25
         },
         colors: ['#359AA3', '#F67E09'],
         background: 'white',
@@ -1682,7 +1693,7 @@
             if (!percentageSprites) percentageSprites = surface.myPercentageSprites[field] = [];
             var percentageSprite = percentageSprites[index];
             if (!percentageSprite) percentageSprite = percentageSprites[index] = surface.add({ type: 'text', fontSize:13, zIndex: 11000, scalingY: -1 });
-            var percentageX = config.x - percentageSprite.attr.bbox.plain.width/2;
+            var percentageX = config.x - 15; // percentageSprite.attr.bbox.plain.width/2;
             var percentageY = maxY ? maxY: config.y;
             percentageSprite.setAttributes({
               x: percentageX + 25,
@@ -1740,7 +1751,7 @@
         width: '30%',
         align: 'bottom',
         padding: '0 10 0 10',
-        margin: '45 10 0 10',
+        margin: '35 10 0 10',
         bodyPadding: 5,
         style: {
           'background-color': '#d3e8ea',
@@ -1764,7 +1775,7 @@
           }
           component.setMargin('130 10 0 10');
         } else {
-          component.setMargin('45 10 0 10');
+          component.setMargin('38 10 0 10');
           var template = '<p><span style="color:#359aa3">{0}</span><br>'
             + 'Andel: {1}<br>'
             + 'Antal: {2} operationer<br>'
@@ -2232,7 +2243,7 @@
         + '		padding-bottom: 10px '
         + '} '
         
-        + '.details-header { color: #359aa3; font-weight: 500 } '
+        + '.details-header { color: #359aa3; font-weight: 500; margin-top: 30px; } '
         + '.x-btn-over.x-btn-default-small, .x-btn.x-btn-pressed.x-btn-default-small {'
         + '		background-color: inherit;'
         + '		outline: none;'
@@ -2250,6 +2261,80 @@
           + '  content: "";'
           + '  transform: rotate(-90deg) translate(-50%);'
         + ' }'
+        
+        + '.details-header-underline hr {'
+        + '  margin-top: 8px;'
+        + '  margin-bottom: 10px;'
+        + '}'
+
+        + '.ton-trend-spinner {'
+        + '  margin: 145px 0;'
+        + '}'
+
+        + '.ton-spinner-inactive {'
+        + '  display: none;'
+        + '}'
+        
+        + '.spinner {'
+        + '  margin: 50px auto;'
+        + '  width: 50px;'
+        + '  height: 60px;'
+        + '  text-align: center;'
+        + '  font-size: 0px;'
+        + '}'
+        
+        + '.spinner>div {'
+        + '  background-color: #245d71;'
+        + '  height: 100%;'
+        + '  margin: 0 3px 0 0;'
+        + '  width: 7px;'
+        + '  display: inline-block;'
+        + '  -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;'
+        + '  animation: sk-stretchdelay 1.2s infinite ease-in-out;'
+        + '}'
+
+        + '@-webkit-keyframes sk-stretchdelay {'
+	    + '0%,'
+	    + '40%,'
+	    + '100% {'
+		+ '-webkit-transform: scaleY(0.4);'
+	    + '}'
+	    + '20% {'
+		+ '-webkit-transform: scaleY(1);'
+	    + '}'
+        + '}'
+        + '.spinner .rect2 {'
+	    + '  -webkit-animation-delay: -1.1s;'
+	    + '  animation-delay: -1.1s;'
+        + '}'
+
+        + '.spinner .rect3 {'
+	    + '  -webkit-animation-delay: -1s;'
+	    + '  animation-delay: -1s;'
+        + '}'
+
+        + '.spinner .rect4 {'
+	    + '  -webkit-animation-delay: -0.9s;'
+	    + '  animation-delay: -0.9s;'
+        + '}'
+
+        + '.spinner .rect5 {'
+	    + '  -webkit-animation-delay: -0.8s;'
+	    + '  animation-delay: -0.8s;'
+        + '}'
+
+        + '@keyframes sk-stretchdelay {'
+	    + '0%,'
+	    + '40%,'
+	    + '100% {'
+		+ 'transform: scaleY(0.4);'
+		+ '-webkit-transform: scaleY(0.4);'
+	    + '}'
+	    + '20% {'
+		+ 'transform: scaleY(1);'
+		+ '-webkit-transform: scaleY(1);'
+	    + '}'
+        + '}'
         
         , 'ton-charts-details'
       );
@@ -2367,6 +2452,20 @@
           },
           chart5Year,
           {
+              xtype: 'panel',
+              itemId: 'spinner5year',
+              html:
+                '<div class="ton-trend-spinner ton-spinner-inactive">'
+                + '    <div class="spinner">'
+                + '        <div class="rect1"></div>'
+                + '        <div class="rect2"></div>'
+                + '        <div class="rect3"></div>'
+                + '        <div class="rect4"></div>'
+                + '        <div class="rect5"></div>'
+                + '    </div>'
+                + '</div>'
+          },
+          {
             xtype: 'container',
             itemId: 'TrendDetails--',
             cls: 'details-divider',
@@ -2392,8 +2491,16 @@
               layout: 'hbox',
               width: '90%',
               items: [
+              {
+                      height: 230,
+                      flex: 1
+                },
                 chart1Year = createChart1Year(),
                 chart1YearDescription = createChart1YearDescription(),
+                {
+                      height: 230,
+                      flex: 1
+                }
                 // qqq chartHalfYear = createChartHalfYear()
               ]
             }]
@@ -2505,7 +2612,7 @@
           grid: true,
           minimum: 0,
           majorTickSteps: 10,
-          minorTickSteps: 10,
+          // minorTickSteps: 10,
           grid: {
             odd: {
               'stroke-width': 0
@@ -2539,6 +2646,15 @@
             minGapWidth: 5,
             stroke: 'none',
             barWidth: 28,
+          },
+          tooltip: {
+                style: {
+                  backgroundColor: '#286d7d',
+                  borderColor: '#286d7d'
+                },
+                renderer: function(tooltip, record, ctx) {
+                      return tooltip.setHtml('Andel: ' + record.get('fraction').toFixed(1) + '%');
+                }
           },
           renderer: function (sprite, config, rendererData, index) {
             var record = rendererData.store.getData().items[index];
@@ -2782,7 +2898,7 @@
             return i;
           }
         );
-  
+        mapped = mapped.filter(function(item) {return Ext.isNumber(item.fraction)});
         return mapped;
       }; //transformData
   
@@ -3293,31 +3409,6 @@
     doChangeUnit(_unitCode, _unitName, true);
     doChangeIndicator(_indicatorId, _indicatorName);
   };
-  
-  Ext.override(Ext.scroll.Scroller, {
-      privates: {
-          restoreState: function () {
-              var me = this,
-                  el = me.getScrollElement(),
-                  dom;
-              if (el) {
-                  dom = el.dom;
-  
-                  if (me.trackingScrollTop !== undefined) {
-  
-                      me.restoring = true;
-                      Ext.defer(function () {
-                          me.restoring = false;
-                      }, 50);
-  
-                      //dom.scrollTop = me.trackingScrollTop;
-                      //dom.scrollLeft = me.trackingScrollLeft;
-                  }
-              }
-          },
-      }
-  });
-  
   
   Ext.onReady(function () {
     // Temporary during test: Require url to end with #tontest
