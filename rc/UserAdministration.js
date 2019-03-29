@@ -4,7 +4,7 @@
 var UserAdministrationModule = (function() {
 	var WIDGET_NAME = 'UserAdministration';
 	var ADMIN_ROLE_ID = 903;
-	var VERSION = '3.3.3';
+	var VERSION = '3.3.4';
 	var ME = null;
 	var MSG = '';
 	/*
@@ -76,7 +76,8 @@ var UserAdministrationModule = (function() {
 			{ RoleID: 902, RoleName: 'Plusregistrerare',	ShortName: 'Plusreg.'	},
 			{ RoleID: 903, RoleName: 'Koordinator',			ShortName: 'Koord.'		},
 			{ RoleID: 906, RoleName: 'Systemutvecklare',	ShortName: 'Syst.utv.'	},
-			{ RoleID: 907, RoleName: 'Observatör',			ShortName: 'Observatör'	}
+			{ RoleID: 907, RoleName: 'Patientobservatör',			ShortName: 'Pat.obs.'	},
+			{ RoleID: 908, RoleName: 'Rapportobservatör',			ShortName: 'Rpt.obs.'	}
 		],
 		filterDisplayRoles: [101, 901, 902, 903, 907],
 		filterNewRoles: 	[901, 902],
