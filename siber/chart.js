@@ -25,6 +25,7 @@ Ext.define('Siber.view.Filter', {
   extend: 'Ext.form.field.ComboBox',
   xtype: 'siberfilter',
   alias: 'view.siberfilter',
+  cls: 'siber-select',
   forceSelection: false,
   typeAhead: true,
   queryMode: 'local',
@@ -48,7 +49,8 @@ Ext.define('Siber.controller.Start', {
 
     var county = controller.getView().down('#countyFilter').getValue();
     var unit = controller.getView().down('#unitFilter').getValue();
-    this.currentCounty = controller.getView().down('#countyFilter').getDisplayValue() || 'Alla landsting';
+    var indicator = controller.getView().down('#indicatorFilter').getValue();
+    this.currentCounty = controller.getView().down('#countyFilter').getDisplayValue() || 'Alla';
     controller.getView().down('#unitFilter').getStore().clearFilter();
     controller.getView().down('#unitFilter').getFilters().add(controller.filterUnits.bind(controller));
 
@@ -57,13 +59,15 @@ Ext.define('Siber.controller.Start', {
     level = level === 'unit' || (level === 'county' && this.api.indexOf('ybars') >= 0 && county !== '0') ? 'unit' : 'county';
     var id = level === 'unit' && this.api.indexOf('ybars') < 0 ? unit : county;
     var group = level === 'unit' || county !== '0' ? '&group=' + id : '';
+    group = (this.api.indexOf('completion') < 0 && this.api.indexOf('struct') < 0) ? '&group=' + id : group;
     var agglevel = this.api.indexOf('struct') < 0 ? 'agglevel=' + level : '';
+    var indication = this.api.indexOf('completion') < 0 ? '' : '&indication=' + indicator;
 
     Ext.Ajax.request({
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: '/stratum/api/statistics/siber/' + this.api + '?' + agglevel + group + '&apikey=KbxAwmlwLM4=',
+      url: '/stratum/api/statistics/siber/' + this.api + '?' + agglevel + group + indication + '&apikey=KbxAwmlwLM4=',
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
         chart.show();
@@ -89,13 +93,13 @@ Ext.define('Siber.controller.Start', {
   },
 
   filterUnits: function (item) {
-    return item.data.UnitName !== 'Registercentrum' && (item.data.UnitName === 'Alla enheter' || (this.unitCounties[item.data.UnitName] && this.unitCounties[item.data.UnitName].County === this.currentCounty) || this.currentCounty === 'Alla landsting');
+    return item.data.UnitName !== 'Registercentrum' && (item.data.UnitName === 'Alla' || (this.unitCounties[item.data.UnitName] && this.unitCounties[item.data.UnitName].County === this.currentCounty) || this.currentCounty === 'Alla');
   },
 
   filterCounties: function (item) {
     var include = false;
     for (var i in this.unitCounties) { if (this.unitCounties[i].County === item.data.ValueName) { include = true; } }
-    return include || item.data.ValueName === 'Alla landsting';
+    return include || item.data.ValueName === 'Alla';
   },
 
   countySelected: function () {
@@ -104,7 +108,7 @@ Ext.define('Siber.controller.Start', {
   },
 
   unitCounties: {},
-  currentCounty: 'Alla landsting'
+  currentCounty: 'Alla'
 });
 
 Ext.define('Start.viewmodel.Start', {
@@ -127,25 +131,56 @@ Ext.define('Siber.view.Start', {
     {
       xtype: 'panel',
       border: false,
+      style: {
+        marginBottom: '20px'
+      },
       layout: {
         type: 'hbox',
         align: 'left'
       },
       items: [
         {
+          itemId: 'indicatorFilter',
+          xtype: 'siberfilter',
+          hidden: !widgetConfig.showIndicatorFilter,
+          displayField: 'ValueName',
+          valueField: 'ValueCode',
+          fieldLabel: 'Indikation:',
+          width: '50%',
+          labelWidth: 80,
+          labelStyle: 'text-align: right;',
+          value: 'stress',
+          listeners: {
+            select: 'countySelected'
+          },
+          store: {
+            fields: ['ValueCode', 'ValueName'],
+            data: [
+              { ValueName: 'Depression', ValueCode: 'depression' },
+              { ValueName: 'Stresssyndrom', ValueCode: 'stress' },
+              { ValueName: 'Social fobi', ValueCode: 'social_anxiety' },
+              { ValueName: 'Paniksyndrom', ValueCode: 'panic' },
+              { ValueName: 'Generaliserat ångestsyndrom', ValueCode: 'generalized_anxiety' },
+              { ValueName: 'Hälsoångest', ValueCode: 'hypochondriasis' },
+              { ValueName: 'Tvångssyndrom', ValueCode: 'ocd' },
+              { ValueName: 'Insomni', ValueCode: 'insomnia' },
+            ]
+          },
+        },
+        {
           itemId: 'countyFilter',
           xtype: 'siberfilter',
-          hidden: !widgetConfig.showCountyFilter && true,
+          hidden: !widgetConfig.showCountyFilter,
           displayField: 'ValueName',
           valueField: 'ValueCode',
           fieldLabel: ' Region:',
-          width: 250,
-          labelWidth: 60,
-          labelStyle: 'padding-left: 10px;',
+          width: '50%',
+          padding: '0 1px 0 0',
+          labelWidth: 80,
+          labelStyle: 'text-align: right;',
           value: '00',
           listeners: {
             select: 'countySelected'
-
           },
           store: {
             fields: ['ValueCode', 'ValueName'],
@@ -161,22 +196,36 @@ Ext.define('Siber.view.Start', {
             },
             listeners: {
               load: function (store) {
-                store.add({ ValueName: 'Alla landsting', ValueCode: '00' });
+                store.add({ ValueName: 'Alla', ValueCode: '00' });
                 store.sort({ property: 'ValueCode', direction: 'ASC' });
               },
             }
           },
         },
+      ]
+    },
+    {
+      xtype: 'panel',
+      hidden: !widgetConfig.showUnitFilter,
+      border: false,
+      style: {
+        marginBottom: '20px'
+      },
+      layout: {
+        type: 'hbox',
+        align: 'left'
+      },
+      items: [
         {
           itemId: 'unitFilter',
           xtype: 'siberfilter',
-          hidden: !widgetConfig.showUnitFilter && true,
-          labelStyle: 'padding-left: 10px;',
+          hidden: !widgetConfig.showUnitFilter,
           displayField: 'UnitName',
           valueField: 'UnitCode',
-          fieldLabel: 'Klinik:',
+          fieldLabel: 'Enhet:',
+          labelStyle: 'padding-left: 10px; text-align: right;',
           flex: 1,
-          labelWidth: 50,
+          labelWidth: 80,
           value: '00',
           listeners: {
             select: 'updateChart'
@@ -195,7 +244,7 @@ Ext.define('Siber.view.Start', {
             },
             listeners: {
               load: function (store) {
-                store.add({ UnitName: 'Alla enheter', UnitCode: '00' });
+                store.add({ UnitName: 'Alla', UnitCode: '00' });
                 store.sort({ property: 'UnitCode', direction: 'ASC' });
               }
             }
@@ -226,7 +275,7 @@ Ext.define('Siber.view.Main', {
   width: '100%',
   flipXY: widgetConfig.flipXY,
   border: false,
-  colors: widgetConfig.colors,
+  colors: widgetConfig.colors || null,
   insetPadding: { right: 20 },
   legend: {
     type: 'dom'
@@ -248,23 +297,47 @@ Ext.define('Siber.view.Main', {
   axes: [
     {
       type: 'numeric',
+      minimum: 0,
       position: widgetConfig.flipXY ? 'bottom' : 'left',
       grid: true,
       border: false,
-      renderer: function (axis, label) { if (widgetConfig.asPercentages) { label = Math.round(label * 100) + '%'; } return label; }
+      renderer: function (axis, label) {
+        if (widgetConfig.asPercentages) { label *= 100; }
+        label = parseInt(label, 10);
+        // label = axis.getSegmenter().renderer(label, layout); 
+        if (widgetConfig.asPercentages) { label += '%'; }
+        return label;
+      }
     },
     {
       type: 'category',
       position: widgetConfig.flipXY ? 'left' : 'bottom',
       fields: widgetConfig.xField,
       fixedAxisWidth: 150,
-      renderer: function (axis, label) { return Ext.util.Format.ellipsis(label, 22, true); }
+      labelWidth: 40,
+      renderer: function (axis, label) {
+        var words = label.split(' ');
+        var newLabel = [];
+        var newWord = words.shift();
+        words.forEach(function (word) {
+          var testWord = newWord + ' ' + word;
+          if (testWord.length > 22) {
+            newLabel.push(newWord);
+            newWord = word;
+          } else {
+            newWord = testWord;
+          }
+        });
+        newLabel.push(newWord);
+        label = newLabel.join('\n');
+        return label;
+      }
     }
   ],
 
   series: {
     type: 'bar',
-    stacked: false,
+    stacked: widgetConfig.isStacked,
     xField: widgetConfig.xField,
     yField: widgetConfig.yField,
     title: widgetConfig.title,
@@ -275,7 +348,14 @@ Ext.define('Siber.view.Main', {
       trackMouse: true,
       renderer: function (tooltip, record, ctx) {
         var value = record.get(ctx.field);
-        if (widgetConfig.asPercentages) { value = Math.round(value * 100) + '%'; }
+        if (widgetConfig.asPercentages) {
+          var period = ctx.field.split('_')[1];
+          var share = 'freq_' + period;
+          value = Math.round(value * 100) + '%';
+          if (record.get(share)) {
+            value = value + ' (' + record.get(share) + ' av ???)';
+          }
+        }
         tooltip.setHtml(value);
       }
     }
@@ -303,5 +383,36 @@ Ext.util.CSS.createStyleSheet(
   + '.numRatingsAxis {'
   + '  white-space: normal;'
   + '  width: 200px;'
+  + '}'
+
+  + '.siber-select .x-form-trigger-wrap {'
+  + '  border-color: #3F73A6;'
+  + '}'
+
+  + '.siber-select .x-form-item-body {'
+  + '  height: 40px;'
+  + '  border-radius: 3px;'
+  + '}'
+
+  + '.siber-select input {'
+  + '  color: #3F73A6;'
+  + '  color: #2f5880;'
+  + '  padding: 9px 14px;'
+  + '}'
+
+  + '.siber-select div {'
+  + '  border-radius: 3px;'
+  + '}'
+
+  + '.siber-select label {'
+  + '  white-space: nowrap;'
+  + '  padding-top: 11px;'
+  + '  color: #3F73A6;'
+  + '  color: #2f5880;'
+  + '}'
+
+  + '.siber-select .x-form-trigger {'
+  + '  vertical-align: middle;'
+  + '  color: #3F73A6;'
   + '}', 'siber'
 );
