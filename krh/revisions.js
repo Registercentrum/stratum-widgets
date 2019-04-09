@@ -54,10 +54,6 @@ Ext.util.CSS.createStyleSheet(''
   + '  margin: 0px 4px 0px 0;'
   + '}'
 
-  + '.scw-multiselect li:first-child {'
-  //+ '  margin-top: 11px;'
-  + '}'
-
   + '.scw-multiselect li:hover {'
   + '  border: none !important;'
   + '}'
@@ -416,7 +412,7 @@ Ext.define('shpr.view.Filter', {
   }
 });
 
-Ext.define('shpr.view.Main', {
+Ext.define('shpr.revisions.view.Main', {
   extend: 'Ext.container.Container',
   controller: 'revisions.main',
   itemId: 'mainView',
@@ -608,7 +604,7 @@ Ext.define('shpr.view.Main', {
       itemId: 'startDate',
       value: Ext.Date.add(new Date(), Ext.Date.YEAR, -1),
       fieldLabel: 'Operationsdatum<div class="scw-info"><div data-qtip="De datum som väljs måste utgöra en period på minst ett år och ligga i spannet mellan 1999-01-01 och dagens datum.">i</div></div>mellan',
-      labelWidth: 200,
+      labelWidth: 188,
       format: 'Y-m-d',
       altFormats: 'ymd|Ymd',
       listeners: {
@@ -621,8 +617,8 @@ Ext.define('shpr.view.Main', {
       itemId: 'endDate',
       value: new Date(),
       fieldLabel: ' och',
-      labelWidth: 35,
-      labelStyle: 'padding: 5px 0 0 0;',
+      labelWidth: 30,
+      labelStyle: 'padding: 8px 0 0 0;',
       format: 'Y-m-d',
       altFormats: 'ymd|Ymd',
       listeners: {
@@ -784,7 +780,7 @@ Ext.application({
   ],
   launch: function () {
     var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['KRH/RevisionScope'] : 'contentPanel';
-    var main = Ext.create('shpr.view.Main', {
+    var main = Ext.create('shpr.revisions.view.Main', {
       renderTo: target
     });
     if (!window.navigator.msSaveBlob) {

@@ -99,9 +99,9 @@ Ext.apply(Ext.QuickTips.getQuickTip(), {
   dismissDelay: 0
 });
 
-Ext.define('shpr.controller.MainController', {
+Ext.define('shpr.market.MainController', {
   extend: 'Ext.app.ViewController',
-  alias: 'controller.main',
+  alias: 'controller.market.main',
 
   updateGrid: function () {
     var view = this.getView();
@@ -292,9 +292,9 @@ Ext.define('shpr.view.Filter', {
   }
 });
 
-Ext.define('shpr.view.Main', {
+Ext.define('shpr.market.view.Main', {
   extend: 'Ext.container.Container',
-  controller: 'main',
+  controller: 'market.main',
   itemId: 'mainView',
   items: [
     {
@@ -440,7 +440,7 @@ Ext.define('shpr.view.Main', {
         itemId: 'startDate',
         value: Ext.Date.add(new Date(), Ext.Date.YEAR, -1),
         fieldLabel: 'Operationsdatum<div class="scw-info"><div data-qtip="De datum som väljs måste utgöra en period på minst 28 dagar och ligga i spannet mellan 1999-01-01 och dagens datum.">i</div></div>mellan',
-        labelWidth: 200,
+        labelWidth: 188,
         format: 'Y-m-d',
         altFormats: 'ymd|Ymd',
         listeners: {
@@ -453,8 +453,8 @@ Ext.define('shpr.view.Main', {
         itemId: 'endDate',
         value: new Date(),
         fieldLabel: ' och',
-        labelWidth: 35,
-        labelStyle: 'padding: 7px 0 0 0;',
+        labelWidth: 30,
+        labelStyle: 'padding: 8px 0 0 0;',
         format: 'Y-m-d',
         altFormats: 'ymd|Ymd',
         listeners: {
@@ -608,7 +608,7 @@ Ext.application({
   ],
   launch: function () {
     var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['KRH/MarketShares'] : 'contentPanel';
-    var main = Ext.create('shpr.view.Main', {
+    var main = Ext.create('shpr.market.view.Main', {
       renderTo: target
     });
     if (!window.navigator.msSaveBlob) {
