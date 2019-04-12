@@ -61,7 +61,7 @@ Ext.define('Siber.controller.Start', {
     var group = level === 'unit' || county !== '0' ? '&group=' + id : '';
     group = (this.api.indexOf('completion') < 0 && this.api.indexOf('struct') < 0) ? '&group=' + id : group;
     var agglevel = this.api.indexOf('struct') < 0 ? 'agglevel=' + level : '';
-    var indication = this.api.indexOf('completion') < 0 ? '' : '&indication=' + indicator;
+    var indication = widgetConfig.showIndicatorFilter ? '&indication=' + indicator : '';
 
     Ext.Ajax.request({
       type: 'ajax',
@@ -145,11 +145,11 @@ Ext.define('Siber.view.Start', {
           hidden: !widgetConfig.showIndicatorFilter,
           displayField: 'ValueName',
           valueField: 'ValueCode',
-          fieldLabel: 'Indikation:',
+          fieldLabel: 'Diagnosgrupp:',
           width: '50%',
-          labelWidth: 80,
+          labelWidth: 100,
           labelStyle: 'text-align: right;',
-          value: 'stress',
+          value: 'depression',
           listeners: {
             select: 'countySelected'
           },
@@ -164,6 +164,12 @@ Ext.define('Siber.view.Start', {
               { ValueName: 'Hälsoångest', ValueCode: 'hypochondriasis' },
               { ValueName: 'Tvångssyndrom', ValueCode: 'ocd' },
               { ValueName: 'Insomni', ValueCode: 'insomnia' },
+            ],
+            filters: [
+              function (item) {
+                if (!widgetConfig.excludedIndicators) return true;
+                return !Ext.Array.contains(widgetConfig.excludedIndicators, item.data.ValueCode);
+              }
             ]
           },
         },
@@ -176,7 +182,7 @@ Ext.define('Siber.view.Start', {
           fieldLabel: ' Region:',
           width: '50%',
           padding: '0 1px 0 0',
-          labelWidth: 80,
+          labelWidth: 100,
           labelStyle: 'text-align: right;',
           value: '00',
           listeners: {
@@ -223,9 +229,9 @@ Ext.define('Siber.view.Start', {
           displayField: 'UnitName',
           valueField: 'UnitCode',
           fieldLabel: 'Enhet:',
-          labelStyle: 'padding-left: 10px; text-align: right;',
+          labelStyle: 'text-align: right;',
           flex: 1,
-          labelWidth: 80,
+          labelWidth: 100,
           value: '00',
           listeners: {
             select: 'updateChart'
@@ -298,13 +304,18 @@ Ext.define('Siber.view.Main', {
     {
       type: 'numeric',
       minimum: 0,
+      maximum: widgetConfig.asPercentages ? 1 : NaN,
       position: widgetConfig.flipXY ? 'bottom' : 'left',
       grid: true,
       border: false,
       renderer: function (axis, label) {
-        if (widgetConfig.asPercentages) { label *= 100; }
-        label = parseInt(label, 10);
-        // label = axis.getSegmenter().renderer(label, layout); 
+        if (widgetConfig.asPercentages) { 
+          label *= 100; 
+          label = parseInt(label, 10);
+        } else {
+          label = Math.floor(label) === label ? label : label.toFixed(1);
+        }
+        
         if (widgetConfig.asPercentages) { label += '%'; }
         return label;
       }
@@ -348,15 +359,21 @@ Ext.define('Siber.view.Main', {
       trackMouse: true,
       renderer: function (tooltip, record, ctx) {
         var value = record.get(ctx.field);
+        var text = value;
         if (widgetConfig.asPercentages) {
-          var period = ctx.field.split('_')[1];
-          var share = 'freq_' + period;
-          value = Math.round(value * 100) + '%';
-          if (record.get(share)) {
-            value = value + ' (' + record.get(share) + ' av ???)';
+          var period = ctx.field.split('_').slice(-1)[0];
+          period = period === 'latest' || period === 'previous' ? '_' + period : '';
+          var classification = widgetConfig.isStacked ? ctx.field.split('_').slice(0)[0] + '_' : '';
+          var frequency = classification + 'freq' + period;
+          var total = classification + 'total' + period;
+          text = Math.round(value * 100) + '%';
+          if (record.get(frequency)) {
+            text = text + ' (' + record.get(frequency) + ' av ' + (record.get(total) || '???') + ')';
           }
+        } else {
+          text = 'Antal: ' + value;
         }
-        tooltip.setHtml(value);
+        tooltip.setHtml(text);
       }
     }
   }
