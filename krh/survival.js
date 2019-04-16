@@ -88,10 +88,6 @@ Ext.util.CSS.createStyleSheet(''
   + '  margin: 0px 4px 0px 0;'
   + '}'
 
-  + '.scw-multiselect li:first-child {'
-  //+ '  margin-top: 11px;'
-  + '}'
-
   + '.scw-multiselect li:hover {'
   + '  border: none !important;'
   + '}'
@@ -599,7 +595,7 @@ Ext.define('shpr.store.Incidens', {
   }
 });
 
-Ext.define('shpr.view.Main', {
+Ext.define('shpr.graph.view.Main', {
   extend: 'Ext.container.Container',
   controller: 'graph.main',
   itemId: 'mainView',
@@ -831,7 +827,7 @@ Ext.define('shpr.view.Main', {
           itemId: 'startDate',
           value: Ext.Date.add(new Date(), Ext.Date.YEAR, -1),
           fieldLabel: 'Operationsdatum<div class="scw-info"><div data-qtip="Avser datum för primäroperation. De datum som väljs måste utgöra en period på minst ett år och ligga i spannet mellan 1999-01-01 och dagens datum.">i</div></div>mellan',
-          labelWidth: 195,
+          labelWidth: 188,
           format: 'Y-m-d',
           altFormats: 'ymd|Ymd',
           listeners: {
@@ -1189,17 +1185,17 @@ Ext.define('shpr.view.Main', {
 });
 
 Ext.define('Novanti.overrides.chart.legend.SpriteLegend', {
-    override: 'Ext.chart.legend.SpriteLegend',
+  override: 'Ext.chart.legend.SpriteLegend',
 
 
-    isXType: function (xtype) {       
-        return xtype === 'sprite';
-    },
+  isXType: function (xtype) {
+    return xtype === 'sprite';
+  },
 
 
-    getItemId: function () {
-        return this.getId();
-    }
+  getItemId: function () {
+    return this.getId();
+  }
 });
 
 Ext.application({
@@ -1210,7 +1206,7 @@ Ext.application({
   ],
   launch: function () {
     var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['KRH/Graph'] : 'contentPanel';
-    var main = Ext.create('shpr.view.Main', {
+    var main = Ext.create('shpr.graph.view.Main', {
       renderTo: target
     });
     if (!window.navigator.msSaveBlob) {

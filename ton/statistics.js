@@ -1155,10 +1155,10 @@
           type: 'category',
           fields: 'year',
           position: 'bottom',
-          renderer: function(axis, label){
+          renderer: function(axis, label, layout){
             return label + ' >';
           }
-        }],
+          }],
   
         series: [{
           type: 'bar',
@@ -2809,7 +2809,7 @@
               var redText = redTexts[_current.indicatorId-1];
               var timeText = timeIntervals[_current.indicatorId-1];
   
-              this.setHtml('<div class="ton-legend-timeframe">Uppgifterna avser ' + timeText + '. Konfidensintervall 95%: <div class="ton-legend-state-confidence-interval"></div>Rikets<div class="ton-legend-confidence-interval"><div class="ton-legend-confidence-interval-bar"></div></div>Enhetens</div><div class="ton-legend-colors"><div class="ton-circle ton-green"></div>' + greenText + '<div class="ton-circle ton-orange"></div>' + orangeText + '<div class="ton-circle ton-red"></div>' + redText + '</div>');
+              this.setHtml('<div class="ton-legend-timeframe">Det som visas här baseras endast på rena tonsillektomier och avser ' + timeText + '. Konfidensintervall 95%: <div class="ton-legend-state-confidence-interval"></div>Rikets<div class="ton-legend-confidence-interval"><div class="ton-legend-confidence-interval-bar"></div></div>Enhetens</div><div class="ton-legend-colors"><div class="ton-circle ton-green"></div>' + greenText + '<div class="ton-circle ton-orange"></div>' + orangeText + '<div class="ton-circle ton-red"></div>' + redText + '</div>');
               // console.log('updating legend');
             }	
           },
@@ -3308,7 +3308,7 @@
         {
           xtype: 'component',
           itemId: 'IntroText--',
-          html: '<p>Här jämför du mottagningens och regionens resultat med genomsnittet för riket i'
+          html: '<p>Här jämför du mottagningens resultat med genomsnittet för riket i'
           + ' Tonsilloperationsregistrets kvalitetsindikatorer. Presenterade data avser alla tonsilloperationer, alltså tonsillektomi med eller utan abrasio, respektive tonsillotomi med eller utan abrasio. Genom att klicka på en indikator kan mer specifierade data studeras.</p>'
         },
         choicesPanel = createChoicesPanel(),
