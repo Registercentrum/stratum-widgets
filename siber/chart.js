@@ -42,32 +42,23 @@ Ext.define('Siber.controller.Start', {
 
   updateChart: function () {
     var controller = this;
-    var spinner = this.getView().down('#spinner');
-    var chart = this.getView().down('trend');
+    var view    = this.getView();
+    var spinner = view.down('#spinner');
+    var chart   = view.down('trend');
     chart.hide();
     spinner.show();
+    
+    controller.currentCounty = view.down('#countyFilter').getDisplayValue() || 'Alla';
+    view.down('#unitFilter').getStore().clearFilter();
+    view.down('#unitFilter').getFilters().add(controller.filterUnits.bind(controller));
 
-    var county = controller.getView().down('#countyFilter').getValue();
-    var unit = controller.getView().down('#unitFilter').getValue();
-    var indicator = controller.getView().down('#indicatorFilter').getValue();
-    this.currentCounty = controller.getView().down('#countyFilter').getDisplayValue() || 'Alla';
-    controller.getView().down('#unitFilter').getStore().clearFilter();
-    controller.getView().down('#unitFilter').getFilters().add(controller.filterUnits.bind(controller));
-
-    county = county[0] === '0' ? county[1] : county;
-    var level = unit === '00' ? 'county' : 'unit';
-    level = level === 'unit' || (level === 'county' && this.api.indexOf('ybars') >= 0 && county !== '0') ? 'unit' : 'county';
-    var id = level === 'unit' && this.api.indexOf('ybars') < 0 ? unit : county;
-    var group = level === 'unit' || county !== '0' ? '&group=' + id : '';
-    group = (this.api.indexOf('completion') < 0 && this.api.indexOf('struct') < 0) ? '&group=' + id : group;
-    var agglevel = this.api.indexOf('struct') < 0 ? 'agglevel=' + level : '';
-    var indication = widgetConfig.showIndicatorFilter ? '&indication=' + indicator : '';
+    var url = controller.createUrl();
 
     Ext.Ajax.request({
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: '/stratum/api/statistics/siber/' + this.api + '?' + agglevel + group + indication + '&apikey=KbxAwmlwLM4=',
+      url: url,
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
         chart.show();
@@ -75,6 +66,24 @@ Ext.define('Siber.controller.Start', {
         spinner.hide();
       }
     });
+  },
+
+  createUrl: function () {
+    var view = this.getView();
+    var county    = view.down('#countyFilter').getValue();
+    var unit      = view.down('#unitFilter').getValue();
+    var indicator = view.down('#indicatorFilter').getValue();
+    
+    var isQuarterly = this.api.indexOf('ybars') >= 0;
+    
+    county    = county[0] === '0' ? county[1] : county;
+    var level = unit !== '00'      || (isQuarterly  && county !== '0') ? 'unit' : 'county';
+    var id    = level === 'county' || isQuarterly ? county : unit;
+    var group = level === 'unit'   || county !== '0' ? '&group=' + id : '';
+    var indication = widgetConfig.showIndicatorFilter ? '&indication=' + indicator : '';
+    
+    var url = '/stratum/api/statistics/siber/' + this.api + '?agglevel=' + level + group + indication + '&apikey=KbxAwmlwLM4=';
+    return url;
   },
 
   initialize: function () {
@@ -157,7 +166,7 @@ Ext.define('Siber.view.Start', {
             fields: ['ValueCode', 'ValueName'],
             data: [
               { ValueName: 'Depression', ValueCode: 'depression' },
-              { ValueName: 'Stresssyndrom', ValueCode: 'stress' },
+              { ValueName: 'Stressyndrom', ValueCode: 'stress' },
               { ValueName: 'Social fobi', ValueCode: 'social_anxiety' },
               { ValueName: 'Paniksyndrom', ValueCode: 'panic' },
               { ValueName: 'Generaliserat ångestsyndrom', ValueCode: 'generalized_anxiety' },
@@ -165,6 +174,10 @@ Ext.define('Siber.view.Start', {
               { ValueName: 'Tvångssyndrom', ValueCode: 'ocd' },
               { ValueName: 'Insomni', ValueCode: 'insomnia' },
             ],
+            sorters: {
+              property: 'ValueName',
+              direction: 'ASC'
+            },
             filters: [
               function (item) {
                 if (!widgetConfig.excludedIndicators) return true;
@@ -203,7 +216,7 @@ Ext.define('Siber.view.Start', {
             listeners: {
               load: function (store) {
                 store.add({ ValueName: 'Alla', ValueCode: '00' });
-                store.sort({ property: 'ValueCode', direction: 'ASC' });
+                store.sort({ property: 'ValueName', direction: 'ASC' });
               },
             }
           },
@@ -251,7 +264,7 @@ Ext.define('Siber.view.Start', {
             listeners: {
               load: function (store) {
                 store.add({ UnitName: 'Alla', UnitCode: '00' });
-                store.sort({ property: 'UnitCode', direction: 'ASC' });
+                store.sort({ property: 'UnitName', direction: 'ASC' });
               }
             }
           }
@@ -313,7 +326,7 @@ Ext.define('Siber.view.Main', {
           label *= 100; 
           label = parseInt(label, 10);
         } else {
-          label = Math.floor(label) === label ? label : label.toFixed(1);
+          label = Math.floor(label) === label ? label : '';
         }
         
         if (widgetConfig.asPercentages) { label += '%'; }
