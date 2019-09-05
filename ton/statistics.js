@@ -1185,12 +1185,13 @@
             trackMouse: true,
             renderer: function (tooltip, rec, item) {
               var text = 'Andel: {0}<br>'
-                + 'Totalt: {1} operationer<br>'
+                + 'Antal som svarat ja: {7}<br>'
+                + 'Antal som besvarat enkäten: {1}<br>'
+                + 'Antal som opererats: {8}<br>'
                 + 'Operationsmetod: {2}<br>'
                 + 'Svarsfrekvens 30 d: {3}<br>'
                 + 'Svarsfrekvens 6 mån: {4}<br>'
                 + 'Täckningsgrad: {5}';
-              // if (_current.indicatorId === 1) text += '<br>Matchad, PAR: {6}';
   
               var suffix = item.field === 'fraction' ? '' : 'N';
               var fraction = Ext.util.Format.number(rec.data['fraction' + suffix] * 100, '0.0%');
@@ -1201,8 +1202,10 @@
               var freq180 = Ext.util.Format.number(rec.data['freq180' + suffix] * 100, '0%');
               var coverage = Ext.util.Format.number(rec.data['coverage' + suffix] * 100, '0%') || '-';
               var par = rec.data['par' + suffix] ? 'ja' : 'nej';
+              var yesCount = rec.data['count_yes' + suffix]
+              var opCount = rec.data['count_max' + suffix]
   
-              text = Ext.String.format(text, fraction, total, opTech, freq30, freq180, coverage, par);
+              text = Ext.String.format(text, fraction, total, opTech, freq30, freq180, coverage, par, yesCount, opCount);
               tooltip.setHtml(text);
             }
           },
@@ -1418,7 +1421,7 @@
           result[key]['tooFewData' +  suffix] = tooFewData;
           result[key]['year' + suffix] = newData.years[key].year;
           result[key]['fraction' + suffix] = fraction;
-          result[key]['freq30' + suffix] = newData.years[key].freq_30;
+          result[key]['freq30' + suffix] = newData.years[key].response_rate;
           result[key]['freq180' + suffix] = newData.years[key].freq_180;
           result[key]['lower' + suffix] = lower;
           result[key]['upper' + suffix] = upper;
@@ -1427,6 +1430,8 @@
           result[key]['par' + suffix] = newData.years[key].par;
           result[key]['te'] = newData.te;
           result[key]['tt'] = newData.tt;
+          result[key]['count_yes' + suffix] = newData.years[key].count_yes;
+          result[key]['count_max' + suffix] = newData.years[key].max_op_count;
   
           //if (upper > maxUpper)
           //	maxUpper = upper;
@@ -1448,7 +1453,7 @@
         var isNational = (unitCode === 0);
         var includeTE = _current.te ? 1 : 0;
         var includeTT = _current.tt ? 1 : 0;
-        var url = serverPrefix + '/stratum/api/statistics/ton/trendfemar/';
+        var url = serverPrefix + '/stratum/api/statistics/ton/tonw-trend-fem-ar-v2'; // tonw-trend-fem-ar-v2
   
         Ext.Ajax.request({
           url: url,
@@ -1748,7 +1753,7 @@
       var component = Ext.create('Ext.Component', {
         itemId: 'chartDescription',
         cls: 'ton-chart-description',
-        width: '30%',
+        width: '40%',
         align: 'bottom',
         padding: '0 10 0 10',
         margin: '35 10 0 10',
@@ -1778,14 +1783,12 @@
           component.setMargin('38 10 0 10');
           var template = '<p><span style="color:#359aa3">{0}</span><br>'
             + 'Andel: {1}<br>'
-            + 'Antal: {2} operationer<br>'
-            + 'Operationsmetod: {3}<br>'
+            + 'Antal som svarat ja: {8}<br>'
+            + 'Antal som besvarat enkäten: {2}<br>'
+            + 'Antal som opererats: {9}<br>'
             + (_current.indicatorId === 2 || _current.indicatorId === 3 ? '' : 'Svarsfrekvens 30 d: {4}<br>')
 					  + (_current.indicatorId === 1 ? '' : 'Svarsfrekvens 6 mån: {5}<br>')
             + 'Täckningsgrad: {6}<br>'
-            //+ '<br>Up {8}, Low {9}<br>' // TEMP
-            //+ 'UpN {10}, LowN {11}<br>' // TEMP
-            //+ 'FractN {12}' // TEMP
             + '</p>';
   
           var fraction = Ext.util.Format.number(data.fraction * 100, '0.0%');
@@ -1796,6 +1799,8 @@
           var te = _current.te;
           var tt = _current.tt;
           var total = data.count==='NA'?'?':data.count;
+          var countYes = data.count_yes;
+          var countMax = data.count_max;
           
           var opTech = (te ? 'TE+TEA' : '') + (te && tt ? '/' : '') + (tt ? 'TT+TTA' : '');
           if (opTech === '') opTech = '-';
@@ -1808,7 +1813,7 @@
           var lowN = Ext.util.Format.number(data.lowerN * 100, '0.0%');
           */
           text = Ext.String.format(template, _current.unitName, fraction,
-            total, opTech, freq30, freq180, coverage, par);
+            total, opTech, freq30, freq180, coverage, par, countYes, countMax);
           //text = Ext.String.format(template, _current.unitName, fraction,
           //	data.count, opTech, freq30, freq180, coverage, par 
           //		,up, low, upN, lowN, fractN); // TEMP
@@ -1875,7 +1880,9 @@
             trackMouse: true,
             renderer: function (tooltip, rec, item) {
               var text = 'Andel: {0}<br>'
-                + 'Totalt: {1} operationer<br>'
+                + 'Antal som svarat ja: {5}<br>'
+                + 'Antal som besvarat enkäten: {1}<br>'
+                + 'Antal som opererats: {6}<br>'
                 + 'Operationsteknik: {2}<br>'
                 + 'Svarsfrekvens 30 d: {3}<br>'
                 + 'Svarsfrekvens 6 mån: {4}<br>'
@@ -2441,6 +2448,15 @@
               }
             }
           },
+          { 
+            xtype: 'panel', 
+            subStyle: {
+                  width: '100%',
+                  height: 40,
+                  fontWeight: 'bold'
+            },
+            html: '<div style="font-size: 13px">Presenterade data avser alla tonsilloperationer, alltså tonsillektomi med eller utan abrasio, respektive tonsillotomi med eller utan abrasio.</div>'
+          },
           {
             itemId: 'Header--',
             xtype: 'container',
@@ -2809,7 +2825,7 @@
               var redText = redTexts[_current.indicatorId-1];
               var timeText = timeIntervals[_current.indicatorId-1];
   
-              this.setHtml('<div class="ton-legend-timeframe">Det som visas här baseras endast på rena tonsillektomier och avser ' + timeText + '. Konfidensintervall 95%: <div class="ton-legend-state-confidence-interval"></div>Rikets<div class="ton-legend-confidence-interval"><div class="ton-legend-confidence-interval-bar"></div></div>Enhetens</div><div class="ton-legend-colors"><div class="ton-circle ton-green"></div>' + greenText + '<div class="ton-circle ton-orange"></div>' + orangeText + '<div class="ton-circle ton-red"></div>' + redText + '</div>');
+              this.setHtml('<div class="ton-legend-timeframe">Det som visas här baseras endast på rena tonsillektomier och avser ' + timeText + '.<br/> Konfidensintervall 95%: <div class="ton-legend-state-confidence-interval"></div>Rikets<div class="ton-legend-confidence-interval"><div class="ton-legend-confidence-interval-bar"></div></div>Enhetens</div><div class="ton-legend-colors"><div class="ton-circle ton-green"></div>' + greenText + '<div class="ton-circle ton-orange"></div>' + orangeText + '<div class="ton-circle ton-red"></div>' + redText + '</div>');
               // console.log('updating legend');
             }	
           },
@@ -3237,8 +3253,8 @@
         switch (_current.indicatorId) {
           case 1:
             text1 = '<h2 class="upper">Om indikatorn</h2>'
-              + '<p style="font-weight:400">Indikatorn visar andelen patienter som har lagts in på '
-              + 'sjukhus för blödning inom 30 dagar efter operationen.'
+              + '<p style="font-weight:400">Indikatorn visar andelen patienter som anger att de har lagts in på '
+              + 'sjukhus för blödning inom 30 dagar efter operationen och beräknas av alla som har besvarat frågan i 30-dagarsenkäten.'
               // + 'av alla patienter som har opererats med tonsillektomi / '
               //+ 'eller tonsillektomi+abrasio på en klinik.'
             text2 = '&nbsp;';
@@ -3265,22 +3281,22 @@
           case 2:
             text1 = '<h2 class="upper">Om indikatorn</h2>'
               + '<p style="font-weight:400">Indikatorn visar andelen patienter som uppger att de har '
-              + 'kontaktat sjukvården på grund av smärta efter operationen, av '
-              + 'alla som har besvarat 30-dagarsenkäten.</p><p style="font-weight:400">Data i detta diagram uppdateras dagligen. Det kan därför finnas skillnader mellan dessa data och kliniktabellerna som uppdateras mindre ofta.';
+              + 'kontaktat sjukvården på grund av smärta efter operationen '
+              + 'och beräknas av alla som har besvarat frågan i 30-dagarsenkäten.</p><p style="font-weight:400">Data i detta diagram uppdateras dagligen. Det kan därför finnas skillnader mellan dessa data och kliniktabellerna som uppdateras mindre ofta.</p>';
             text2 = '&nbsp;';
             break;
           case 3:
             text1 = '<h2 class="upper">Om indikatorn</h2>'
               + '<p style="font-weight:400">Indikatorn visar andelen patienter som har svarat '
               + '"Besvären borta" eller "Jag har blivit ganska bra från mina '
-              + 'besvär", av alla patienter som har besvarat 6-månadersenkäten.</p>';
+              + 'besvär" och beräknas av alla patienter som har besvarat frågan i 6-månadersenkäten.</p>';
             text2 = '&nbsp;';
             break;
           case 4:
             text1 = '<h2 class="upper">Om indikatorn</h2>'
               + '<p style="font-weight:400">Indikatorn visar andelen patienter som har registrerats i '
-              + 'Tonsillregistret, av alla tonsilloperationer som har identifierats '
-              + 'från Tonsillregistret eller Patientregistret.</p>';
+              + 'Tonsilloperationsregistret, av alla tonsilloperationer som har identifierats '
+              + 'från Tonsilloperationsregistret eller Patientregistret.</p>';
             text2 = '&nbsp;';
             break;
         };
@@ -3309,7 +3325,7 @@
           xtype: 'component',
           itemId: 'IntroText--',
           html: '<p>Här jämför du mottagningens resultat med genomsnittet för riket i'
-          + ' Tonsilloperationsregistrets kvalitetsindikatorer. Presenterade data avser alla tonsilloperationer, alltså tonsillektomi med eller utan abrasio, respektive tonsillotomi med eller utan abrasio. Genom att klicka på en indikator kan mer specifierade data studeras.</p>'
+          + ' Tonsilloperationsregistrets kvalitetsindikatorer. Genom att klicka på en indikator eller hålla markören över en stapel kan mer detaljerade data studeras.</p>'
         },
         choicesPanel = createChoicesPanel(),
         {

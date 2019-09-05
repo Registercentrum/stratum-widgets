@@ -1324,7 +1324,7 @@ Ext.define('Boa.controller.DetailsController', {
     var indicatorTexts = {
       'fysisk-aktivitet': ''
         + 'Indikatorn visar andelen patienter som är fysiskt aktiva minst 150 minuter per vecka. '
-        + 'Målet är att minst 80 % av patienterna ska vara fysiskt aktiva 150 aktivitetsminuter eller mer per vecka ett år efter avslutad artrosskola.<br><br>'
+        + 'Målet är att minst 80 % av patienterna ska vara fysiskt aktiva 150 aktivitetsminuter eller mer per vecka ett år efter grundbehandling av artros.<br><br>'
         + 'Ungefär fem miljoner dödsfall i världen per år är direkt kopplade till fysisk inaktivitet. '
         + 'Patienter som har artros blir ofta mindre aktiva och därmed ökar risken att de ska drabbas av andra sjukdomar. '
         + 'Socialstyrelsen och Världshälsoorganisationen rekommenderar att vuxna personer är fysiskt aktiva minst 150 minuter per vecka.<br><br>'
@@ -1346,19 +1346,19 @@ Ext.define('Boa.controller.DetailsController', {
         + 'Smärta i BOA-registret mäts med Numeric Rating Scale (NRS) där 0 står för ingen smärta och 10 står för värsta tänkbara smärta. BOA-registret använde fram till och med den 31 december 2015 en Visuell analog skala (VAS) som gick från 0-100 och införde därefter NRS. På grund av byte av mätmetod visas indikatorn endast från och med 2016.</br></br>'
         + 'Indikatorn visar andelen patienter som uppger att de har kliniskt betydelsefullt minskad smärta efter ett år. För att en förändring ska vara betydelsefull för patienten behöver den vara av en viss storlek. Minsta kliniskt betydelsefulla förbättring mätt med NRS är 2.',
       xray: ''
-        + 'Indikatorn visar andelen patienter som är röntgade innan de går artrosskola. Målet som är satt av Socialstyrelsen är att högst 50-70 % av patienterna ska vara röntgade.<br><br>'
+        + 'Indikatorn visar andelen patienter som är röntgade före grundbehandling av artros. Målet som är satt av Socialstyrelsen är att högst 50-70 % av patienterna ska vara röntgade.<br><br>'
         + 'Diagnosen artros ska enligt Socialstyrelsen och internationella riktlinjer ställas kliniskt, det vill säga med hjälp av anamnes (sjukhistoria) och en klinisk undersökning. Endast i oklara fall eller där man överväger remiss till ortoped ska röntgen vara en del av diagnostiseringen. Artrossjukdomen startar ofta 10-15 år innan förändringar syns på röntgen och röntgenfynd korrelerar dåligt med de symtom och besvär patienten har.',
       age: ''
-        + 'Indikatorn visar medelåldern på patienter som börjar artrosskola. Målet är att medelåldern ska vara högst 58 år.<br><br>'
-        + 'Medelåldern på patienter i BOA-registret är hög, runt 66 år. Medelåldern för patienter som får höft- eller knäproteser inopererade är 67-70 år. Artrossjukdomen startar ofta långt innan en protesoperation är aktuell och sannolikt skulle patienterna få bäst effekt av artrosskola vid mycket lägre ålder.',
+        + 'Indikatorn visar medelåldern på patienter som börjar grundbehandling av artros. Målet är att medelåldern ska vara högst 58 år.<br><br>'
+        + 'Medelåldern på patienter i BOA-registret är hög, runt 66 år. Medelåldern för patienter som får höft- eller knäproteser inopererade är 67-70 år. Artrossjukdomen startar ofta långt innan en protesoperation är aktuell och sannolikt skulle patienterna få bäst effekt av grundbehandling av artros vid mycket lägre ålder.',
       'no-prior-medical-joint-help': ''
         + 'Indikatorn visar andelen patienter som kommer direkt till arbetsterapeut eller fysioterapeut. Målet är att minst 15 % av patienterna ska ha kommit till arbetsterapeut eller fysioterapeut direkt.<br><br>'
         + 'Grundbehandling vid artros är information, långvarig träning och vid behov viktreduktion. Enligt gällande riktlinjer ska alla som har artros erbjudas detta och patienterna kan få det hos arbetsterapeuter eller fysioterapeuter. Det krävs ingen remiss för att få tid hos arbetsterapeut eller fysioterapeut och i många regioner tillämpas även fritt vårdval när det gäller rehabilitering. Om fler patienter kom direkt till arbetsterapeut eller fysioterapeut skulle vi sannolikt nå dem tidigare i förloppet och ha större chans att hjälpa dem.',
       'stop-medication': ''
-        + 'Indikatorn visar andelen patienter som slutar med ledrelaterade läkemedel efter artrosskola. Målet är att minst 30 % ska ha slutat med sådana läkemedel.<br><br>'
+        + 'Indikatorn visar andelen patienter som slutar med ledrelaterade läkemedel efter grundbehandling av artros. Målet är att minst 30 % ska ha slutat med sådana läkemedel.<br><br>'
         + 'I många fall räcker information och anpassad fysisk aktivitet för att kontrollera smärtan vid artros. Smärtstillande läkemedel rekommenderas som komplement. I vissa fall krävs smärtstillande läkemedel för att patienten ska kunna fortsätta vara aktiv och få tillräckligt med sömn. Men många läkemedel har biverkningar och framförallt för äldre patienter som kanske även har många andra läkemedel kan biverkningarna orsaka problem. Socialstyrelsens riktlinjer säger att patienter över 75 ska förskrivas NSAID (antiinflammatoriska läkemedel) med försiktighet.',
       'completed-school': ''
-        + 'Indikatorn visar andel patienter som registrerats för ett 3-månadersbesök av de som har ett första besök för respektive år. Målnivån är 80%”'
+        + 'Indikatorn visar andel patienter som registrerats för ett 3-månadersbesök av de som har ett första besök för respektive år. Målnivån är 80%.'
     };
     var elements = document.getElementsByClassName('bsw-indicator-explanation');
 
@@ -1942,7 +1942,6 @@ Ext.define('Boa.view.Comparison', {
       titleMargin: 0,
       minimum: 0,
       maximum: 130,
-      increment: 10,
 
       renderer: function (axis, label) {
         if (label === 30) return '0%';
@@ -2005,11 +2004,12 @@ Ext.define('Boa.view.Comparison', {
       field: 'shortname',
       display: 'insideStart',
       fill: '#183136',
-      width: 300,
       renderer: function (label) {
-        if (label.length > 30) {
-          label = label.substring(0, 30) + '...';
+        if (window.innerWidth > 768) return label;
+        if (label.length > 10) {
+          label = label.substring(0, 10) + '...';
         }
+        
         return label;
       }
     },
@@ -2023,7 +2023,7 @@ Ext.define('Boa.view.Comparison', {
         'almost',
         'good'
       ];
-      var opacity = (sprite.getField() === 'base' ? 0.2 : 0.75);
+      var opacity = (sprite.getField() === 'base' ? 0.1 : 0.75);
       if (!attr.store.data.items[index]) return {};
       var grade = attr.store.data.items[index].get('grade');
       var value = grades.indexOf(grade);
@@ -2068,7 +2068,7 @@ Ext.define('Boa.view.Comparison', {
       id: 'nodatasprite',
       type: 'text',
       text: 'Data saknas eller så finns färre än 10 registreringar (50 för hälsorelaterad livskvalitet)',
-      x: 530,
+      x: 830,
       y: 52
     }
   ],
@@ -2079,29 +2079,31 @@ Ext.define('Boa.view.Comparison', {
   },
 
   updateChart: function (output) {
+    var base = 60;
+    var maxValue = base + 100; 
     if (output.indicator === 'age') {
       this.axes[0].setRenderer(function (axis, label) {
-        if (label === 30) return '0 år';
-        if (label > 30 && label < 130 && ((label - 30) % 20) === 0) return label - 30 + ' år';
-        if (label > 129) return '100 år       ';
+        if (label === base) return '0 år';
+        if (label > base && label < maxValue && ((label - base) % 20) === 0) return label - base + ' år';
+        if (label > (maxValue - 1)) return '100 år       ';
         return '';
       });
     } else {
       this.axes[0].setRenderer(function (axis, label) {
-        if (label === 30) return '0%';
-        if (label > 30 && label < 130 && ((label - 30) % 20) === 0) return label - 30 + '%';
-        if (label > 129) return '100%       ';
+        if (label === base) return '0%';
+        if (label > base && label < (100 + base) && ((label - base) % 20) === 0) return label - base + '%';
+        if (label > (100 + base - 1)) return '100%';
         return '';
       });
     }
 
-    var max = output.indicator === 'age' ? 131 : 130;
-    max = this.axes[0].getMaximum() === 130 ? 131 : 130;
+    var max = output.indicator === 'age' ? maxValue + 1  : maxValue;
+    max = this.axes[0].getMaximum() === maxValue ? maxValue + 1  : maxValue;
 
     var serverdata = output.result;
 
     var data = [];
-    var base = 30;
+    
     var multiplier = output.indicator !== 'age' ? 100 : 1;
     this.getItems().items[7].getItems()[1].hide(); // was 7
     var shortname;
@@ -2110,8 +2112,8 @@ Ext.define('Boa.view.Comparison', {
         this.getItems().items[7].getItems()[1].show(); // was 7
       }
       if (serverdata[i].value !== 'NA' || i === 0) {
-        if (serverdata[i].grupp.length > 25) {
-          shortname = serverdata[i].grupp.substring(0, 25) + '...';
+        if (serverdata[i].grupp.length > 1000) { // qqq 200
+          shortname = serverdata[i].grupp.substring(0, 200) + '...';
         } else {
           shortname = serverdata[i].grupp;
         }
@@ -2126,7 +2128,7 @@ Ext.define('Boa.view.Comparison', {
       }
     }
     this.axes[0].setLimits([{
-      value: (output.target * multiplier) + 30,
+      value: (output.target * multiplier) + base,
       line: {
         strokeStyle: '#009666',
         lineDash: [2, 2],
@@ -2259,12 +2261,12 @@ Ext.define('Boa.view.Details', {
               { IndicatorCode: 'eqindex', IndicatorName: 'Hälsorelaterad livskvalitet' },
               { IndicatorCode: 'pain-nrs', IndicatorName: 'Skattad smärta' },
 
-              { IndicatorCode: 'xray', IndicatorName: 'Andel röntgade innan artrosskola' },
+              { IndicatorCode: 'xray', IndicatorName: 'Andel röntgade före behandling' },
               { IndicatorCode: 'age', IndicatorName: 'Medelålder' },
               { IndicatorCode: 'no-prior-medical-joint-help', IndicatorName: 'Andel som söker direkt' },
 
               { IndicatorCode: 'stop-medication', IndicatorName: 'Slutar med ledrelaterade läkemedel' },
-              { IndicatorCode: 'completed-school', IndicatorName: 'Andel uppföljda efter artrosskola' }
+              { IndicatorCode: 'completed-school', IndicatorName: 'Andel uppföljda efter behandling' }
             ]
           }
         }
@@ -2353,7 +2355,7 @@ Ext.define('Boa.view.Details', {
           uncheckedValue: '0',
           itemId: 'hipCheckbox',
           boxLabel: 'Höft',
-          cls: 'col-md-1 bsw-checkbox',
+          cls: 'col-md-1 col-xs-4 bsw-checkbox',
           listeners: {
             change: 'updateSelection'
           }
@@ -2364,7 +2366,7 @@ Ext.define('Boa.view.Details', {
           value: 1,
           id: 'kneeCheckbox',
           boxLabel: 'Knä',
-          cls: 'col-md-1 bsw-checkbox',
+          cls: 'col-md-1 col-xs-4 bsw-checkbox',
           listeners: {
             change: 'updateSelection'
           }
@@ -2375,7 +2377,7 @@ Ext.define('Boa.view.Details', {
           value: 1,
           id: 'handCheckbox',
           boxLabel: 'Hand',
-          cls: 'col-md-1 bsw-checkbox',
+          cls: 'col-md-1 col-xs-4 bsw-checkbox',
           listeners: {
             change: 'updateSelection'
           }
@@ -4094,3 +4096,24 @@ Ext.application({
     this.redirectTo('overview');
   }
 });
+/*
+Ext.override(Ext.scroll.Scroller, {
+  privates: {
+    restoreState: function () {
+      var me = this,
+        el = me.getScrollElement(),
+        dom;
+      if (el) {
+        dom = el.dom;
+
+        if (me.trackingScrollTop !== undefined) {
+          me.restoring = true;
+          Ext.defer(function () {
+            me.restoring = false;
+          }, 50);
+        }
+      }
+    }
+  }
+});
+*/
