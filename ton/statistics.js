@@ -46,6 +46,50 @@
       + '.indicator-1 .ton-par-legend, .indicator-2 .ton-par-legend, .indicator-3 .ton-par-legend, .indicator-4 .ton-par-legend {'
       + '    visibility: hidden;'
       + '}'
+      
+      +'.triangle {'
+      +' position: relative;'
+      +' margin-top: 2em;'
+      + 'padding-top: 10px; '
+      + 'padding-bottom: 30px; '
+      +' box-sizing: border-box;'
+      +' background: white;'
+      +' box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.25);'
+      + 'overflow: visible;'
+      +'} '
+      +'.triangle::before {'
+      +'   content: "";'
+      +'   position: absolute;'
+      +'   width: 0;'
+      +'   height: 0;'
+      +'   margin-left: -0.5em;'
+      +'   bottom: 280px;'
+      +'   left: 95%;'
+      +'   box-sizing: border-box;'
+      +'   border: 1em solid black;'
+      +'   border-color: transparent transparent white white;'
+      +'   transform-origin: 0 0;'
+      +'   transform: rotate(135deg);'
+      +'   box-shadow: -3px 3px 3px 0 rgba(0, 0, 0, 0.14);'
+      +' }'
+      + '.ton-year-0.triangle::before {'
+      + '  left: 19%;'
+      + '}'
+      + '.ton-year-1.triangle::before {'
+      + '  left: 34%;'
+      + '}'
+      + '.ton-year-2.triangle::before {'
+      + '  left: 49.3%;'
+      + '}'
+      + '.ton-year-3.triangle::before {'
+      + '  left: 64.6%;'
+      + '}'
+      + '.ton-year-4.triangle::before {'
+      + '  left: 79.5%;'
+      + '}'
+      + '.ton-year-5.triangle::before {'
+      + '  left: 95%;'
+      + '}'
       , 'ton-defaults');
   
   
@@ -1361,6 +1405,7 @@
               //console.dir(item);
               //console.dir(series);
               _current.selectedYearIndex = item.index;
+              Ext.query('.triangle')[0].className = 'details-divider triangle ton-year-' + item.index
               selectYear(item.record.data, _current.indicatorName);
               //selectYear(item.record.data.year);
               //doClickYearCallback(item.record.data);
@@ -2245,9 +2290,9 @@
       Ext.util.CSS.removeStyleSheet('ton-charts-details');
       Ext.util.CSS.createStyleSheet(
         '.details-divider { '
-        + '		border-top: solid 2px #e0e0e0; '
-        + '		border-bottom: solid 2px #e0e0e0; '
-        + '		padding-top: 10px; '
+        + '		border-top: solid 0px #e0e0e0; '
+        + '		border-bottom: solid 0px #e0e0e0; '
+        + '		padding-top: 0px; '
         + '		padding-bottom: 10px '
         + '} '
         
@@ -2485,7 +2530,7 @@
           {
             xtype: 'container',
             itemId: 'TrendDetails--',
-            cls: 'details-divider',
+            cls: 'details-divider triangle',
             layout: {
               type: 'vbox',
               align: 'center'
