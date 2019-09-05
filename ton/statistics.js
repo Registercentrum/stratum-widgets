@@ -1137,6 +1137,7 @@
           position: 'left',
           //minimum: 0,
           //maximum: 1,
+          margin:5,
           style: {
             axisLine: false
           },
