@@ -524,7 +524,7 @@ Ext.define('Sesar.controller.Main', {
     }
     chart = view.down('sesar' + tab)
     url   = this.createUrl(type, this.filters)
-    url   = tab === 'comparison' ? url.replace(/&clinic=[0-9]*/, '') : url
+    url   = tab === 'comparison' ? url.replace(/&clinic=[A-z0-9]*/, '') : url
     this.fetchData(chart, url, this.filters.report, controller, tab)
     this.updateProgress(true)
   },
@@ -560,7 +560,7 @@ Ext.define('Sesar.controller.Main', {
     return '/stratum/api/statistics/sesar/sesarw-publicstatistics-' + type + '?startyear=' + filters.start + '&stopyear=' + filters.end + '&indicator=' + filters.report + '&sex=' + filters.sex + '&clinic=' + filters.clinic + '&apikey=KbxAwmlwLM4='
   },
 
-  percentageReports: ['severe_osa', 'mild_osa', 'cardiovascular', 'metabol', 'prespitory', 'psyk', 'cpap_sever_osa', 'apne_mild_osa', 'weight', 'apnetype', 'four'],
+  percentageReports: ['severe_osa', 'mild_osa', 'cardiovascular', 'metabol', 'prespiratory', 'psyk', 'cpap_sever_osa', 'apne_mild_osa', 'weight', 'apnetype', 'four'],
 
   dirtyTabs: {time: true, age: true, comparison: true}
 })
@@ -856,7 +856,7 @@ Ext.application({
   name: 'Sesar',
   units: [],
   launch: function () {
-    var target = (typeof Stratum !== 'undefined' && Stratum.containers) ? Stratum.containers['SESAR/OverviewEval'] : 'contentPanel'
+    var target = (typeof Stratum !== 'undefined' && Stratum.containers) ? Stratum.containers['SESAR/Overview'] : 'contentPanel'
     var main = Ext.create('Sesar.view.Main', {renderTo: target})
     main.getController().tab = 'time'
     main.getController().status = {time: false, age: false, comparison: false}
