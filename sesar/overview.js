@@ -127,12 +127,15 @@ Ext.util.CSS.createStyleSheet(
   //+ '  background: linear-gradient(to bottom, rgba(235, 189, 138, 1), rgba(252, 238, 213, 1)) !important;'
   + '}'
 
-  + ' .sesar-group-label {'
+  + ' .sesar-category {'
   + '     padding-top: 10px;'
   + '     padding-bottom: 6px;'
   + '     border-top: 1px dashed #000;'
-  + '     font-weight: bold;'
+  + '     font-weight: normal;'
   + '     margin-top: 5px;'
+  + '  background-color: #e0e0e0;'
+  + '  color: #606060;'
+  + '  cursor: default;'
   + ' }'
   , 'siber'
 )
@@ -350,7 +353,6 @@ Ext.define('Sesar.chart.AgeGroups', {
           },
           autoHide: true,
           dismissDelay: 0,
-          
           renderer: function(tooltip, record, context) {
             var text = record.get('Clinic_Numerator')
             text = text === 'NA' ? 'För få uppgifter för att visa' : text
@@ -558,7 +560,7 @@ Ext.define('Sesar.controller.Main', {
     return '/stratum/api/statistics/sesar/sesarw-publicstatistics-' + type + '?startyear=' + filters.start + '&stopyear=' + filters.end + '&indicator=' + filters.report + '&sex=' + filters.sex + '&clinic=' + filters.clinic + '&apikey=KbxAwmlwLM4='
   },
 
-  percentageReports: ['severe_osa', 'mild_osa', 'cardiovascular', 'metabol', 'prespiratory', 'psyk', 'cpap_severe_osa', 'apne_mild_osa', 'weight', 'apnetype', 'four'],
+  percentageReports: ['severe_osa', 'mild_osa', 'cardiovascular', 'metabol', 'prespitory', 'psyk', 'cpap_sever_osa', 'apne_mild_osa', 'weight', 'apnetype', 'four'],
 
   dirtyTabs: {time: true, age: true, comparison: true}
 })
@@ -602,16 +604,30 @@ Ext.define('Sesar.view.Main', {
       labelStyle: 'text-align: right;',
       labelWidth: 65,
       value: 'eval',
+      listConfig: {
+        maxHeight: 600
+      },
       listeners: {
-        beforeselect: function () {var disabled = arguments[1].getData().Disabled === true; return !disabled },
+        beforeselect: function () {var disabled = arguments[1].getData().Category === true; return !disabled },
         select: 'updateCharts'
       },
+      tpl: Ext.create('Ext.XTemplate',
+        '<ul class="x-list-plain"><tpl for=".">',
+            '<tpl if="Category">',
+            '<li role="option" class="x-boundlist-item sesar-category">{ValueName}</li>',
+            '<tpl else>',
+            '<li role="option" class="x-boundlist-item">{ValueName}</li>',
+            '</tpl>',
+        '</tpl></ul>'
+    ),
       store: {
         fields: ['ValueCode', 'ValueName'],
         data: [
-          { ValueName: 'Utredning', ValueCode: 'eval', Disabled: true },
+          { ValueName: 'Väntetider', ValueCode: 'Category', Category: true },
+          { ValueName: 'Utredning', ValueCode: 'eval' },
           { ValueName: 'Cpap', ValueCode: 'cpap' },
           { ValueName: 'Skena', ValueCode: 'apne' },
+          { ValueName: 'Undersökning', ValueCode: 'Category', Category: true },
           { ValueName: 'Apnéindex (AHI)', ValueCode: 'ahi' },
           { ValueName: 'Oxygensaturationsindex (ODI)', ValueCode: 'odi' },
           { ValueName: 'Sömnighetskattning (Ess)', ValueCode: 'ess' },
@@ -619,11 +635,13 @@ Ext.define('Sesar.view.Main', {
           { ValueName: 'Andel mild OSA', ValueCode: 'mild_osa' },
           { ValueName: 'Andel CV', ValueCode: 'cardiovascular' },
           { ValueName: 'Andel metabol', ValueCode: 'metabol' },
-          { ValueName: 'Andel respiratorisk', ValueCode: 'prespiratory' },
+          { ValueName: 'Andel respisratorisk', ValueCode: 'prespiratory' },
           { ValueName: 'Andel psyk', ValueCode: 'psyk' },
-          { ValueName: 'Andel cpap vid svårt OSA', ValueCode: 'cpap_severe_osa' },
+          { ValueName: 'Behandling', ValueCode: 'Category', Category: true },
+          { ValueName: 'Andel cpap vid svårt OSA', ValueCode: 'cpap_sever_osa' },
           { ValueName: 'Andel skena vid mild OSA', ValueCode: 'apne_mild_osa' },
           { ValueName: 'Andel viktreduktion vid övervikt', ValueCode: 'weight' },
+          { ValueName: 'Resultat', ValueCode: 'Category', Category: true },
           { ValueName: 'Mandibulär framskjutning', ValueCode: 'mandfix' },
           { ValueName: 'Andel apnébettskenor av typen bitblock', ValueCode: 'apnetype' },
           { ValueName: 'Reduktion ESS (Patienter med CPAP)', ValueCode: 'ESSchange_CPAP' },
@@ -830,8 +848,7 @@ Ext.define('Sesar.view.Main', {
     margin: 10,
     maxHeight: 5,
     cls: 'sesar-progressbar'
-  },
-  
+  }
   ]
 })
 
@@ -839,7 +856,7 @@ Ext.application({
   name: 'Sesar',
   units: [],
   launch: function () {
-    var target = (typeof Stratum !== 'undefined' && Stratum.containers) ? Stratum.containers['SESAR/Overview'] : 'contentPanel'
+    var target = (typeof Stratum !== 'undefined' && Stratum.containers) ? Stratum.containers['SESAR/OverviewEval'] : 'contentPanel'
     var main = Ext.create('Sesar.view.Main', {renderTo: target})
     main.getController().tab = 'time'
     main.getController().status = {time: false, age: false, comparison: false}
