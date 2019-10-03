@@ -101,8 +101,8 @@ Ext.util.CSS.createStyleSheet(
   + '}'
   
   + '.sesar-tooltip-orange {'
-  + '  background-color: #E9724C;'
-  + '  border-color: #E9724C;'
+  + '  background-color: #DD4C39;'
+  + '  border-color: #DD4C39;'
   + '}'
 
   + '.sesar-tooltip-blue {'
@@ -149,14 +149,14 @@ Ext.define('Sesar.chart.Time', {
      //colors: ['#E16E28', '#40CADA'],
      //colors: ['#E16E28', '#0791AB'],
      //colors: ['#DC6910', '#0ba1af'],
-     
+     padding: '10 0 0 0',
+     insetPadding: '0 35 20 10',
      innerPadding: {
       top: 10,
       left: 10,
       right: 10,
       bottom: 10
      },
-     insetPadding: '20 35 20 30',
      cls: 'sesar-timechart',
      legend: {
        type: 'dom'
@@ -167,6 +167,10 @@ Ext.define('Sesar.chart.Time', {
      },
      axes: [{
        type: 'numeric',
+       title: {
+         text: '',
+       },
+       titleMargin: 20,
        position: 'left',
        fields: ['Clinic_Mean', 'State_Mean'],
        style: {
@@ -281,12 +285,14 @@ Ext.define('Sesar.chart.AgeGroups', {
   border: false,
      colors: ['#E388BE', '#83D6F5'],
      colors: ['#DD4C39', '#0791AB'],
+     
      innerPadding: {
       top: 10,
-      left: 10,
+      //left: 10,
       right: 10,
       bottom: 10
      },
+     
      insetPadding: '20 35 20 30',
      cls: 'sesar-timechart',
      legend: {
@@ -299,7 +305,7 @@ Ext.define('Sesar.chart.AgeGroups', {
      axes: [{
        type: 'numeric',
        position: 'left',
-       fields: ['Clinic_Mean'],
+       //fields: ['Clinic_Mean', 'State_Mean'],
        style: {
          strokeStyle: '#9aa8bc',
          axisLine: false
@@ -347,15 +353,22 @@ Ext.define('Sesar.chart.AgeGroups', {
           maxBarWidth: 40
         },
         tooltip: {
+          /*
           style: {
             backgroundColor: '#DD4C39',
             borderColor: '#DD4C39',
-          },
-          autoHide: true,
-          dismissDelay: 0,
+          },*/
+          //autoHide: true,
+          //dismissDelay: 0,
           renderer: function(tooltip, record, context) {
-            var text = record.get('Clinic_Numerator')
+            var field = context.field.replace(/_[A-z]*/,'')
+            var text = record.get(field + '_Numerator')
             text = text === 'NA' ? 'För få uppgifter för att visa' : text
+            if(field==='State'){
+              tooltip.setUserCls('sesar-tooltip-blue')
+            } else {
+              tooltip.setUserCls('sesar-tooltip-orange')
+            }
             return tooltip.setHtml('Antal: ' + text)
           }
         }
@@ -372,12 +385,12 @@ Ext.define('Sesar.chart.Comparison', {
   // height: 345,
   callout: 'none',
   innerPadding: {
-    top: 10,
+    top: 0,
     left: 10,
-    right: 30,
-    bottom: 10
+    right: 40,
+    bottom: 0
   },
-  // insetPadding: '20 35 20 0',
+  insetPadding: '20 5 20 0',
   cls: 'sesar-timechart',
   border: false,
   store: {
@@ -463,8 +476,8 @@ Ext.define('Sesar.chart.Comparison', {
           }
         },
         tooltip: {
-          autoHide: true,
-          dismissDelay: 0,
+          //autoHide: true,
+          //dismissDelay: 0,
           renderer: function(tooltip, record, context) {
             tooltip.setHtml('Antal: ' + record.get('Denominator'))
             if(record && record.data.UnitName === this.getChart().up('#mainView').getController().filters.clinicName){
@@ -548,8 +561,10 @@ Ext.define('Sesar.controller.Main', {
       success: function (response) {
         var result = Ext.decode(response.responseText).data
         chart.usePercentages = Ext.Array.contains(controller.percentageReports, report)
-        chart.precision = report === 'ess' || report === 'cardiovascular' || report === 'metabol' ? 1 : 0
-        chart.precision = report === 'weight' ? 2 : chart.precision
+        chart.precision = controller.precision[report] || 0
+        widgetConfig[report] && chart.setCaptions(Ext.Object.merge(controller.captions, widgetConfig[report]))
+        !widgetConfig[report] && chart.setCaptions(Ext.Object.merge(controller.captions, controller.defaultTexts))
+        chart.getAxes()[0].setTitle({text: controller.axisTitles[report] || 'andel', strokeStyle: 'darkslategrey', lineWidth: 1, globalAlpha: 0.4}) 
         chart.getStore().loadData(result)
         controller.status[tab] = true
       }
@@ -559,8 +574,80 @@ Ext.define('Sesar.controller.Main', {
   createUrl: function (type, filters) {
     return '/stratum/api/statistics/sesar/sesarw-publicstatistics-' + type + '?startyear=' + filters.start + '&stopyear=' + filters.end + '&indicator=' + filters.report + '&sex=' + filters.sex + '&clinic=' + filters.clinic + '&apikey=KbxAwmlwLM4='
   },
+  defaultTexts :{
+    header: {
+      text: ' '
+    },
+    subheader: {
+      text: ' '
+    },
+    about: {
+      text: ' '
+    }
+  },
 
-  percentageReports: ['severe_osa', 'mild_osa', 'cardiovascular', 'metabol', 'prespiratory', 'psyk', 'cpap_sever_osa', 'apne_mild_osa', 'weight', 'apnetype', 'four'],
+  captions: {
+       header: {
+         text: ' ',
+         docked: 'top',
+         align: 'center',
+         style: {
+            fontSize: 18,
+            fontWeight: 'normal',
+            fontFamily: 'open_sans',
+            color: 'darkslategrey'
+        }
+       },
+       subheader: {
+         text: ' ',
+         docked: 'top',
+         align: 'center',
+         style: {
+            fontSize: 18,
+            fontWeight: 'normal',
+            fontFamily: 'open_sans',
+            color: 'darkslategrey'
+        }
+       },
+       about: {
+         text: ' ',
+         docked: 'bottom',
+         align: 'center',
+         style: {
+            fontSize: 12,
+            fontWeight: 'lighter',
+            fontFamily: 'open_sans',
+            color: 'darkslategrey'
+        }
+       },
+     },
+
+  axisTitles: {
+    eval: 'dagar',
+    cpap: 'dagar',
+    apne: 'dagar',
+    ahi: 'index',
+    odi: 'index',
+    ess: 'index',
+    mandfix: 'mm',
+    apnetype: 'förändring',
+    ESSchange_CPAP: 'förändring',
+    ESSchange_apne: 'förändring'
+  },
+
+  precision: {
+    ahi: 1,
+    odi: 1,
+    ess: 1,
+    madfix: 1,
+    cardiovascular: 1,
+    metabol: 1,
+    weight: 2,
+    ESSchange_CPAP: 1,
+    ESSchange_apne: 1
+  },
+
+  percentageReports: ['severe_osa', 'mild_osa', 'cardiovascular', 'metabol', 'prespiratory', 'psyk', 'cpap_severe_osa', 'apne_mild_osa', 'weight', 'apnetype', 'four'],
 
   dirtyTabs: {time: true, age: true, comparison: true}
 })
@@ -626,27 +713,27 @@ Ext.define('Sesar.view.Main', {
           { ValueName: 'Väntetider', ValueCode: 'Category', Category: true },
           { ValueName: 'Utredning', ValueCode: 'eval' },
           { ValueName: 'Cpap', ValueCode: 'cpap' },
-          { ValueName: 'Skena', ValueCode: 'apne' },
-          { ValueName: 'Undersökning', ValueCode: 'Category', Category: true },
+          { ValueName: 'Apnébettskena', ValueCode: 'apne' },
+          { ValueName: 'Svårighetsgrad och samsjuklighet', ValueCode: 'Category', Category: true },
           { ValueName: 'Apnéindex (AHI)', ValueCode: 'ahi' },
           { ValueName: 'Oxygensaturationsindex (ODI)', ValueCode: 'odi' },
-          { ValueName: 'Sömnighetskattning (Ess)', ValueCode: 'ess' },
-          { ValueName: 'Andel svår OSA', ValueCode: 'severe_osa' },
-          { ValueName: 'Andel mild OSA', ValueCode: 'mild_osa' },
-          { ValueName: 'Andel CV', ValueCode: 'cardiovascular' },
-          { ValueName: 'Andel metabol', ValueCode: 'metabol' },
-          { ValueName: 'Andel respisratorisk', ValueCode: 'prespiratory' },
-          { ValueName: 'Andel psyk', ValueCode: 'psyk' },
+          { ValueName: 'Sömnighetskattning (ESS)', ValueCode: 'ess' },
+          { ValueName: 'Svår OSA', ValueCode: 'severe_osa' },
+          { ValueName: 'Mild OSA', ValueCode: 'mild_osa' },
+          { ValueName: 'Kardiovaskulär sjukdom', ValueCode: 'cardiovascular' },
+          { ValueName: 'Metabol sjukdom', ValueCode: 'metabol' },
+          { ValueName: 'Respisratorisk sjukdom', ValueCode: 'prespiratory' },
+          { ValueName: 'Psykisk sjukdom', ValueCode: 'psyk' },
           { ValueName: 'Behandling', ValueCode: 'Category', Category: true },
-          { ValueName: 'Andel cpap vid svårt OSA', ValueCode: 'cpap_sever_osa' },
-          { ValueName: 'Andel skena vid mild OSA', ValueCode: 'apne_mild_osa' },
-          { ValueName: 'Andel viktreduktion vid övervikt', ValueCode: 'weight' },
+          { ValueName: 'Cpap vid svårt OSA', ValueCode: 'cpap_severe_osa' },
+          { ValueName: 'Apnébettskena vid mild OSA', ValueCode: 'apne_mild_osa' },
+          { ValueName: 'Viktreduktion vid övervikt', ValueCode: 'weight' },
           { ValueName: 'Resultat', ValueCode: 'Category', Category: true },
           { ValueName: 'Mandibulär framskjutning', ValueCode: 'mandfix' },
-          { ValueName: 'Andel apnébettskenor av typen bitblock', ValueCode: 'apnetype' },
-          { ValueName: 'Reduktion ESS (Patienter med CPAP)', ValueCode: 'ESSchange_CPAP' },
-          { ValueName: 'Reduktion ESS (Patienter med apnébettskena)', ValueCode: 'ESSchange_apne' },
-          { ValueName: 'Andel patienter som använder CPAP-maskinen mer än 4h', ValueCode: 'four' },
+          { ValueName: 'Apnébettskenor - bitblock', ValueCode: 'apnetype' },
+          { ValueName: 'Reduktion ESS med CPAP', ValueCode: 'ESSchange_CPAP' },
+          { ValueName: 'Reduktion ESS med apnébettskena', ValueCode: 'ESSchange_apne' },
+          { ValueName: 'CPAP-användning mer än 4h', ValueCode: 'four' },
         ],
         /*
         sorters: {
@@ -821,7 +908,7 @@ Ext.define('Sesar.view.Main', {
        iconCls: 'sesar-icon x-fa fa-child',
       title: Ext.is.Phone ? '' : 'Åldersgrupper',
       tabConfig: {
-        width: 182
+        width: Ext.is.Phone ? 42 : 182
       },
       height: 400,
       listeners: {
