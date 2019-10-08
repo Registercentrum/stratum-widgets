@@ -1,4 +1,3 @@
-
 var skeletonWidget = function (current, callback, loadonly, inFreeMode) {
 	
 	var RINGSKADA_TEXT = 'Ringskada';
@@ -112,7 +111,9 @@ var skeletonWidget = function (current, callback, loadonly, inFreeMode) {
 			handHandler(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
 		}
 		else {
-			generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
+			
+			handleConcensus(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
+			//generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
 		}
 	}
 
@@ -6494,6 +6495,26 @@ var skeletonWidget = function (current, callback, loadonly, inFreeMode) {
 		return aPictureID == '100' || aPictureID == '100b' || aPictureID == '101' || aPictureID == '102' || aPictureID == '102B' || aPictureID == '103' || aPictureID == '100-C0' || aPictureID == '100-C1' || aPictureID == '100-C2';
 	}
 
+	function handleConcensus(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName){
+			var prefix=getFractureClassificationName(aPictureID);
+			var fxClass=prefix + '-' + aPictureID + '-' +aAO;
+			if(Repository.Local.Methods.Consensus.isActive(fxClass)){
+				Ext.MessageBox.show({
+					title: 'Bekräfta',
+					msg: Repository.Local.Methods.Consensus.getConfirmText(fxClass),
+					buttons: Ext.Msg.OKCANCEL,
+					icon: Ext.MessageBox.INFO,
+					fn: function (c) {
+						if (c === 'ok') {
+							generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
+						}						
+					}
+				});
+			}else {
+				generate_ICD_AO_SubFracturePanels(aParentID, aSide, aPictureID, aAO, aWindow, aNoClassification, aUseHandAO, aPanelName);
+			}
+	}
+
 	function addCrossBorderTitleInfo(aForm) {
 		if (aForm.isCrossBorder && !Ext.isEmpty(aForm.unitName)) {
 			if (aForm.isReduced === true) {
@@ -6524,7 +6545,7 @@ var skeletonWidget = function (current, callback, loadonly, inFreeMode) {
 
 		window.scrollTo(0, y);
 	}
-
+ 
 	function initialize(loadonly) {
 		if (typeof sfrDomainValues !== 'undefined' && !loadonly) {
 
@@ -6870,3 +6891,4 @@ Ext.util.CSS.createStyleSheet(''
 
 if (typeof g_inFreeMode !== 'undefined') 
 	skeletonWidget(null, null, null, g_inFreeMode); 
+//# sourceURL=SFR/Skeleton
