@@ -237,7 +237,7 @@ Ext.define('Shpr.controller.Spider', {
 
   updateCharts: function () {
     var controller = this
-    var view    = this.getView()
+    var view = this.getView()
     var spiderchart   = view.down('polar')
     var timechart   = view.down('shprtime')
     var missingData   = view.down('#missingData')
@@ -245,7 +245,7 @@ Ext.define('Shpr.controller.Spider', {
     var indicator = view.down('#indicatorFilter').getValue()
     var spiderurl = controller.createUrl(view, 'compass')
     var timeurl = controller.createTimeUrl(view, indicator)
-
+    
     controller.requests +=1 
     view.down('#timeSpinner').show()
     controller.disableInvalidFilters(view)
@@ -265,9 +265,11 @@ Ext.define('Shpr.controller.Spider', {
           missingData.hide()
           spiderchart.show()
           casemixchart.show()
+          // spiderchart.setSprites([])
           spiderchart.getStore().loadData(result.compass)
           casemixchart.getStore().loadData(result.case_mix)
           controller.updateLegend(view)
+          if(!spiderchart.sprites)Ext.defer(function () {spiderchart.setSprites(controller.sprites)}, 500)
         } else {
           missingData.show()
           spiderchart.hide()
@@ -319,6 +321,11 @@ Ext.define('Shpr.controller.Spider', {
     })
   },
 
+  message: function (indicator) {
+    this.getView().up().up().down('#indicatorFilter').setValue(indicator)
+    this.updateCharts.apply(this.getView().up().up().getController())
+  },
+
   findMinimum: function (data) {
     var findMinimumUnitValue = (min, current) => current.y_unit < min ? current.y_unit : min
     var findMinimumComparisionValue = (min, current) => current.y_comparison < min ? current.y_comparison : min
@@ -344,8 +351,12 @@ Ext.define('Shpr.controller.Spider', {
   },
 
   filterUnits: function(item) {
+    var view = this.getView()
+    if(this.getView().itemId!== 'spider') {
+      view = this.getView().up('#spider')
+    }
     var include = false
-    var diagnosis = this.getView().down('#diagnosisFilter').getValue()
+    var diagnosis = view.down('#diagnosisFilter').getValue()
     return (diagnosis === 1 && item.data.Arthritis) || (diagnosis === 3 && item.data.Fracture)
   },
 
@@ -386,8 +397,7 @@ Ext.define('Shpr.controller.Spider', {
   },
 
 
-  enableAllFilters: function () {
-    var view = this.getView()
+  enableAllFilters: function (view) {
     view.down('#commonPatient').enable()
     view.down('#sexFilter').enable()
     view.down('#fixationFilter').enable()
@@ -397,9 +407,8 @@ Ext.define('Shpr.controller.Spider', {
     view.down('#charnleyFilter').enable()
   },
 
-  disableInvalidFilters: function () {
-    var view = this.getView()
-    this.enableAllFilters()
+  disableInvalidFilters: function (view) {
+    this.enableAllFilters(view)
     var indicator = view.down('#indicatorFilter').getValue()
     switch (indicator) {
       case 'rev10yrs':
@@ -432,10 +441,11 @@ Ext.define('Shpr.controller.Spider', {
       paingain: '                                  Minskad smärta\n                                    efter 1 år',
       eqvasgain: '                              EQ-VAS vinst\n                            efter 1 år',
       surv1yr: 'Implantatöverlevnad                            \n             efter 1 år                                    ',
-      surv5yrs: 'Implantatöverlevnad                        \n             efter 5 år                                    ',
+      surv5yrs:  'Implantatöverlevnad                            \n              efter 5 år                                    ',
       surv10yrs: 'Implantatöverlevnad                            \n              efter 10 år                                   ',
       coverage: 'Täckningsgrad',
       prop_reop: 'Reoperation                  \ninom 2 år               ',
+      prop_reop6m: 'Reoperation                  \ninom 6 månader               ',
       adverse_events: '                                           Oönskade händelser \n                                          inom 90 dagar',
       mort90days: '                        Mortalitet \n                        90 dagar'
     }
@@ -673,10 +683,13 @@ Ext.define('Shpr.view.Main', {
     },
     {
       xtype: 'polar',
+      controller: 'spider',
       width: Ext.is.Phone ? '100%' : '60%',
       height: 400,
+      plugins: {
+                spriteevents: true
+            },
       border: false,
-      
       insetPadding: {
         left: 0,
         right: 0,
@@ -693,9 +706,43 @@ Ext.define('Shpr.view.Main', {
       legend: {
         type: 'dom'
       },
+      /*
+      sprites: [
+      {
+        type: 'text',
+        // text: 'Implantatöverlevnad',
+        // text: 'Implantatöverlevnad                            \n              efter 10 år                                   ',
+        text: '', 
+        x: 210,
+        y: 65,
+        value: 1
+      }],
+      */
       listeners: {
+        /*
+          redraw: function () {
+            var func = this.getController().message.bind(this) 
+             Ext.defer(func, 500)
+          },*/
          spriteclick: function (item, event) {
              var sprite = item && item.sprite;
+             this.getController().message(sprite.value)
+         },
+         spritemouseover: function(item, event) {
+             var sprite = item && item.sprite
+             if(sprite.value){
+               sprite.setAttributes({fillStyle: 'rgba(0,0,0,1)'})
+               sprite.repaint()
+             }
+             
+         },
+         spritemouseout: function(item, event) {
+             var sprite = item && item.sprite
+             if(sprite.value){
+               sprite.setAttributes({fillStyle: 'rgba(0,0,0,0.01)'})
+               sprite.repaint()
+             }
+             
          }
      },
       
@@ -796,7 +843,8 @@ Ext.define('Shpr.view.Main', {
               { ValueName: 'EQ-VAS vinst efter 1 år',          ValueCode: 'eqvasgain',      Arthritis: true,  Fracture: false},
               { ValueName: 'Oönskade händelser inom 90 dagar', ValueCode: 'adverse_events', Arthritis: true,  Fracture: true},
               { ValueName: 'Täckningsgrad',                    ValueCode: 'coverage',       Arthritis: true,  Fracture: true},
-              { ValueName: 'Reoperation inom 2 år',            ValueCode: 'reop2yrs',       Arthritis: true,  Fracture: true},
+              { ValueName: 'Reoperation inom 2 år',            ValueCode: 'reop2yrs',       Arthritis: true,  Fracture: false},
+              { ValueName: 'Reoperation inom 6 månader',       ValueCode: 'reop6m',         Arthritis: false, Fracture: true},
               { ValueName: 'Implantatöverlevnad efter 5 år',   ValueCode: 'rev5yrs',        Arthritis: true,  Fracture: false},
               { ValueName: 'Implantatöverlevnad efter 10 år',  ValueCode: 'rev10yrs',       Arthritis: true,  Fracture: false},
               { ValueName: 'Mortalitet 90 dagar',              ValueCode: 'mort90',         Arthritis: false, Fracture: true},
@@ -1064,6 +1112,10 @@ Ext.application({
     controller.apikey = 'MpuYxfbtp5I='
     controller.requests = 0
     controller.ajaxrequests = []
+    controller.sprites = [
+      {type: 'text', value: 'rev10yrs', text: '______________                            \n         ______                                   ', x: 110, y: 76, fontSize: 16, zIndex: 100, fillStyle: 'rgba(0,0,0,0.01)'},
+      {type: 'text', value: 'rev5yrs',  text: '______________                            \n         ______                                   ', x: 65, y: 190, fontSize: 16, zIndex: 100, fillStyle: 'rgba(0,0,0,0.01)'}
+    ]
     controller.updateCharts()
   },
 });
@@ -1071,6 +1123,10 @@ Ext.application({
 Ext.util.CSS.removeStyleSheet('shpr');
 Ext.util.CSS.createStyleSheet(
   ' '
+  + '.foo {'
+  + '  background-color: red;'
+  + '}'
+  
   + '.numRatingsAxis {'
   + '  white-space: normal;'
   + '  width: 200px;'
