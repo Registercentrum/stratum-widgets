@@ -98,7 +98,8 @@ var SfrSearchList = function () {
       ['Hämta där primär behandling saknas men Re-operation/Operation i sent skede finns', '7'],
       ['Hämta där Icke-kirurgisk behandling saknas men Operation efter icke-kirurgi övergivits finns', '8'],
       ['Hämta där Operation efter icke-kirurgi övergivits saknas men Icke-kirurgisk behandling tillsammans med Planerat följdingrepp finns', '9'],
-      ['Hämta där patient vid PROM-ifyllande angett att denne reoperats men där endast primäroperationer finns registrerade', '10']
+      ['Hämta där patient vid PROM-ifyllande angett att denne reoperats men där endast primäroperationer finns registrerade', '10'],
+      ['Hämta där registrering är överförd från SHPR', '11']
     ];
     
     var fractureTreatStore = Ext.create('Ext.data.ArrayStore', {
