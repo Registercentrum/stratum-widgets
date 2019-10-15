@@ -540,6 +540,7 @@ Ext.define('Sesar.controller.Main', {
     chart = view.down('sesar' + tab)
     url = this.createUrl(type, this.filters)
     url = tab === 'comparison' ? url.replace(/&clinic=[A-z0-9]*/, '') : url
+    tab === 'comparison' && chart.setHeight(400) && chart.getStore().loadData({})
     this.fetchData(chart, url, this.filters.report, controller, tab)
     this.updateProgress(true)
   },
@@ -568,7 +569,8 @@ Ext.define('Sesar.controller.Main', {
         captions.subheader.text = config.subcaption
         chart.usePercentages = config.percentage
         chart.precision = config.precision || 0
-        chart.setCaptions(Ext.Object.merge(controller.captions, captions))
+        chart.setCaptions(Ext.Object.merge({},controller.captions, captions))
+        tab === 'comparison' && chart.setHeight(result.length*25+50)
         // widgetConfig[report] && chart.setCaptions(Ext.Object.merge(controller.captions, widgetConfig[report]))
         // !widgetConfig[report] && chart.setCaptions(Ext.Object.merge(controller.captions, controller.defaultTexts))
         // chart.getAxes()[0].setTitle({text: controller.axisTitles[report] || 'andel', strokeStyle: 'darkslategrey', lineWidth: 1, globalAlpha: 0.4}) 
@@ -610,7 +612,7 @@ Ext.define('Sesar.controller.Main', {
       docked: 'top',
       align: 'center',
       style: {
-        fontSize: 14,
+        fontSize: 18,
         fontWeight: 'normal',
         fontFamily: 'open_sans',
         color: 'darkslategrey'
@@ -635,21 +637,21 @@ Ext.define('Sesar.controller.Main', {
     apne: { caption: 'Väntetider från diagnos till terapistart apnébettskena', subcaption: 'medelvärde antal dagar', axis: 'dagar', precision: 0, percentage: false },
     ahi: { caption: 'Genomsnittligt AHI vid utredningsbesök', subcaption: '.', axis: 'index', precision: 1, percentage: false },
     odi: { caption: 'Genomsnittligt ODI vid utredningsbesök', subcaption: '.', axis: 'index', precision: 1, percentage: false },
-    ess: { caption: 'ESS (självskattad dagsömninghet) vid utredningsbesök', subcaption: '.', axis: 'index', precision: 1, percentage: false },
-    severe_osa: { caption: 'Andel patienter med svår OSA vid utredningsbesök', subcaption: '.', axis: 'andel', precision: 0, percentage: true },
-    mild_osa: { caption: 'Andel patienter med mild OSA vid utredningsbesök', subcaption: '.', axis: 'andel', precision: 0, percentage: true },
-    cardiovascular: { caption: 'Andel patienter med kardiovaskulär sjukdom vid utredningsbesök', subcaption: '.', axis: 'andel', precision: 0, percentage: true },
-    metabol: { caption: 'Andel patienter med metabol sjukdom vid utredningsbesök', subcaption: '.', axis: 'andel', precision: 1, percentage: true },
-    prespiratory: { caption: 'Andel patienter med respiratorisk sjukdom vid utredningsbesök', subcaption: '.', axis: 'andel', precision: 1, percentage: true },
-    psyk: { caption: 'Andel patienter med psykisk sjukdom vid utredningsbesök', subcaption: '.', axis: 'andel', precision: 0, percentage: true },
-    cpap_severe_osa: { caption: 'Andel patienter som rekommenderats CPAP vid svår OSA (AHI>=30)', subcaption: '.', axis: 'andel', precision: 0, percentage: true },
-    apne_mild_osa: { caption: 'Andel patienter som rekommenderats apnébettskena vid mild OSA (AHI 5 - <15)', subcaption: '.', axis: 'andel', precision: 0, percentage: true },
-    weight: { caption: 'Andel patienter som rekommenderats aktiv överviktsbehandling vid BMI = 30', subcaption: '.', axis: 'andel', precision: 0, percentage: true },
+    ess: { caption: 'ESS (självskattad dagsömninghet)', subcaption: 'vid utredningsbesök', axis: 'index', precision: 1, percentage: false },
+    severe_osa: { caption: 'Andel patienter med svår OSA', subcaption: 'vid utredningsbesök', axis: 'andel', precision: 0, percentage: true },
+    mild_osa: { caption: 'Andel patienter med mild OSA', subcaption: 'vid utredningsbesök', axis: 'andel', precision: 0, percentage: true },
+    cardiovascular: { caption: 'Andel patienter med kardiovaskulär', subcaption: 'sjukdom vid utredningsbesök', axis: 'andel', precision: 0, percentage: true },
+    metabol: { caption: 'Andel patienter med metabol sjukdom ', subcaption: 'vid utredningsbesök', axis: 'andel', precision: 1, percentage: true },
+    prespiratory: { caption: 'Andel patienter med respiratorisk', subcaption: 'sjukdom vid utredningsbesök', axis: 'andel', precision: 1, percentage: true },
+    psyk: { caption: 'Andel patienter med psykisk', subcaption: 'sjukdom vid utredningsbesök', axis: 'andel', precision: 0, percentage: true },
+    cpap_severe_osa: { caption: 'Andel patienter som rekommenderats', subcaption: 'CPAP vid svår OSA (AHI>=30)', axis: 'andel', precision: 0, percentage: true },
+    apne_mild_osa: { caption: 'Andel patienter som rekommenderats', subcaption: 'apnébettskena vid mild OSA (AHI 5 - <15)', axis: 'andel', precision: 0, percentage: true },
+    weight: { caption: 'Andel patienter som rekommenderats', subcaption: 'aktiv överviktsbehandling vid BMI = 30', axis: 'andel', precision: 0, percentage: true },
     mandfix: { caption: 'Mandibulär framdragning apnébettskena', subcaption: 'medelvärde (mm)', axis: 'mm', precision: 1, percentage: false },
-    apnetype: { caption: 'Andel av apnébettskenor som är bitblock', subcaption: '.', axis: 'förändring', precision: 0, percentage: true },
-    ESSchange_CPAP: { caption: 'Genomsnittlig förändring av ESS för patienter behandlade med CPAP', subcaption: '.', axis: 'förändring', precision: 1, percentage: false },
-    ESSchange_apne: { caption: 'Genomsnittlig förändring av ESS för patienter behandlade med apnébettskena', subcaption: '.', axis: 'förändring', precision: 1, percentage: false },
-    four: { caption: 'Andel med CPAP som använder den mer än fyra timmar per natt', subcaption: '.', axis: 'andel', precision: 0, percentage: true }
+    apnetype: { caption: 'Andel av apnébettskenor', subcaption: 'som är bitblock', axis: 'förändring', precision: 0, percentage: true },
+    ESSchange_CPAP: { caption: 'Genomsnittlig förändring av ESS för', subcaption: 'patienter behandlade med CPAP', axis: 'förändring', precision: 1, percentage: false },
+    ESSchange_apne: { caption: 'Genomsnittlig förändring av ESS för', subcaption: 'patienter behandlade med apnébettskena', axis: 'förändring', precision: 1, percentage: false },
+    four: { caption: 'Andel med CPAP som använder den', subcaption: 'mer än fyra timmar per natt', axis: 'andel', precision: 0, percentage: true }
   },
 
   dirtyTabs: { time: true, age: true, comparison: true }
@@ -952,7 +954,7 @@ Ext.application({
   name: 'Sesar',
   units: [],
   launch: function () {
-    var target = (typeof Stratum !== 'undefined' && Stratum.containers) ? Stratum.containers['SESAR/OverviewEval'] : 'contentPanel'
+    var target = (typeof Stratum !== 'undefined' && Stratum.containers) ? Stratum.containers['SESAR/Overview'] : 'contentPanel'
     var main = Ext.create('Sesar.view.Main', { renderTo: target })
     main.getController().tab = 'time'
     main.getController().status = { time: false, age: false, comparison: false }
