@@ -77,7 +77,7 @@
                 loadWidget("ConfiguratorToolDefault", "RC.ConfiguratorTool.view.DefaultView");
             },
             forms: function() {
-                loadWidget("ConfiguratorToolForms", "RC.ConfiguratorTool.view.FormsView");
+                loadWidget("ConfiguratorToolForms", "RC.ConfiguratorTool.view.FormsAdministrationView");
             },
             editForm: function(formId) {
                 console.log("Edit form route was called for form id: " + formId);
