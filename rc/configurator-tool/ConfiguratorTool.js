@@ -35,23 +35,31 @@
 
     }
 
-    function loadWidget(widgetName, componentName) {
+    function loadWidget(widgetName, successCallback, errorCallback) {
         Ext.Loader.loadScript({
             url: "/stratum/api/widgets/rc/" + widgetName,
             onLoad: function() {
                 try {
-                    var view = Ext.create(componentName);
-                    if(CURRENT_VIEW) {
-                        MAIN_VIEW.remove(CURRENT_VIEW, true);
+                    if(successCallback) {
+                        successCallback();
                     }
-                    MAIN_VIEW.add(view);
-                    CURRENT_VIEW = view;
                 } catch (error) {
                     console.error("An error occurred:");
                     console.error(error);
+                    if(errorCallback) {
+                        errorCallback(error);
+                    }
                 }
             }
         });        
+    }
+
+    function loadView(view) {
+        if(CURRENT_VIEW) {
+            MAIN_VIEW.remove(CURRENT_VIEW, true);
+        }
+        MAIN_VIEW.add(view);
+        CURRENT_VIEW = view;
     }
 
     function defineMainController() {
@@ -74,13 +82,23 @@
                 "editform/:formId": "editForm"
             },
             default: function() {
-                loadWidget("ConfiguratorToolDefault", "RC.ConfiguratorTool.view.DefaultView");
+                loadWidget("ConfiguratorToolDefault", function() {
+                    var view = Ext.create("RC.ConfiguratorTool.view.DefaultView");
+                    loadView(view);
+                });
             },
             forms: function() {
-                loadWidget("ConfiguratorToolForms", "RC.ConfiguratorTool.view.FormsAdministrationView");
+                loadWidget("ConfiguratorToolForms", function() {
+                    var view = Ext.create("RC.ConfiguratorTool.view.FormsAdministrationView");
+                    loadView(view);
+                });
             },
             editForm: function(formId) {
-                console.log("Edit form route was called for form id: " + formId);
+                loadWidget("ConfiguratorToolFormDetails", function() {
+                    ConfiguratorToolFormDetails.init(formId);
+                    var view = ConfiguratorToolFormDetails.getView();
+                    loadView(view);
+                });
             },
             domains: function() {
                 console.log("Nu redigerar vi domäner!");

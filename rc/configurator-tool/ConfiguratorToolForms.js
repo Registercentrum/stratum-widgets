@@ -2,6 +2,8 @@
 (function() {
     "use strict";
 
+    var SELECTED_ITEM = null;
+
     function getStore() {
 
         var store = Ext.create("Ext.data.Store", {
@@ -11,14 +13,14 @@
             autoLoad: true,
             proxy: {
                 type: "rest",
-                url: "/stratum/api/metadata/forms/register/" + Repository.PortalSiteID, // registerId
+                url: "/stratum/api/metadata/forms/register/" + Profile.Context.Unit.Register.RegisterID,
                 reader: "compactjson",
                 writer: "compactjson"
             }
         });
         
         return store;
-    };
+    }
 
     function defineController() {
         Ext.define("RC.ConfiguratorTool.controller.FormsAdministrationController", {
@@ -29,12 +31,15 @@
                 var removeButton = this.getView().down("#removeButton");
                 editButton.setDisabled(!event.selected.length);
                 removeButton.setDisabled(!event.selected.length);
+                if(event.selected.length > 0) {
+                    SELECTED_ITEM = event.selected.items[0];
+                }
             },
             onNew: function(event, record, index, options) {
                 console.log("New button was clicked");
             },
             onEdit: function(event, record, index, options) {
-                console.log("Edit button was clicked");
+                this.redirectTo('editform/' + SELECTED_ITEM.id);
             },
             onRemove: function(event, record, index, options) {
                 console.log("Remove button was clicked");
@@ -48,7 +53,6 @@
             alias: "widget.formsadministration",
             controller: "formsadministration",
             title: "Formulär",
-            frame: true,
             dockedItems: [{
                 xtype: 'toolbar',
                 dock: 'top',
@@ -84,6 +88,7 @@
                 },
                 columns: {
                     items: [
+                        { text: "Titel", dataIndex: "FormTitle", flex: 1  },
                         { text: "Namn", dataIndex: "FormName", flex: 1  },
                         { text: "Cross border", dataIndex: "IsCrossBorder", width: 100  },
                         { text: "Subject bound", dataIndex: "IsSubjectBound", width: 100  }
