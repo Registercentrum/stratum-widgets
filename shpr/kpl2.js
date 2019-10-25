@@ -114,6 +114,7 @@ Ext.define('Shpr.chart.Time', {
       },
        border: false,
        store: {
+         storeId: 'timechart',
          data: [],
        },
          axes: [{
@@ -251,6 +252,8 @@ Ext.define('Shpr.controller.Spider', {
     controller.disableInvalidFilters(view)
     view.down('#indicatorFilter').getStore().clearFilter()
     view.down('#indicatorFilter').getFilters().add(controller.filterUnits.bind(controller))
+    controller.updateDependentSelection()
+    controller.updateDependentExplantions()
 
     Ext.Ajax.request({
       type: 'ajax',
@@ -334,6 +337,31 @@ Ext.define('Shpr.controller.Spider', {
     return minimum
   },
 
+  updateDependentSelection: function () {
+    var me = this
+    var view = me.getView()
+    var options = view.down('#indicatorFilter').getStore().getData().items
+    var value = view.down('#indicatorFilter').getValue()
+    var diagnosis = view.down('#diagnosisFilter').getValue()
+    var eligible = options.filter(function(item){return item.data.ValueCode === value}).length
+    if(eligible)return
+    view.down('#diagnosisFilter').getDisplayValue() !== 'Fraktur' && view.down('#indicatorFilter').setValue('satis')
+    view.down('#diagnosisFilter').getDisplayValue() === 'Fraktur' && view.down('#indicatorFilter').setValue('coverage')
+  },
+
+  updateDependentExplantions: function () {
+    var me = this
+    var view = me.getView()
+    var diagnosis = view.down('#diagnosisFilter').getDisplayValue()
+    if(diagnosis === 'Fraktur') {
+      view.down('#arthrosisExplantions').setHidden(true)
+      view.down('#fractureExplantions').setHidden(false)
+    } else {
+      view.down('#arthrosisExplantions').setHidden(false)
+      view.down('#fractureExplantions').setHidden(true)
+    }
+  },
+
   isSomeUnitDataMissing: function(data) {
     var result = false
     data.forEach(function(item) {
@@ -367,7 +395,7 @@ Ext.define('Shpr.controller.Spider', {
     view.down('#fixationFilter').setValue({fixation: 'all'})
     view.down('#ageLowerFilter').setValue(55)
     view.down('#ageUpperFilter').setValue(84)
-    view.down('#bmiLowerFilter').setValue(10)
+    view.down('#bmiLowerFilter').setValue(0)
     view.down('#bmiUpperFilter').setValue(30)
     view.down('#asaOneFilter').setValue(true)
     view.down('#asaTwoFilter').setValue(true)
@@ -444,7 +472,7 @@ Ext.define('Shpr.controller.Spider', {
       surv5yrs:  'Implantatöverlevnad                            \n              efter 5 år                                    ',
       surv10yrs: 'Implantatöverlevnad                            \n              efter 10 år                                   ',
       coverage: 'Täckningsgrad',
-      prop_reop: 'Reoperation                  \ninom 2 år               ',
+      prop_reop2yrs: 'Reoperation                  \ninom 2 år               ',
       prop_reop6m: 'Reoperation                  \ninom 6 månader               ',
       adverse_events: '                                           Oönskade händelser \n                                          inom 90 dagar',
       mort90days: '                        Mortalitet \n                        90 dagar'
@@ -520,6 +548,43 @@ Ext.define('Shpr.controller.Spider', {
     polarchart.getSeries()[1].setTitle(comparison || 'Riket')
     timechart.getSeries()[2].setTitle(unit || (Profile.Context ? Profile.Context.Unit.UnitName : 'Riket'))
     timechart.getSeries()[3].setTitle(comparison || 'Riket')
+  },
+
+  exportTable: function (element) {
+    var tag = element.el.dom;
+    if (!tag) return;
+    var content = this.createContentToDownload();
+    var blob = new Blob([content], { type: 'text/html;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+
+    /* IE downloads directly, use the download attribute for others */
+    if (window.navigator.msSaveBlob) {
+      window.navigator.msSaveBlob(blob, 'registreringar.csv');
+    } else {
+      tag.setAttribute('href', url);
+    }
+  },
+
+  createContentToDownload: function () {
+    var indicator = this.getView().down('#indicatorFilter').getDisplayValue()
+    var headers = 'År; Resultat; Antal;\n';
+    var content = '';
+    content += indicator + '\n' +headers;
+    
+    var data = Ext.data.StoreManager.lookup('timechart');
+    for (var i in data.data.items) {
+      if (i === '') continue;
+      for (var item in data.data.items[i].data) {
+        if (!(item === 'year' || item === 'y_unit' || item === 'n_unit')) continue;
+        var value = data.data.items[i].data[item];
+        content += value + ';'; 
+      }
+      content += '\n';
+    }
+    
+    /* Set BOM to let Excel know what the content is */
+    content = '\ufeff' + content;
+    return content;
   }
 });
 
@@ -864,6 +929,21 @@ Ext.define('Shpr.view.Main', {
         },
         {
           xtype: 'button',
+          itemId: 'exportTableSwedish',
+          cls: 'shpr-download-button',
+          width: 100,
+          margin: '0 0 0 30',
+          autoEl: {
+            tag: 'a',
+            download: 'kpl.csv'
+          },
+          text: '&#xf019 Excel',
+          listeners: {
+            click: 'exportTable'
+          }
+        },
+        {
+          xtype: 'button',
           itemId: 'timeSpinner',
           width: 40,
           height: 40,
@@ -872,13 +952,13 @@ Ext.define('Shpr.view.Main', {
             background: 'white'
           },
           iconCls: 'fa fa-cog fa-spin timechart-spinner'
-        },
+        }
         ]},
       {
         xtype: 'shprtime',
         columnWidth: 1,
         height: 300,
-        margin: '20px 0 20px 0'
+        margin: '0px 0 20px 0'
       },
       {
         xtype: 'panel',
@@ -888,7 +968,7 @@ Ext.define('Shpr.view.Main', {
         title: 'Mer detaljerad filtrering av femårstrend',
         border: false,
         padding: '0 20px 0 20px',
-        margin: '20px 0 80px 0',
+        margin: '20px 0 0px 0',
         items: [
         {
           xtype: 'tbspacer',
@@ -1084,7 +1164,54 @@ Ext.define('Shpr.view.Main', {
             checked: true
           }]
         }],
-       }
+       },
+       {
+        xtype: 'panel',
+        layout: 'vbox',
+        collapsible: true,
+        collapsed: false,
+        title: 'Förklaringar av begrepp',
+        border: false,
+        padding: '0 20px 0 20px',
+        margin: '20px 0 80px 0',
+        items: [
+        {
+          xtype: 'tbspacer',
+          height: 15
+        },
+        {
+          itemId: 'arthrosisExplantions',
+          cls: 'shpr-terms',
+          hidden: true,
+          html: '<div><b>Tillfredsställelse</b>: Patienttillfredsställelse vid 1-årsuppföljningen. En skala från 1-5 används där 1 är mycket missnöjd och 5 är mycket nöjd.</div>'
+              + '<div><b>Minskad smärta efter 1 år</b>: Värdet beräknas genom att subtrahera värdet på smärta preoperativt med värdet som angavs ett år efter operationen. En skala från 1-5 används där 1 är ingen smärta och 5 är svår smärta.</div>'
+              + '<div><b>EQ-VAS vinst efter 1 år</b>: Förbättring i självskattad hälsa på en skala mellan 1-100. Värdet beräknas genom att subtrahera EQ VAS-värdet preoperativt med EQ VAS ett år efter operationen. </div>'
+              + '<div><b>Oönskade händelse inom 90 dagar</b>: Oönskad händelse inom 90 dagar enligt senaste länkningen med Patientregistret på Socialstyrelsen. Anges som andel.</div>'
+              + '<div><b>Täckningsgrad</b>: Täckningsgrad (completeness) på individnivå enligt senaste länkningen med Patientregistret på Socialstyrelsen. Anges som andel.</div>'
+              + '<div><b>Reoperation inom 2 år</b>: Anger all form av reoperation inom två år efter primäroperation och under den senaste fyraårsperioden. Anges som andel.</div>'
+              + '<div><b>Implantatöverlevnad efter 5 år</b>: Protesöverlevnad efter fem år med Kaplan-Meier statistik. Anges som sannolikhet.</div>'
+              + '<div><b>Implantatöverlevnad efter 10 år</b>: Protesöverlevnad efter tio år med Kaplan-Meier statistik.  Anges som sannolikhet.</div>'
+              + '<br>'
+              + '<div style="width: 100%">Varje variabel har skalats om till värden från 0 till 1. Det sämsta värdet (0, 0) för variablerna tilldelades origo och det bästa värdet (1, 0) i periferin. Gränsvärdena bestäms genom att ta det högsta respektive lägsta medelvärdet (på enhetsnivå) plus/minus en standardavvikelse. Ju större den ytan blir i denna figur, desto gynnsammare resultat har den aktuella enheten.</div>',
+          width: '100%',
+          border: false
+        },
+        {
+          itemId: 'fractureExplantions',
+          cls: 'shpr-terms',
+          hidden: false,
+          html: '<div><b>Täckningsgrad</b>: Täckningsgrad (completeness) på individnivå enligt senaste länkningen med Patientregistret på Socialstyrelsen. Anges som andel.</div>'
+              + '<div><b>Oönskade händelser inom 90 dagar</b>: Oönskade händelser enligt senaste samkörningen med Patientregistret. Dessa definieras som kardio- och cerebrovaskulära tillstånd, tromboembolisk sjukdom, pneumoni, ulcus och urinvägsinfektion om dessa lett till återinläggning eller död. Dessutom ingår alla typer av omoperation av höften. Anges som andel.</div>'
+              + '<div><b>Mortalitet 90 dagar</b>: I internationell litteratur används denna variabel för att belysa mortalitet efter höftproteskirurgi. Anges som andel.'
+              + '<div><b>Reoperation inom 6 månader</b>: Reoperation inom sex månader. Alla öppna, efterföljande ingrepp i aktuell höft. Anges som andel.</div>'
+              + '<div><b>Implantatöverlevnad efter 1 år</b>: Protesöverlevnad efter ett år med Kaplan-Meier statistik. Anges som sannolikhet.</div>'
+              + '<br>'
+              + '<div style="width: 100%">Varje variabel har skalats om till värden från 0 till 1. Det sämsta värdet (0, 0) för variablerna tilldelades origo och det bästa värdet (1, 0) i periferin. Gränsvärdena bestäms genom att ta det högsta respektive lägsta medelvärdet (på enhetsnivå) plus/minus en standardavvikelse. Ju större den ytan blir i denna figur, desto gynnsammare resultat har den aktuella enheten.</div>',
+          width: '100%',
+          border: false
+        }
+        ]
+        }
       ]
     },
     {
@@ -1104,9 +1231,12 @@ Ext.application({
   units: [],
   launch: function () {
     var target = (typeof Stratum !== 'undefined' && Stratum.containers) ? Stratum.containers['SHPR/Radar'] : 'contentPanel'
-    Ext.create('Shpr.view.Main', {
+    var main = Ext.create('Shpr.view.Main', {
       renderTo: target
     })
+    if (!window.navigator.msSaveBlob) {
+      main.down('#exportTableSwedish').setHref(' ');
+    }
     var controller = Ext.ComponentQuery.query('#spider')[0].getController()
     controller.api = 'kpl_compass'
     controller.apikey = 'MpuYxfbtp5I='
@@ -1223,7 +1353,35 @@ Ext.util.CSS.createStyleSheet(
   + '  box-shadow: 0 20px 20px -20px #333;'
   + '  margin: -50px auto 30px;'
   + '}'
+
+  + '.shpr-terms b {'
+  + '  color: #6d7984;'
+  + '}'
+
+  + '.shpr-download-button span {'
+  + '  font: normal 14px/22px Open Sans, sans-serif;'
+  + '  font-family: FontAwesome, open_sans;'
+  + '  font-weight: normal;'
   
+  + '  color: #7b7878;'
+  + '}'
+
+  + '.shpr-download-button {'
+  + '  color: black;'
+  + '  background-color: white;'
+  + '  border-color: #ccc;'
+  + '  margin-left: 5px;'
+  + '  padding: 8px 0;'
+  + '}'
+
+   + '.shpr-download-button.x-btn-over {'
+   + '  background-color: #ccc;'
+   + '}'
+
+   + '.shpr-download-button.x-btn-focus {'
+   + '  background-color: white !important;'
+   + '}'
+   
   + '.shpr-select .x-form-trigger {'
   + '  vertical-align: middle;'
   + '  color: #3F73A6;'
