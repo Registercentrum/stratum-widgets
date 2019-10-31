@@ -1,5 +1,4 @@
 
-Stratum.require(['multiselect'])
 Ext.util.CSS.removeStyleSheet('shpr')
 Ext.util.CSS.createStyleSheet(
   ' '
@@ -100,7 +99,7 @@ Ext.util.CSS.createStyleSheet(
   + '  box-shadow: none;'
   + '}'
 
-  + '.sesar-tooltip-orange {'
+  + '.sesar-tooltip-red {'
   + '  background-color: #DD4C39;'
   + '  border-color: #DD4C39;'
   + '}'
@@ -110,6 +109,15 @@ Ext.util.CSS.createStyleSheet(
   + '  border-color: #26879B;'
   + '}'
 
+  + '.sesar-tooltip-yellow {'
+  + '  background-color: #FED766;'
+  + '  border-color: #FED766;'
+  + '}'
+
+  + '.sesar-tooltip-yellow .x-tip-body-default {'
+  + '  color: black;'
+  + '}'
+  
   + '.sesar-icon {'
   + '  color: #00528F !important;'
   + '}'
@@ -368,7 +376,7 @@ Ext.define('Sesar.chart.AgeGroups', {
           if (field === 'State') {
             tooltip.setUserCls('sesar-tooltip-blue')
           } else {
-            tooltip.setUserCls('sesar-tooltip-orange')
+            tooltip.setUserCls('sesar-tooltip-red')
           }
           return tooltip.setHtml('Antal: ' + text)
         }
@@ -397,6 +405,7 @@ Ext.define('Sesar.chart.Comparison', {
   border: false,
   store: {
     data: [],
+    sorters: []
   },
   flipXY: true,
   axes: [
@@ -440,10 +449,13 @@ Ext.define('Sesar.chart.Comparison', {
       title: 'Kliniken',
       xField: 'UnitName',
       yField: 'Mean',
-      colors: ['#D44A9C'],
-      colors: ['rgb(230, 112, 48)'],
-      colors: ['#E9724C'],
+      //colors: ['#D44A9C'],
+      //colors: ['rgb(230, 112, 48)'],
+      //colors: ['#E9724C'],
+      colors: ['#26879B'],
       useDarkerStrokeColor: false,
+
+      
       label: {
         display: 'outside',
         color: '#333',
@@ -460,21 +472,43 @@ Ext.define('Sesar.chart.Comparison', {
       },
       style: {
         lineWidth: 4,
-        maxBarWidth: 30
+        maxBarWidth: 20
       },
 
       renderer: function (sprite, config, rendererData, index) {
         var record = rendererData.store.getAt(index)
-        if (record && record.data.UnitName === this.getChart().up('#mainView').getController().filters.clinicName) {
+        if(record && record.data.Mean === 'NA') {
+           return {
+            fillStyle: '#26000',
+            stroke: '#260000'
+          }
+        } else if(record && record.data.UnitCode === 'NA'){
+          return {
+            fillStyle: '#FED766',
+            stroke: '#FED766'
+          }
+        } else if (record && record.data.UnitCode === this.getChart().up('#mainView').getController().filters.clinic) {
+          return {
+            fillStyle: '#DD4C39',
+            stroke: '#DD4C39'
+          }
+        } else {
+          // FFBA49
           return {
             fillStyle: '#26879B',
             stroke: '#26879B'
           }
-        } else {
+          /*
+          return {
+            fillStyle: '#FFBC42',
+            stroke: '#FFBC42'
+          }
+          
           return {
             fillStyle: '#E9724C',
             stroke: '#E9724C'
           }
+          */
         }
       },
       tooltip: {
@@ -482,10 +516,12 @@ Ext.define('Sesar.chart.Comparison', {
         //dismissDelay: 0,
         renderer: function (tooltip, record, context) {
           tooltip.setHtml('Antal: ' + record.get('Denominator'))
-          if (record && record.data.UnitName === this.getChart().up('#mainView').getController().filters.clinicName) {
-            tooltip.setUserCls('sesar-tooltip-blue')
+          if (record && record.data.UnitCode === this.getChart().up('#mainView').getController().filters.clinic) {
+            tooltip.setUserCls('sesar-tooltip-red')
+          } else if (record && record.data.UnitCode === 'NA') {
+            tooltip.setUserCls('sesar-tooltip-yellow')
           } else {
-            tooltip.setUserCls('sesar-tooltip-orange')
+            tooltip.setUserCls('sesar-tooltip-blue')
           }
           return
         }
@@ -540,7 +576,7 @@ Ext.define('Sesar.controller.Main', {
     chart = view.down('sesar' + tab)
     url = this.createUrl(type, this.filters)
     url = tab === 'comparison' ? url.replace(/&clinic=[A-z0-9]*/, '') : url
-    tab === 'comparison' && chart.setHeight(400) && chart.getStore().loadData({})
+    tab === 'comparison' && chart.setHeight(400) && chart.getStore().setSorters([this.sortAsc]) && chart.getStore().loadData({})
     this.fetchData(chart, url, this.filters.report, controller, tab)
     this.updateProgress(true)
   },
@@ -570,7 +606,7 @@ Ext.define('Sesar.controller.Main', {
         chart.usePercentages = config.percentage
         chart.precision = config.precision || 0
         chart.setCaptions(Ext.Object.merge({},controller.captions, captions))
-        tab === 'comparison' && chart.setHeight(result.length*25+50)
+        tab === 'comparison' && chart.setHeight(result.length*28+50)
         // widgetConfig[report] && chart.setCaptions(Ext.Object.merge(controller.captions, widgetConfig[report]))
         // !widgetConfig[report] && chart.setCaptions(Ext.Object.merge(controller.captions, controller.defaultTexts))
         // chart.getAxes()[0].setTitle({text: controller.axisTitles[report] || 'andel', strokeStyle: 'darkslategrey', lineWidth: 1, globalAlpha: 0.4}) 
@@ -637,21 +673,33 @@ Ext.define('Sesar.controller.Main', {
     apne: { caption: 'Väntetider från diagnos till terapistart apnébettskena', subcaption: 'medelvärde antal dagar', axis: 'dagar', precision: 0, percentage: false },
     ahi: { caption: 'Genomsnittligt AHI vid utredningsbesök', subcaption: '.', axis: 'index', precision: 1, percentage: false },
     odi: { caption: 'Genomsnittligt ODI vid utredningsbesök', subcaption: '.', axis: 'index', precision: 1, percentage: false },
-    ess: { caption: 'ESS (självskattad dagsömninghet)', subcaption: 'vid utredningsbesök', axis: 'index', precision: 1, percentage: false },
-    severe_osa: { caption: 'Andel patienter med svår OSA', subcaption: 'vid utredningsbesök', axis: 'andel', precision: 0, percentage: true },
-    mild_osa: { caption: 'Andel patienter med mild OSA', subcaption: 'vid utredningsbesök', axis: 'andel', precision: 0, percentage: true },
+    ess: { caption: 'Självskattad dagsömnighet (ESS)', subcaption: 'vid utredningsbesök', axis: 'index', precision: 1, percentage: false },
+    severe_osa: { caption: 'Andel patienter med svår sömnapné', subcaption: 'vid utredningsbesök', axis: 'andel', precision: 0, percentage: true },
+    mild_osa: { caption: 'Andel patienter med mild sömnapné', subcaption: 'vid utredningsbesök', axis: 'andel', precision: 0, percentage: true },
     cardiovascular: { caption: 'Andel patienter med kardiovaskulär', subcaption: 'sjukdom vid utredningsbesök', axis: 'andel', precision: 0, percentage: true },
     metabol: { caption: 'Andel patienter med metabol sjukdom ', subcaption: 'vid utredningsbesök', axis: 'andel', precision: 1, percentage: true },
     prespiratory: { caption: 'Andel patienter med respiratorisk', subcaption: 'sjukdom vid utredningsbesök', axis: 'andel', precision: 1, percentage: true },
     psyk: { caption: 'Andel patienter med psykisk', subcaption: 'sjukdom vid utredningsbesök', axis: 'andel', precision: 0, percentage: true },
-    cpap_severe_osa: { caption: 'Andel patienter som rekommenderats', subcaption: 'CPAP vid svår OSA (AHI>=30)', axis: 'andel', precision: 0, percentage: true },
-    apne_mild_osa: { caption: 'Andel patienter som rekommenderats', subcaption: 'apnébettskena vid mild OSA (AHI 5 - <15)', axis: 'andel', precision: 0, percentage: true },
-    weight: { caption: 'Andel patienter som rekommenderats', subcaption: 'aktiv överviktsbehandling vid BMI = 30', axis: 'andel', precision: 0, percentage: true },
-    mandfix: { caption: 'Mandibulär framdragning apnébettskena', subcaption: 'medelvärde (mm)', axis: 'mm', precision: 1, percentage: false },
-    apnetype: { caption: 'Andel av apnébettskenor', subcaption: 'som är bitblock', axis: 'förändring', precision: 0, percentage: true },
+    cpap_severe_osa: { caption: 'Andel patienter som rekommenderats', subcaption: 'CPAP vid svår sömnapné (AHI>=30)', axis: 'andel', precision: 0, percentage: true },
+    apne_mild_osa: { caption: 'Andel patienter som rekommenderats', subcaption: 'apnébettskena vid mild sömnapné (AHI 5 - <15)', axis: 'andel', precision: 0, percentage: true },
+    weight: { caption: 'Andel patienter med BMI >= 30 som rekommenderats', subcaption: 'aktiv överviktsbehandling', axis: 'andel', precision: 0, percentage: true },
+    mandfix: { caption: 'Mandibulär framskjutning av', subcaption: 'apnébettskena, medelvärde (mm)', axis: 'mm', precision: 1, percentage: false },
+    apnetype: { caption: 'Andel av apnébettskenor', subcaption: 'som är tvådelade (bitblock)', axis: 'förändring', precision: 0, percentage: true },
     ESSchange_CPAP: { caption: 'Genomsnittlig förändring av ESS för', subcaption: 'patienter behandlade med CPAP', axis: 'förändring', precision: 1, percentage: false },
     ESSchange_apne: { caption: 'Genomsnittlig förändring av ESS för', subcaption: 'patienter behandlade med apnébettskena', axis: 'förändring', precision: 1, percentage: false },
-    four: { caption: 'Andel med CPAP som använder den', subcaption: 'mer än fyra timmar per natt', axis: 'andel', precision: 0, percentage: true }
+    four: { caption: 'Andel patienter med CPAP som använder den', subcaption: '>=  4 timmar per natt', axis: 'andel', precision: 0, percentage: true }
+  },
+
+  sortDesc: function (a, b) {
+    if(a.data.Mean === 'NA') return -1
+    if(b.data.Mean === 'NA') return 1
+    return a.data.Mean-b.data.Mean       
+  },
+
+  sortAsc: function (a, b) {
+    if(a.data.Mean === 'NA') return -1
+    if(b.data.Mean === 'NA') return 1
+    return b.data.Mean-a.data.Mean       
   },
 
   dirtyTabs: { time: true, age: true, comparison: true }
@@ -695,7 +743,7 @@ Ext.define('Sesar.view.Main', {
           height: 40,
           labelStyle: 'text-align: right;',
           labelWidth: 65,
-          value: 'eval',
+          value: widgetConfig.selected,
           listConfig: {
             maxHeight: 600
           },
@@ -703,48 +751,36 @@ Ext.define('Sesar.view.Main', {
             beforeselect: function () { var disabled = arguments[1].getData().Category === true; return !disabled },
             select: 'updateCharts'
           },
-          tpl: Ext.create('Ext.XTemplate',
-            '<ul class="x-list-plain"><tpl for=".">',
-            '<tpl if="Category">',
-            '<li role="option" class="x-boundlist-item sesar-category">{ValueName}</li>',
-            '<tpl else>',
-            '<li role="option" class="x-boundlist-item">{ValueName}</li>',
-            '</tpl>',
-            '</tpl></ul>'
-          ),
-          displayTpl: Ext.create('Ext.XTemplate',
-            '<tpl for=".">',
-            Ext.String.format('{ValueName}'),
-            '</tpl>'
-          ),
+          
           htmlEncode: true,
           store: {
             fields: ['ValueCode', 'ValueName'],
+            filters: [
+              function(item) {
+                return widgetConfig.category === item.data.Category
+              }
+            ],
             data: [
-              { ValueName: 'Väntetider', ValueCode: 'Category', Category: true },
-              { ValueName: 'Väntetider till OSA-utredning', ValueCode: 'eval' },
-              { ValueName: 'Väntetider till CPAP-start', ValueCode: 'cpap' },
-              { ValueName: 'Väntetider till apnébettskena-start', ValueCode: 'apne' },
-              { ValueName: 'Utredningsresultat: Sömnapné och samsjuklighet', ValueCode: 'Category', Category: true },
-              { ValueName: 'Antal andningsstörningar/timme (AHI)', ValueCode: 'ahi' },
-              { ValueName: 'Antal desaturationer/timme (ODI)', ValueCode: 'odi' },
-              { ValueName: 'Sömnighetsskattning (ESS)', ValueCode: 'ess' },
-              { ValueName: 'Andel med svår sömnapné', ValueCode: 'severe_osa' },
-              { ValueName: 'Andel med mild sömnapné', ValueCode: 'mild_osa' },
-              { ValueName: 'Andel med kardiovaskulär sjukdom', ValueCode: 'cardiovascular' },
-              { ValueName: 'Andel med metabol sjukdom', ValueCode: 'metabol' },
-              { ValueName: 'Andel med med respiratorisk sjukdom', ValueCode: 'prespiratory' },
-              { ValueName: 'Andel med psykisk sjukdom', ValueCode: 'psyk' },
-              { ValueName: 'Behandlingsrekommendation efter utredning', ValueCode: 'Category', Category: true },
-              { ValueName: 'Andel med CPAP vid svår OSA (AHI >= 30)', ValueCode: 'cpap_severe_osa' },
-              { ValueName: 'Andel med apnébettskena vid mild sömnapné (AHI 5 - <15)', ValueCode: 'apne_mild_osa' },
-              { ValueName: 'Andel aktiv överviktsbehandling (BMI >= 30)', ValueCode: 'weight' },
-              { ValueName: 'Behandlingsrelaterade utfall', ValueCode: 'Category', Category: true },
-              { ValueName: 'Mandibulär framskjutning (apnébettskena)', ValueCode: 'mandfix' },
-              { ValueName: 'Andel apnébettskena - bitblock', ValueCode: 'apnetype' },
-              { ValueName: 'Förändring  ESS med CPAP', ValueCode: 'ESSchange_CPAP' },
-              { ValueName: 'Förändring ESS med apnébettskena', ValueCode: 'ESSchange_apne' },
-              { ValueName: 'Andel CPAP-användning >= 4 timmar', ValueCode: 'four' },
+              { ValueName: 'Väntetider till sömnapnédiagnos', ValueCode: 'eval', Category: 'WaitingPeriods' },
+              { ValueName: 'Väntetider till CPAP-start', ValueCode: 'cpap', Category: 'WaitingPeriods' },
+              { ValueName: 'Väntetider till apnébettskena-start', ValueCode: 'apne', Category: 'WaitingPeriods' },
+              { ValueName: 'Antal andningsstörningar/timme (AHI)', ValueCode: 'ahi', Category: 'ExaminationResults' },
+              { ValueName: 'Antal desaturationer/timme (ODI)', ValueCode: 'odi', Category: 'ExaminationResults' },
+              { ValueName: 'Självskattad dagsömnighet (ESS)', ValueCode: 'ess', Category: 'ExaminationResults' },
+              { ValueName: 'Andel med svår sömnapné', ValueCode: 'severe_osa', Category: 'ExaminationResults' },
+              { ValueName: 'Andel med mild sömnapné', ValueCode: 'mild_osa', Category: 'ExaminationResults' },
+              { ValueName: 'Andel med kardiovaskulär sjukdom', ValueCode: 'cardiovascular', Category: 'ExaminationResults' },
+              { ValueName: 'Andel med metabol sjukdom', ValueCode: 'metabol', Category: 'ExaminationResults' },
+              { ValueName: 'Andel med respiratorisk sjukdom', ValueCode: 'prespiratory', Category: 'ExaminationResults' },
+              { ValueName: 'Andel med psykisk sjukdom', ValueCode: 'psyk', Category: 'ExaminationResults' },
+              { ValueName: 'Andel som rekommenderats CPAP vid svår sömnapné (AHI >= 30)', ValueCode: 'cpap_severe_osa', Category: 'TherapyChoice' },
+              { ValueName: 'Andel som rekommenderats apnébettskena vid mild sömnapné (AHI 5 - <15)', ValueCode: 'apne_mild_osa', Category: 'TherapyChoice' },
+              { ValueName: 'Andel med BMI >= 30 som rekommenderats aktiv överviktsbehandling', ValueCode: 'weight', Category: 'TherapyChoice' },
+              { ValueName: 'Mandibulär framskjutning av apnébettskena', ValueCode: 'mandfix', Category: 'TherapyOutcomes' },
+              { ValueName: 'Andel av apnébettskenor som är tvådelade (bitblock)', ValueCode: 'apnetype', Category: 'TherapyOutcomes' },
+              { ValueName: 'Förändring av ESS vid behandling med CPAP', ValueCode: 'ESSchange_CPAP', Category: 'TherapyOutcomes' },
+              { ValueName: 'Förändring av ESS vid behandling med apnébettskena', ValueCode: 'ESSchange_apne', Category: 'TherapyOutcomes' },
+              { ValueName: 'Andel med CPAP som använder den >=  4 timmar per natt', ValueCode: 'four', Category: 'TherapyOutcomes' },
             ],
             /*
             sorters: {
@@ -948,17 +984,4 @@ Ext.define('Sesar.view.Main', {
       cls: 'sesar-progressbar'
     }
   ]
-})
-
-Ext.application({
-  name: 'Sesar',
-  units: [],
-  launch: function () {
-    var target = (typeof Stratum !== 'undefined' && Stratum.containers) ? Stratum.containers['SESAR/Overview'] : 'contentPanel'
-    var main = Ext.create('Sesar.view.Main', { renderTo: target })
-    main.getController().tab = 'time'
-    main.getController().status = { time: false, age: false, comparison: false }
-    main.getController().updateCharts()
-    main.down('sesarcomparison').getSeries()[0].getLabel().getTemplate().setCalloutLine({ length: 20, color: 'rgba(0,0,0,0)' })
-  },
 })
