@@ -1,4 +1,3 @@
-
 Ext.define('CustomAxis', {
   extend: 'Ext.chart.axis.Category',
   alias: 'axis.custom',
@@ -92,7 +91,7 @@ Ext.define('Siber.controller.Start', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: '/stratum/api/metadata/units/bindings/155?apikey=J6b-GSKrkfk=',
+      url: '/stratum/api/metadata/units/bindings/155?apikey=KbxAwmlwLM4=',
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
         controller.unitCounties = result;
@@ -156,23 +155,27 @@ Ext.define('Siber.view.Start', {
           valueField: 'ValueCode',
           fieldLabel: 'Diagnosgrupp:',
           width: '50%',
-          labelWidth: 100,
+          // labelWidth: 100,
           labelStyle: 'text-align: right;',
-          value: 'depression',
+          value: 'all',
           listeners: {
             select: 'countySelected'
           },
           store: {
             fields: ['ValueCode', 'ValueName'],
             data: [
+			  { ValueName: 'Alla diagnoser', ValueCode: 'all' },
               { ValueName: 'Depression', ValueCode: 'depression' },
               { ValueName: 'Stressyndrom', ValueCode: 'stress' },
               { ValueName: 'Social fobi', ValueCode: 'social_anxiety' },
               { ValueName: 'Paniksyndrom', ValueCode: 'panic' },
-              { ValueName: 'Generaliserat ångestsyndrom', ValueCode: 'generalized_anxiety' },
+              { ValueName: 'Ångestsyndrom inkl GAD', ValueCode: 'anxiety_including_gad' },
               { ValueName: 'Hälsoångest', ValueCode: 'hypochondriasis' },
               { ValueName: 'Tvångssyndrom', ValueCode: 'ocd' },
               { ValueName: 'Insomni', ValueCode: 'insomnia' },
+			  { ValueName: 'Dysmorfofobi', ValueCode: 'dysmorphic' },
+			  
+              /*{ ValueName: 'Separationsångest', ValueCode: 'separation_anxiety'}*/
             ],
             sorters: {
               property: 'ValueName',
@@ -195,7 +198,7 @@ Ext.define('Siber.view.Start', {
           fieldLabel: ' Region:',
           width: '50%',
           padding: '0 1px 0 0',
-          labelWidth: 100,
+          labelWidth: 60,
           labelStyle: 'text-align: right;',
           value: '00',
           listeners: {
@@ -206,7 +209,7 @@ Ext.define('Siber.view.Start', {
             autoLoad: true,
             proxy: {
               type: 'ajax',
-              url: 'https://stratum.registercentrum.se/api/metadata/domains/3003?apikey=J6b-GSKrkfk=',
+              url: '/stratum/api/metadata/domains/3003?apikey=KbxAwmlwLM4=',
               withCredentials: true,
               reader: {
                 type: 'json',
@@ -244,7 +247,7 @@ Ext.define('Siber.view.Start', {
           fieldLabel: 'Enhet:',
           labelStyle: 'text-align: right;',
           flex: 1,
-          labelWidth: 100,
+          labelWidth: 60,
           value: '00',
           listeners: {
             select: 'updateChart'
@@ -254,7 +257,7 @@ Ext.define('Siber.view.Start', {
             autoLoad: true,
             proxy: {
               type: 'ajax',
-              url: 'https://stratum.registercentrum.se/api/metadata/units/register/155?apikey=J6b-GSKrkfk=',
+              url: '/stratum/api/metadata/units/register/155?apikey=KbxAwmlwLM4=',
               withCredentials: true,
               reader: {
                 type: 'json',
@@ -299,7 +302,7 @@ Ext.define('Siber.view.Main', {
   legend: {
     type: 'dom'
   },
-
+  useDarkerStrokeColor: false,
   store: {
     fields: [],
     autoLoad: true,
@@ -368,6 +371,7 @@ Ext.define('Siber.view.Main', {
     style: {
       maxBarWidth: 70
     },
+    useDarkerStrokeColor: false,
     tooltip: {
       trackMouse: true,
       renderer: function (tooltip, record, ctx) {
