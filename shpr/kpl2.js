@@ -104,8 +104,8 @@ Ext.define('Shpr.chart.Time', {
        height: 145,
        innerPadding: {
         top: 5,
-        left: 5,
-        right: 5
+        left: 0,
+        right: 0
       },
        insetPadding: '20 35 20 20',
        cls: 'shpr-timechart',
@@ -330,8 +330,8 @@ Ext.define('Shpr.controller.Spider', {
   },
 
   findMinimum: function (data) {
-    var findMinimumUnitValue = (min, current) => current.y_unit < min ? current.y_unit : min
-    var findMinimumComparisionValue = (min, current) => current.y_comparison < min ? current.y_comparison : min
+    var findMinimumUnitValue = function(min, current) { return current.y_unit < min ? current.y_unit : min }
+    var findMinimumComparisionValue = function(min, current){ return current.y_comparison < min ? current.y_comparison : min }
     var minimum = data.reduce(findMinimumUnitValue, 1)
     minimum = data.reduce(findMinimumComparisionValue, minimum)
     return minimum
@@ -932,7 +932,7 @@ Ext.define('Shpr.view.Main', {
           itemId: 'exportTableSwedish',
           cls: 'shpr-download-button',
           width: 100,
-          margin: '0 0 0 30',
+          margin: '0 0 0 20',
           autoEl: {
             tag: 'a',
             download: 'kpl.csv'
