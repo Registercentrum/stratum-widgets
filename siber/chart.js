@@ -159,7 +159,7 @@ Ext.define('Siber.view.Start', {
           labelStyle: 'text-align: right;',
           value: 'all',
           listeners: {
-            select: 'countySelected'
+            select: 'updateChart'
           },
           store: {
             fields: ['ValueCode', 'ValueName'],
@@ -450,3 +450,4 @@ Ext.util.CSS.createStyleSheet(
   + '  color: #3F73A6;'
   + '}', 'siber'
 );
+//# sourceURL=SIBER/Chart
