@@ -19,19 +19,14 @@ Ext.define('Sesar.view.Filter', {
 Ext.define('Sesar.chart.Time', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'sesartime',
-  cls: 'sesar-timechart',
   border: false,
+  cls: 'sesar-timechart',
   colors: ['#DD4C39', '#0791AB'],
   padding: '10 0 0 0',
   insetPadding: '0 35 20 10',
+  innerPadding: '10 10 10 10',
   touchAction: {
     panY: true,
-  },
-  innerPadding: {
-    top: 10,
-    left: 10,
-    right: 10,
-    bottom: 10
   },
   legend: {
     type: 'dom'
@@ -39,44 +34,46 @@ Ext.define('Sesar.chart.Time', {
   store: {
     data: [],
   },
-  axes: [{
-    type: 'numeric',
-    title: {
-      text: '',
-    },
-    titleMargin: 20,
-    position: 'left',
-    fields: ['Clinic_Mean', 'State_Mean'],
-    style: {
-      strokeStyle: '#9aa8bc',
-      axisLine: false
-    },
-    label: {
-      strokeOpacity: 0.2,
-      fillStyle: '#9aa8bc'
-    },
+  axes: [
+    {
+      type: 'numeric',
+      title: {
+        text: '',
+      },
+      titleMargin: 20,
+      position: 'left',
+      fields: ['Clinic_Mean', 'State_Mean'],
+      style: {
+        strokeStyle: '#9aa8bc',
+        axisLine: false
+      },
+      label: {
+        strokeOpacity: 0.2,
+        fillStyle: '#9aa8bc'
+      },
 
-    renderer: function (axis, label, context, previous) {
-      var precision = axis.getChart().precision || 0
-      if (axis.getChart().usePercentages) {
-        return (label * 100).toFixed(precision) + '%'
+      renderer: function (axis, label, context, previous) {
+        var precision = axis.getChart().precision || 0
+        if (axis.getChart().usePercentages) {
+          return (label * 100).toFixed(precision) + '%'
+        }
+        return label.toFixed(precision)
       }
-      return label.toFixed(precision)
+    },
+    {
+      type: 'category',
+      position: 'bottom',
+      fields: 'Year',
+      style: {
+        strokeStyle: '#9aa8bc',
+        axisLine: false
+      },
+      label: {
+        fillStyle: '#9aa8bc',
+        strokeOpacity: 0.2,
+      },
     }
-  },
-  {
-    type: 'category',
-    position: 'bottom',
-    fields: 'Year',
-    style: {
-      strokeStyle: '#9aa8bc',
-      axisLine: false
-    },
-    label: {
-      fillStyle: '#9aa8bc',
-      strokeOpacity: 0.2,
-    },
-  }],
+  ],
   series: [
     {
       type: 'line',
@@ -144,62 +141,57 @@ Ext.define('Sesar.chart.Time', {
 Ext.define('Sesar.chart.AgeGroups', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'sesarage',
+  border: false,
+  cls: 'sesar-timechart',
+  colors: ['#DD4C39', '#0791AB'],
+  padding: '10 0 0 0',
+  innerPadding: '10 10 10 0',
+  insetPadding: '0 35 20 10',
   touchAction: {
     panY: true,
   },
-  border: false,
-  colors: ['#E388BE', '#83D6F5'],
-  colors: ['#DD4C39', '#0791AB'],
-  padding: '10 0 0 0',
-  innerPadding: {
-    top: 10,
-    right: 10,
-    bottom: 10
-  },
-
-  insetPadding: '0 35 20 10',
-  cls: 'sesar-timechart',
   legend: {
     type: 'dom'
   },
-  border: false,
   store: {
     data: [],
   },
-  axes: [{
-    type: 'numeric',
-    position: 'left',
-    titleMargin: 20,
-    style: {
-      strokeStyle: '#9aa8bc',
-      axisLine: false
-    },
-    label: {
-      strokeOpacity: 0.2,
-      fillStyle: '#9aa8bc'
-    },
+  axes: [
+    {
+      type: 'numeric',
+      position: 'left',
+      titleMargin: 20,
+      style: {
+        strokeStyle: '#9aa8bc',
+        axisLine: false
+      },
+      label: {
+        strokeOpacity: 0.2,
+        fillStyle: '#9aa8bc'
+      },
 
-    renderer: function (axis, label, context, previous) {
-      var precision = axis.getChart().precision || 0
-      if (axis.getChart().usePercentages) {
-        return (label * 100).toFixed(precision) + '%'
+      renderer: function (axis, label, context, previous) {
+        var precision = axis.getChart().precision || 0
+        if (axis.getChart().usePercentages) {
+          return (label * 100).toFixed(precision) + '%'
+        }
+        return label.toFixed(precision)
       }
-      return label.toFixed(precision)
+    },
+    {
+      type: 'category',
+      position: 'bottom',
+      fields: ['Agegroups'],
+      style: {
+        strokeStyle: '#9aa8bc',
+        axisLine: false
+      },
+      label: {
+        fillStyle: '#9aa8bc',
+        strokeOpacity: 0.2,
+      },
     }
-  },
-  {
-    type: 'category',
-    position: 'bottom',
-    fields: ['Agegroups'],
-    style: {
-      strokeStyle: '#9aa8bc',
-      axisLine: false
-    },
-    label: {
-      fillStyle: '#9aa8bc',
-      strokeOpacity: 0.2,
-    },
-  }],
+  ],
   series: [
     {
       type: 'bar',
@@ -232,28 +224,21 @@ Ext.define('Sesar.chart.AgeGroups', {
 Ext.define('Sesar.chart.Comparison', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'sesarcomparison',
-  touchAction: {
-    panY: true,
-  },
   border: false,
-  background: '#ccc',
+  flipXY: true,
+  cls: 'sesar-timechart',
   colors: ['#E388BE', '#83D6F5'],
   callout: 'none',
   padding: '10 0 0 0',
-  innerPadding: {
-    top: 10,
-    left: 10,
-    right: 40,
-    bottom: 0
-  },
+  innerPadding: '10 40 0 10',
   insetPadding: '0 5 20 0',
-  cls: 'sesar-timechart',
-  border: false,
+  touchAction: {
+    panY: true,
+  },
   store: {
     data: [],
     sorters: []
   },
-  flipXY: true,
   axes: [
     {
       type: 'numeric',
@@ -455,7 +440,7 @@ Ext.define('Sesar.controller.Main', {
     if (b.data.Mean === 'NA') return 1
     return b.data.Mean - a.data.Mean
   },
-  
+
   defaultTexts: {
     header: {
       text: ' '
