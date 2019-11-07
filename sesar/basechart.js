@@ -1,156 +1,10 @@
 
-Ext.util.CSS.removeStyleSheet('shpr')
-Ext.util.CSS.createStyleSheet(
-  ' '
-
-  + '.sesar-select .x-form-item-body {'
-  + '  height: 40px;'
-  + '  border-radius: 3px;'
-  + '}'
-
-  + '.sesar-select input {'
-  + '  color: #3F73A6;'
-  + '  color: #2f5880;'
-  + '  padding: 9px 14px;'
-  + '}'
-
-  + '.sesar-select div {'
-  + '  border-radius: 3px;'
-  + '}'
-
-  + '.sesar-select label {'
-  + '  white-space: nowrap;'
-  + '  padding-top: 11px;'
-  + '  color: #3F73A6;'
-  + '  color: #2f5880;'
-  + '}'
-
-  + '.sesar-select .x-form-trigger {'
-  + '  vertical-align: middle;'
-  + '  color: #3F73A6;'
-  + '}'
-
-  + '.ton-tab .x-tab-bar { '
-  + '  background-color: white; '
-  + '}'
-
-  + '.ton-tab a:first-of-type { '
-  + '  margin-left: 64px;'
-  + '}'
-
-  + '.ton-tab a:nth-child(1) { '
-  //+ '  left: 65px !important;'
-  + '}'
-
-  + '.ton-tab a:nth-child(2) { '
-  //+ '  left: 252px !important;'
-  //+ '  left: 280px !important;'
-  + '}'
-
-  + '.ton-tab a:nth-child(3) { '
-  //+ '  left: 409px !important;'
-  //+ '  left: 464px !important;'
-  + '}'
-
-  + '.ton-tab .x-tab-bar-default-top>.x-tab-bar-body-default {'
-  + '  padding: 6px;'
-  + '}'
-
-  + '.ton-tab .x-tab-bar-body { '
-  + '  border-bottom: 1px solid green;'
-  + '}'
-
-  + '.ton-tab .x-tab { '
-  + '  background-color: #E7F1FF;'
-  + '  border-radius: 3px 3px 0px 0px; '
-  + '  border-left: solid 1px #00528F; '
-  + '  border-top: solid 1px #00528F; '
-  + '  border-right: 1px solid #00528F; '
-  + '  border-bottom: 1px solid #00528F;'
-  + '  top: 1px !important;'
-  + '}'
-
-  + '.ton-tab .x-tab.x-tab-active.x-tab-default { '
-  + '  border-left: solid 1px #00528F; '
-  + '  border-top: solid 1px #00528F; '
-  + '  border-right: solid 1px #00528F; '
-  + '  border-bottom: solid 1px white; '
-  + '  background-color: white; '
-  + '  outline: none;'
-  + '}'
-
-  + '.ton-tab .x-tab-inner-default { '
-  + '  color: #00528F; '
-  + '  font: 400 16px open_sans, helvetica, arial, sans-serif; '
-  + '  padding: 5px 10px 0px 10px; '
-  + '  height: 35px; '
-  + '} '
-
-  + '.ton-tab .x-tab.x-tab-active.x-tab-default .x-tab-inner-default { '
-  + '  color: #00528F; '
-  + '} '
-
-  + '.ton-tab .x-tab-bar .x-box-inner {'
-  + '  overflow: visible !important;'
-  + '  border-bottom: solid 1px #359aa3;'
-  + '	}'
-
-  + '.ton-tab .x-tab-default-top.x-tab-focus.x-tab-active {'
-  + '  box-shadow: none;'
-  + '}'
-
-  + '.sesar-tooltip-red {'
-  + '  background-color: #DD4C39;'
-  + '  border-color: #DD4C39;'
-  + '}'
-
-  + '.sesar-tooltip-blue {'
-  + '  background-color: #26879B;'
-  + '  border-color: #26879B;'
-  + '}'
-
-  + '.sesar-tooltip-yellow {'
-  + '  background-color: #FED766;'
-  + '  border-color: #FED766;'
-  + '}'
-
-  + '.sesar-tooltip-yellow .x-tip-body-default {'
-  + '  color: black;'
-  + '}'
-  
-  + '.sesar-icon {'
-  + '  color: #00528F !important;'
-  + '}'
-
-  + '.sesar-progressbar {'
-  + '  border-radius: 22px;'
-  + '}'
-
-  + '.sesar-progressbar .x-progress-bar {'
-  //+ '  background-image: linear-gradient(-45deg, #00528F 25%, transparent 25%, transparent 50%, #00528F 50%, #00528F 75%, transparent 75%, transparent);'
-  //+ '  background-position: 0rem -244rem;'
-  //+ '  background-size: 1.5rem 1.5rem;'
-  // + '  animation: stripes 3s linear infinite;'
-  + '  background-color: #77818c !important;'
-  //+ '  background: linear-gradient(to bottom, rgba(235, 189, 138, 1), rgba(252, 238, 213, 1)) !important;'
-  + '}'
-
-  + ' .sesar-category {'
-  + '     padding-top: 10px;'
-  + '     padding-bottom: 6px;'
-  + '     border-top: 1px dashed #000;'
-  + '     font-weight: normal;'
-  + '     margin-top: 5px;'
-  + '  background-color: #e0e0e0;'
-  + '  color: #606060;'
-  + '  cursor: default;'
-  + ' }'
-  , 'siber'
-)
-
 Ext.define('Sesar.chart.Time', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'sesartime',
+  touchAction: {
+    panY: true,
+  },
   border: false,
   colors: ['#E388BE', '#83D6F5'],
   colors: ['#DD4C39', '#0791AB'],
@@ -290,6 +144,9 @@ Ext.define('Sesar.chart.Time', {
 Ext.define('Sesar.chart.AgeGroups', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'sesarage',
+  touchAction: {
+    panY: true,
+  },
   border: false,
   colors: ['#E388BE', '#83D6F5'],
   colors: ['#DD4C39', '#0791AB'],
@@ -388,6 +245,9 @@ Ext.define('Sesar.chart.AgeGroups', {
 Ext.define('Sesar.chart.Comparison', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'sesarcomparison',
+  touchAction: {
+    panY: true,
+  },
   border: false,
   background: '#ccc',
   colors: ['#E388BE', '#83D6F5'],
@@ -711,6 +571,7 @@ Ext.define('Sesar.view.Filter', {
   alias: 'view.sesarfilter',
   cls: 'sesar-select',
   labelWidth: 65,
+  editable: Ext.is.Phone ? false : true,
   forceSelection: false,
   typeAhead: true,
   queryMode: 'local',
@@ -730,7 +591,10 @@ Ext.define('Sesar.view.Main', {
     {
       xtype: 'panel',
       padding: '0 6 0 0',
-      layout: 'hbox',
+      layout: Ext.is.Phone ? 'vbox' : 'hbox',
+      style: {
+        marginBottom: Ext.is.Phone ? '3px' : '20px'
+      },
       border: false,
       items: [
         {
@@ -794,8 +658,11 @@ Ext.define('Sesar.view.Main', {
     },
     {
       xtype: 'panel',
-      padding: '20 6 0 0',
-      layout: 'hbox',
+      padding: '0 6 0 0',
+      layout: 'vbox',
+      style: {
+        marginBottom: Ext.is.Phone ? '3px' : '20px'
+      },
       border: false,
       items: [
         {
@@ -804,6 +671,7 @@ Ext.define('Sesar.view.Main', {
           displayField: 'UnitName',
           valueField: 'UnitCode',
           fieldLabel: 'Klinik:',
+          height: 40,
           labelStyle: 'text-align: right;',
           //flex: 1,
           width: '99%',
@@ -811,10 +679,12 @@ Ext.define('Sesar.view.Main', {
             select: 'updateCharts'
           },
           labelWidth: 65,
+          htmlEncode: true,
           value: Profile.Context ? Profile.Context.Unit.UnitCode : 'alla',
           store: {
             fields: ['UnitCode', 'UnitName'],
             autoLoad: true,
+            data: [{ UnitName: 'Välj en enhet', UnitCode: 'alla' }],
             proxy: {
               type: 'ajax',
               url: '/stratum/api/metadata/units/register/117?apikey=KbxAwmlwLM4=',
@@ -836,14 +706,17 @@ Ext.define('Sesar.view.Main', {
     },
     {
       xtype: 'panel',
-      padding: '20 6 0 0',
-      layout: 'hbox',
+      padding: '0 6 0 0',
+      style: {
+        marginBottom: '20px'
+      },
+      layout: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? 'vbox' : 'hbox',
       border: false,
       items: [{
         xtype: 'sesarfilter',
         itemId: 'startyearFilter',
         checkChangeEvents: ['change'],
-        width: '33%',
+        width: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? '99%' : '33%',
         fieldLabel: 'Från',
         labelStyle: 'text-align: right;',
         labelWidth: 65,
@@ -872,7 +745,7 @@ Ext.define('Sesar.view.Main', {
       {
         xtype: 'sesarfilter',
         itemId: 'endyearFilter',
-        width: '33%',
+        width: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? '99%' : '33%',
         fieldLabel: 'Till',
         labelStyle: 'text-align: right;',
         labelWidth: 65,
@@ -901,7 +774,7 @@ Ext.define('Sesar.view.Main', {
       {
         xtype: 'sesarfilter',
         itemId: 'sexFilter',
-        width: '33%',
+        width: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? '99%' : '33%',
         displayField: 'ValueName',
         valueField: 'ValueCode',
         fieldLabel: 'Kön:',
@@ -985,3 +858,155 @@ Ext.define('Sesar.view.Main', {
     }
   ]
 })
+window.addEventListener("orientationchange", function(){location.reload()});
+Sesar.controller.inputCss =  Ext.os.deviceType === 'Phone' ? 'font-size: 16px;' : ''  
+Ext.util.CSS.removeStyleSheet('shpr')
+Ext.util.CSS.createStyleSheet(
+  ' '
+
+  + '.sesar-select .x-form-item-body {'
+  + '  height: 40px;'
+  + '  border-radius: 3px;'
+  + '}'
+
+  + '.sesar-select input {'
+  + '  color: #3F73A6;'
+  + '  color: #2f5880;'
+  + '  padding: 9px 14px;'
+  + Sesar.controller.inputCss 
+  + '}'
+
+  + '.sesar-select div {'
+  + '  border-radius: 3px;'
+  + '}'
+
+  + '.sesar-select label {'
+  + '  white-space: nowrap;'
+  + '  padding-top: 11px;'
+  + '  color: #3F73A6;'
+  + '  color: #2f5880;'
+  + Sesar.controller.inputCss 
+  + '}'
+
+  + '.sesar-select .x-form-trigger {'
+  + '  vertical-align: middle;'
+  + '  color: #3F73A6;'
+  + '}'
+
+  + '.ton-tab .x-tab-bar { '
+  + '  background-color: white; '
+  + '}'
+
+  + '.ton-tab a:first-of-type { '
+  + '  margin-left: 64px;'
+  + '}'
+
+  + '.ton-tab a:nth-child(1) { '
+  //+ '  left: 65px !important;'
+  + '}'
+
+  + '.ton-tab a:nth-child(2) { '
+  //+ '  left: 252px !important;'
+  //+ '  left: 280px !important;'
+  + '}'
+
+  + '.ton-tab a:nth-child(3) { '
+  //+ '  left: 409px !important;'
+  //+ '  left: 464px !important;'
+  + '}'
+
+  + '.ton-tab .x-tab-bar-default-top>.x-tab-bar-body-default {'
+  + '  padding: 6px;'
+  + '}'
+
+  + '.ton-tab .x-tab-bar-body { '
+  + '  border-bottom: 1px solid green;'
+  + '}'
+
+  + '.ton-tab .x-tab { '
+  + '  background-color: #E7F1FF;'
+  + '  border-radius: 3px 3px 0px 0px; '
+  + '  border-left: solid 1px #00528F; '
+  + '  border-top: solid 1px #00528F; '
+  + '  border-right: 1px solid #00528F; '
+  + '  border-bottom: 1px solid #00528F;'
+  + '  top: 1px !important;'
+  + '}'
+
+  + '.ton-tab .x-tab.x-tab-active.x-tab-default { '
+  + '  border-left: solid 1px #00528F; '
+  + '  border-top: solid 1px #00528F; '
+  + '  border-right: solid 1px #00528F; '
+  + '  border-bottom: solid 1px white; '
+  + '  background-color: white; '
+  + '  outline: none;'
+  + '}'
+
+  + '.ton-tab .x-tab-inner-default { '
+  + '  color: #00528F; '
+  + '  font: 400 16px open_sans, helvetica, arial, sans-serif; '
+  + '  padding: 5px 10px 0px 10px; '
+  + '  height: 35px; '
+  + '} '
+
+  + '.ton-tab .x-tab.x-tab-active.x-tab-default .x-tab-inner-default { '
+  + '  color: #00528F; '
+  + '} '
+
+  + '.ton-tab .x-tab-bar .x-box-inner {'
+  + '  overflow: visible !important;'
+  + '  border-bottom: solid 1px #359aa3;'
+  + '	}'
+
+  + '.ton-tab .x-tab-default-top.x-tab-focus.x-tab-active {'
+  + '  box-shadow: none;'
+  + '}'
+
+  + '.sesar-tooltip-red {'
+  + '  background-color: #DD4C39;'
+  + '  border-color: #DD4C39;'
+  + '}'
+
+  + '.sesar-tooltip-blue {'
+  + '  background-color: #26879B;'
+  + '  border-color: #26879B;'
+  + '}'
+
+  + '.sesar-tooltip-yellow {'
+  + '  background-color: #FED766;'
+  + '  border-color: #FED766;'
+  + '}'
+
+  + '.sesar-tooltip-yellow .x-tip-body-default {'
+  + '  color: black;'
+  + '}'
+  
+  + '.sesar-icon {'
+  + '  color: #00528F !important;'
+  + '}'
+
+  + '.sesar-progressbar {'
+  + '  border-radius: 22px;'
+  + '}'
+
+  + '.sesar-progressbar .x-progress-bar {'
+  //+ '  background-image: linear-gradient(-45deg, #00528F 25%, transparent 25%, transparent 50%, #00528F 50%, #00528F 75%, transparent 75%, transparent);'
+  //+ '  background-position: 0rem -244rem;'
+  //+ '  background-size: 1.5rem 1.5rem;'
+  // + '  animation: stripes 3s linear infinite;'
+  + '  background-color: #77818c !important;'
+  //+ '  background: linear-gradient(to bottom, rgba(235, 189, 138, 1), rgba(252, 238, 213, 1)) !important;'
+  + '}'
+
+  + ' .sesar-category {'
+  + '     padding-top: 10px;'
+  + '     padding-bottom: 6px;'
+  + '     border-top: 1px dashed #000;'
+  + '     font-weight: normal;'
+  + '     margin-top: 5px;'
+  + '  background-color: #e0e0e0;'
+  + '  color: #606060;'
+  + '  cursor: default;'
+  + ' }'
+  , 'siber'
+)
