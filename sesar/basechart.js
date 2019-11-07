@@ -1,4 +1,21 @@
 
+Ext.define('Sesar.view.Filter', {
+  extend: 'Ext.form.field.ComboBox',
+  xtype: 'sesarfilter',
+  alias: 'view.sesarfilter',
+  cls: 'sesar-select',
+  labelWidth: 65,
+  editable: Ext.is.Phone ? false : true,
+  forceSelection: false,
+  typeAhead: true,
+  queryMode: 'local',
+  minChars: 1,
+  anyMatch: true,
+  autoSelect: false,
+  caseSensitive: false,
+  checkChangeEvents: ['change', 'keyup'],
+})
+
 Ext.define('Sesar.chart.Time', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'sesartime',
@@ -8,8 +25,8 @@ Ext.define('Sesar.chart.Time', {
   padding: '10 0 0 0',
   insetPadding: '0 35 20 10',
   touchAction: {
-    panY: true,
-  },
+    panY: true,
+  },
   innerPadding: {
     top: 10,
     left: 10,
@@ -128,8 +145,8 @@ Ext.define('Sesar.chart.AgeGroups', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'sesarage',
   touchAction: {
-    panY: true,
-  },
+    panY: true,
+  },
   border: false,
   colors: ['#E388BE', '#83D6F5'],
   colors: ['#DD4C39', '#0791AB'],
@@ -216,8 +233,8 @@ Ext.define('Sesar.chart.Comparison', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'sesarcomparison',
   touchAction: {
-    panY: true,
-  },
+    panY: true,
+  },
   border: false,
   background: '#ccc',
   colors: ['#E388BE', '#83D6F5'],
@@ -301,12 +318,12 @@ Ext.define('Sesar.chart.Comparison', {
 
       renderer: function (sprite, config, rendererData, index) {
         var record = rendererData.store.getAt(index)
-        if(record && record.data.Mean === 'NA') {
-           return {
+        if (record && record.data.Mean === 'NA') {
+          return {
             fillStyle: '#26000',
             stroke: '#260000'
           }
-        } else if(record && record.data.UnitCode === 'NA'){
+        } else if (record && record.data.UnitCode === 'NA') {
           return {
             fillStyle: '#FED766',
             stroke: '#FED766'
@@ -415,8 +432,8 @@ Ext.define('Sesar.controller.Main', {
         captions.subheader.text = config.subcaption
         chart.usePercentages = config.percentage
         chart.precision = config.precision || 0
-        chart.setCaptions(Ext.Object.merge({},controller.captions, captions))
-        tab === 'comparison' && chart.setHeight(result.length*28+50)
+        chart.setCaptions(Ext.Object.merge({}, controller.captions, captions))
+        tab === 'comparison' && chart.setHeight(result.length * 28 + 50)
         chart.getStore().loadData(result)
         controller.status[tab] = true
       }
@@ -426,6 +443,19 @@ Ext.define('Sesar.controller.Main', {
   createUrl: function (type, filters) {
     return '/stratum/api/statistics/sesar/sesarw-publicstatistics-' + type + '?startyear=' + filters.start + '&stopyear=' + filters.end + '&indicator=' + filters.report + '&sex=' + filters.sex + '&clinic=' + filters.clinic + '&apikey=KbxAwmlwLM4='
   },
+
+  sortDesc: function (a, b) {
+    if (a.data.Mean === 'NA') return -1
+    if (b.data.Mean === 'NA') return 1
+    return a.data.Mean - b.data.Mean
+  },
+
+  sortAsc: function (a, b) {
+    if (a.data.Mean === 'NA') return -1
+    if (b.data.Mean === 'NA') return 1
+    return b.data.Mean - a.data.Mean
+  },
+  
   defaultTexts: {
     header: {
       text: ' '
@@ -497,36 +527,7 @@ Ext.define('Sesar.controller.Main', {
     four: { caption: 'Andel patienter med CPAP som använder den', subcaption: '>=  4 timmar per natt', axis: 'andel', precision: 0, percentage: true }
   },
 
-  sortDesc: function (a, b) {
-    if(a.data.Mean === 'NA') return -1
-    if(b.data.Mean === 'NA') return 1
-    return a.data.Mean-b.data.Mean       
-  },
-
-  sortAsc: function (a, b) {
-    if(a.data.Mean === 'NA') return -1
-    if(b.data.Mean === 'NA') return 1
-    return b.data.Mean-a.data.Mean       
-  },
-
   dirtyTabs: { time: true, age: true, comparison: true }
-})
-
-Ext.define('Sesar.view.Filter', {
-  extend: 'Ext.form.field.ComboBox',
-  xtype: 'sesarfilter',
-  alias: 'view.sesarfilter',
-  cls: 'sesar-select',
-  labelWidth: 65,
-  editable: Ext.is.Phone ? false : true,
-  forceSelection: false,
-  typeAhead: true,
-  queryMode: 'local',
-  minChars: 1,
-  anyMatch: true,
-  autoSelect: false,
-  caseSensitive: false,
-  checkChangeEvents: ['change', 'keyup'],
 })
 
 Ext.define('Sesar.view.Main', {
@@ -550,7 +551,7 @@ Ext.define('Sesar.view.Main', {
           displayField: 'ValueName',
           valueField: 'ValueCode',
           fieldLabel: 'Rapport:',
-          width: '99%', 
+          width: '99%',
           labelStyle: 'text-align: right;',
           labelWidth: 65,
           value: widgetConfig.selected,
@@ -561,12 +562,12 @@ Ext.define('Sesar.view.Main', {
             beforeselect: function () { var disabled = arguments[1].getData().Category === true; return !disabled },
             select: 'updateCharts'
           },
-          
+
           htmlEncode: true,
           store: {
             fields: ['ValueCode', 'ValueName'],
             filters: [
-              function(item) {
+              function (item) {
                 return widgetConfig.category === item.data.Category
               }
             ],
@@ -628,7 +629,7 @@ Ext.define('Sesar.view.Main', {
               }
             }
           }
-        }, 
+        },
       ]
     },
     {
@@ -640,90 +641,90 @@ Ext.define('Sesar.view.Main', {
       layout: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? 'vbox' : 'hbox',
       border: false,
       items: [
-      {
-        xtype: 'sesarfilter',
-        itemId: 'startyearFilter',
-        checkChangeEvents: ['change'],
-        width: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? '99%' : '33%',
-        fieldLabel: 'Från',
-        labelStyle: 'text-align: right;',
-        labelWidth: 65,
-        value: 'year2014',
-        displayField: 'ValueName',
-        valueField: 'ValueCode',
-        listeners: {
-          select: 'updateCharts'
-        },
-        store: {
-          fields: ['ValueCode', 'ValueName'],
-          data: [
-            { ValueName: '2014', ValueCode: 'year2014' },
-            { ValueName: '2015', ValueCode: 'year2015' },
-            { ValueName: '2016', ValueCode: 'year2016' },
-            { ValueName: '2017', ValueCode: 'year2017' },
-            { ValueName: '2018', ValueCode: 'year2018' }
-          ],
-          sorters: {
-            property: 'ValueCode',
-            direction: 'ASC'
+        {
+          xtype: 'sesarfilter',
+          itemId: 'startyearFilter',
+          checkChangeEvents: ['change'],
+          width: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? '99%' : '33%',
+          fieldLabel: 'Från',
+          labelStyle: 'text-align: right;',
+          labelWidth: 65,
+          value: 'year2014',
+          displayField: 'ValueName',
+          valueField: 'ValueCode',
+          listeners: {
+            select: 'updateCharts'
+          },
+          store: {
+            fields: ['ValueCode', 'ValueName'],
+            data: [
+              { ValueName: '2014', ValueCode: 'year2014' },
+              { ValueName: '2015', ValueCode: 'year2015' },
+              { ValueName: '2016', ValueCode: 'year2016' },
+              { ValueName: '2017', ValueCode: 'year2017' },
+              { ValueName: '2018', ValueCode: 'year2018' }
+            ],
+            sorters: {
+              property: 'ValueCode',
+              direction: 'ASC'
+            }
           }
-        }
-      },
-      {
-        xtype: 'sesarfilter',
-        itemId: 'endyearFilter',
-        width: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? '99%' : '33%',
-        fieldLabel: 'Till',
-        labelStyle: 'text-align: right;',
-        labelWidth: 65,
-        value: 'year2018',
-        displayField: 'ValueName',
-        valueField: 'ValueCode',
-        listeners: {
-          select: 'updateCharts',
         },
-        store: {
-          fields: ['ValueCode', 'ValueName'],
-          data: [
-            { ValueName: '2014', ValueCode: 'year2014' },
-            { ValueName: '2015', ValueCode: 'year2015' },
-            { ValueName: '2016', ValueCode: 'year2016' },
-            { ValueName: '2017', ValueCode: 'year2017' },
-            { ValueName: '2018', ValueCode: 'year2018' }
-          ],
-          sorters: {
-            property: 'ValueCode',
-            direction: 'ASC'
+        {
+          xtype: 'sesarfilter',
+          itemId: 'endyearFilter',
+          width: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? '99%' : '33%',
+          fieldLabel: 'Till',
+          labelStyle: 'text-align: right;',
+          labelWidth: 65,
+          value: 'year2018',
+          displayField: 'ValueName',
+          valueField: 'ValueCode',
+          listeners: {
+            select: 'updateCharts',
+          },
+          store: {
+            fields: ['ValueCode', 'ValueName'],
+            data: [
+              { ValueName: '2014', ValueCode: 'year2014' },
+              { ValueName: '2015', ValueCode: 'year2015' },
+              { ValueName: '2016', ValueCode: 'year2016' },
+              { ValueName: '2017', ValueCode: 'year2017' },
+              { ValueName: '2018', ValueCode: 'year2018' }
+            ],
+            sorters: {
+              property: 'ValueCode',
+              direction: 'ASC'
+            }
           }
-        }
-      },
-      {
-        xtype: 'sesarfilter',
-        itemId: 'sexFilter',
-        width: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? '99%' : '33%',
-        displayField: 'ValueName',
-        valueField: 'ValueCode',
-        fieldLabel: 'Kön:',
-        labelWidth: 65,
-        height: 40,
-        labelStyle: 'text-align: right;',
-        value: 'both',
-        listeners: {
-          select: 'updateCharts'
         },
-        store: {
-          fields: ['ValueCode', 'ValueName'],
-          data: [
-            { ValueName: 'Båda', ValueCode: 'both' },
-            { ValueName: 'Män', ValueCode: 'man' },
-            { ValueName: 'Kvinnor', ValueCode: 'woman' },
-          ],
-          sorters: {
-            property: 'ValueCode',
-            direction: 'ASC'
+        {
+          xtype: 'sesarfilter',
+          itemId: 'sexFilter',
+          width: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? '99%' : '33%',
+          displayField: 'ValueName',
+          valueField: 'ValueCode',
+          fieldLabel: 'Kön:',
+          labelWidth: 65,
+          height: 40,
+          labelStyle: 'text-align: right;',
+          value: 'both',
+          listeners: {
+            select: 'updateCharts'
+          },
+          store: {
+            fields: ['ValueCode', 'ValueName'],
+            data: [
+              { ValueName: 'Båda', ValueCode: 'both' },
+              { ValueName: 'Män', ValueCode: 'man' },
+              { ValueName: 'Kvinnor', ValueCode: 'woman' },
+            ],
+            sorters: {
+              property: 'ValueCode',
+              direction: 'ASC'
+            }
           }
-        }
-      }]
+        }]
     },
     {
       xtype: 'tabpanel',
@@ -783,8 +784,8 @@ Ext.define('Sesar.view.Main', {
     }
   ]
 })
-window.addEventListener("orientationchange", function(){location.reload()});
-Sesar.controller.inputCss =  Ext.os.deviceType === 'Phone' ? 'font-size: 16px;' : ''  
+window.addEventListener("orientationchange", function () { location.reload() });
+Sesar.controller.inputCss = Ext.os.deviceType === 'Phone' ? 'font-size: 16px;' : ''
 Ext.util.CSS.removeStyleSheet('shpr')
 Ext.util.CSS.createStyleSheet(
   ' '
@@ -798,7 +799,7 @@ Ext.util.CSS.createStyleSheet(
   + '  color: #3F73A6;'
   + '  color: #2f5880;'
   + '  padding: 9px 14px;'
-  + Sesar.controller.inputCss 
+  + Sesar.controller.inputCss
   + '}'
 
   + '.sesar-select div {'
@@ -810,7 +811,7 @@ Ext.util.CSS.createStyleSheet(
   + '  padding-top: 11px;'
   + '  color: #3F73A6;'
   + '  color: #2f5880;'
-  + Sesar.controller.inputCss 
+  + Sesar.controller.inputCss
   + '}'
 
   + '.sesar-select .x-form-trigger {'
@@ -891,7 +892,7 @@ Ext.util.CSS.createStyleSheet(
   + '.sesar-tooltip-yellow .x-tip-body-default {'
   + '  color: black;'
   + '}'
-  
+
   + '.sesar-icon {'
   + '  color: #00528F !important;'
   + '}'
