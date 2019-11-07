@@ -2,28 +2,23 @@
 Ext.define('Sesar.chart.Time', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'sesartime',
+  cls: 'sesar-timechart',
+  border: false,
+  colors: ['#DD4C39', '#0791AB'],
+  padding: '10 0 0 0',
+  insetPadding: '0 35 20 10',
   touchAction: {
     panY: true,
   },
-  border: false,
-  colors: ['#E388BE', '#83D6F5'],
-  colors: ['#DD4C39', '#0791AB'],
-  //colors: ['#E16E28', '#40CADA'],
-  //colors: ['#E16E28', '#0791AB'],
-  //colors: ['#DC6910', '#0ba1af'],
-  padding: '10 0 0 0',
-  insetPadding: '0 35 20 10',
   innerPadding: {
     top: 10,
     left: 10,
     right: 10,
     bottom: 10
   },
-  cls: 'sesar-timechart',
   legend: {
     type: 'dom'
   },
-  border: false,
   store: {
     data: [],
   },
@@ -71,8 +66,6 @@ Ext.define('Sesar.chart.Time', {
       title: 'Kliniken',
       xField: 'Year',
       yField: 'Clinic_Mean',
-      // colors: ['#D44A9C'],
-      // colors: ['rgb(230, 112, 48)'],
       useDarkerStrokeColor: false,
       style: {
         lineWidth: 4,
@@ -81,14 +74,10 @@ Ext.define('Sesar.chart.Time', {
         type: 'circle',
         size: 4,
         radius: 7,
-        // fill: '#D44A9C',
         fillOpacity: 1,
         'stroke-width': 3,
         strokeStyle: '#fff'
       },
-      /*marker: {
-        scaling: 1.5
-      },*/
       tooltip: {
         style: {
           backgroundColor: '#DD4C39',
@@ -108,8 +97,6 @@ Ext.define('Sesar.chart.Time', {
       title: 'Riket',
       xField: 'Year',
       yField: 'State_Mean',
-      // colors: ['#3CBFEF'],
-      // colors: ['rgb(25, 149, 173)'],
       useDarkerStrokeColor: false,
       style: {
         lineWidth: 4
@@ -118,14 +105,10 @@ Ext.define('Sesar.chart.Time', {
         type: 'circle',
         size: 4,
         radius: 7,
-        // fill: '#3CBFEF',
         fillOpacity: 1,
         'stroke-width': 3,
         strokeStyle: '#fff'
       },
-      /*marker: { 
-        scaling: 1.5
-      },*/
       tooltip: {
         style: {
           backgroundColor: 'rgb(25, 149, 173)',
@@ -153,7 +136,6 @@ Ext.define('Sesar.chart.AgeGroups', {
   padding: '10 0 0 0',
   innerPadding: {
     top: 10,
-    //left: 10,
     right: 10,
     bottom: 10
   },
@@ -171,7 +153,6 @@ Ext.define('Sesar.chart.AgeGroups', {
     type: 'numeric',
     position: 'left',
     titleMargin: 20,
-    //fields: ['Clinic_Mean', 'State_Mean'],
     style: {
       strokeStyle: '#9aa8bc',
       axisLine: false
@@ -209,23 +190,12 @@ Ext.define('Sesar.chart.AgeGroups', {
       stacked: false,
       xField: 'Agegroups',
       yField: ['Clinic_Mean', 'State_Mean'],
-      // title: 'Kliniken',
-      // colors: ['#D44A9C'],
-      // colors: ['rgb(230, 112, 48)'],
-      // colors: ['#E9724C', 'blue'],
       useDarkerStrokeColor: false,
       style: {
         lineWidth: 4,
         maxBarWidth: 40
       },
       tooltip: {
-        /*
-        style: {
-          backgroundColor: '#DD4C39',
-          borderColor: '#DD4C39',
-        },*/
-        //autoHide: true,
-        //dismissDelay: 0,
         renderer: function (tooltip, record, context) {
           var field = context.field.replace(/_[A-z]*/, '')
           var text = record.get(field + '_Numerator')
@@ -251,7 +221,6 @@ Ext.define('Sesar.chart.Comparison', {
   border: false,
   background: '#ccc',
   colors: ['#E388BE', '#83D6F5'],
-  // height: 345,
   callout: 'none',
   padding: '10 0 0 0',
   innerPadding: {
@@ -309,13 +278,8 @@ Ext.define('Sesar.chart.Comparison', {
       title: 'Kliniken',
       xField: 'UnitName',
       yField: 'Mean',
-      //colors: ['#D44A9C'],
-      //colors: ['rgb(230, 112, 48)'],
-      //colors: ['#E9724C'],
       colors: ['#26879B'],
       useDarkerStrokeColor: false,
-
-      
       label: {
         display: 'outside',
         color: '#333',
@@ -353,27 +317,13 @@ Ext.define('Sesar.chart.Comparison', {
             stroke: '#DD4C39'
           }
         } else {
-          // FFBA49
           return {
             fillStyle: '#26879B',
             stroke: '#26879B'
           }
-          /*
-          return {
-            fillStyle: '#FFBC42',
-            stroke: '#FFBC42'
-          }
-          
-          return {
-            fillStyle: '#E9724C',
-            stroke: '#E9724C'
-          }
-          */
         }
       },
       tooltip: {
-        //autoHide: true,
-        //dismissDelay: 0,
         renderer: function (tooltip, record, context) {
           tooltip.setHtml('Antal: ' + record.get('Denominator'))
           if (record && record.data.UnitCode === this.getChart().up('#mainView').getController().filters.clinic) {
@@ -467,9 +417,6 @@ Ext.define('Sesar.controller.Main', {
         chart.precision = config.precision || 0
         chart.setCaptions(Ext.Object.merge({},controller.captions, captions))
         tab === 'comparison' && chart.setHeight(result.length*28+50)
-        // widgetConfig[report] && chart.setCaptions(Ext.Object.merge(controller.captions, widgetConfig[report]))
-        // !widgetConfig[report] && chart.setCaptions(Ext.Object.merge(controller.captions, controller.defaultTexts))
-        // chart.getAxes()[0].setTitle({text: controller.axisTitles[report] || 'andel', strokeStyle: 'darkslategrey', lineWidth: 1, globalAlpha: 0.4}) 
         chart.getStore().loadData(result)
         controller.status[tab] = true
       }
@@ -591,9 +538,9 @@ Ext.define('Sesar.view.Main', {
     {
       xtype: 'panel',
       padding: '0 6 0 0',
-      layout: Ext.is.Phone ? 'vbox' : 'hbox',
+      layout: 'vbox',
       style: {
-        marginBottom: Ext.is.Phone ? '3px' : '20px'
+        marginBottom: Ext.is.Phone ? '0px' : '0px'
       },
       border: false,
       items: [
@@ -603,8 +550,7 @@ Ext.define('Sesar.view.Main', {
           displayField: 'ValueName',
           valueField: 'ValueCode',
           fieldLabel: 'Rapport:',
-          width: '99%', // Ext.is.Phone ? '99%' : '50%',
-          height: 40,
+          width: '99%', 
           labelStyle: 'text-align: right;',
           labelWidth: 65,
           value: widgetConfig.selected,
@@ -645,35 +591,16 @@ Ext.define('Sesar.view.Main', {
               { ValueName: 'Förändring av ESS vid behandling med CPAP', ValueCode: 'ESSchange_CPAP', Category: 'TherapyOutcomes' },
               { ValueName: 'Förändring av ESS vid behandling med apnébettskena', ValueCode: 'ESSchange_apne', Category: 'TherapyOutcomes' },
               { ValueName: 'Andel med CPAP som använder den >=  4 timmar per natt', ValueCode: 'four', Category: 'TherapyOutcomes' },
-            ],
-            /*
-            sorters: {
-              property: 'ValueCode',
-              direction: 'ASC'
-            }
-            */
+            ]
           }
-        }
-      ]
-    },
-    {
-      xtype: 'panel',
-      padding: '0 6 0 0',
-      layout: 'vbox',
-      style: {
-        marginBottom: Ext.is.Phone ? '3px' : '20px'
-      },
-      border: false,
-      items: [
+        },
         {
           xtype: 'sesarfilter',
           itemId: 'clinicFilter',
           displayField: 'UnitName',
           valueField: 'UnitCode',
           fieldLabel: 'Klinik:',
-          height: 40,
           labelStyle: 'text-align: right;',
-          //flex: 1,
           width: '99%',
           listeners: {
             select: 'updateCharts'
@@ -701,7 +628,7 @@ Ext.define('Sesar.view.Main', {
               }
             }
           }
-        }
+        }, 
       ]
     },
     {
@@ -712,7 +639,8 @@ Ext.define('Sesar.view.Main', {
       },
       layout: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? 'vbox' : 'hbox',
       border: false,
-      items: [{
+      items: [
+      {
         xtype: 'sesarfilter',
         itemId: 'startyearFilter',
         checkChangeEvents: ['change'],
@@ -733,8 +661,7 @@ Ext.define('Sesar.view.Main', {
             { ValueName: '2015', ValueCode: 'year2015' },
             { ValueName: '2016', ValueCode: 'year2016' },
             { ValueName: '2017', ValueCode: 'year2017' },
-            { ValueName: '2018', ValueCode: 'year2018' },
-            // { ValueName: '2019', ValueCode: 'year2019' },
+            { ValueName: '2018', ValueCode: 'year2018' }
           ],
           sorters: {
             property: 'ValueCode',
@@ -762,8 +689,7 @@ Ext.define('Sesar.view.Main', {
             { ValueName: '2015', ValueCode: 'year2015' },
             { ValueName: '2016', ValueCode: 'year2016' },
             { ValueName: '2017', ValueCode: 'year2017' },
-            { ValueName: '2018', ValueCode: 'year2018' },
-            // { ValueName: '2019', ValueCode: 'year2019' },
+            { ValueName: '2018', ValueCode: 'year2018' }
           ],
           sorters: {
             property: 'ValueCode',
@@ -779,7 +705,6 @@ Ext.define('Sesar.view.Main', {
         valueField: 'ValueCode',
         fieldLabel: 'Kön:',
         labelWidth: 65,
-        // width: Ext.is.Phone ? '99%' : '50%',
         height: 40,
         labelStyle: 'text-align: right;',
         value: 'both',
@@ -901,20 +826,6 @@ Ext.util.CSS.createStyleSheet(
   + '  margin-left: 64px;'
   + '}'
 
-  + '.ton-tab a:nth-child(1) { '
-  //+ '  left: 65px !important;'
-  + '}'
-
-  + '.ton-tab a:nth-child(2) { '
-  //+ '  left: 252px !important;'
-  //+ '  left: 280px !important;'
-  + '}'
-
-  + '.ton-tab a:nth-child(3) { '
-  //+ '  left: 409px !important;'
-  //+ '  left: 464px !important;'
-  + '}'
-
   + '.ton-tab .x-tab-bar-default-top>.x-tab-bar-body-default {'
   + '  padding: 6px;'
   + '}'
@@ -990,12 +901,7 @@ Ext.util.CSS.createStyleSheet(
   + '}'
 
   + '.sesar-progressbar .x-progress-bar {'
-  //+ '  background-image: linear-gradient(-45deg, #00528F 25%, transparent 25%, transparent 50%, #00528F 50%, #00528F 75%, transparent 75%, transparent);'
-  //+ '  background-position: 0rem -244rem;'
-  //+ '  background-size: 1.5rem 1.5rem;'
-  // + '  animation: stripes 3s linear infinite;'
   + '  background-color: #77818c !important;'
-  //+ '  background: linear-gradient(to bottom, rgba(235, 189, 138, 1), rgba(252, 238, 213, 1)) !important;'
   + '}'
 
   + ' .sesar-category {'
