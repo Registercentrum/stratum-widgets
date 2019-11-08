@@ -1,39 +1,14 @@
 
-Ext.Loader.loadScript({
-  url: '/stratum/extjs/scripts/exporter.js',
-  onLoad: function () { }
-});
-
-Ext.Loader.loadScript({
-  url: '/stratum/extjs/scripts/pivot.js',
-  onLoad: function () { onReady(); }
-});
- 
-var params = {
-    ContextID: 32558,
-    IsActive: true,
-    /*
-    Role: {
-      RoleID: 903,
-    }
-    */
+function start () {
+  Ext.Loader.loadScript({
+    url: '/stratum/extjs/scripts/exporter.js',
+    onLoad: function () { onReady(); }
+  });
 }
 
-
-Ext.Ajax.request({
-  url: 'http://w10-076.rcvg.local/stratum/api/metadata/contexts/32558',
-  method: 'PUT',
-  jsonData: params,
-  withCredentials: true,
-  success: function (result, request){
-    console.log(Ext.decode(result.responseText));
-  },
-  failure: function (result, request){
-    console.log(result.responseText);
-  }
-});
-
 function onReady() {
+  var register = Profile.Context.Unit.Register.RegisterID
+  Ext.tip.QuickTipManager.init()
   Ext.define('RC.UserAdministration.controller.FileController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.drag-file',
@@ -61,11 +36,11 @@ function onReady() {
     },
 
     onDragEnter: function () {
-      this.getView().body.addCls('active');
+      this.getView().body.addCls('rc-active');
     },
 
     onDragLeave: function () {
-      this.getView().body.removeCls('active');
+      this.getView().body.removeCls('rc-active');
     },
 
     beforeDrop: function () {
@@ -115,7 +90,9 @@ function onReady() {
       users: [],
       contexts: [],
       units: [],
-      observers: []
+      observers: [],
+      loginsSith: [],
+      loginsBankId: []
     },
     constructor: function (config) {
       this.initConfig(config);
@@ -128,24 +105,199 @@ function onReady() {
     loadData: function () {
       var controller = this;
       Ext.Promise.all([
+	    Ext.Ajax.request({ url: '/stratum/api/metadata/units/register/' + Profile.Site.Register.RegisterID}),
+      ]).then(function(results) { 
+        var units = Ext.decode(results[0].responseText).data;
+	    controller.setUnits(units);
+	    controller.getObservers().forEach(function(observer) {
+          observer.fireEvent('unitsloaded', controller);
+        })
+	  });
+      Ext.Promise.all([
+        Ext.Ajax.request({ url: '/stratum/api/metadata/logentries/latest/logtype/1102/', method: 'GET' }),
+	    Ext.Ajax.request({ url: '/stratum/api/metadata/logentries/latest/logtype/1104/', method: 'GET' }),
+	    Ext.Ajax.request({ url: '/stratum/api/metadata/units/register/' + Profile.Site.Register.RegisterID}),
+      ]).then(function(results) { 
+        var loginsSith = Ext.decode(results[0].responseText).data;
+		var loginsBankid = Ext.decode(results[1].responseText).data;
+        var units = Ext.decode(results[2].responseText).data;
+
+	    controller.setLoginsSith(loginsSith)
+	    controller.setLoginsBankId(loginsBankid)
+	    controller.setUnits(units);
+	    
+	    controller.getObservers().forEach(function(observer) {
+          observer.fireEvent('loginsloaded', controller);
+        })
+	  });
+      Ext.Promise.all([
         Ext.Ajax.request({ url: '/stratum/api/metadata/users/register/' + Profile.Site.Register.RegisterID }),
         Ext.Ajax.request({ url: '/stratum/api/metadata/contexts/register/' + Profile.Site.Register.RegisterID }),
-        Ext.Ajax.request({ url: '/stratum/api/metadata/units/register/' + Profile.Site.Register.RegisterID}),
       ]).then(function (results) {
           var users = Ext.decode(results[0].responseText).data;
           var contexts = Ext.decode(results[1].responseText).data;
-          var units = Ext.decode(results[2].responseText).data;
 
           controller.setUsers(users);
-          controller.setContexts(contexts);
-          controller.setUnits(units);
-          
+          controller.setContexts(contexts);  
           controller.getObservers().forEach(function(observer) {
             observer.fireEvent('dataloaded', controller);
           })
-        });
+      });
     }
   }); 
+  
+  Ext.define('RC.UserAdministration.form.User', {
+    extend: 'Ext.form.Panel',
+    xtype: 'rcuserform',
+    defaults: {
+        layout: 'form',
+        xtype: 'container',
+        defaultType: 'textfield',
+        columnWidth: 0.49
+    },
+    layout: 'column',
+    width: 800,
+    items: [
+      {
+        items: [
+            { fieldLabel: 'Förnamn', name: 'firstName', bind: '{user.FirstName}' },
+            { fieldLabel: 'Efternamn', name: 'lastName', bind: '{user.LastName}' },
+            { fieldLabel: 'Epostadress', name: 'email', bind: '{user.Email}' },
+            { fieldLabel: 'Registerinfo', name: 'info', bind: '{user.Info}' },
+        ]
+      }, 
+      {
+        items: [
+            { fieldLabel: 'HSAID', name: 'hsaid', bind: '{user.HSAID}', itemId: 'hsaid' },
+            { fieldLabel: 'Personnummer', name: 'personalid', bind: '{user.PersonalId}', itemId: 'personalid', msgTarget: 'qtip', validator: function(val) { return this.up('form').validatePersonalId(val) } },
+            { fieldLabel: 'Organisation', name: 'organisation', bind: '{user.Organization}' },
+            { fieldLabel: 'Titel', name: 'title', bind: '{user.WorkTitle}' },
+            { fieldLabel: 'Senast inloggad', bind: '{user.LatestLogin}', cls: 'rc-info', itemId: 'latestLogin' }
+            
+        ]
+      }
+    ],
+    dockedItems: [
+      {
+        xtype: 'toolbar',
+        dock: 'bottom',
+        border: false,
+        items: [
+          {
+            xtype: 'tbspacer', width: 684
+          },
+          /*
+          {
+              xtype: 'button',
+              text: 'Nytt Sithskort',
+              minWidth: 80,
+              handler: function () {
+                  this.up('form').down('#username').show()
+                  this.up('form').down('#personalid').hide()
+                  console.log('nytt siths')
+              }
+          },
+          {
+              xtype: 'button',
+              text: 'Nytt BankID',
+              minWidth: 80,
+              handler: function () {
+                  this.up('form').down('#username').hide()
+                  this.up('form').down('#personalid').show()
+                  console.log('nytt bankid')
+              }
+          },
+          */
+          {
+            xtype: 'button',
+            text: 'Spara',
+            minWidth: 80,
+            handler: function () {
+                var user = this.up('rcuserform').getViewModel().data.user
+                var extra = this.up('rcuserform').up().Info || {}
+                extra[register] = user.Info
+                var updatedUser = {
+                    UserID: user.UserID,
+                    WorkTitle: user.WorkTitle,
+                    Username: user.Username,
+                    Email: user.Email,
+                    FirstName: user.FirstName,
+                    LastName: user.LastName,
+                    HSAID: user.HSAID,
+                    Organization: user.Organization,
+                    Title: user.Title,
+                    Extra: JSON.stringify(extra)
+                }
+                this.up('form').saveUser(updatedUser)
+                this.up('window').destroy()
+            }
+          }
+         ]
+      }
+    ],
+
+    initComponent: function () {
+      this.callParent()
+      var personalid = this.getViewModel().get('user').PersonalId
+      if(personalid) {
+          this.down('#personalid').show()
+          this.down('#hsaid').hide()
+      } else {
+          this.down('#personalid').hide()
+          this.down('#hsaid').show()
+      }
+    },
+
+    saveUser: function (user) {
+        console.log({form: user, controller: controller})
+        var controller = this
+        Ext.Ajax.request({
+          url: '/stratum/api/metadata/users/' + user.UserID,
+          method: 'PUT',
+          jsonData: user,
+          withCredentials: true,
+          success: function (result, request){
+            controller.updateUser(user, controller)
+          },
+          failure: function (result, request){
+            console.log(result.responseText);
+         }
+     });
+    },
+
+    updateUser: function(user, controller) {
+      console.log({form: user})
+        Ext.Ajax.request({
+          url: '/stratum/api/metadata/contexts/user/' + user.UserID,
+          method: 'GET',
+          jsonData: user,
+          withCredentials: true,
+          success: function (result, request){
+            console.log(Ext.decode(result.responseText));
+            var index = Ext.ComponentQuery.query('usergrid')[0].getStore().find('UserID', user.UserID)
+            var userToUpdate = Ext.ComponentQuery.query('usergrid')[0].getStore().getAt(index)
+            user.Contexts = Ext.decode(result.responseText).data
+            Ext.ComponentQuery.query('usergrid')[0].getStore().removeAt(index)
+            Ext.ComponentQuery.query('usergrid')[0].getStore().add(user)
+          },
+          failure: function (result, request){
+            console.log(result.responseText);
+         }
+     });  
+    },
+
+    validatePersonalId: function (value) {
+      var validator = new RegExp(/^\d{8}-\w{4}$/)
+      return validator.test(value) ? true : false
+    },
+
+    displayLatestLogin: function () {
+      var user = this.getViewModel().getData().user.UserID
+      var field = this.down('#latestLogin')
+      field.setValue(time.data[0].PerformedAt.slice(0,10))
+    }
+
+  });
 
   Ext.define('RC.UserAdministration.view.Filter', {
     extend: 'Ext.form.field.ComboBox',
@@ -178,31 +330,56 @@ function onReady() {
 
     export: function () {
       Ext.util.CSV.delimiter = ';';
-      this.getView().saveDocumentAs({ type: 'csv', fileName: 'users.csv' });
+      this.getView().saveDocumentAs({ type: 'xlsx', fileName: 'users.xlsx' });
     },
+    
     mail: function () { 
-      console.log('mailed'); 
+      var selections = this.getView().getSelection()
+      var mailList = ''
+      selections.forEach(function(user){
+        if(Ext.data.validator.Email(user.getData().Email)){
+          mailList += user.getData().Email + ';'
+        }
+      })
+      window.location = 'mailto:' + mailList
     },
 
     edit: function () { 
+      var selections = this.getView().getSelection()
+      if(selections.length === 1 ) {
+        this.userClicked(null, selections[0])
+      }
       console.log('edited'); 
+    },
+
+    create: function () {
+        console.log('created')
     },
     
     updateStores: function (dataLoader) {
-      var units = dataLoader.getUnits();
       var users = dataLoader.getUsers();
       var contexts = dataLoader.getContexts();
       
-      this.loadOwnUnits(units);
       this.loadOwnUsers(users, contexts);
       this.setLoader(dataLoader);
+      this.getView().down('#searchOwnButton').setDisabled(false)
+      // this.getView().up().getComponent('contextsView').setDisabled(false)
+    },
+
+    updateDropdowns: function (dataLoader) {
+      var units = dataLoader.getUnits();  
+      this.loadOwnUnits(units);
+    },
+
+    updateLogins: function(dataLoader) {
+       this.setLoader(dataLoader)
     },
 
     loadOwnUnits: function (units) {
       var unitFilter = this.getView().down('#unitFilter');
       var unitStore = unitFilter.getStore();
       unitStore.loadData(units);
-      unitStore.add({ UnitName: 'Alla', UnitID: 0 });
+      unitStore.add({ UnitName: ' Alla', UnitID: 0 });
       unitStore.sort({ property: 'UnitName', direction: 'ASC' });
       unitFilter.setValue(0);
     },
@@ -211,7 +388,7 @@ function onReady() {
       var userStore = this.getView().getStore();
       this.addContexts(users);
       this.join(users, contexts);
-      userStore.loadData(users);
+      // userStore.loadData(users);
       this.updateGrid();
       this.ownUsers = users;
     },
@@ -233,12 +410,13 @@ function onReady() {
       var filter = function (item) {
         var contexts = item.data.Contexts;
         if (contexts) {
-          var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906; }).length !== 0;
+          // var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906; }).length !== 0;
+          var isDeveloper = item.data.UserID < 200 
           var showDevelopers = role === 906;
           if (isDeveloper && !showDevelopers) { return false; }
           if (user === '') { return true; }
           var unitContexts = contexts.filter(function (context) { 
-            return Ext.String.startsWith(context.User.Username, user, true) || Ext.String.startsWith(context.User.FirstName, user, true) || Ext.String.startsWith(context.User.LastName, user, true); 
+            return Ext.String.startsWith(context.User.Username, user, true) || Ext.String.startsWith(context.User.FirstName, user, true) || Ext.String.startsWith(context.User.LastName, user, true) || (context.User.Extra && JSON.parse(context.User.Extra)[register] === user); 
           });
           var isPartOfUnit = unitContexts.length !== 0;
           return isPartOfUnit;
@@ -252,7 +430,8 @@ function onReady() {
       var filter = function (item) {
         var contexts = item.data.Contexts;
         if (contexts) {
-          var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906; }).length !== 0;
+          // var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906; }).length !== 0;
+          var isDeveloper = item.data.UserID < 200 
           var showDevelopers = role === 906;
           if (isDeveloper && !showDevelopers) { return false; }
           if (unit === 0) { return true; }
@@ -269,7 +448,8 @@ function onReady() {
       var filter = function (item) {
         var contexts = item.data.Contexts;
         if (contexts && role) {
-          var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906; }).length !== 0;
+          // var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906; }).length !== 0;
+          var isDeveloper = item.data.UserID < 200 
           var roles = contexts.filter(function (context) { return context.Role.RoleID === role && (role === 906 || !isDeveloper); });
           var isInRole = roles.length !== 0;
           return isInRole;
@@ -304,12 +484,14 @@ function onReady() {
       var unit   = this.getView().down('#unitFilter').getValue();
       var role   = this.getView().down('#roleFilter').getValue();
       var active = this.getView().down('#activeFilter').getValue();
-
+      
+      store.suspendEvents()
       store.clearFilter();
-      store.addFilter(this.createUserFilter(user, role));
-      store.addFilter(this.createUnitFilter(unit, role));
-      store.addFilter(this.createRoleFilter(role));
-      store.addFilter(this.createActiveFilter(active, role));
+      store.addFilter(this.createUserFilter(user, role))
+      store.addFilter(this.createUnitFilter(unit, role))
+      store.addFilter(this.createRoleFilter(role))
+      store.resumeEvents()
+      store.addFilter(this.createActiveFilter(active, role))
     },
 
     searchOwn: function () {
@@ -327,8 +509,12 @@ function onReady() {
       this.getView().down('#labelBar').hide();
       this.getView().down('#filterBar').hide();
       var me = this;
-      var userQuery   = this.getView().down('#userFilter').getValue();
-      this.loadUsers(userQuery).then(function (response) { me.followupAction(response); });
+      var userQuery   = this.getView().down('#userFilter').getValue()
+      if (userQuery === '') {
+        this.getView().getStore().removeAll()
+      } else {
+        this.loadUsers(userQuery).then(function (response) { me.followupAction(response) })
+      }
     },
 
     loadUsers: function (query) {
@@ -347,8 +533,103 @@ function onReady() {
 
     followupAction: function (response) {
       this.getView().getStore().loadRawData(Ext.decode(response.responseText).data)
-      console.log('followup');
-    } 
+    },
+
+    userClicked: function (component, record, item, index) {
+      var etxra, info
+      record.data.LatestLogin = this.getLatestLogin(record.data.UserID)
+      record.data.Contexts && record.data.Contexts.forEach(function(item){item.User.Extra && delete item.User.Extra})
+      extra = record.data.Extra
+      if(typeof record.data.Extra === 'string') {
+          record.data.Info = JSON.parse(record.data.Extra)[register]
+          info =JSON.parse(record.data.Extra)
+      }
+      record.data.Extra = null
+      record.data.PersonalId = this.checkIfPersonalId(record.data.HSAID) ? record.data.HSAID : null
+      var userWindow = Ext.create('Ext.window.Window', {
+        modal: true,
+        title: 'Användare',
+        items: [
+          {
+            xtype: 'rcuserform',
+            viewModel: {
+              stores: {
+                user: record.data
+              }
+            }
+          },
+          {
+            xtype: 'contextgrid',
+            width: 800,
+            height: 300,
+            plugin: true,
+            listeners: {
+                beforerender: function() {
+                    this.down('toolbar').hide()
+                    this.down('#gridHeader').show()
+                    this.down('#labelBar').hide()
+                    this.down('#filterBar').hide()
+                }
+            },
+            store: {
+              data: record.data.Contexts
+            },
+          },
+          {
+            xtype: 'toolbar',
+            dock: 'bottom',
+            itemId: 'buttonBar',
+            items: [{xtype: 'tbspacer', width: 690}, {
+              minWidth: 80,
+              text: 'Stäng',
+              handler: function() {
+                  this.up('window').destroy()
+              }
+            }]
+          },
+        ],
+        /*
+        destroy : function() {
+          this.down('grid').getStore().destroy();
+          this.callParent(arguments);
+        }*/
+      }).show();
+      userWindow.Info = info
+      if(!record.data.Contexts) {
+        this.loadContexts(userWindow, record.data.UserID)
+      }
+      record.data.Extra = extra
+    }, 
+
+    checkIfPersonalId:  function (value) {
+      return value && (value.indexOf('19') === 0 || value.indexOf('20') === 0)
+    },
+
+    loadContexts: function (component, userId) {
+      var contexts = this.getLoader() && this.getLoader().getContexts().filter(function(c){return c.User.UserID === userId})
+      if(contexts.length !== 0) {
+          component.down('grid').getStore().loadData(contexts)
+      } else {
+        Ext.Ajax.request({
+          url: '/stratum/api/metadata/contexts/user/' + userId,
+          withCredentials: true,
+          success: function (result, request){
+            var data = Ext.decode(result.responseText).data
+            component.down('grid').getStore().loadData(data)
+          }
+       });
+      }
+    },
+
+    getLatestLogin: function(user){
+        if(!this.getLoader() || !this.getLoader().getLoginsSith()) return ''
+        var bankIdLog = this.getLoader().getLoginsBankId().filter(function(logitem){return logitem.Context.User.UserID === user})[0];
+        var latestBankIdLogin = bankIdLog ? bankIdLog.PerformedAt.slice(0, 10) : ''
+        var sithsLog = this.getLoader().getLoginsSith().filter(function(logitem){return logitem.Context.User.UserID === user})[0]
+        var latestSithsLogin = sithsLog ? sithsLog.PerformedAt.slice(0, 10) : ''
+        var latestOfAll = latestBankIdLogin > latestSithsLogin ? latestBankIdLogin : latestSithsLogin
+        return latestOfAll
+    }
   });
 
   Ext.define('RC.UserAdministration.view.UserGrid', {
@@ -358,6 +639,7 @@ function onReady() {
     multiSelect: true,
     selModel: 'rowmodel',
     width: 750,
+    height: 500,
 
     initComponent: function () {
       this.callParent();
@@ -368,26 +650,33 @@ function onReady() {
     },
     
     listeners: {
-      dataloaded: 'updateStores'
-    },
-
-    header: {
-      style: {
-        backgroundColor: Profile.Site.ThemeSettings.BaseColor
-      },
-      title: {
-        text: 'Användare',
-        style: {
-          color: 'white'
-        }
-      },
+      unitsloaded: 'updateDropdowns',
+      loginsloaded: 'updateLogins',
+      dataloaded: 'updateStores',
+      groupclick: function(){return false;},
+      itemdblclick: 'userClicked',
+      refresh: function() {this.update()}
     },
 
     store: {
+      // groupField: 'FirstName',
       data: [],
-      filters: []
+      filters: [],
+      sorters: {
+          property: 'LastName'
+      },
     },
-
+      
+      features: [{ftype:'grouping', enableGroupingMenu: true }],
+      /*
+      features: [{
+        id: 'group',
+        ftype: 'groupingsummary',
+        groupHeaderTpl: '{name}',
+        hideGroupedHeader: true,
+        enableGroupingMenu: false
+      }],
+*/
     columns: [
       {
         text: 'Förnamn',
@@ -414,6 +703,11 @@ function onReady() {
         dataIndex: 'Organization',
         flex: 1,
         sortable: true
+      }, {
+        text: 'Epost',
+        dataIndex: 'Email',
+        flex: 1,
+        sortable: true
       }
     ],
 
@@ -421,31 +715,38 @@ function onReady() {
       {
         xtype: 'toolbar',
         dock: 'top',
+        border: false,
         items: [
           {
             xtype: 'textfield',
             itemId: 'userFilter',
-            flex: 3,
+            flex: 6,
             keyMap: {
-              'ctrl+enter': {
-                handler: 'searchAll'
-              },
               'enter': {
                 handler: 'searchOwn'
               },
+              /*
+              'enter': {
+                handler: 'searchAll'
+              },
+              */
             },
           },
-          {
-            xtype: 'button',
-            text: 'Sök (egna)',
-            flex: 1,
-            handler: 'searchOwn'
-          },
+          /*
           {
             xtype: 'button',
             text: 'Sök (alla)',
             flex: 1,
             handler: 'searchAll'
+          },
+          */
+          {
+            xtype: 'button',
+            itemId: 'searchOwnButton',
+            text: 'Sök',
+            flex: 1,
+            handler: 'searchOwn',
+            disabled: true
           },
         ]
       },
@@ -453,6 +754,8 @@ function onReady() {
         xtype: 'toolbar',
         dock: 'top',
         itemId: 'labelBar',
+        hidden: false,
+        border: false,
         items: [
           { xtype: 'label', text: 'Enhet', height: 15, flex: 1, padding: '0 0 0 3' },
           { xtype: 'label', text: 'Roll',  height: 15, flex: 1, padding: '0 0 0 3' },
@@ -463,6 +766,8 @@ function onReady() {
         xtype: 'toolbar',
         dock: 'top',
         itemId: 'filterBar',
+        hidden: false,
+        border: false,
         items: [
           {
             xtype: 'rcfilter',
@@ -496,11 +801,11 @@ function onReady() {
                 { ValueCode: 301, ValueName: 'Integratör' },
                 { ValueCode: 701, ValueName: 'Patient' },
                 { ValueCode: 901, ValueName: 'Registrerare' },
+                { ValueCode: 902, ValueName: 'Plusregistrerare' },
                 { ValueCode: 903, ValueName: 'Koordinatorer' },
                 { ValueCode: 906, ValueName: 'Systemutvecklare' },
                 { ValueCode: 907, ValueName: 'Patientobsertvatör' },
-                { ValueCode: 908, ValueName: 'Rapportobsertvatör' },
-
+                { ValueCode: 908, ValueName: 'Rapportobsertvatör' }
               ]
             }
           },
@@ -526,75 +831,97 @@ function onReady() {
           }
         ]
       },
-    ],
-
-    fbar: [
-      // {
-      //   minWidth: 80,
-      //   text: 'Redigera',
-      //   handler: 'edit'
-      // }, {
-      //   minWidth: 80,
-      //   text: 'Mejla',
-      //   handler: 'mail'
-      // }, 
       {
-        minWidth: 80,
-        text: 'Exportera',
-        // iconCls: 'fa fa-file-excel-o',
-        handler: 'export'
+        xtype: 'toolbar',
+        dock: 'top',
+        itemId: 'actionBar',
+        border: false,
+        style: {
+          // backgroundColor: '#999'
+        },
+        items: [
+          {
+            minWidth: 80,
+            text: 'Exportera',
+            style: {
+              // backgroundColor: 'white',
+              // borderColor: 'white'
+            },
+            // iconCls: 'fa fa-file-excel-o',
+            handler: 'export'
+          },
+          {
+              minWidth: 80,
+              text: 'E-posta',
+              handler: 'mail'
+          },
+          {
+              minWidth: 80,
+              text: 'Redigera',
+              handler: 'edit'
+          },
+          /*
+          {
+              minWidth: 80,
+              text: 'Skapa',
+              handler: 'create'
+          }
+          */
+        ]
       }
-    ]
+    ],
   });
 
-  /*Ext.define('Role', {
-    extend: 'Ext.data.Model',
-    idProperty: 'RoleID',
-    fields: ['RoleName']
-});
-
-  Ext.define('Context', {
-    extend: 'Ext.data.Model',
-    idProperty: 'ContextID',
-    fields: ['ContextID', 'isActive',
-    {
-      name: 'RoleID',
-      reference: {
-        type: 'Role',
-        association: 'ContextsByRole',
-        getterName: 'getRole',
-        setterName: 'setRole',
-        inverse: "context"
-    }}]
-});*/
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 
   Ext.define('RC.UserAdministration.controller.ContextController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.context',
     config: {
       loader: null,
-      contexts: []
+      contexts: [],
+      users: []
     },
     ownLoaded: false,
-
-    export: function () {
-      Ext.util.CSV.delimiter = ';';
-      this.getView().saveDocumentAs({ type: 'csv', fileName: 'users.csv' });
-    },
-    mail: function () { 
-      console.log('mailed'); 
-    },
-
-    edit: function () { 
-      console.log('edited'); 
-    },
     
     updateStores: function (dataLoader) {
       var contexts = dataLoader.getContexts();
-      var units = dataLoader.getUnits();
+      this.transformContexts(contexts);
       this.loadOwnContexts(contexts);
-      this.loadOwnUnits(units);
       this.setLoader(dataLoader);
+    },
+
+    updateDropdowns: function (dataLoader) {
+      var units = dataLoader.getUnits();  
+      this.loadOwnUnits(units);
+    },
+
+    updateLogins: function(dataLoader) {
+       this.setLoader(dataLoader)
+    },
+
+    transformContexts: function (contexts) {
+      contexts.forEach(function(context) { context.FullName = context.User.LastName + ', ' + context.User.FirstName; })
+    },
+
+    loadUnits: function (dataLoader) {
+        var units = dataLoader.getUnits()
+        this.loadOwnUnits(units)
     },
 
     loadOwnUnits: function (units) {
@@ -650,7 +977,7 @@ function onReady() {
     loadContexts: function (query) {
       var deferred = new Ext.Deferred();
       Ext.Ajax.request({
-        url: '/stratum/api/metadata/contexts?query=' + query,
+        url: '/stratum/api/metadata/users?query=' + query,
         success: function (response) {
           deferred.resolve(response);
         },
@@ -681,20 +1008,22 @@ function onReady() {
 
     createUserFilter: function (user, role) {
       var contexts = this.getContexts();
+      var controller = this;
       var filter = function (item) {
-        var isDeveloper = item.data.Role.RoleID === 906;
-        var showDevelopers = role === 906;
-        if (isDeveloper && !showDevelopers) { return false; }
+        var isDeveloper = controller.isDeveloper(item.data.User);
+        var hideDevelopers = role !== 906;
+        if (isDeveloper && hideDevelopers) { return false; }
         if (user === '') { return true; }
-        return Ext.String.startsWith(item.data.User.Username, user, true) || Ext.String.startsWith(item.data.User.FirstName, user, true) || Ext.String.startsWith(item.data.User.LastName, user, true); 
+        return Ext.String.startsWith(item.data.User.Username, user, true) || Ext.String.startsWith(item.data.User.FirstName, user, true) || Ext.String.startsWith(item.data.User.LastName, user, true) || Ext.String.startsWith(item.data.User.Extra[register], user, true); 
       };
       return filter;
     },
 
     createRoleFilter: function (role) {
       var contexts = this.getContexts();
+      var controller = this;
       var filter = function (item) {
-        var isDeveloper = item.data.Role.RoleID === 906;
+        var isDeveloper = controller.isDeveloper(item.data.User);
         var showDevelopers = role === 906;
         if (isDeveloper && !showDevelopers) { return false; }
         if (role === 0) { return true; }
@@ -705,8 +1034,9 @@ function onReady() {
 
     createActiveFilter: function (active, role) {
       var contexts = this.getContexts();
+      var controller = this;
       var filter = function (item) {
-        var isDeveloper = item.data.Role.RoleID === 906;
+        var isDeveloper = controller.isDeveloper(item.data.User);
         var showDevelopers = role === 906;
         if (isDeveloper && !showDevelopers) { return false; }
         if (active === 0) { return true; }
@@ -714,11 +1044,37 @@ function onReady() {
       }
       return filter;
     },
+
+    isDeveloper: function (user) {
+      return user.UserID < 200;
+    },
+    
+    syncStore: function(column, index, checked, record, e, eOpts) {
+      var view = column.getView()
+      var params = Ext.clone(record.data)
+      params.IsActive = checked
+      delete params.User
+      Ext.Ajax.request({
+        url: '/stratum/api/metadata/contexts/' + params.ContextID,
+        method: 'PUT',
+        jsonData: params,
+        withCredentials: true,
+        success: function (result, request){
+          record.data.isSynced = true;
+          view.addRowCls(index, 'synced')
+          console.log(Ext.decode(result.responseText));
+        },
+        failure: function (result, request){
+          console.log(result.responseText);
+        }
+     });
+    }
   });
   
   Ext.define('RC.UserAdministration.view.ContextGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.contextgrid',
+    itemId: 'contextGrid',
     controller: 'context',
     multiSelect: true,
     selModel: 'rowmodel',
@@ -733,71 +1089,82 @@ function onReady() {
     },
     
     listeners: {
+      unitsloaded: 'updateDropdowns',
+      loginsloaded: 'updateLogins',
       dataloaded: 'updateStores'
     },
 
-    header: {
-      style: {
-        backgroundColor: Profile.Site.ThemeSettings.BaseColor
-      },
-      title: {
-        text: 'Kontexter',
-        style: {
-          color: 'white'
-        }
-      },
-    },
-
     store: {
-      // model: 'Context',
+      groupField: 'FullName',
+      
       data: [],
       filters: []
     },
 
+    features: [{ftype:'grouping', enableGroupingMenu: true, startCollapsed: true, groupHeaderTpl: '{name}' }],
+    
     columns: [
+       /*
+      {
+        text: 'Slutdatum',
+        renderer: function(value, metaData, record) { return record.get('User').ExpireDate; },
+        flex: 1,
+        sortable: true
+      },*/ 
       {
         text: 'Aktiv',
         xtype: 'checkcolumn',
         dataIndex: 'IsActive',
-        
         width: 60,
-        sortable: true
-      }, 
-      {
-        text: 'Förnamn',
-        renderer: function(value, metaData, record) {
-                    return record.get('User').FirstName;
-                },
-        flex: 1,
-        sortable: true
-      }, 
-      {
-        text: 'Efternamn',
-        renderer: function(value, metaData, record) {
-                    return record.get('User').LastName;
-                },
-        flex: 1,
-        sortable: true
-      }, 
-      {
-        text: 'Roll',
-        renderer: function(value, metaData, record) {
-                    return record.get('Role').RoleName;
-                },
-        flex: 1,
-        sortable: true
-      }, 
+        sortable: true,
+        renderer: function(value, cellValues) {
+          cellValues.innerCls = cellValues.innerCls.replace(' synced', '');
+          if(cellValues.record.data.isSynced) {
+            cellValues.innerCls += ' synced';  
+          }
+          
+          var content = this.defaultRenderer(value, cellValues);
+          return content;
+        },
+        listeners: {
+          beforecheckchange: function(aColumn, anRowIndex, isChecked) {
+		  },
+		  checkchange: 'syncStore'
+        }
+      },
       {
         text: 'Enhet',
-        renderer: function(value, metaData, record) {
-                    return record.get('Unit').UnitName;
-                },
+        renderer: function(value, metaData, record) { return record.get('Unit').UnitName; },
         flex: 1,
+        sortable: true
+      },
+      {
+        text: 'Roll',
+        renderer: function(value, metaData, record) { return record.get('Role').RoleName; },
+        flex: 1,
+        sortable: true
+      }, 
+      {
+        text: 'Aktiv senast',
+        width: 100,
+        renderer: function(value, metaData, record) { return record.get('ActivatedAt') ? record.get('ActivatedAt') : '' },
         sortable: true
       }
     ],
 
     dockedItems: [
+    {
+      xtype: 'header',
+      title: 'Kontexter',
+      itemId: 'gridHeader',
+      padding: 10,
+      border: false,
+      style: {
+        color: 'white',
+        backgroundColor: '#888',
+      },
+      hidden: true
+    },
       {
         xtype: 'toolbar',
         dock: 'top',
@@ -805,11 +1172,8 @@ function onReady() {
           {
             xtype: 'textfield',
             itemId: 'userFilter',
-            flex: 3,
+            flex: 4,
             keyMap: {
-              'ctrl+enter': {
-                handler: 'searchAll'
-              },
               'enter': {
                 handler: 'searchOwn'
               },
@@ -817,16 +1181,11 @@ function onReady() {
           },
           {
             xtype: 'button',
-            text: 'Sök (egna)',
+            itemId: 'searchAllButton',
+            text: 'Sök',
             flex: 1,
             handler: 'searchOwn'
-          },
-          {
-            xtype: 'button',
-            text: 'Sök (alla)',
-            flex: 1,
-            handler: 'searchAll'
-          },
+          }
         ]
       },
       {
@@ -905,39 +1264,50 @@ function onReady() {
             }
           }
         ]
-      },
-    ],
-
-    fbar: [
-      // {
-      //   minWidth: 80,
-      //   text: 'Redigera',
-      //   handler: 'edit'
-      // }, {
-      //   minWidth: 80,
-      //   text: 'Mejla',
-      //   handler: 'mail'
-      // }, 
+      }, 
+      /*
       {
-        minWidth: 80,
-        text: 'Exportera',
-        // iconCls: 'fa fa-file-excel-o',
-        handler: 'export'
+        xtype: 'toolbar',
+        dock: 'top',
+        itemId: 'actionBar',
+        style: {
+          // backgroundColor: '#999'
+        },
+        items: [
+          {
+            minWidth: 80,
+            text: 'Exportera',
+            style: {
+              // backgroundColor: 'white',
+              // borderColor: 'white'
+            },
+            // iconCls: 'fa fa-file-excel-o',
+            handler: 'export'
+          }
+        ]
       }
-    ]
+      */
+    ],
   });
   
   // Ext.create('RC.UserAdministration.view.FileDrop').show();
-  RC.UserAdministration.app = Ext.create('Ext.tab.Panel', { renderTo: 'contentPanel', items: [{ title: 'Användare', xtype: 'usergrid', itemId: 'usersView' }, { title: 'Kontexter', xtype: 'contextgrid', itemId: 'contextsView' }] });
-  Ext.create('RC.UserAdministration.storage.Data', {observers: [RC.UserAdministration.app.down('#usersView'), RC.UserAdministration.app.down('#contextsView')]});
+  RC.UserAdministration.app = Ext.create('Ext.tab.Panel', { renderTo: 'contentPanel', items: [{ title: 'Användare', xtype: 'usergrid', itemId: 'usersView' }, /*{ title: 'Kontexter', xtype: 'contextgrid', itemId: 'contextsView', height: 500, disabled: true }*/] });
+  RC.UserAdministration.data = Ext.create('RC.UserAdministration.storage.Data', {observers: [RC.UserAdministration.app.down('#usersView') /*RC.UserAdministration.app.down('#contextsView')*/]});
 }
 
 Ext.util.CSS.removeStyleSheet('useradministration');
 Ext.util.CSS.createStyleSheet(
   ' '
-  + '.active {'
+  + '.rc-active {'
   + '  background-color: aquamarine;'
-  + '.x-selmodel-checkbox .x-grid-cell-inner {'
-  + '  padding: 5px 0px 6px 2px;'
-  + '}', 'septum'
+  + '}'
+  
+  + '.synced .x-grid-dirty-cell .x-grid-cell-inner:after, .x-grid-dirty-cell .synced.x-grid-cell-inner:after {'
+  + '  color: #0db52b;'
+  + '}'
+
+  + '.rc-info div {'
+  + '  border: none;'
+  + '}'
+  , 'useradministration'
 );
