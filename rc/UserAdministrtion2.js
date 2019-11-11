@@ -1,4 +1,5 @@
 
+widgetConfig = { columns: ['FirstName', 'LastName', 'Username', 'WorkTitle', 'Organization']}
 function start () {
   Ext.Loader.loadScript({
     url: '/stratum/extjs/scripts/exporter.js',
@@ -330,7 +331,10 @@ function onReady() {
 
     export: function () {
       Ext.util.CSV.delimiter = ';';
-      this.getView().saveDocumentAs({ type: 'xlsx', fileName: 'users.xlsx' });
+      var grid = this.getView()
+      // grid.columns.forEach(function(column) {column.show()})
+      grid.saveDocumentAs({ type: 'xlsx', fileName: 'users.xlsx' });
+      // Ext.defer(function () {grid.columns.forEach(function(column) { !Ext.Array.contains(widgetConfig.columns, column.dataIndex) && column.hide()})}, 1)
     },
     
     mail: function () { 
@@ -416,7 +420,7 @@ function onReady() {
           if (isDeveloper && !showDevelopers) { return false; }
           if (user === '') { return true; }
           var unitContexts = contexts.filter(function (context) { 
-            return Ext.String.startsWith(context.User.Username, user, true) || Ext.String.startsWith(context.User.FirstName, user, true) || Ext.String.startsWith(context.User.LastName, user, true) || (context.User.Extra && JSON.parse(context.User.Extra)[register] === user); 
+            return Ext.String.startsWith(context.User.Username, user, true) || Ext.String.startsWith(context.User.FirstName, user, true) || Ext.String.startsWith(context.User.LastName, user, true) || (context.User.Extra && Ext.String.startsWith(JSON.parse(context.User.Extra)[register], user, true)); 
           });
           var isPartOfUnit = unitContexts.length !== 0;
           return isPartOfUnit;
@@ -707,7 +711,7 @@ function onReady() {
         text: 'Epost',
         dataIndex: 'Email',
         flex: 1,
-        sortable: true
+        sortable: true,
       }
     ],
 
@@ -746,7 +750,7 @@ function onReady() {
             text: 'Sök',
             flex: 1,
             handler: 'searchOwn',
-            disabled: true
+            disabled: false
           },
         ]
       },
@@ -1014,7 +1018,7 @@ function onReady() {
         var hideDevelopers = role !== 906;
         if (isDeveloper && hideDevelopers) { return false; }
         if (user === '') { return true; }
-        return Ext.String.startsWith(item.data.User.Username, user, true) || Ext.String.startsWith(item.data.User.FirstName, user, true) || Ext.String.startsWith(item.data.User.LastName, user, true) || Ext.String.startsWith(item.data.User.Extra[register], user, true); 
+        return Ext.String.startsWith(item.data.User.Username, user, true) || Ext.String.startsWith(item.data.User.FirstName, user, true) || Ext.String.startsWith(item.data.User.LastName, user, true); 
       };
       return filter;
     },
