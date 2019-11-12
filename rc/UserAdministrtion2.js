@@ -173,7 +173,7 @@ function onReady() {
             { fieldLabel: 'Personnummer', name: 'personalid', bind: '{user.PersonalId}', itemId: 'personalid', msgTarget: 'qtip', validator: function(val) { return this.up('form').validatePersonalId(val) } },
             { fieldLabel: 'Organisation', name: 'organisation', bind: '{user.Organization}' },
             { fieldLabel: 'Titel', name: 'title', bind: '{user.WorkTitle}' },
-            { fieldLabel: 'Senast inloggad', bind: '{user.LatestLogin}', cls: 'rc-info', itemId: 'latestLogin' }
+            { fieldLabel: 'Senast inloggad', bind: '{user.LatestContextLogin}', cls: 'rc-info', itemId: 'latestLogin' }
             
         ]
       }
@@ -327,6 +327,10 @@ function onReady() {
       loader: null,
       ownUsers: null,
       ownLoaded: false
+    },
+
+    initComponent: function() {
+      this.callParent()  
     },
 
     export: function () {
@@ -542,6 +546,7 @@ function onReady() {
     userClicked: function (component, record, item, index) {
       var etxra, info
       record.data.LatestLogin = this.getLatestLogin(record.data.UserID)
+      record.data.LatestContextLogin = this.getLatestContextLogin(record.data).substring(0, 16).replace('T', ' ')
       record.data.Contexts && record.data.Contexts.forEach(function(item){item.User.Extra && delete item.User.Extra})
       extra = record.data.Extra
       if(typeof record.data.Extra === 'string') {
@@ -605,6 +610,16 @@ function onReady() {
       record.data.Extra = extra
     }, 
 
+    onColumnHidden: function (component, column, eOpts) {
+      console.log('hidden column')  
+      localStorage.setItem(column.dataIndex, 'hidden')
+    },
+
+    onColumnShown: function (component, column, eOpts) {
+      console.log('shown column')  
+      localStorage.setItem(column.dataIndex, 'shown')
+    },
+
     checkIfPersonalId:  function (value) {
       return value && (value.indexOf('19') === 0 || value.indexOf('20') === 0)
     },
@@ -633,6 +648,10 @@ function onReady() {
         var latestSithsLogin = sithsLog ? sithsLog.PerformedAt.slice(0, 10) : ''
         var latestOfAll = latestBankIdLogin > latestSithsLogin ? latestBankIdLogin : latestSithsLogin
         return latestOfAll
+    },
+
+    getLatestContextLogin: function (user) {
+      return user.Contexts.reduce(function(total, current) {if(total.ActivatedAt<current.ActivatedAt){ return current;} return total}).ActivatedAt
     }
   });
 
@@ -659,7 +678,9 @@ function onReady() {
       dataloaded: 'updateStores',
       groupclick: function(){return false;},
       itemdblclick: 'userClicked',
-      refresh: function() {this.update()}
+      refresh: function() {this.update()},
+      columnhide: 'onColumnHidden',
+      columnShow: 'onColumnShown'
     },
 
     store: {
@@ -686,32 +707,38 @@ function onReady() {
         text: 'Förnamn',
         dataIndex: 'FirstName',
         flex: 1,
-        sortable: true
+        sortable: true,
+        hidden: localStorage.getItem('FirstName') === 'hidden' || false
       }, {
         text: 'Efternamn',
         dataIndex: 'LastName',
         flex: 1,
-        sortable: true
+        sortable: true,
+        hidden: localStorage.getItem('LastName') === 'hidden' || false
       }, {
         text: 'Användarnamn',
         dataIndex: 'Username',
         flex: 1,
-        sortable: true
+        sortable: true,
+        hidden: localStorage.getItem('Username') === 'hidden' || false
       }, {
         text: 'Titel',
         dataIndex: 'WorkTitle',
         flex: 1,
-        sortable: true
+        sortable: true,
+        hidden: localStorage.getItem('WorkTitle') === 'hidden' || false
       }, {
         text: 'Organisation',
         dataIndex: 'Organization',
         flex: 1,
-        sortable: true
+        sortable: true,
+        hidden: localStorage.getItem('Organization') === 'hidden' || false
       }, {
         text: 'Epost',
         dataIndex: 'Email',
         flex: 1,
         sortable: true,
+        hidden: localStorage.getItem('Email') === 'hidden' || false
       }
     ],
 
@@ -780,7 +807,7 @@ function onReady() {
             flex: 1,
             valueField: 'UnitID',
             displayField: 'UnitName',
-            value: 0,
+            value: localStorage.getItem('selectedunit') || 0,
             selectCallback: 'updateGrid',
             store: {
               fields: ['UnitID', 'UnitName']
@@ -1149,9 +1176,10 @@ function onReady() {
         sortable: true
       }, 
       {
+        // xtype: 'datecolumn',
         text: 'Aktiv senast',
         width: 100,
-        renderer: function(value, metaData, record) { return record.get('ActivatedAt') ? record.get('ActivatedAt') : '' },
+        renderer: function(value, metaData, record) { return record.get('ActivatedAt') ? record.get('ActivatedAt').substring(0, 10) : '' },
         sortable: true
       }
     ],
