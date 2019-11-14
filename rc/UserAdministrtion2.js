@@ -51,50 +51,8 @@ Ext.define('RC.UserAdministration.controller.UserController', {
   },
 
   create: function () {
-    var userWindow = Ext.create('Ext.window.Window', {
-      controller: 'createuser',
-      modal: true,
-      title: 'Användare',
-      items: [
-        {
-          xtype: 'rcuserform',
-          isCreation: true,
-          viewModel: {
-            stores: {
-              user: {}
-            }
-          }
-        },
-        {
-          xtype: 'matchuser',
-          width: 800,
-          height: 300,
-          plugin: true,
-          store: {
-            data: []
-          },
-        }
-      ],
-      dockedItems: [
-        {
-          xtype: 'toolbar',
-          dock: 'bottom',
-          itemId: 'buttonBar',
-          items: [
-            {
-              xtype: 'tbspacer', flex: 1
-            },
-            {
-              minWidth: 80,
-              text: 'Stäng',
-              handler: function () {
-                this.up('window').destroy()
-              }
-            }
-          ]
-        },
-      ]
-    }).show();
+    var userWindow = Ext.create('RC.UserAdministration.view.CreateUser')
+    userWindow.show()
   },
 
   updateStores: function (dataLoader) {
@@ -104,7 +62,6 @@ Ext.define('RC.UserAdministration.controller.UserController', {
     this.loadOwnUsers(users, contexts);
     this.setLoader(dataLoader);
     this.getView().down('#searchOwnButton').setDisabled(false)
-    // this.getView().up().getComponent('contextsView').setDisabled(false)
   },
 
   updateDropdowns: function (dataLoader) {
@@ -637,6 +594,52 @@ Ext.define('RC.UserAdministration.controller.CreateUserController', {
     })
     return matches
   }
+})
+
+Ext.define('RC.UserAdministration.view.CreateUser', {
+  extend: 'Ext.window.Window', 
+      controller: 'createuser',
+      modal: true,
+      title: 'Användare',
+      items: [
+        {
+          xtype: 'rcuserform',
+          isCreation: true,
+          viewModel: {
+            stores: {
+              user: {}
+            }
+          }
+        },
+        {
+          xtype: 'matchuser',
+          width: 800,
+          height: 300,
+          plugin: true,
+          store: {
+            data: []
+          },
+        }
+      ],
+      dockedItems: [
+        {
+          xtype: 'toolbar',
+          dock: 'bottom',
+          itemId: 'buttonBar',
+          items: [
+            {
+              xtype: 'tbspacer', flex: 1
+            },
+            {
+              minWidth: 80,
+              text: 'Stäng',
+              handler: function () {
+                this.up('window').destroy()
+              }
+            }
+          ]
+        },
+      ]
 })
 
 Ext.define('RC.UserAdministration.view.MatchUser', {
