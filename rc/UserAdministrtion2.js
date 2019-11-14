@@ -1194,14 +1194,6 @@ Ext.define('RC.UserAdministration.view.ContextGrid', {
   selModel: 'rowmodel',
   width: 750,
 
-  initComponent: function () {
-    this.callParent();
-  },
-
-  plugins: {
-    gridexporter: true,
-  },
-
   listeners: {
     unitsloaded: 'updateDropdowns',
     loginsloaded: 'updateLogins',
