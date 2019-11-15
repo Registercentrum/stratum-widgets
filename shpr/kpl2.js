@@ -79,7 +79,7 @@ Ext.define('Shpr.chart.Casemix', {
       fields: ['indicator'],
       hidden: false,
       renderer: function (axis, label, context) {
-        var translations = {prop_female: 'Kvinnor', prop_older_60: 'Över 60', prop_older_85: 'Över 85', prop_acute_fracture: 'Akuta frakturer', prop_dementia: 'Icke-dementa', prop_charnley: 'Charnley'}
+        var translations = {prop_female: 'Kvinnor', prop_older_60: '60 år och \näldre', prop_older_85: '85 år och \näldre', prop_acute_fracture: 'Akuta frakturer', prop_dementia: 'Icke-dementa', prop_charnley: 'Charnley-klass\n A eller B'}
         return translations[label]
       }
     }
@@ -1403,7 +1403,7 @@ Ext.util.CSS.createStyleSheet(
   + ' }'
 
   + '.shpr-indicatorfilter {'
-  + '  margin-top: 70px;'
+ // + '  margin-top: 70px;'
   + '}'
 
   + '.timechart-spinner {'
