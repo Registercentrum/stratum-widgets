@@ -15,6 +15,7 @@ Ext.define('Shpr.view.Filter', {
   cls: 'shpr-select',
   labelWidth: 85,
   forceSelection: false,
+  editable: Ext.os.deviceType === 'Phone' ? false : true,
   typeAhead: true,
   queryMode: 'local',
   minChars: 1,
@@ -42,6 +43,9 @@ Ext.define('Shpr.chart.Casemix', {
   colors: ['#CA097C', '#00ADEF'],
   cls: 'shpr-casemix',
   flipXY: true,
+  touchAction: {
+        panY: true,
+      },
   captions: {
     title: {
       text: 'Casemix',
@@ -99,15 +103,18 @@ Ext.define('Shpr.chart.Casemix', {
 Ext.define('Shpr.chart.Time', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'shprtime',
+  touchAction: {
+        panY: true,
+      },
        border: false,
        colors: ['#E388BE', '#83D6F5'],
-       height: 145,
+       height: 160,
        innerPadding: {
         top: 5,
         left: 0,
         right: 0
       },
-       insetPadding: '20 35 20 20',
+       insetPadding: '20 35 0 20',
        cls: 'shpr-timechart',
        legend: {
         type: 'dom'
@@ -139,6 +146,12 @@ Ext.define('Shpr.chart.Time', {
         }, {
             type: 'category',
             position: 'bottom',
+            title: {
+              text:'År för primäroperation',
+              color: '#9aa8bc',
+              margin: 10
+            },
+            titleMargin: 5,
             fields: 'year',
             style: {
               strokeStyle: '#9aa8bc'
@@ -249,12 +262,13 @@ Ext.define('Shpr.controller.Spider', {
     
     controller.requests +=1 
     view.down('#timeSpinner').show()
-    controller.disableInvalidFilters(view)
+    
     view.down('#indicatorFilter').getStore().clearFilter()
     view.down('#indicatorFilter').getFilters().add(controller.filterUnits.bind(controller))
     controller.updateDependentSelection()
     controller.updateDependentExplantions()
-
+    controller.disableInvalidFilters(view)
+    
     Ext.Ajax.request({
       type: 'ajax',
       method: 'get',
@@ -272,7 +286,7 @@ Ext.define('Shpr.controller.Spider', {
           spiderchart.getStore().loadData(result.compass)
           casemixchart.getStore().loadData(result.case_mix)
           controller.updateLegend(view)
-          if(!spiderchart.sprites)Ext.defer(function () {spiderchart.setSprites(controller.sprites)}, 500)
+          // if(!spiderchart.sprites)Ext.defer(function () {spiderchart.setSprites(controller.sprites)}, 500)
         } else {
           missingData.show()
           spiderchart.hide()
@@ -289,7 +303,7 @@ Ext.define('Shpr.controller.Spider', {
       success: function (response) {
         var result = Ext.decode(response.responseText).data
         result = controller.transformTimeData(result)
-        timechart.usePercentages = indicator === 'reop2yrs' || indicator === 'rev5yrs' || indicator === 'rev10yrs' || indicator === 'coverage' || indicator === 'mort90' || indicator === 'rev1yrs'
+        timechart.usePercentages = indicator === 'reop2yrs' || indicator === 'rev5yrs' || indicator === 'rev10yrs' || indicator === 'coverage' || indicator === 'mort90' || indicator === 'rev1yrs' || indicator === 'adverse_events' || indicator === 'reop6m'
         timechart.show()
         var minimum = controller.findMinimum(result)
         if(timechart.usePercentages && !(indicator === 'reop2yrs')){
@@ -456,7 +470,7 @@ Ext.define('Shpr.controller.Spider', {
         break
     }
     var diagnosis = view.down('#diagnosisFilter').getValue()
-    if(diagnosis === 3) view.down('#commonPatient').disable()
+    // if(diagnosis === 3) view.down('#commonPatient').disable()
   },
 
   transformData: function (data) {
@@ -481,6 +495,12 @@ Ext.define('Shpr.controller.Spider', {
     compass.forEach(function(item){
       item.indicator = translations[item.indicator]
       item.background = 1
+      if(item.unit_value === 'NA') {
+        item.unit_value = 0
+      }
+      if(item.comparison_value === 'NA') {
+        item.comparison_value = 0
+      }
     })
     data.compass = compass
     return data
@@ -532,7 +552,7 @@ Ext.define('Shpr.controller.Spider', {
     
     if( indicator === 'rev10yrs') {
       url =  base + baseFilters
-    } else if( indicator === 'reop2yrs' || indicator === 'rev5yrs' || indicator === 'eqvasgain' || indicator === 'paingain') {
+    } else if( indicator === 'reop2yrs' || indicator === 'rev5yrs' || indicator === 'eqvasgain' || indicator === 'paingain' || indicator === 'reop6m' || indicator === 'rev1yrs' || indicator === 'mort90' || indicator === 'rev1yrs') {
       url =  base + baseFilters + extendedFilters
     }
     url += apikey
@@ -567,18 +587,26 @@ Ext.define('Shpr.controller.Spider', {
 
   createContentToDownload: function () {
     var indicator = this.getView().down('#indicatorFilter').getDisplayValue()
-    var headers = 'År; Resultat; Antal;\n';
+    var unit = ';;' + this.getView().down('#unitFilter').getDisplayValue() + ';;;' + this.getView().down('#comparisonFilter').getDisplayValue()
+    var headers = 'År;;Resultat; Antal;;Resultat; Antal;\n';
     var content = '';
-    content += indicator + '\n' +headers;
+    content += indicator + '\n' + unit + '\n' +headers;
     
     var data = Ext.data.StoreManager.lookup('timechart');
+    var counter;
+    var fields = ['year', 'y_unit', 'n_unit', 'y_comparison', 'n_comparison']
     for (var i in data.data.items) {
       if (i === '') continue;
+      fields.forEach(function(field) {
       for (var item in data.data.items[i].data) {
-        if (!(item === 'year' || item === 'y_unit' || item === 'n_unit')) continue;
+        if (!(item === field)) continue;
         var value = data.data.items[i].data[item];
         content += value + ';'; 
+        if(item==='year') content += ';'; 
+        if(item==='n_unit')content += ';'; 
       }
+      
+      })
       content += '\n';
     }
     
@@ -598,10 +626,10 @@ Ext.define('Shpr.view.Main', {
       xtype: 'panel',
       border: false,
       style: {
-        marginBottom: '20px'
+        marginBottom: Ext.os.deviceType === 'Phone' ? '0px' : '20px'
       },
       layout: {
-        type: 'hbox',
+        type: Ext.os.deviceType === 'Phone' ?  'vbox' : 'hbox',
         align: 'left'
       },
       items: [
@@ -611,8 +639,11 @@ Ext.define('Shpr.view.Main', {
           displayField: 'ValueName',
           valueField: 'ValueCode',
           fieldLabel: 'Diagnos:',
-          width: Ext.is.Phone ? '99%' : '50%',
+          width: Ext.os.deviceType === 'Phone' ? '99%' : '50%',
           height: 40,
+          style: {
+            marginBottom: 10
+          },
           labelStyle: 'text-align: right;',
           value: 1,
           listeners: {
@@ -639,7 +670,7 @@ Ext.define('Shpr.view.Main', {
         marginBottom: '20px'
       },
       layout: {
-        type: Ext.is.Phone ?  'vbox' : 'hbox',
+        type: Ext.os.deviceType === 'Phone' ?  'vbox' : 'hbox',
         align: 'left'
       },
       items: [
@@ -651,7 +682,7 @@ Ext.define('Shpr.view.Main', {
           fieldLabel: 'Enhet:',
           labelStyle: 'text-align: right;',
           height: 40,
-          width: Ext.is.Phone ? '99%' : '50%',
+          width: Ext.os.deviceType === 'Phone' ? '99%' : '50%',
           value:  Profile.Context ? Profile.Context.Unit.UnitCode : 1001,
           listeners: {
             select: 'updateCharts'
@@ -691,7 +722,7 @@ Ext.define('Shpr.view.Main', {
           fieldLabel: 'Jämförelse:',
           labelStyle: 'text-align: right;',
           height: 40,
-          width: Ext.is.Phone ? '99%' : '49%',
+          width: Ext.os.deviceType === 'Phone' ? '99%' : '49%',
           value: 0,
           listeners: {
             select: 'updateCharts'
@@ -736,7 +767,7 @@ Ext.define('Shpr.view.Main', {
         marginBottom: '20px'
       },
       layout: {
-        type: Ext.is.Phone ?  'vbox' : 'hbox',
+        type: Ext.os.deviceType === 'Phone' ?  'vbox' : 'hbox',
         align: 'left'
       },
       items: [
@@ -749,7 +780,7 @@ Ext.define('Shpr.view.Main', {
     {
       xtype: 'polar',
       controller: 'spider',
-      width: Ext.is.Phone ? '100%' : '60%',
+      width: Ext.os.deviceType === 'Phone' ? '100%' : '60%',
       height: 400,
       plugins: {
                 spriteevents: true
@@ -871,10 +902,10 @@ Ext.define('Shpr.view.Main', {
     
     {
       xtype: 'shprcasemix',
-      width: Ext.is.Phone ? '100%' : '20%',
+      width: Ext.os.deviceType === 'Phone' ? '100%' : '20%',
       height: 250,
       insetPadding: '10 30 10 10',
-      margin: Ext.is.Phone ? 0 : '109px 0 0 0'
+      margin: Ext.os.deviceType === 'Phone' ? 0 : '109px 0 0 0'
     }]},
     {
       xtype: 'panel',
@@ -882,7 +913,11 @@ Ext.define('Shpr.view.Main', {
       items: [
       {
         xtype: 'panel',
-        layout: 'hbox',
+        layout: {
+        type: Ext.os.deviceType === 'Phone' ?  'vbox' : 'hbox',
+          align: 'left'
+        },
+        
         border: false,
         items: [
       {
@@ -891,10 +926,14 @@ Ext.define('Shpr.view.Main', {
           cls: 'shpr-indicatorfilter shpr-select',
           displayField: 'ValueName',
           valueField: 'ValueCode',
-          fieldLabel: 'Femårstrend för',
-          width: Ext.is.Phone ? '99%' : '49%',
+          fieldLabel: Ext.os.deviceType === 'Phone' ? '' : 'Femårstrend för',
+          width: Ext.os.deviceType === 'Phone' ? '99%' : '49%',
           height: 40,
+          
           labelWidth: 130,
+          style: {
+            marginBottom: 10
+          },
           labelStyle: 'text-align: right;',
           value: 'satis',
           listeners: {
@@ -933,6 +972,7 @@ Ext.define('Shpr.view.Main', {
           cls: 'shpr-download-button',
           width: 100,
           margin: '0 0 0 20',
+          hidden: Ext.os.deviceType === 'Phone',
           autoEl: {
             tag: 'a',
             download: 'kpl.csv'
@@ -965,7 +1005,7 @@ Ext.define('Shpr.view.Main', {
         layout: 'vbox',
         collapsible: true,
         collapsed: true,
-        title: 'Mer detaljerad filtrering av femårstrend',
+        title: Ext.os.deviceType === 'Phone' ? 'Filtrering' : 'Mer detaljerad filtrering av femårstrend',
         border: false,
         padding: '0 20px 0 20px',
         margin: '20px 0 0px 0',
@@ -1052,7 +1092,7 @@ Ext.define('Shpr.view.Main', {
         }, {
           xtype: 'fieldcontainer',
           itemId: 'ageFilter',
-          fieldLabel: 'Åldrar',
+          fieldLabel: 'Ålder',
           labelWidth: 85,
           layout: 'hbox',
           defaults: {
@@ -1173,7 +1213,7 @@ Ext.define('Shpr.view.Main', {
         title: 'Förklaringar av begrepp',
         border: false,
         padding: '0 20px 0 20px',
-        margin: '20px 0 80px 0',
+        margin: '20px 0 0px 0',
         items: [
         {
           xtype: 'tbspacer',
@@ -1190,9 +1230,7 @@ Ext.define('Shpr.view.Main', {
               + '<div><b>Täckningsgrad</b>: Täckningsgrad (completeness) på individnivå enligt senaste länkningen med Patientregistret på Socialstyrelsen. Anges som andel.</div>'
               + '<div><b>Reoperation inom 2 år</b>: Anger all form av reoperation inom två år efter primäroperation och under den senaste fyraårsperioden. Anges som andel.</div>'
               + '<div><b>Implantatöverlevnad efter 5 år</b>: Protesöverlevnad efter fem år med Kaplan-Meier statistik. Anges som sannolikhet.</div>'
-              + '<div><b>Implantatöverlevnad efter 10 år</b>: Protesöverlevnad efter tio år med Kaplan-Meier statistik.  Anges som sannolikhet.</div>'
-              + '<br>'
-              + '<div style="width: 100%">Varje variabel har skalats om till värden från 0 till 1. Det sämsta värdet (0, 0) för variablerna tilldelades origo och det bästa värdet (1, 0) i periferin. Gränsvärdena bestäms genom att ta det högsta respektive lägsta medelvärdet (på enhetsnivå) plus/minus en standardavvikelse. Ju större den ytan blir i denna figur, desto gynnsammare resultat har den aktuella enheten.</div>',
+              + '<div><b>Implantatöverlevnad efter 10 år</b>: Protesöverlevnad efter tio år med Kaplan-Meier statistik.  Anges som sannolikhet.</div>',
           width: '100%',
           border: false
         },
@@ -1204,14 +1242,74 @@ Ext.define('Shpr.view.Main', {
               + '<div><b>Oönskade händelser inom 90 dagar</b>: Oönskade händelser enligt senaste samkörningen med Patientregistret. Dessa definieras som kardio- och cerebrovaskulära tillstånd, tromboembolisk sjukdom, pneumoni, ulcus och urinvägsinfektion om dessa lett till återinläggning eller död. Dessutom ingår alla typer av omoperation av höften. Anges som andel.</div>'
               + '<div><b>Mortalitet 90 dagar</b>: I internationell litteratur används denna variabel för att belysa mortalitet efter höftproteskirurgi. Anges som andel.'
               + '<div><b>Reoperation inom 6 månader</b>: Reoperation inom sex månader. Alla öppna, efterföljande ingrepp i aktuell höft. Anges som andel.</div>'
-              + '<div><b>Implantatöverlevnad efter 1 år</b>: Protesöverlevnad efter ett år med Kaplan-Meier statistik. Anges som sannolikhet.</div>'
-              + '<br>'
-              + '<div style="width: 100%">Varje variabel har skalats om till värden från 0 till 1. Det sämsta värdet (0, 0) för variablerna tilldelades origo och det bästa värdet (1, 0) i periferin. Gränsvärdena bestäms genom att ta det högsta respektive lägsta medelvärdet (på enhetsnivå) plus/minus en standardavvikelse. Ju större den ytan blir i denna figur, desto gynnsammare resultat har den aktuella enheten.</div>',
+              + '<div><b>Implantatöverlevnad efter 1 år</b>: Protesöverlevnad efter ett år med Kaplan-Meier statistik. Anges som sannolikhet.</div>',
+          width: '100%',
+          border: false
+        },
+        {
+          itemId: 'compassExplantion',
+          cls: 'shpr-terms',
+          hidden: false,
+          margin: '20 0 0 0',
+          html: '<div><b>Värdekompass:</b> Varje variabel har skalats om till värden från 0 till 1. Det sämsta värdet (0, 0) för variablerna tilldelades origo och det bästa värdet (1, 0) i periferin. Gränsvärdena bestäms genom att ta det högsta respektive lägsta medelvärdet (på enhetsnivå) plus/minus en standardavvikelse. Ju större den ytan blir i denna figur, desto gynnsammare resultat har den aktuella enheten.</div>',
+          width: '100%',
+          border: false
+        },
+        {
+          itemId: 'casemixExplantion',
+          cls: 'shpr-terms',
+          hidden: false,
+          margin: '20 0 0 0',
+          html: '<div><b>Casemix</b>: Fördelning av patientkaraktäristika på respektive enhet. Varje variabel har skalats om till värden från 0 till 1. Gränsvärdena bestäms genom att ta det högsta respektive lägsta medelvärdet (på enhetsnivå) plus/minus en standardavvikelse.',    
+          width: '100%',
+          border: false
+        },
+        {
+          itemId: 'filterExplantions',
+          cls: 'shpr-terms',
+          hidden: false,
+          margin: '20 0 0 0',
+          html: '<div><b>ASA-grad:</b> American Society of Anesthesiologist physical status classification är en klassifikation av eventuell samsjuklighet. Ju högre ASA desto allvarligare sjukdomstillstånd.</div>'
+              + '<div><b>Charnley-klass:</b> Muskuloskeletalt samsjuklighetsmått. Klass A avser ensidig höftsjukdom, klass B bilateral höftsjukdom och klass C multipel ledsjukdom eller andra medicinska tillstånd som påverkar gångförmågan.</div>'
+              + '<div><b>BMI:</b> Body Mass Index. BMI = vikt/längd^2.</div>'
+              + '<div><br/><b>"Den vanlige patienten":</b> Man eller kvinna med primär artros som har fått en totalprotes och är 55–85 år, med ASA klass I–II och BMI mindre än 30.</div>',
+          width: '100%',
+          border: false
+        },
+        ]
+        },
+        {
+        xtype: 'panel',
+        layout: 'vbox',
+        collapsible: true,
+        collapsed: true,
+        title: Ext.os.deviceType === 'Phone' ? 'Patientpopulationens påverkan' :'Patientpopulationens (casemix) påverkan på resultaten',
+        border: false,
+        padding: '0 20px 0 20px',
+        margin: '20px 0 80px 0',
+        items: [
+        {
+          xtype: 'tbspacer',
+          height: 15
+        },
+        {
+          itemId: 'casemixDiscussion',
+          cls: 'shpr-terms',
+          hidden: false,
+          html: ''
+              + '<div><b>Artros:</b></div>'
+              + '<p>Risken att bli omopererad är lägre för kvinnor.</p>'
+              + '<p>Risken att bli omopererad är lägre för individer över 60 år.</p>'
+              + '<p>En hög andel i Charnley indikerar många patienter i kategori A och B medan en låg andel anger att det finns fler patienter i kategori C. Patienter som fyllt i Charnleyklass A eller B har generellt sett lägre risk för komplikationer och bättre patientrapporterat utfall.</p>'
+              + '<div><b>Fraktur:</b><p>Kvinnor har generellt bättre resultat än män avseende behov av reoperation/revision.<p/>'
+              + '<p>I figuren anges enhetens andel av patienter som bedömts vara kognitivt intakta. Dementa har högre mortalitet efter höftfraktur. Om en enhet har stor andel icke-dementa förbättras deras mortalitetssiffror.</p>'
+              + '<p>Ju fler patienter som kliniken opererar med diagnosen akut fraktur (S72.0.) desto bättre blir långtidsresultatet enligt registrets regressionsanalys av databasen.</p>'
+              + 'Hög ålder skyddar mot reoperation och revision. Orsakerna kan vara flera; minskad aktivitet minskar risken för till exempel erosion och sannolikt även för luxation. Få års återstående livslängd gör att lossning inte hinner utvecklas. Å andra sidan kan den ”riskminskning” vi ser orsakas av att en äldre individ trots allt drabbas av komplikation men avrådes från reoperation eller revision av medicinska skäl. Kliniker som opererar många patienter över 85 år får bättre resultat avseende reoperation/ revision, men sämre avseende mortalitet.</div>',
           width: '100%',
           border: false
         }
-        ]
-        }
+       ]},
+
       ]
     },
     {
@@ -1249,7 +1347,8 @@ Ext.application({
     controller.updateCharts()
   },
 });
-
+Shpr.controller.inputCss =  Ext.os.deviceType === 'Phone' ? 'font-size: 16px;' : ''  
+Shpr.controller.selectCss = Ext.os.deviceType === 'Phone' ? 'height: 50px;' : ''  
 Ext.util.CSS.removeStyleSheet('shpr');
 Ext.util.CSS.createStyleSheet(
   ' '
@@ -1264,6 +1363,7 @@ Ext.util.CSS.createStyleSheet(
 
   + '.shpr-select .x-form-item-body {'
   + '  height: 40px;'
+//  + Shpr.controller.selectCss
   + '  border-radius: 3px;'
   + '}'
 
@@ -1271,6 +1371,7 @@ Ext.util.CSS.createStyleSheet(
   + '  color: #3F73A6;'
   + '  color: #2f5880;'
   + '  padding: 9px 14px;'
+  + Shpr.controller.inputCss                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
   + '}'
 
   + '.shpr-select div {'
@@ -1286,6 +1387,7 @@ Ext.util.CSS.createStyleSheet(
   + '  padding-top: 11px;'
   + '  color: #3F73A6;'
   + '  color: #2f5880;'
+  + Shpr.controller.inputCss
   + '}'
 
   + '.shpr-county-item {'
@@ -1387,3 +1489,4 @@ Ext.util.CSS.createStyleSheet(
   + '  color: #3F73A6;'
   + '}', 'siber'
 );
+window.addEventListener("orientationchange", function(){location.reload()});
