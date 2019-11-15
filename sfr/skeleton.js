@@ -6501,7 +6501,7 @@ var skeletonWidget = function (current, callback, loadonly, inFreeMode) {
 			if(Repository.Local.Methods.Consensus.isActive(fxClass)){
 				Ext.MessageBox.show({
 					title: 'Bekräfta',
-					msg: Repository.Local.Methods.Consensus.getConfirmText(fxClass),
+					msg: Repository.Local.Methods.Consensus.getTexts(fxClass).confirmText,
 					buttons: Ext.Msg.OKCANCEL,
 					icon: Ext.MessageBox.INFO,
 					fn: function (c) {
