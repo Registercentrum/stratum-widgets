@@ -24,6 +24,7 @@ Ext.define('RC.UserAdministration.controller.UserController', {
 
   initComponent: function () {
     this.callParent()
+    con
   },
 
   export: function () {
@@ -221,7 +222,9 @@ Ext.define('RC.UserAdministration.controller.UserController', {
     record.data.Extra = null
 
     record.data.PersonalId = this.checkIfPersonalId(record.data.HSAID) ? record.data.HSAID : null
-    var userWindow = Ext.create('Ext.window.Window', {
+    var userWindow = Ext.create('RC.UserAdministration.view.EditUser', { userData: record.data, contextData: record.data.Contexts })
+    /*
+    Ext.create('Ext.window.Window', {
       modal: true,
       title: 'Användare',
       items: [
@@ -269,7 +272,8 @@ Ext.define('RC.UserAdministration.controller.UserController', {
             }]
         }
       ]
-    }).show();
+    }).show(); */
+    userWindow.show()
     userWindow.Info = info
     if (!record.data.Contexts) {
       this.loadContexts(userWindow, record.data.UserID)
@@ -342,7 +346,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
     columnhide: 'onColumnHidden',
     columnShow: 'onColumnShown'
   },
-  
+
   store: {
     // groupField: 'FirstName',
     data: [],
@@ -351,7 +355,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
       property: 'LastName'
     },
   },
-  
+
   columns: [
     {
       text: 'Förnamn',
@@ -391,7 +395,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
       hidden: localStorage.getItem('Email') === 'hidden' || false
     }
   ],
-  
+
   features: [{ ftype: 'grouping', enableGroupingMenu: true }],
   /*
   features: [{
@@ -542,6 +546,52 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
   ],
 })
 
+Ext.define('RC.UserAdministration.view.CreateUser', {
+  extend: 'Ext.window.Window',
+  controller: 'createuser',
+  modal: true,
+  title: 'Användare',
+  items: [
+    {
+      xtype: 'rcuserform',
+      isCreation: true,
+      viewModel: {
+        stores: {
+          user: {}
+        }
+      }
+    },
+    {
+      xtype: 'matchuser',
+      width: 800,
+      height: 300,
+      plugin: true,
+      store: {
+        data: []
+      },
+    }
+  ],
+  dockedItems: [
+    {
+      xtype: 'toolbar',
+      dock: 'bottom',
+      itemId: 'buttonBar',
+      items: [
+        {
+          xtype: 'tbspacer', flex: 1
+        },
+        {
+          minWidth: 80,
+          text: 'Stäng',
+          handler: function () {
+            this.up('window').destroy()
+          }
+        }
+      ]
+    },
+  ]
+})
+
 Ext.define('RC.UserAdministration.controller.CreateUserController', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.createuser',
@@ -596,50 +646,65 @@ Ext.define('RC.UserAdministration.controller.CreateUserController', {
   }
 })
 
-Ext.define('RC.UserAdministration.view.CreateUser', {
-  extend: 'Ext.window.Window', 
-      controller: 'createuser',
-      modal: true,
-      title: 'Användare',
+Ext.define('RC.UserAdministration.view.EditUser', {
+  extend: 'Ext.window.Window',
+  config: {
+    userData: [],
+    contextData: []
+  },
+  initComponent: function (arguments) {
+    this.callParent(arguments)
+    this.down('rcuserform').getViewModel().setData({ user: this.getUserData() })
+    this.down('grid').getStore().loadData(this.getContextData())
+  },
+  modal: true,
+  title: 'Användare',
+  items: [
+    {
+      xtype: 'rcuserform',
+      viewModel: {
+        stores: {
+          user: [] // record.data
+        }
+      }
+    },
+    {
+      xtype: 'contextgrid',
+      width: 800,
+      height: 300,
+      plugin: true,
+      listeners: {
+        beforerender: function () {
+          this.down('toolbar').hide()
+          this.down('#gridHeader').show()
+          this.down('#labelBar').hide()
+          this.down('#filterBar').hide()
+        }
+      },
+      store: {
+        data: [] //record.data.Contexts
+      },
+    }
+  ],
+  dockedItems: [
+    {
+      xtype: 'toolbar',
+      dock: 'bottom',
+      itemId: 'buttonBar',
       items: [
         {
-          xtype: 'rcuserform',
-          isCreation: true,
-          viewModel: {
-            stores: {
-              user: {}
-            }
+          xtype: 'tbspacer', flex: 1
+        },
+        {
+          minWidth: 80,
+          text: 'Stäng',
+          handler: function () {
+            this.up('window').destroy()
           }
-        },
-        {
-          xtype: 'matchuser',
-          width: 800,
-          height: 300,
-          plugin: true,
-          store: {
-            data: []
-          },
         }
-      ],
-      dockedItems: [
-        {
-          xtype: 'toolbar',
-          dock: 'bottom',
-          itemId: 'buttonBar',
-          items: [
-            {
-              xtype: 'tbspacer', flex: 1
-            },
-            {
-              minWidth: 80,
-              text: 'Stäng',
-              handler: function () {
-                this.up('window').destroy()
-              }
-            }
-          ]
-        },
       ]
+    }
+  ]
 })
 
 Ext.define('RC.UserAdministration.view.MatchUser', {
