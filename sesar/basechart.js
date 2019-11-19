@@ -4,6 +4,7 @@ Ext.define('Sesar.view.Filter', {
   xtype: 'sesarfilter',
   alias: 'view.sesarfilter',
   cls: 'sesar-select',
+  margin: '0 0 15 0',
   labelWidth: 65,
   editable: Ext.is.Phone ? false : true,
   forceSelection: false,
@@ -45,11 +46,13 @@ Ext.define('Sesar.chart.Time', {
       fields: ['Clinic_Mean', 'State_Mean'],
       style: {
         strokeStyle: '#9aa8bc',
+        strokeStyle: '#8594AD',
         axisLine: false
       },
       label: {
         strokeOpacity: 0.2,
-        fillStyle: '#9aa8bc'
+        fillStyle: '#9aa8bc',
+        fillStyle: '#8594AD'
       },
 
       renderer: function (axis, label, context, previous) {
@@ -66,10 +69,12 @@ Ext.define('Sesar.chart.Time', {
       fields: 'Year',
       style: {
         strokeStyle: '#9aa8bc',
+        strokeStyle: '#8594AD',
         axisLine: false
       },
       label: {
         fillStyle: '#9aa8bc',
+        fillStyle: '#8594AD',
         strokeOpacity: 0.2,
       },
     }
@@ -163,11 +168,13 @@ Ext.define('Sesar.chart.AgeGroups', {
       titleMargin: 20,
       style: {
         strokeStyle: '#9aa8bc',
+        strokeStyle: '#8594AD',
         axisLine: false
       },
       label: {
         strokeOpacity: 0.2,
-        fillStyle: '#9aa8bc'
+        fillStyle: '#9aa8bc',
+        fillStyle: '#8594AD'
       },
 
       renderer: function (axis, label, context, previous) {
@@ -184,10 +191,12 @@ Ext.define('Sesar.chart.AgeGroups', {
       fields: ['Agegroups'],
       style: {
         strokeStyle: '#9aa8bc',
+        strokeStyle: '#8594AD',
         axisLine: false
       },
       label: {
         fillStyle: '#9aa8bc',
+        fillStyle: '#8594AD',
         strokeOpacity: 0.2,
       },
     }
@@ -227,6 +236,7 @@ Ext.define('Sesar.chart.Comparison', {
   border: false,
   flipXY: true,
   cls: 'sesar-timechart',
+  background: 'red',
   colors: ['#E388BE', '#83D6F5'],
   callout: 'none',
   padding: '10 0 0 0',
@@ -239,6 +249,7 @@ Ext.define('Sesar.chart.Comparison', {
     data: [],
     sorters: []
   },
+
   axes: [
     {
       type: 'numeric',
@@ -246,11 +257,13 @@ Ext.define('Sesar.chart.Comparison', {
       fields: ['Mean'],
       style: {
         strokeStyle: '#9aa8bc',
+        strokeStyle: '#8594AD',
         axisLine: false
       },
       label: {
         strokeOpacity: 0.2,
-        fillStyle: '#9aa8bc'
+        fillStyle: '#9aa8bc',
+        fillStyle: '#8594AD',
       },
 
       renderer: function (axis, label, context, previous) {
@@ -267,10 +280,14 @@ Ext.define('Sesar.chart.Comparison', {
       fields: ['UnitName'],
       style: {
         strokeStyle: '#9aa8bc',
+        strokeStyle: '#8594AD',
+        strokeStyle: '#788AA5',
         axisLine: false
       },
       label: {
         fillStyle: '#9aa8bc',
+        fillStyle: '#8594AD',
+        fillStyle: '#788AA5',
         strokeOpacity: 0.2,
       },
     }],
@@ -366,7 +383,7 @@ Ext.define('Sesar.controller.Main', {
 
     controller.tab = typeof tab === 'string' && tab || controller.tab
     controller.filters = { start: startyear, end: endyear, report: report, sex: sex, clinic: clinic, clinicName: clinicName || (Profile.Context && Profile.Context.Unit.UnitName) }
-
+  // view.down('sesar' + controller.tab).up('panel').down().setData({caption: '...', subcaption: '...'})
     switch (controller.tab) {
       case 'time':
         controller.updateData(controller.tab, 'clinics-over-time', view, controller)
@@ -388,7 +405,7 @@ Ext.define('Sesar.controller.Main', {
     chart = view.down('sesar' + tab)
     url = this.createUrl(type, this.filters)
     url = tab === 'comparison' ? url.replace(/&clinic=[A-z0-9]*/, '') : url
-    tab === 'comparison' && chart.setHeight(400) && chart.getStore().setSorters([this.sortAsc]) && chart.getStore().loadData({})
+    tab === 'comparison' && chart.setHeight(360) && chart.getStore().setSorters([this.sortAsc]) && chart.getStore().loadData({})
     this.fetchData(chart, url, this.filters.report, controller, tab)
     this.updateProgress(true)
   },
@@ -417,7 +434,8 @@ Ext.define('Sesar.controller.Main', {
         captions.subheader.text = config.subcaption
         chart.usePercentages = config.percentage
         chart.precision = config.precision || 0
-        chart.setCaptions(Ext.Object.merge({}, controller.captions, captions))
+        // chart.setCaptions(Ext.Object.merge({}, controller.captions, captions))
+        chart.up('panel').down().setData(config)
         tab === 'comparison' && chart.setHeight(result.length * 28 + 50)
         chart.getStore().loadData(result)
         controller.status[tab] = true
@@ -718,51 +736,95 @@ Ext.define('Sesar.view.Main', {
       border: false,
       padding: 0,
       margin: '20px 0 0 0',
+      focusCls: 'sesar-tab-focused',
       bodyStyle: {
         border: 0,
       },
       items: [
         {
-          xtype: 'sesartime',
+          xtype: 'panel',
+          tabindex: 0,
           title: Ext.is.Phone ? '' : 'Utveckling över tid',
           iconCls: 'sesar-icon x-fa fa-calendar',
           border: false,
-          height: 400,
           listeners: {
             show: function () {
               this.up('#mainView').getController().updateCharts('time')
             }
-          }
+          },
+          items: [
+            {
+              padding: '10 0 0 0',
+              tpl: '<div class="sesar-chart-title">{caption}</div><div class="sesar-chart-title">{subcaption}</div>',
+              data: { caption: '', subcaption: '' },
+              border: false
+            },
+            {
+              xtype: 'sesartime',
+              border: false,
+              height: 360,
+            }
+          ]
         },
         {
-          xtype: 'sesarage',
+          xtype: 'panel',
+          tabindex: 1,
           iconCls: 'sesar-icon x-fa fa-child',
           title: Ext.is.Phone ? '' : 'Åldersgrupper',
           tabConfig: {
             width: Ext.is.Phone ? 42 : 182
           },
-          height: 400,
+          border: false,
           listeners: {
             show: function () {
               this.up('#mainView').getController().updateCharts('age')
             }
-          }
+          },
+          items:
+            [
+              {
+                padding: '10 0 0 0',
+                tpl: '<div class="sesar-chart-title">{caption}</div><div class="sesar-chart-title">{subcaption}</div>',
+                data: { caption: '', subcaption: '' },
+                border: false
+              },
+              {
+                xtype: 'sesarage',
+                height: 360,
+
+              }
+            ]
         },
         {
-          xtype: 'sesarcomparison',
+          xtype: 'panel',
+          itemId: 'chartContainer',
           title: Ext.is.Phone ? '' : 'Jämförelse mellan kliniker',
           iconCls: 'sesar-icon x-fa fa-balance-scale',
-          height: 800,
+          border: false,
           listeners: {
             show: function () {
               this.up('#mainView').getController().updateCharts('comparison')
             }
-          }
+          },
+          items:
+            [
+              {
+                padding: '10 0 0 0',
+                tpl: '<div class="sesar-chart-title">{caption}</div><div class="sesar-chart-title">{subcaption}</div>',
+                data: { caption: '', subcaption: '' },
+                border: false
+              },
+              {
+                xtype: 'sesarcomparison',
+                height: 760,
+              }
+            ]
         }
       ],
     },
     {
       xtype: 'progressbar',
+      focusable: false,
       margin: 10,
       maxHeight: 5,
       cls: 'sesar-progressbar'
@@ -836,7 +898,11 @@ Ext.util.CSS.createStyleSheet(
   + '  border-right: solid 1px #00528F; '
   + '  border-bottom: solid 1px white; '
   + '  background-color: white; '
-  + '  outline: none;'
+  // + '  outline: lightblue solid 2px;'
+  + '}'
+
+  + '.x-keyboard-mode .ton-tab.x-tab-focus.x-tab-default {'
+  // + '  outline: 1px solid darkblue;'
   + '}'
 
   + '.ton-tab .x-tab-inner-default { '
@@ -888,6 +954,15 @@ Ext.util.CSS.createStyleSheet(
 
   + '.sesar-progressbar .x-progress-bar {'
   + '  background-color: #77818c !important;'
+  + '}'
+
+  + '.sesar-chart-title {'
+  // + '  color: #9aa8bc;'
+  + '  color: #8594AD;'
+  + '  font-size: 18px;'
+  + '  text-align: center;'
+  + '  margin: 0 0 0 0;'
+  + '  min-height: 25px;'
   + '}'
 
   + ' .sesar-category {'
