@@ -4598,9 +4598,9 @@ var skeletonWidget = function (current, callback, loadonly, inFreeMode) {
 						break;
 					case '85':
 						icdSuffix = '.Y'
-						icdCodes[0] = 'S92.2' + icdSuffix;
-						icdCodes[1] = 'S93.2' + icdSuffix;
-						icdCodes[2] = 'S92.3' + icdSuffix;
+						icdCodes[0] = 'S92.2';
+						icdCodes[1] = 'S93.2';
+						icdCodes[2] = 'S92.3';
 						switch (aAO) {
 							case "A1": case "A2": case "A3": case "B1": case "B2": case "B3": case "C3":
 								icd10 = icdCodes[0];
@@ -4615,7 +4615,9 @@ var skeletonWidget = function (current, callback, loadonly, inFreeMode) {
 								icd10 = icdCodes[2];
 								break;
 						}
-						
+						icdCodes[0]+= icdSuffix;
+						icdCodes[1]+= icdSuffix;
+						icdCodes[2]+= icdSuffix;
 						break;
 					case '87':
 						var ICD_SUFFIX_87A = '.A';
