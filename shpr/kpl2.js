@@ -1,4 +1,5 @@
 
+console.time('ext-time')
 widgetConfig = {};
 
 Ext.define('Shpr.store.Spider', {
@@ -910,6 +911,7 @@ Ext.define('Shpr.view.Main', {
     {
       xtype: 'panel',
       border: false,
+      cls: 'shpr-timechart-panel',
       items: [
       {
         xtype: 'panel',
@@ -1009,6 +1011,11 @@ Ext.define('Shpr.view.Main', {
         border: false,
         padding: '0 20px 0 20px',
         margin: '20px 0 0px 0',
+        header: {
+          style: {
+            backgroundColor: '#e8f1f5'
+          }
+        },
         items: [
         {
           xtype: 'tbspacer',
@@ -1214,6 +1221,11 @@ Ext.define('Shpr.view.Main', {
         border: false,
         padding: '0 20px 0 20px',
         margin: '20px 0 0px 0',
+        header: {
+          style: {
+            backgroundColor: '#e8f1f5'
+          }
+        },
         items: [
         {
           xtype: 'tbspacer',
@@ -1287,6 +1299,11 @@ Ext.define('Shpr.view.Main', {
         border: false,
         padding: '0 20px 0 20px',
         margin: '20px 0 80px 0',
+        header: {
+          style: {
+            backgroundColor: '#e8f1f5'
+          }
+        },
         items: [
         {
           xtype: 'tbspacer',
@@ -1328,6 +1345,11 @@ Ext.application({
   name: 'Shpr',
   units: [],
   launch: function () {
+    
+    Ext.defer(this.start, 0)
+  },
+  start: function() {
+    console.timeEnd('ext-time')
     var target = (typeof Stratum !== 'undefined' && Stratum.containers) ? Stratum.containers['SHPR/Radar'] : 'contentPanel'
     var main = Ext.create('Shpr.view.Main', {
       renderTo: target
@@ -1345,7 +1367,7 @@ Ext.application({
       {type: 'text', value: 'rev5yrs',  text: '______________                            \n         ______                                   ', x: 65, y: 190, fontSize: 16, zIndex: 100, fillStyle: 'rgba(0,0,0,0.01)'}
     ]
     controller.updateCharts()
-  },
+  }
 });
 Shpr.controller.inputCss =  Ext.os.deviceType === 'Phone' ? 'font-size: 16px;' : ''  
 Shpr.controller.selectCss = Ext.os.deviceType === 'Phone' ? 'height: 50px;' : ''  
@@ -1365,6 +1387,7 @@ Ext.util.CSS.createStyleSheet(
   + '  height: 40px;'
 //  + Shpr.controller.selectCss
   + '  border-radius: 3px;'
+  // + '  outline: 1px solid #a9b5c6'
   + '}'
 
   + '.shpr-select input {'
@@ -1372,6 +1395,10 @@ Ext.util.CSS.createStyleSheet(
   + '  color: #2f5880;'
   + '  padding: 9px 14px;'
   + Shpr.controller.inputCss                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+  + '}'
+
+  + '.shpr-select input:focus {'
+  + '  outline: 1px solid #a9b5c6;'
   + '}'
 
   + '.shpr-select div {'
@@ -1480,8 +1507,16 @@ Ext.util.CSS.createStyleSheet(
    + '  background-color: #ccc;'
    + '}'
 
-   + '.shpr-download-button.x-btn-focus {'
+   + '.x-keyboard-mode .shpr-download-button.x-btn-focus {'
    + '  background-color: white !important;'
+   + '  outline: 1px solid #a9b5c6;'
+   + '  outline-offset: -3px;'
+   + '  box-shadow: none;'
+   + '  border-color: #a3a3a3;'
+   + '}'
+
+   + '.x-keyboard-mode .shpr-timechart-panel .x-panel-header-default .x-tool-focus {'
+   + '  outline: 1px dashed #333;'
    + '}'
    
   + '.shpr-select .x-form-trigger {'
