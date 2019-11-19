@@ -6,7 +6,7 @@ Ext.util.CSS.createStyleSheet(
   + '  content: url(https://stratum.blob.core.windows.net/boa/checkbox-boa.svg);'
   +  '}'
   + '.x-keyboard-mode .bsw-button.x-btn-focus {'
-  + '  background-color: #245d71;'
+  + '  background-color: #f0f7fb;'
   + '  outline: none !important;'
   + '}'
   + ' .bsw-county-item {'
@@ -362,6 +362,10 @@ Ext.util.CSS.createStyleSheet(
   + '      display: flex;'
   + '  }'
 
+  + '.bsw-secondary:focus {'
+  + '  background-color: #f0f7fb !important;'
+  + '}'
+
   + '  .bsw-secondary.bsw-grade-almost {'
   + '      background-position: -6px -41px !important;'
   + '      color:  #fbb600;'
@@ -534,7 +538,7 @@ Ext.util.CSS.createStyleSheet(
   + '  }'
 
   + '.bsw-button.x-btn-focus .x-btn-inner {'
-  + '  color: white;'
+//  + '  color: white;'
   + '}'
 
   + '  .bsw-hidden {'
@@ -561,7 +565,7 @@ Ext.util.CSS.createStyleSheet(
   + '  }'
 
   + '  .bsw-pills a:focus {'
-  //  + '      outline: none;'
+//  + '      outline: none;'
   + '  }'
 
   + '  .bsw-pills .x-tab.x-tab-active.x-tab-default .x-tab-inner-default {'
@@ -3453,7 +3457,7 @@ Ext.define('Boa.view.SecondaryGoals', {
     {
       xtype: 'panel',
       bind: {
-        html: '<div class="bsw-secondary bsw-grade-{first.output.grade}"><div>{first.output.result}</div><div><div class="patient-rate">{first.output.indicatorText}</div><div class="goal-level">{first.output.targetText}</div></div></div>'
+        html: '<div tabindex="0" class="bsw-secondary bsw-grade-{first.output.grade}"><div>{first.output.result}</div><div><div class="patient-rate">{first.output.indicatorText}</div><div class="goal-level">{first.output.targetText}</div></div></div>'
       },
       cls: ' bsw-secondary-line',
       listeners: {
@@ -3462,12 +3466,19 @@ Ext.define('Boa.view.SecondaryGoals', {
           fn: function () {
             this.component.up().up().getController().details('xray');
           }
+        },
+        keyup: {                         
+          element: 'el',
+          fn: function (e) {
+            if(e.keyCode!==13)return
+            this.component.up().up().getController().details('xray');
+          }
         }
       }
     },
     {
       bind: {
-        html: '<div class="bsw-secondary bsw-grade-{second.output.grade}"><div>{second.output.result}</div><div><div class="patient-rate">{second.output.indicatorText}</div><div class="goal-level">{second.output.targetText}</div></div></div>'
+        html: '<div tabindex="0" class="bsw-secondary bsw-grade-{second.output.grade}"><div>{second.output.result}</div><div><div class="patient-rate">{second.output.indicatorText}</div><div class="goal-level">{second.output.targetText}</div></div></div>'
       },
       cls: ' bsw-secondary-line',
       listeners: {
@@ -3481,7 +3492,7 @@ Ext.define('Boa.view.SecondaryGoals', {
     },
     {
       bind: {
-        html: '<div class="bsw-secondary bsw-grade-{third.output.grade}"><div>{third.output.result}</div><div><div class="patient-rate">{third.output.indicatorText}</div><div class="goal-level">{third.output.targetText}</div></div></div>'
+        html: '<div tabindex="0" class="bsw-secondary bsw-grade-{third.output.grade}"><div>{third.output.result}</div><div><div class="patient-rate">{third.output.indicatorText}</div><div class="goal-level">{third.output.targetText}</div></div></div>'
       },
       cls: ' bsw-secondary-line',
       listeners: {
@@ -3495,7 +3506,7 @@ Ext.define('Boa.view.SecondaryGoals', {
     },
     {
       bind: {
-        html: '<div class="bsw-secondary bsw-grade-{fourth.output.grade}"><div>{fourth.output.result}</div><div><div class="patient-rate">{fourth.output.indicatorText}</div><div class="goal-level">{fourth.output.targetText}</div></div></div>'
+        html: '<div tabindex="0" class="bsw-secondary bsw-grade-{fourth.output.grade}"><div>{fourth.output.result}</div><div><div class="patient-rate">{fourth.output.indicatorText}</div><div class="goal-level">{fourth.output.targetText}</div></div></div>'
       },
       cls: ' bsw-secondary-line',
       listeners: {
@@ -3509,7 +3520,7 @@ Ext.define('Boa.view.SecondaryGoals', {
     },
     {
       bind: {
-        html: '<div class="bsw-secondary bsw-grade-{fifth.output.grade}"><div>{fifth.output.result}</div><div><div class="patient-rate">{fifth.output.indicatorText}</div><div class="goal-level">{fifth.output.targetText}</div></div></div>'
+        html: '<div tabindex="0" class="bsw-secondary bsw-grade-{fifth.output.grade}"><div>{fifth.output.result}</div><div><div class="patient-rate">{fifth.output.indicatorText}</div><div class="goal-level">{fifth.output.targetText}</div></div></div>'
       },
       cls: ' bsw-secondary-line',
       listeners: {
@@ -3667,7 +3678,7 @@ Ext.define('Boa.view.Table', {
       + '<div class="rect5"></div>'
       + '</div>'
   },
-
+/*
   createExcelLink: function (data) {
     var tag = document.getElementById('exportComparison');
     if (!tag) return;
@@ -3695,7 +3706,7 @@ Ext.define('Boa.view.Table', {
     }
 
     document.getElementById('exportTableBar').setAttribute('class', 'bsw-visible');
-  }
+  }*/
 });
 
 Ext.define('Boa.view.Trend', {
