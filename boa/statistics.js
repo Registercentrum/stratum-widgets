@@ -7,6 +7,7 @@ Ext.util.CSS.createStyleSheet(
   +  '}'
   + '.x-keyboard-mode .bsw-button.x-btn-focus {'
   + '  background-color: #245d71;'
+  + '  outline: none !important;'
   + '}'
   + ' .bsw-county-item {'
   + '     padding-top: 10px;'
@@ -47,8 +48,15 @@ Ext.util.CSS.createStyleSheet(
   + '      height: 42px;'
   + '      border-radius: 3px;'
   + '      background-color: #ffffff;'
-  + '      border: solid 1px rgba(36, 93, 113, 0.5);'
   + '  }'
+
+  + '.bsw-select .x-form-trigger-wrap {'
+  + '  border: solid 1px rgba(36, 93, 113, 0.5);'
+  + '}'
+  
+  + '.bsw-select .x-form-trigger-wrap.x-form-trigger-wrap-focus {'
+  + '  border-color: #42c1ef;'
+  + '}'
 
   + '  .bsw-select input {'
   + '      color: #245d71;'
@@ -202,8 +210,8 @@ Ext.util.CSS.createStyleSheet(
   + '      box-shadow: inset 0px -10px 9px -7px rgba(0,0,0,0.2);'
   + '  }'
 
-  + '  .bsw-tabs a:focus, .bsw-tabs .x-tab-focus {'
-  + '      outline: none !important;'
+  + '.x-keyboard-mode .bsw-tabs a:focus, .x-keyboard-mode .bsw-tabs .x-tab-focus {'
+  + '      outline: 1px solid #42c1ef;'
   + '  }'
 
   + '  .bsw-tabs .x-tab.x-tab-active.x-tab-default {'
@@ -281,6 +289,10 @@ Ext.util.CSS.createStyleSheet(
   + '      margin: 0;'
   + '  }'
 
+  + '.bsw-checkbox span.x-form-checkbox-focus {'
+  + '  outline: 1px solid #42c1ef;'
+  + '}'
+  
   + '  .bsw-checkbox.x-form-cb-checked input {'
   + '      background-position: -8px -38px !important;'
   + '  }'
@@ -519,8 +531,11 @@ Ext.util.CSS.createStyleSheet(
   + '      font-stretch: normal;'
   + '      line-height: 1.67;'
   + '      color: #245d71;'
-
   + '  }'
+
+  + '.bsw-button.x-btn-focus .x-btn-inner {'
+  + '  color: white;'
+  + '}'
 
   + '  .bsw-hidden {'
   + '      display: hidden'
@@ -546,7 +561,7 @@ Ext.util.CSS.createStyleSheet(
   + '  }'
 
   + '  .bsw-pills a:focus {'
-  + '      outline: none;'
+  //  + '      outline: none;'
   + '  }'
 
   + '  .bsw-pills .x-tab.x-tab-active.x-tab-default .x-tab-inner-default {'
@@ -867,10 +882,6 @@ Ext.util.CSS.createStyleSheet(
 
   + '  .bsw-body .x-btn.x-btn-pressed.x-btn-default-large span {'
   + '      color: white;'
-  + '  }'
-
-  + '  .bsw-body .x-form-trigger-wrap-default {'
-  + '      border:none;'
   + '  }'
 
   + '  .bsw-body .x-tab-bar-default-top>.x-tab-bar-body-default {'
