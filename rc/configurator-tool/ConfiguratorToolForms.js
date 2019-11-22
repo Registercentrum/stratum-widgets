@@ -43,7 +43,7 @@
             },
             onRemove: function(event, record, index, options) {
                 console.log("Remove button was clicked");
-            },
+            }
         });
     }
 
@@ -94,6 +94,11 @@
                         { text: "Subject bound", dataIndex: "IsSubjectBound", width: 100  }
                     ]
                 }
+            }],
+            tools: [{
+                type: 'help',
+                callback: 'onHelp',
+                scope: this
             }]
         });
     }
