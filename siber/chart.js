@@ -46,7 +46,7 @@ Ext.define('Siber.controller.Start', {
       controller.updateChart(0);
     }
     else {
-      for (var i = 0; i < 5; i++) {
+      for (var i = 0; i < 6; i++) {
         controller.api = getChartConfig(i, widgetConfig).api;
         controller.updateChart(i);
       }
@@ -103,7 +103,7 @@ Ext.define('Siber.controller.Start', {
   },
 
   initialize: function () {
-
+	printObject(widgetConfig);
     Ext.Ajax.request({
       type: 'ajax',
       method: 'get',
@@ -153,7 +153,7 @@ Ext.define('Siber.view.Start', {
   controller: 'start',
   viewModel: 'start',
   itemId: 'start',
-
+  width: '100%',
   items: [
     {
       xtype: 'container',
@@ -166,11 +166,6 @@ Ext.define('Siber.view.Start', {
         align: 'left'
       },
       items: [
-        {
-          xtype: 'component',
-          html: '',
-          id: 'headerCmp'
-        },
         {
           itemId: 'indicatorFilter',
           xtype: 'siberfilter',
@@ -199,8 +194,8 @@ Ext.define('Siber.view.Start', {
               { ValueName: 'Insomni', ValueCode: 'insomnia' },
               { ValueName: 'Dysmorfofobi', ValueCode: 'dysmorphic' },
               { ValueName: 'Ångestsyndrom unga RCADS-47', ValueCode: 'anxiety_young_rcads47' },
-              { ValueName: 'Ångestsyndrom unga RCADS-25', ValueCode: 'anxiety_young_rcads25' }/*,
-			  { ValueName: 'Ångestsyndrom unga*', ValueCode: 'anxiety_young' }*/
+              { ValueName: 'Ångestsyndrom unga RCADS-25', ValueCode: 'anxiety_young_rcads25' },
+			  { ValueName: 'Ångestsyndrom unga*', ValueCode: 'anxiety_young' }
 
 
               /*{ ValueName: 'Separationsångest', ValueCode: 'separation_anxiety'}*/
@@ -211,8 +206,12 @@ Ext.define('Siber.view.Start', {
             },
             filters: [
               function (item) {
-                if (item.data.ValueCode == 'anxiety_young_rcads47' || item.data.ValueCode == 'anxiety_young_rcads25')
-                  return widgetConfig.showSpecialIndicatores;
+                if(widgetConfig.isDashboard)
+					return true;
+				if (item.data.ValueCode == 'anxiety_young_rcads47' || item.data.ValueCode == 'anxiety_young_rcads25')
+					return widgetConfig.showSpecialIndicators;
+				if (item.data.ValueCode == 'anxiety_young')
+					return widgetConfig.showSpecialIndicators===undefined || widgetConfig.showSpecialIndicators===false;
                 if (!widgetConfig.excludedIndicators) return true;
                 return !Ext.Array.contains(widgetConfig.excludedIndicators, item.data.ValueCode);
               }
@@ -303,7 +302,13 @@ Ext.define('Siber.view.Start', {
           }
         },
       ]
-    },
+	},
+	{
+		xtype:'component',
+		height:'200',
+		html: '<p><i>Håll muspekaren över staplarna för mer information om antal eller andelar.</i></p>',
+		hidden: textExists() //Remove after demo stage
+  	},
     getChartItems(),
     {
       xtype: 'container',
@@ -323,8 +328,8 @@ function createChart(id) {
     extend: 'Ext.chart.CartesianChart',
     id: 'chart' + id,
     //alias: 'view.trend',
-    height:  widgetConfig.height || 500,
-    width: '100%',
+    height:  widgetConfig.isDashboard? 300 : widgetConfig.height || 500,
+    width: widgetConfig.isDashboard? 370 : '100%',
     flipXY: widgetConfig.flipXY,
     border: false,
     colors: widgetConfig.colors || null,
@@ -332,7 +337,8 @@ function createChart(id) {
     hidden: true,
     legend: {
       type: 'dom',
-      docked: 'top'
+      docked: 'top',
+      cls: 'siber-legend'
     },
     useDarkerStrokeColor: false,
     store: {
@@ -429,13 +435,16 @@ function createChart(id) {
   });
 
   if (widgetConfig.id !== undefined) {
-    var headerCmp = getHeaderText(widgetConfig.id)
+    var headerCmp = getHeaderTextCmp(widgetConfig.id)
     if (headerCmp !== null) {
       var container = Ext.create('Ext.Panel', {
         //html: '',//getHeaderText(id)
         layout: 'vbox',
-        height: widgetConfig.height || 500,
-        width: '50%'
+		
+        // height:'auto',
+        width: '100%',
+		margin:5
+		
       });
       container.items.add(headerCmp);
       container.items.add(chart);
@@ -446,7 +455,6 @@ function createChart(id) {
   return chart;
 
 }
-
 
 function getChartConfig(id, widgetConfig) {
   if (!widgetConfig.isDashboard) //TODO
@@ -466,7 +474,7 @@ function getChartConfig(id, widgetConfig) {
         numericPosition: 'bottom'
       }
       break;
-    case 1:
+	 case 1:
       cfg = {
         api: 'siberw-qbars-count-endings',
         xField: 'YQ',
@@ -479,24 +487,53 @@ function getChartConfig(id, widgetConfig) {
         numericPosition: 'bottom'
       }
       break;
-    case 2:
+	 case 2:
       cfg = {
         api: 'siberw-qbars-proportion-treated-in-time',
         xField: 'YQ',
         yField: ['proportion'],
         id: 'BeInom30Kv',
         title: ['Andel inom 30 dagar'],
-        colors: ['#C95D63'],
+        //colors: ['#C95D63'],
         colors: ['#43afaf'],
         flipXY: false,
-        asPercentages: true,
-        height: 600
+        asPercentages: true
       }
       break;
+    
     case 3:
       cfg = {
+        api: 'siberw-stacked-qbars-completion',
+		id: 'FullfoljKv',
+        flipXY: false,
+        xField: 'YQ',
+        yField: ['good_proportion', 'bad_proportion', 'missing_proportion'],        
+        title: ['Förbättrad', 'Inte förbättrad', 'Uppgift saknas'],
+        isStacked: true,
+        asPercentages: true,
+        // colors: ['#70C1B3', '#D14F60', '#FFE899'],
+        // colors: ['#6BBCC6', '#D14F60', '#FFE899'],
+        // colors: ['#6BACC6', '#D14F60', '#FFE899'],
+        // colors: ['#6B99C7', '#D14F60', '#FFE899'],
+        colors: ['#43afaf', '#E47C7B', '#E8DAB2']
+      }
+      break;
+	   case 4:
+      cfg = {
+        api: 'siberw-qbars-structured-diagnostics',
+		id: 'StruktDiagKv',
+        xField: 'YQ',
+        yField: 'freq',
+        title: 'Strukturerad diagnostik',
+        // colors: ['#C95D63'],
+        colors: ['#E47C7B'],
+        flipXY: false,
+        numericPosition: 'bottom'
+      }
+      break;
+    case 5:
+      cfg = {
         api: 'siberw-stacked-qbars-effect',
-
         flipXY: false,
         xField: 'YQ',
         yField: ['good_proportion', 'bad_proportion', 'missing_proportion'],
@@ -512,35 +549,8 @@ function getChartConfig(id, widgetConfig) {
       }
 
       break;
-    case 4:
-      cfg = {
-        api: 'siberw-qbars-structured-diagnostics',
-        xField: 'YQ',
-        yField: 'freq',
-        title: 'Strukturerad diagnostik',
-        // colors: ['#C95D63'],
-        colors: ['#E47C7B'],
-        flipXY: false,
-        numericPosition: 'bottom'
-      }
-      break;
-    case 5:
-      cfg = {
-        api: 'siberw-stacked-qbars-completion',
-        flipXY: false,
-        xField: 'YQ',
-        yField: ['good_proportion', 'bad_proportion', 'missing_proportion'],
-        id: 'EjForbattradKv',
-        title: ['Förbättrad', 'Inte förbättrad', 'Uppgift saknas'],
-        isStacked: true,
-        asPercentages: true,
-        // colors: ['#70C1B3', '#D14F60', '#FFE899'],
-        // colors: ['#6BBCC6', '#D14F60', '#FFE899'],
-        // colors: ['#6BACC6', '#D14F60', '#FFE899'],
-        // colors: ['#6B99C7', '#D14F60', '#FFE899'],
-        colors: ['#43afaf', '#E47C7B', '#E8DAB2']
-      }
-      break;
+   
+    
   }
   cfg.isDashboard = true;
   return cfg;
@@ -561,8 +571,6 @@ Ext.application({
 
   }
 });
-
-
 
 Ext.util.CSS.removeStyleSheet('siber');
 Ext.util.CSS.createStyleSheet(
@@ -609,29 +617,34 @@ Ext.util.CSS.createStyleSheet(
 );
 
 function getChartItems() {
+  var height=400;
   if (widgetConfig.isDashboard) {
-    return {
-      xtype: 'container',
-      //border: false,
-      height: 2000,
+    return { 
+      
+      height: 1650, 
       layout: {
         type: 'vbox'
       },
-      items: [{
+      items: [		
+      {
         xtype: 'container',
-        height: 650,
+		border:true,
+		style: 'border: 1px; blue',
+        height: height,
         layout: { type: 'hbox' },
         items: [createChart(0), createChart(1)]
       },
       {
         xtype: 'container',
-        height: 650,
+		border:true,
+        height: height,
         layout: { type: 'hbox' },
         items: [createChart(2), createChart(3)]
       },
       {
         xtype: 'container',
-        height: 650,
+		border:true,
+        height: height,
         layout: { type: 'hbox' },
         items: [createChart(4), createChart(5)]
       }
@@ -639,8 +652,7 @@ function getChartItems() {
       ]
 
     }
-  }
-  else {
+  } else {
     return {
       xtype: 'container',
       //border: false,
@@ -653,13 +665,11 @@ function getChartItems() {
       }
 
       ]
-
     }
   }
-
 }
 
-function getHeaderText(id) {
+function getHeaderTextCmp(id) {
   if (id == undefined)
     return null;
   var headerText = null;
@@ -667,42 +677,77 @@ function getHeaderText(id) {
   switch (id) {
     case 'BeStartKv':
       headerText = 'Behandlingsstart - uppdelat per kvartal';
-      subheaderText = 'Antal påbörjade internetbehandlingar över tid';
+      subheaderText = 'Antal påbörjade internetbehandlingar över tid.';
       break;
     case 'BeSlutKv':
       headerText = 'Behandlingsavslut - uppdelat per kvartal';
-      subheaderText = 'Antal avslutade internetbehandlingar över tid';
+      subheaderText = 'Antal avslutade internetbehandlingar över tid.';
       break;
     case 'BeInom30Kv':
       headerText = 'Tillgänglighet - uppdelat per kvartal';
-      subheaderText = 'Andel patienter som blev bedömda och startade psykologisk behandling inom 30 dagar efter vårdbegäran, över tid';
+      subheaderText = 'Andel patienter som blev bedömda och startade<br/ psykologisk behandling<br/>inom 30 dagar efter vårdbegäran, över tid.';
       break;
     case 'ForbattradKv':
       headerText = 'Behandlingsresultat - uppdelat på kvartal';
-      subheaderText = 'Andel patienter som är förbättrade efter behandling per diagnosgrupp, över tid';
+      subheaderText = 'Andel patienter som är förbättrade efter behandling<br/>per diagnosgrupp, över tid.';
       break;
-    case 'EjForbattradKv':
-      headerText = 'abc1';
-      subheaderText = 'def1';
+    case 'StruktDiagKv':
+      headerText = 'Strukturerad diagnostik – uppdelat per kvartal';
+      subheaderText = 'Andel patienter som diagnostiserats med stöd av strukturerad bedömning.';
       break;
-    case '':
-      headerText = 'abc2';
-      subheaderText = 'def2';
+    case 'FullfoljKv':
+      headerText = 'Fullföljande - uppdelat per kvartal';
+      subheaderText = 'Andel patienter som fullföljt mer än hälften av behandlingsprogrammet per diagnosgrupp.';
       break;
   }
 
   if (headerText !== null) {
-    var cmp = Ext.create('Ext.Component', {
-      html: '<h2>' + headerText + '</h2><p>' + subheaderText + '</p>'
+    var cmp = Ext.create('Ext.Container', {
+	  height:75,
+	  width: '100%',//370,
+      html: '<p><b>' + headerText + '</b></p><p style="font-size:13px">' + subheaderText + '</p>'
     });
     return cmp;
   }
   return null;
 }
+
+function printObject(obj){	
+	console.log('{');	
+	for(var p in obj){
+		console.log(p + ': ' + obj[p]);		
+	}
+	console.log('}');
+}
+Ext.util.CSS.removeStyleSheet('siber-charts')
+Ext.util.CSS.createStyleSheet(
+  ' '
+  + '.rc-active {'
+  + '  background-color: aquamarine;'
+  + '}'
+
+  + '@media (min-width: 992px) {'
+  + '.base-page>.widget-large {'
+  + '  margin-right: -10%;'
+  + '}'
+  + '}'
+
+  + '.siber-legend .x-legend-item {'
+  + '  font-size: 12px;'
+  + '}'
+  
+  , 'sibercharts'
+)
+
+function textExists(){
+	var aTags = document.getElementsByTagName("p");
+	var searchText = "När du står";	
+	for (var i = 0; i < aTags.length; i++) {
+		if (aTags[i].textContent.indexOf(searchText)>=0) {
+			return true;
+		}	
+	}
+	return false;
+}
+
 //# sourceURL=SIBER/Chart
-
-
-
-
-
-

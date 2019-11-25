@@ -1,3 +1,4 @@
+
 Ext.define('Sesar.view.Filter', {
   extend: 'Ext.form.field.ComboBox',
   xtype: 'sesarfilter',
@@ -15,7 +16,6 @@ Ext.define('Sesar.view.Filter', {
   caseSensitive: false,
   checkChangeEvents: ['change', 'keyup'],
 })
-/**/
 
 Ext.define('Sesar.chart.Time', {
   extend: 'Ext.chart.CartesianChart',
@@ -1043,4 +1043,3 @@ Ext.util.CSS.createStyleSheet(
   + ' }'
   , 'siber'
 )
-//# sourceURL=SESAR/BaseChart
