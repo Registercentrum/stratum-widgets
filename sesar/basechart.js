@@ -1,4 +1,3 @@
-
 Ext.define('Sesar.view.Filter', {
   extend: 'Ext.form.field.ComboBox',
   xtype: 'sesarfilter',
@@ -12,7 +11,7 @@ Ext.define('Sesar.view.Filter', {
   queryMode: 'local',
   minChars: 1,
   anyMatch: true,
-  autoSelect: false,
+  autoSelect: false, 
   caseSensitive: false,
   checkChangeEvents: ['change', 'keyup'],
 })
@@ -20,9 +19,23 @@ Ext.define('Sesar.view.Filter', {
 Ext.define('Sesar.chart.Time', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'sesartime',
+  /*
+  plugins: {
+    responsive: true
+  },
+  responsiveConfig: {
+    'width < 1250': {
+      width: '100%'
+    },
+    'width >= 1250': {
+      width: '100%'
+    },
+  },
+  */
   border: false,
   cls: 'sesar-timechart',
   colors: ['#DD4C39', '#0791AB'],
+  // colors: ['#a12b1b', '#36d7f7'],
   padding: '10 0 0 0',
   insetPadding: '0 35 20 10',
   innerPadding: '10 10 10 10',
@@ -45,14 +58,12 @@ Ext.define('Sesar.chart.Time', {
       position: 'left',
       fields: ['Clinic_Mean', 'State_Mean'],
       style: {
-        strokeStyle: '#9aa8bc',
-        strokeStyle: '#8594AD',
+        strokeStyle: '#677792',
         axisLine: false
       },
       label: {
         strokeOpacity: 0.2,
-        fillStyle: '#9aa8bc',
-        fillStyle: '#8594AD'
+        fillStyle: '#677792'
       },
 
       renderer: function (axis, label, context, previous) {
@@ -68,13 +79,11 @@ Ext.define('Sesar.chart.Time', {
       position: 'bottom',
       fields: 'Year',
       style: {
-        strokeStyle: '#9aa8bc',
-        strokeStyle: '#8594AD',
+        strokeStyle: '#677792',
         axisLine: false
       },
       label: {
-        fillStyle: '#9aa8bc',
-        fillStyle: '#8594AD',
+        fillStyle: '#677792',
         strokeOpacity: 0.2,
       },
     }
@@ -167,14 +176,12 @@ Ext.define('Sesar.chart.AgeGroups', {
       position: 'left',
       titleMargin: 20,
       style: {
-        strokeStyle: '#9aa8bc',
-        strokeStyle: '#8594AD',
+        strokeStyle: '#677792',
         axisLine: false
       },
       label: {
         strokeOpacity: 0.2,
-        fillStyle: '#9aa8bc',
-        fillStyle: '#8594AD'
+        fillStyle: '#677792'
       },
 
       renderer: function (axis, label, context, previous) {
@@ -190,13 +197,11 @@ Ext.define('Sesar.chart.AgeGroups', {
       position: 'bottom',
       fields: ['Agegroups'],
       style: {
-        strokeStyle: '#9aa8bc',
-        strokeStyle: '#8594AD',
+        strokeStyle: '#677792',
         axisLine: false
       },
       label: {
-        fillStyle: '#9aa8bc',
-        fillStyle: '#8594AD',
+        fillStyle: '#677792',
         strokeOpacity: 0.2,
       },
     }
@@ -256,14 +261,12 @@ Ext.define('Sesar.chart.Comparison', {
       position: 'bottom',
       fields: ['Mean'],
       style: {
-        strokeStyle: '#9aa8bc',
-        strokeStyle: '#8594AD',
+        strokeStyle: '#677792',
         axisLine: false
       },
       label: {
         strokeOpacity: 0.2,
-        fillStyle: '#9aa8bc',
-        fillStyle: '#8594AD',
+        fillStyle: '#677792'
       },
 
       renderer: function (axis, label, context, previous) {
@@ -279,15 +282,11 @@ Ext.define('Sesar.chart.Comparison', {
       position: 'left',
       fields: ['UnitName'],
       style: {
-        strokeStyle: '#9aa8bc',
-        strokeStyle: '#8594AD',
-        strokeStyle: '#788AA5',
+        strokeStyle: '#677792',
         axisLine: false
       },
       label: {
-        fillStyle: '#9aa8bc',
-        fillStyle: '#8594AD',
-        fillStyle: '#788AA5',
+        fillStyle: '#677792',
         strokeOpacity: 0.2,
       },
     }],
@@ -359,7 +358,7 @@ Ext.define('Sesar.chart.Comparison', {
   ]
 })
 
-Ext.define('Sesar.controller.Main', {
+var ctrlr=Ext.define('Sesar.controller.Main', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.main',
 
@@ -374,6 +373,11 @@ Ext.define('Sesar.controller.Main', {
     var startyear = view.down('#startyearFilter').getDisplayValue()
     var endyear = view.down('#endyearFilter').getDisplayValue()
     var clinicName = view.down('#clinicFilter').getDisplayValue()
+	var currentYr=new Date().getFullYear();
+	Ext.get('warningCmp').setVisible(false);
+	if(startyear==currentYr || endyear == currentYr){
+		Ext.get('warningCmp').setVisible(true);
+	}
 
     !Ext.Object.isEmpty(Ext.Ajax.requests) && Ext.Ajax.abort(controller.currentRequest)
 
@@ -538,14 +542,18 @@ Ext.define('Sesar.view.Main', {
   alias: 'view.main',
   controller: 'main',
   itemId: 'mainView',
+  margin : 'auto',
+  mixin: [
+    'Ext.mixin.Responsive'
+  ],
   items: [
     {
       xtype: 'panel',
+      width: '100%',
+      
+      id: 'foo',
       padding: '0 6 0 0',
       layout: 'vbox',
-      style: {
-        marginBottom: Ext.is.Phone ? '0px' : '0px'
-      },
       border: false,
       items: [
         {
@@ -638,21 +646,41 @@ Ext.define('Sesar.view.Main', {
     {
       xtype: 'panel',
       padding: '0 6 0 0',
+      cls: 'flexFix',
       style: {
-        marginBottom: '20px'
+        marginBottom: '20px',
       },
-      layout: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? 'vbox' : 'hbox',
+      width: '99%',
+      plugins: {
+             responsive: true
+      },
+      responsiveConfig: {
+        'width < 768': {
+          layout: {
+            type: 'box',
+            vertical: true,
+            align: 'stretch'
+          }
+        },
+        'width >= 768': {
+          layout: {
+            type: 'box',
+            vertical: false,
+            // align: 'stretch'
+          }
+        }
+      },
       border: false,
       items: [
         {
           xtype: 'sesarfilter',
           itemId: 'startyearFilter',
+          flex: 1,
           checkChangeEvents: ['change'],
-          width: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? '99%' : '33%',
           fieldLabel: 'Från',
           labelStyle: 'text-align: right;',
           labelWidth: 65,
-          value: 'year2014',
+          value: getYearSelectionItems()[0].ValueCode,
           displayField: 'ValueName',
           valueField: 'ValueCode',
           listeners: {
@@ -660,13 +688,7 @@ Ext.define('Sesar.view.Main', {
           },
           store: {
             fields: ['ValueCode', 'ValueName'],
-            data: [
-              { ValueName: '2014', ValueCode: 'year2014' },
-              { ValueName: '2015', ValueCode: 'year2015' },
-              { ValueName: '2016', ValueCode: 'year2016' },
-              { ValueName: '2017', ValueCode: 'year2017' },
-              { ValueName: '2018', ValueCode: 'year2018' }
-            ],
+            data: getYearSelectionItems(),
             sorters: {
               property: 'ValueCode',
               direction: 'ASC'
@@ -676,11 +698,11 @@ Ext.define('Sesar.view.Main', {
         {
           xtype: 'sesarfilter',
           itemId: 'endyearFilter',
-          width: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? '99%' : '33%',
+          flex: 1,
           fieldLabel: 'Till',
           labelStyle: 'text-align: right;',
           labelWidth: 65,
-          value: 'year2018',
+          value: getYearSelectionItems()[getYearSelectionItems().length-1].ValueCode,
           displayField: 'ValueName',
           valueField: 'ValueCode',
           listeners: {
@@ -688,13 +710,7 @@ Ext.define('Sesar.view.Main', {
           },
           store: {
             fields: ['ValueCode', 'ValueName'],
-            data: [
-              { ValueName: '2014', ValueCode: 'year2014' },
-              { ValueName: '2015', ValueCode: 'year2015' },
-              { ValueName: '2016', ValueCode: 'year2016' },
-              { ValueName: '2017', ValueCode: 'year2017' },
-              { ValueName: '2018', ValueCode: 'year2018' }
-            ],
+            data: getYearSelectionItems(),
             sorters: {
               property: 'ValueCode',
               direction: 'ASC'
@@ -704,7 +720,7 @@ Ext.define('Sesar.view.Main', {
         {
           xtype: 'sesarfilter',
           itemId: 'sexFilter',
-          width: Ext.is.Phone && (window.innerHeight > window.innerWidth) ? '99%' : '33%',
+          flex: 1,
           displayField: 'ValueName',
           valueField: 'ValueCode',
           fieldLabel: 'Kön:',
@@ -729,6 +745,12 @@ Ext.define('Sesar.view.Main', {
           }
         }]
     },
+	{
+		xtype: 'component',
+		id: 'warningCmp',
+		html: '<b><i>OBS! Data för innevarande år är inte komplett.</i></b>',
+		hidden: true
+	},
     {
       xtype: 'tabpanel',
       cls: 'ton-tab',
@@ -736,15 +758,26 @@ Ext.define('Sesar.view.Main', {
       border: false,
       padding: 0,
       margin: '20px 0 0 0',
-      focusCls: 'sesar-tab-focused',
       bodyStyle: {
         border: 0,
       },
       items: [
         {
           xtype: 'panel',
-          tabindex: 0,
-          title: Ext.is.Phone ? '' : 'Utveckling över tid',
+          plugins: {
+             responsive: true
+          },
+          responsiveConfig: {
+            'width < 500': {
+              title: ''
+            }, 
+            'width < 1186 && width >= 500': {
+             title: 'Tid'
+            },
+            'width > 1186': {
+              title: 'Utveckling över tid'
+            }
+          },
           iconCls: 'sesar-icon x-fa fa-calendar',
           border: false,
           listeners: {
@@ -768,11 +801,20 @@ Ext.define('Sesar.view.Main', {
         },
         {
           xtype: 'panel',
-          tabindex: 1,
           iconCls: 'sesar-icon x-fa fa-child',
-          title: Ext.is.Phone ? '' : 'Åldersgrupper',
-          tabConfig: {
-            width: Ext.is.Phone ? 42 : 182
+          plugins: {
+             responsive: true
+          },
+          responsiveConfig: {
+            'width < 500': {
+              title: ''
+            }, 
+            'width < 1185 && width >= 500': {
+             title: 'Ålder'
+            },
+           'width > 1185': {
+             title: 'Åldersgrupper',
+            }
           },
           border: false,
           listeners: {
@@ -798,7 +840,21 @@ Ext.define('Sesar.view.Main', {
         {
           xtype: 'panel',
           itemId: 'chartContainer',
-          title: Ext.is.Phone ? '' : 'Jämförelse mellan kliniker',
+          plugins: {
+             responsive: true
+          },
+          responsiveConfig: {
+          'width < 500': {
+              title: ''
+            }, 
+            'width < 1184 && width >= 500': {
+             title: 'Jämförelse'
+            },
+           'width > 1184': {
+             title: 'Jämförelse mellan kliniker'
+            }
+          },
+          
           iconCls: 'sesar-icon x-fa fa-balance-scale',
           border: false,
           listeners: {
@@ -824,14 +880,24 @@ Ext.define('Sesar.view.Main', {
     },
     {
       xtype: 'progressbar',
-      focusable: false,
       margin: 10,
       maxHeight: 5,
       cls: 'sesar-progressbar'
     }
   ]
 })
-window.addEventListener("orientationchange", function () { location.reload() });
+
+
+function getYearSelectionItems(){
+	var i=0;
+	var currentYr=new Date().getFullYear();
+	var arr=[];
+	for(y=2014; y<=currentYr; y++){ 
+		arr.push({ ValueName: y , ValueCode: 'year' + y });
+	}
+	return arr;
+}
+
 Sesar.controller.inputCss = Ext.os.deviceType === 'Phone' ? 'font-size: 16px;' : ''
 Ext.util.CSS.removeStyleSheet('shpr')
 Ext.util.CSS.createStyleSheet(
@@ -898,11 +964,7 @@ Ext.util.CSS.createStyleSheet(
   + '  border-right: solid 1px #00528F; '
   + '  border-bottom: solid 1px white; '
   + '  background-color: white; '
-  // + '  outline: lightblue solid 2px;'
-  + '}'
-
-  + '.x-keyboard-mode .ton-tab.x-tab-focus.x-tab-default {'
-  // + '  outline: 1px solid darkblue;'
+  + '  outline: none;'
   + '}'
 
   + '.ton-tab .x-tab-inner-default { '
@@ -953,12 +1015,15 @@ Ext.util.CSS.createStyleSheet(
   + '}'
 
   + '.sesar-progressbar .x-progress-bar {'
-  + '  background-color: #77818c !important;'
+  + '  background-color: #677792 !important;'
+  + '}'
+
+  + '.flexFix div {'
+  + '  overflow: visible;'
   + '}'
 
   + '.sesar-chart-title {'
-  // + '  color: #9aa8bc;'
-  + '  color: #8594AD;'
+  + '  color: #677792;'
   + '  font-size: 18px;'
   + '  text-align: center;'
   + '  margin: 0 0 0 0;'
@@ -977,3 +1042,4 @@ Ext.util.CSS.createStyleSheet(
   + ' }'
   , 'siber'
 )
+//# sourceURL=SESAR/BaseChart
