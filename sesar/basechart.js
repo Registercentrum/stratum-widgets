@@ -15,6 +15,7 @@ Ext.define('Sesar.view.Filter', {
   caseSensitive: false,
   checkChangeEvents: ['change', 'keyup'],
 })
+/**/
 
 Ext.define('Sesar.chart.Time', {
   extend: 'Ext.chart.CartesianChart',
