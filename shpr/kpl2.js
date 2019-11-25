@@ -13,6 +13,7 @@ Ext.define('Shpr.view.Filter', {
   extend: 'Ext.form.field.ComboBox',
   xtype: 'shprfilter',
   alias: 'view.shprfilter',
+  margin: '0 0 15 0',
   cls: 'shpr-select',
   labelWidth: 85,
   forceSelection: false,
@@ -283,11 +284,9 @@ Ext.define('Shpr.controller.Spider', {
           missingData.hide()
           spiderchart.show()
           casemixchart.show()
-          // spiderchart.setSprites([])
           spiderchart.getStore().loadData(result.compass)
           casemixchart.getStore().loadData(result.case_mix)
           controller.updateLegend(view)
-          // if(!spiderchart.sprites)Ext.defer(function () {spiderchart.setSprites(controller.sprites)}, 500)
         } else {
           missingData.show()
           spiderchart.hide()
@@ -471,7 +470,6 @@ Ext.define('Shpr.controller.Spider', {
         break
     }
     var diagnosis = view.down('#diagnosisFilter').getValue()
-    // if(diagnosis === 3) view.down('#commonPatient').disable()
   },
 
   transformData: function (data) {
@@ -482,14 +480,14 @@ Ext.define('Shpr.controller.Spider', {
     var translations = {
       satisfaction: 'Tillfredställelse', 
       paingain: '                                  Minskad smärta\n                                    efter 1 år',
-      eqvasgain: '                              EQ-VAS vinst\n                            efter 1 år',
+      eqvasgain: '                          EQ-VAS vinst\n                         efter 1 år',
       surv1yr: 'Implantatöverlevnad                            \n             efter 1 år                                    ',
       surv5yrs:  'Implantatöverlevnad                            \n              efter 5 år                                    ',
       surv10yrs: 'Implantatöverlevnad                            \n              efter 10 år                                   ',
       coverage: 'Täckningsgrad',
       prop_reop2yrs: 'Reoperation                  \ninom 2 år               ',
       prop_reop6m: 'Reoperation                  \ninom 6 månader               ',
-      adverse_events: '                                           Oönskade händelser \n                                          inom 90 dagar',
+      adverse_events: '                                               Oönskade händelser \n                                              inom 90 dagar',
       mort90days: '                        Mortalitet \n                        90 dagar'
     }
     var compass = data.compass;
@@ -622,17 +620,12 @@ Ext.define('Shpr.view.Main', {
   alias: 'view.main',
   controller: 'spider',
   itemId: 'spider',
+  mixin: ['Ext.mixin.Responsive'],
+  width: '100%',
   items: [
     {
       xtype: 'panel',
       border: false,
-      style: {
-        marginBottom: Ext.os.deviceType === 'Phone' ? '0px' : '20px'
-      },
-      layout: {
-        type: Ext.os.deviceType === 'Phone' ?  'vbox' : 'hbox',
-        align: 'left'
-      },
       items: [
         {
           itemId: 'diagnosisFilter',
@@ -640,11 +633,8 @@ Ext.define('Shpr.view.Main', {
           displayField: 'ValueName',
           valueField: 'ValueCode',
           fieldLabel: 'Diagnos:',
-          width: Ext.os.deviceType === 'Phone' ? '99%' : '50%',
+          width: '100%',
           height: 40,
-          style: {
-            marginBottom: 10
-          },
           labelStyle: 'text-align: right;',
           value: 1,
           listeners: {
@@ -667,12 +657,27 @@ Ext.define('Shpr.view.Main', {
     {
       xtype: 'panel',
       border: false,
+      cls: 'flexFix',
       style: {
         marginBottom: '20px'
       },
-      layout: {
-        type: Ext.os.deviceType === 'Phone' ?  'vbox' : 'hbox',
-        align: 'left'
+       plugins: {
+            responsive: true
+          },
+      responsiveConfig: {
+        'width < 1200': {
+          layout: {
+            type: 'box',
+            vertical: true,
+            align: 'stretch'
+          }
+        },
+        'width >= 1200': {
+          layout: {
+            type: 'box',
+            vertical: false
+          }
+        }
       },
       items: [
         {
@@ -683,7 +688,7 @@ Ext.define('Shpr.view.Main', {
           fieldLabel: 'Enhet:',
           labelStyle: 'text-align: right;',
           height: 40,
-          width: Ext.os.deviceType === 'Phone' ? '99%' : '50%',
+          flex: 1,
           value:  Profile.Context ? Profile.Context.Unit.UnitCode : 1001,
           listeners: {
             select: 'updateCharts'
@@ -723,7 +728,7 @@ Ext.define('Shpr.view.Main', {
           fieldLabel: 'Jämförelse:',
           labelStyle: 'text-align: right;',
           height: 40,
-          width: Ext.os.deviceType === 'Phone' ? '99%' : '49%',
+          flex: 1,
           value: 0,
           listeners: {
             select: 'updateCharts'
@@ -764,37 +769,69 @@ Ext.define('Shpr.view.Main', {
      {
       xtype: 'panel',
       border: false,
-      style: {
-        marginBottom: '20px'
+      subStyle: {
+        marginBottom: '20px',
+        overflowX: 'scroll'
       },
-      layout: {
-        type: Ext.os.deviceType === 'Phone' ?  'vbox' : 'hbox',
-        align: 'left'
+      plugins: {
+        responsive: true
+      },
+      responsiveConfig: {
+        'width < 1200': {
+          layout: {
+            type: 'box',
+            vertical: true,
+            align: 'stretch'
+          }
+        },
+        'width >= 1200': {
+          layout: {
+            type: 'box',
+            vertical: false
+          }
+        }
       },
       items: [
       {
       xtype: 'tbspacer',
-      width: '20%',
+      plugins: {
+        responsive: true
+      },
+      responsiveConfig: {
+        'width < 1200': {
+          width: '0%'
+        },
+        'width >= 1200': {
+          width: '20%'
+        }
+      },
       height: 0,
       margin: '0 0 0 0'
     },
     {
       xtype: 'polar',
       controller: 'spider',
-      width: Ext.os.deviceType === 'Phone' ? '100%' : '60%',
-      height: 400,
       plugins: {
-                spriteevents: true
-            },
-      border: false,
-      insetPadding: {
-        left: 0,
-        right: 0,
-        top: 30,
-        bottom: 30
+        responsive: true
+      },
+      responsiveConfig: {
+        'width < 600': {
+          width: '100%',
+          height: 290,
+        },
+        'width < 1200 && width >= 600': {
+          width: '100%',
+          height: 400,
+        },
+        'width >= 1200': {
+          width: '60%',
+          height: 400,
+        }
       },
       
-      // interactions: 'rotate',
+      border: false,
+      insetPadding: '30px 0px 30px 0px',
+      
       border: false,
       touchAction: {
         panY: true,
@@ -803,46 +840,6 @@ Ext.define('Shpr.view.Main', {
       legend: {
         type: 'dom'
       },
-      /*
-      sprites: [
-      {
-        type: 'text',
-        // text: 'Implantatöverlevnad',
-        // text: 'Implantatöverlevnad                            \n              efter 10 år                                   ',
-        text: '', 
-        x: 210,
-        y: 65,
-        value: 1
-      }],
-      */
-      listeners: {
-        /*
-          redraw: function () {
-            var func = this.getController().message.bind(this) 
-             Ext.defer(func, 500)
-          },*/
-         spriteclick: function (item, event) {
-             var sprite = item && item.sprite;
-             this.getController().message(sprite.value)
-         },
-         spritemouseover: function(item, event) {
-             var sprite = item && item.sprite
-             if(sprite.value){
-               sprite.setAttributes({fillStyle: 'rgba(0,0,0,1)'})
-               sprite.repaint()
-             }
-             
-         },
-         spritemouseout: function(item, event) {
-             var sprite = item && item.sprite
-             if(sprite.value){
-               sprite.setAttributes({fillStyle: 'rgba(0,0,0,0.01)'})
-               sprite.repaint()
-             }
-             
-         }
-     },
-      
       store: {
         fields: ['indicator', 'unit_value', 'comparison_value'],
         data: []
@@ -903,10 +900,21 @@ Ext.define('Shpr.view.Main', {
     
     {
       xtype: 'shprcasemix',
-      width: Ext.os.deviceType === 'Phone' ? '100%' : '20%',
+      plugins: {
+        responsive: true
+      },
+      responsiveConfig: {
+        'width < 1200': {
+          width: '100%',
+          margin: 0
+        },
+        'width >= 1200': {
+          width: '20%',
+          margin: '109px 0 0 0'
+        }
+      },
       height: 250,
       insetPadding: '10 30 10 10',
-      margin: Ext.os.deviceType === 'Phone' ? 0 : '109px 0 0 0'
     }]},
     {
       xtype: 'panel',
@@ -915,11 +923,24 @@ Ext.define('Shpr.view.Main', {
       items: [
       {
         xtype: 'panel',
-        layout: {
-        type: Ext.os.deviceType === 'Phone' ?  'vbox' : 'hbox',
-          align: 'left'
+        plugins: {
+          responsive: true
         },
-        
+        responsiveConfig: {
+        'width < 600': {
+          layout: {
+            type: 'box',
+            vertical: true,
+            align: 'stretch'
+          }
+        },
+        'width >= 600': {
+          layout: {
+            type: 'box',
+            vertical: false
+          }
+        }
+      },
         border: false,
         items: [
       {
@@ -931,7 +952,6 @@ Ext.define('Shpr.view.Main', {
           fieldLabel: Ext.os.deviceType === 'Phone' ? '' : 'Femårstrend för',
           width: Ext.os.deviceType === 'Phone' ? '99%' : '49%',
           height: 40,
-          
           labelWidth: 130,
           style: {
             marginBottom: 10
@@ -973,8 +993,9 @@ Ext.define('Shpr.view.Main', {
           itemId: 'exportTableSwedish',
           cls: 'shpr-download-button',
           width: 100,
+          height: 40,
           margin: '0 0 0 20',
-          hidden: Ext.os.deviceType === 'Phone',
+          hidden: Ext.os.deviceType === 'Phone',  
           autoEl: {
             tag: 'a',
             download: 'kpl.csv'
@@ -1004,17 +1025,22 @@ Ext.define('Shpr.view.Main', {
       },
       {
         xtype: 'panel',
+        itemId: 'filterPanel',
         layout: 'vbox',
         collapsible: true,
         collapsed: true,
         title: Ext.os.deviceType === 'Phone' ? 'Filtrering' : 'Mer detaljerad filtrering av femårstrend',
         border: false,
-        padding: '0 20px 0 20px',
+        padding: '0 20px 0px 20px',
         margin: '20px 0 0px 0',
         header: {
           style: {
             backgroundColor: '#e8f1f5'
           }
+        },
+        bodyStyle: {
+          overflowX: 'auto',
+          padding: '0 0 20px 0'
         },
         items: [
         {
@@ -1025,6 +1051,7 @@ Ext.define('Shpr.view.Main', {
           xtype: 'fieldcontainer',
           itemId: 'commonPatient',
           fieldLabel: 'Förinställda',
+          labelAlign: top,
           labelWidth: 85,
           items: [
         {
@@ -1044,6 +1071,7 @@ Ext.define('Shpr.view.Main', {
         {
           xtype: 'shprradiogroup', 
           itemId: 'sexFilter',
+          minWidth: 600,
           listeners: {
             change: 'updateCharts'
           },
@@ -1070,6 +1098,7 @@ Ext.define('Shpr.view.Main', {
         {
           xtype: 'shprradiogroup',
           itemId: 'fixationFilter',
+          minWidth: 600,
           fieldLabel: 'Fixation',
           listeners: {
             change: 'updateCharts'
@@ -1099,6 +1128,7 @@ Ext.define('Shpr.view.Main', {
         }, {
           xtype: 'fieldcontainer',
           itemId: 'ageFilter',
+          minWidth: 600,
           fieldLabel: 'Ålder',
           labelWidth: 85,
           layout: 'hbox',
@@ -1124,6 +1154,7 @@ Ext.define('Shpr.view.Main', {
         }, {
           xtype: 'fieldcontainer',
           itemId: 'bmiFilter',
+          minWidth: 600,
           fieldLabel: 'BMI',
           labelWidth: 85,
           layout: 'hbox',
@@ -1235,14 +1266,14 @@ Ext.define('Shpr.view.Main', {
           itemId: 'arthrosisExplantions',
           cls: 'shpr-terms',
           hidden: true,
-          html: '<div><b>Tillfredsställelse</b>: Patienttillfredsställelse vid 1-årsuppföljningen. En skala från 1-5 används där 1 är mycket missnöjd och 5 är mycket nöjd.</div>'
-              + '<div><b>Minskad smärta efter 1 år</b>: Värdet beräknas genom att subtrahera värdet på smärta preoperativt med värdet som angavs ett år efter operationen. En skala från 1-5 används där 1 är ingen smärta och 5 är svår smärta.</div>'
-              + '<div><b>EQ-VAS vinst efter 1 år</b>: Förbättring i självskattad hälsa på en skala mellan 1-100. Värdet beräknas genom att subtrahera EQ VAS-värdet preoperativt med EQ VAS ett år efter operationen. </div>'
-              + '<div><b>Oönskade händelse inom 90 dagar</b>: Oönskad händelse inom 90 dagar enligt senaste länkningen med Patientregistret på Socialstyrelsen. Anges som andel.</div>'
-              + '<div><b>Täckningsgrad</b>: Täckningsgrad (completeness) på individnivå enligt senaste länkningen med Patientregistret på Socialstyrelsen. Anges som andel.</div>'
-              + '<div><b>Reoperation inom 2 år</b>: Anger all form av reoperation inom två år efter primäroperation och under den senaste fyraårsperioden. Anges som andel.</div>'
-              + '<div><b>Implantatöverlevnad efter 5 år</b>: Protesöverlevnad efter fem år med Kaplan-Meier statistik. Anges som sannolikhet.</div>'
-              + '<div><b>Implantatöverlevnad efter 10 år</b>: Protesöverlevnad efter tio år med Kaplan-Meier statistik.  Anges som sannolikhet.</div>',
+          html: '<div><b>Tillfredsställelse</b>: Patienttillfredsställelse vid 1-årsuppföljningen. En skala från 1-5 används där 1 är mycket missnöjd och 5 är mycket nöjd. I kompassen visas data för operationer som utförts inom 2 år från dagens datum och som har 1-årsuppföljning.</div>'
+              + '<div><b>Minskad smärta efter 1 år</b>: Värdet beräknas genom att subtrahera värdet på smärta preoperativt med värdet som angavs ett år efter operationen. En skala från 1-5 används där 1 är ingen smärta och 5 är svår smärta. I kompassen visas data för operationer som utförts inom 2 år från dagens datum och som har 1-årsuppföljning.</div>'
+              + '<div><b>EQ-VAS vinst efter 1 år</b>: Förbättring i självskattad hälsa på en skala mellan 1-100. Värdet beräknas genom att subtrahera EQ VAS-värdet preoperativt med EQ VAS ett år efter operationen. I kompassen visas data för operationer som utförts inom 2 år från dagens datum och som har 1-årsuppföljning.</div>'
+              + '<div><b>Oönskade händelse inom 90 dagar</b>: Oönskad händelse inom 90 dagar enligt senaste länkningen med Patientregistret på Socialstyrelsen. Anges som andel. I kompassen visas data från senaste matchningen med Patientregistret. Matchning mot Patientregistret görs på hösten varje år.</div>'
+              + '<div><b>Täckningsgrad</b>: Täckningsgrad (completeness) på individnivå enligt senaste länkningen med Patientregistret på Socialstyrelsen. Anges som andel. I kompassen visas data från senaste matchningen med Patientregistret. Matchning mot Patientregistret görs på hösten varje år.</div>'
+              + '<div><b>Reoperation inom 2 år</b>: Anger all form av reoperation inom två år efter primäroperation och under den senaste fyraårsperioden. Anges som andel. I kompassen visas data för operationer som utförts inom 4 år från dagens datum och som har följts upp i 2 år.</div>'
+              + '<div><b>Implantatöverlevnad efter 5 år</b>: Protesöverlevnad efter fem år med Kaplan-Meier statistik. Anges som sannolikhet. I kompassen visas data för operationer som utförts inom 6 år från dagens datum och som har följts upp i 5 år.</div>'
+              + '<div><b>Implantatöverlevnad efter 10 år</b>: Protesöverlevnad efter tio år med Kaplan-Meier statistik.  Anges som sannolikhet. I kompassen visas data för operationer som utförts inom 11 år från dagens datum och som har följts upp i 10 år.</div>',
           width: '100%',
           border: false
         },
@@ -1250,11 +1281,11 @@ Ext.define('Shpr.view.Main', {
           itemId: 'fractureExplantions',
           cls: 'shpr-terms',
           hidden: false,
-          html: '<div><b>Täckningsgrad</b>: Täckningsgrad (completeness) på individnivå enligt senaste länkningen med Patientregistret på Socialstyrelsen. Anges som andel.</div>'
-              + '<div><b>Oönskade händelser inom 90 dagar</b>: Oönskade händelser enligt senaste samkörningen med Patientregistret. Dessa definieras som kardio- och cerebrovaskulära tillstånd, tromboembolisk sjukdom, pneumoni, ulcus och urinvägsinfektion om dessa lett till återinläggning eller död. Dessutom ingår alla typer av omoperation av höften. Anges som andel.</div>'
-              + '<div><b>Mortalitet 90 dagar</b>: I internationell litteratur används denna variabel för att belysa mortalitet efter höftproteskirurgi. Anges som andel.'
-              + '<div><b>Reoperation inom 6 månader</b>: Reoperation inom sex månader. Alla öppna, efterföljande ingrepp i aktuell höft. Anges som andel.</div>'
-              + '<div><b>Implantatöverlevnad efter 1 år</b>: Protesöverlevnad efter ett år med Kaplan-Meier statistik. Anges som sannolikhet.</div>',
+          html: '<div><b>Täckningsgrad</b>: Täckningsgrad (completeness) på individnivå enligt senaste länkningen med Patientregistret på Socialstyrelsen. Anges som andel. I kompassen visas data från senaste matchningen med Patientregistret. Matchning mot Patientregistret görs på hösten varje år.</div>'
+              + '<div><b>Oönskade händelser inom 90 dagar</b>: Oönskade händelser enligt senaste samkörningen med Patientregistret. Dessa definieras som kardio- och cerebrovaskulära tillstånd, tromboembolisk sjukdom, pneumoni, ulcus och urinvägsinfektion om dessa lett till återinläggning eller död. Dessutom ingår alla typer av omoperation av höften. Anges som andel. I kompassen visas data från senaste matchningen med Patientregistret. Matchning mot Patientregistret görs på hösten varje år.</div>'
+              + '<div><b>Mortalitet 90 dagar</b>: I internationell litteratur används denna variabel för att belysa mortalitet efter höftproteskirurgi. Anges som andel. I kompassen visas data för operationer som utförts inom 2 år från dagens datum och som har följts upp 90 dagar.'
+              + '<div><b>Reoperation inom 6 månader</b>: Reoperation inom sex månader. Alla öppna, efterföljande ingrepp i aktuell höft. Anges som andel. I kompassen visas data för operationer som utförts inom 2 år från dagens datum och som har följts upp i 6 månader.</div>'
+              + '<div><b>Implantatöverlevnad efter 1 år</b>: Protesöverlevnad efter ett år med Kaplan-Meier statistik. Anges som sannolikhet. I kompassen visas data för operationer som utförts inom 3 år från dagens datum och som har följts upp i 1 år.</div>',
           width: '100%',
           border: false
         },
@@ -1295,7 +1326,17 @@ Ext.define('Shpr.view.Main', {
         layout: 'vbox',
         collapsible: true,
         collapsed: true,
-        title: Ext.os.deviceType === 'Phone' ? 'Patientpopulationens påverkan' :'Patientpopulationens (casemix) påverkan på resultaten',
+        plugins: {
+          responsive: true
+        },
+        responsiveConfig: {
+          'width < 600': {
+            title: 'Patientpopulationens påverkan'
+          },
+          'width >= 600': {
+            title: 'Patientpopulationens (casemix) påverkan på resultaten'
+          }
+        },
         border: false,
         padding: '0 20px 0 20px',
         margin: '20px 0 80px 0',
@@ -1350,7 +1391,7 @@ Ext.application({
   },
   start: function() {
     console.timeEnd('ext-time')
-    var target = (typeof Stratum !== 'undefined' && Stratum.containers) ? Stratum.containers['SHPR/Radar'] : 'contentPanel'
+    var target = (typeof Stratum !== 'undefined' && Stratum.containers) ? Stratum.containers['SHPR/KPL2'] : 'contentPanel'
     var main = Ext.create('Shpr.view.Main', {
       renderTo: target
     })
@@ -1362,10 +1403,6 @@ Ext.application({
     controller.apikey = 'MpuYxfbtp5I='
     controller.requests = 0
     controller.ajaxrequests = []
-    controller.sprites = [
-      {type: 'text', value: 'rev10yrs', text: '______________                            \n         ______                                   ', x: 110, y: 76, fontSize: 16, zIndex: 100, fillStyle: 'rgba(0,0,0,0.01)'},
-      {type: 'text', value: 'rev5yrs',  text: '______________                            \n         ______                                   ', x: 65, y: 190, fontSize: 16, zIndex: 100, fillStyle: 'rgba(0,0,0,0.01)'}
-    ]
     controller.updateCharts()
   }
 });
@@ -1385,9 +1422,7 @@ Ext.util.CSS.createStyleSheet(
 
   + '.shpr-select .x-form-item-body {'
   + '  height: 40px;'
-//  + Shpr.controller.selectCss
   + '  border-radius: 3px;'
-  // + '  outline: 1px solid #a9b5c6'
   + '}'
 
   + '.shpr-select input {'
@@ -1428,10 +1463,6 @@ Ext.util.CSS.createStyleSheet(
   + '.shpr-radar .x-panel-body-default{'
   + '     border-bottom: 0px;'
   + ' }'
-
-  + '.shpr-indicatorfilter {'
- // + '  margin-top: 70px;'
-  + '}'
 
   + '.timechart-spinner {'
   + '  color: #bbb;'
@@ -1501,6 +1532,7 @@ Ext.util.CSS.createStyleSheet(
   + '  border-color: #ccc;'
   + '  margin-left: 5px;'
   + '  padding: 8px 0;'
+  + '  height: 40px !important;'
   + '}'
 
    + '.shpr-download-button.x-btn-over {'
@@ -1518,10 +1550,13 @@ Ext.util.CSS.createStyleSheet(
    + '.x-keyboard-mode .shpr-timechart-panel .x-panel-header-default .x-tool-focus {'
    + '  outline: 1px dashed #333;'
    + '}'
+
+   + '.flexFix div {'
+   + '  overflow: visible;'
+   + '}'
    
   + '.shpr-select .x-form-trigger {'
   + '  vertical-align: middle;'
   + '  color: #3F73A6;'
   + '}', 'siber'
 );
-window.addEventListener("orientationchange", function(){location.reload()});
