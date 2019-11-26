@@ -311,26 +311,28 @@ Ext.define('Shpr.controller.Compass', {
         var result = Ext.decode(response.responseText).data
         result = controller.transformTimeData(result)
         var percentageIndicators = ['reop2yrs', 'rev5yrs', 'rev10yrs', 'coverage', 'mort90', 'rev1yrs', 'adverse_events', 'reop6m']
-        timechart.usePercentages = percentageIndicators.indexOf(indicator) > 0
+        timechart.usePercentages = percentageIndicators.indexOf(indicator) > -1
         timechart.show()
-        var minimum = controller.findMinimum(result)
-        if (timechart.usePercentages && !(indicator === 'reop2yrs')) {
-          timechart.getAxes()[0].setMinimum(minimum)
+        var minimum = 0
+        var useCalculatedMinimum = timechart.usePercentages && indicator !== 'reop2yrs'
+        if (useCalculatedMinimum) {
+          minimum = controller.findMinimum(result)
         } else if (indicator === 'satis') {
-          timechart.getAxes()[0].setMinimum(3)
-        } else {
-          timechart.getAxes()[0].setMinimum(0)
-        }
+          minimum = 3
+        } 
+
         if (controller.isSomeUnitDataMissing(result)) {
           timechart.getSeries()[0].setStyle({ fillOpacity: 0 })
         } else {
           timechart.getSeries()[0].setStyle({ fillOpacity: 0.5 })
         }
+
         if (controller.isSomeComparisonDataMissing(result)) {
           timechart.getSeries()[1].setStyle({ fillOpacity: 0 })
         } else {
           timechart.getSeries()[1].setStyle({ fillOpacity: 0.5 })
         }
+        timechart.getAxes()[0].setMinimum(minimum)
         timechart.getStore().loadData(result);
         controller.requests -= 1
         if (controller.requests < 1) {
@@ -558,10 +560,10 @@ Ext.define('Shpr.controller.Compass', {
     var apikey = '&apikey=' + this.apikey
     var url = base
     var filteredIndicators = ['reop2yrs', 'rev5yrs', 'eqvasgain', 'paingain', 'reop6m', 'rev1yrs', 'mort90', 'rev1yrs']
-    
+
     if (indicator === 'rev10yrs') {
       url = base + baseFilters
-    } else if (filteredIndicators.indexOf(indicator) > 0) {
+    } else if (filteredIndicators.indexOf(indicator) > -1) {
       url = base + baseFilters + extendedFilters
     }
     url += apikey
