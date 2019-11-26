@@ -81,7 +81,14 @@ Ext.define('Shpr.chart.Casemix', {
       fields: ['indicator'],
       hidden: false,
       renderer: function (axis, label, context) {
-        var translations = { prop_female: 'Kvinnor', prop_older_60: '60 år och \näldre', prop_older_85: '85 år och \näldre', prop_acute_fracture: 'Akuta frakturer', prop_dementia: 'Icke-dementa', prop_charnley: 'Charnley-klass\n A eller B' }
+        var translations = {
+          prop_female: 'Kvinnor', 
+          prop_older_60: '60 år och \näldre', 
+          prop_older_85: '85 år och \näldre', 
+          prop_acute_fracture: 'Akuta frakturer', 
+          prop_dementia: 'Icke-dementa', 
+          prop_charnley: 'Charnley-klass\n A eller B' 
+        }
         return translations[label]
       }
     }
@@ -105,10 +112,7 @@ Ext.define('Shpr.chart.Casemix', {
 Ext.define('Shpr.chart.Time', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'shprtime',
-  touchAction: {
-    panY: true,
-  },
-  border: false,
+  cls: 'shpr-timechart',
   colors: ['#E388BE', '#83D6F5'],
   height: 160,
   innerPadding: {
@@ -117,11 +121,13 @@ Ext.define('Shpr.chart.Time', {
     right: 0
   },
   insetPadding: '20 35 0 20',
-  cls: 'shpr-timechart',
+  border: false,
+  touchAction: {
+    panY: true,
+  },
   legend: {
     type: 'dom'
   },
-  border: false,
   store: {
     storeId: 'timechart',
     data: [],
@@ -304,7 +310,8 @@ Ext.define('Shpr.controller.Compass', {
       success: function (response) {
         var result = Ext.decode(response.responseText).data
         result = controller.transformTimeData(result)
-        timechart.usePercentages = indicator === 'reop2yrs' || indicator === 'rev5yrs' || indicator === 'rev10yrs' || indicator === 'coverage' || indicator === 'mort90' || indicator === 'rev1yrs' || indicator === 'adverse_events' || indicator === 'reop6m'
+        var percentageIndicators = ['reop2yrs', 'rev5yrs', 'rev10yrs', 'coverage', 'mort90', 'rev1yrs', 'adverse_events', 'reop6m']
+        timechart.usePercentages = percentageIndicators.indexOf(indicator) > 0
         timechart.show()
         var minimum = controller.findMinimum(result)
         if (timechart.usePercentages && !(indicator === 'reop2yrs')) {
@@ -550,10 +557,11 @@ Ext.define('Shpr.controller.Compass', {
     var extendedFilters = '&bmi_lower=' + bmiLower + '&bmi_upper=' + bmiUpper + '&asa=' + asa + '&charnley=' + charnley
     var apikey = '&apikey=' + this.apikey
     var url = base
-
+    var filteredIndicators = ['reop2yrs', 'rev5yrs', 'eqvasgain', 'paingain', 'reop6m', 'rev1yrs', 'mort90', 'rev1yrs']
+    
     if (indicator === 'rev10yrs') {
       url = base + baseFilters
-    } else if (indicator === 'reop2yrs' || indicator === 'rev5yrs' || indicator === 'eqvasgain' || indicator === 'paingain' || indicator === 'reop6m' || indicator === 'rev1yrs' || indicator === 'mort90' || indicator === 'rev1yrs') {
+    } else if (filteredIndicators.indexOf(indicator) > 0) {
       url = base + baseFilters + extendedFilters
     }
     url += apikey
@@ -1411,6 +1419,7 @@ Ext.application({
     controller.updateCharts()
   }
 });
+
 Shpr.controller.inputCss = Ext.os.deviceType === 'Phone' ? 'font-size: 16px;' : ''
 Shpr.controller.selectCss = Ext.os.deviceType === 'Phone' ? 'height: 50px;' : ''
 Ext.util.CSS.removeStyleSheet('shpr');
