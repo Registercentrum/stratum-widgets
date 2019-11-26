@@ -2,10 +2,10 @@
 console.time('ext-time')
 widgetConfig = {};
 
-Ext.define('Shpr.store.Spider', {
+Ext.define('Shpr.store.Compass', {
   extend: 'Ext.data.Store',
-  alias: 'store.spider',
-  storeId: 'spider',
+  alias: 'store.compass',
+  storeId: 'compass',
   fields: []
 });
 
@@ -247,9 +247,9 @@ Ext.define('Shpr.chart.Time', {
        ]
 });
 
-Ext.define('Shpr.controller.Spider', {
+Ext.define('Shpr.controller.Compass', {
   extend: 'Ext.app.ViewController',
-  alias: 'controller.spider',
+  alias: 'controller.compass',
 
   updateCharts: function () {
     var controller = this
@@ -394,8 +394,8 @@ Ext.define('Shpr.controller.Spider', {
 
   filterUnits: function(item) {
     var view = this.getView()
-    if(this.getView().itemId!== 'spider') {
-      view = this.getView().up('#spider')
+    if(this.getView().itemId!== 'compass') {
+      view = this.getView().up('#compass')
     }
     var include = false
     var diagnosis = view.down('#diagnosisFilter').getValue()
@@ -561,10 +561,10 @@ Ext.define('Shpr.controller.Spider', {
   updateLegend: function (view) {
     var comparison = view.down('#comparisonFilter').getDisplayValue()
     var unit      = view.down('#unitFilter').getDisplayValue()
-    var polarchart   = view.down('polar')
+    var compasschart   = view.down('polar')
     var timechart   = view.down('shprtime')
-    polarchart.getSeries()[0].setTitle(unit || (Profile.Context ? Profile.Context.Unit.UnitName : 'Riket'))
-    polarchart.getSeries()[1].setTitle(comparison || 'Riket')
+    compasschart.getSeries()[0].setTitle(unit || (Profile.Context ? Profile.Context.Unit.UnitName : 'Riket'))
+    compasschart.getSeries()[1].setTitle(comparison || 'Riket')
     timechart.getSeries()[2].setTitle(unit || (Profile.Context ? Profile.Context.Unit.UnitName : 'Riket'))
     timechart.getSeries()[3].setTitle(comparison || 'Riket')
   },
@@ -618,8 +618,8 @@ Ext.define('Shpr.controller.Spider', {
 Ext.define('Shpr.view.Main', {
   extend: 'Ext.container.Container',
   alias: 'view.main',
-  controller: 'spider',
-  itemId: 'spider',
+  controller: 'compass',
+  itemId: 'compass',
   mixin: ['Ext.mixin.Responsive'],
   width: '100%',
   items: [
@@ -810,7 +810,7 @@ Ext.define('Shpr.view.Main', {
     },
     {
       xtype: 'polar',
-      controller: 'spider',
+      controller: 'compass',
       plugins: {
         responsive: true
       },
@@ -836,7 +836,7 @@ Ext.define('Shpr.view.Main', {
       touchAction: {
         panY: true,
       },
-      cls: 'shpr-radar',
+      cls: 'shpr-compass',
       legend: {
         type: 'dom'
       },
@@ -1014,7 +1014,7 @@ Ext.define('Shpr.view.Main', {
           style: {
             background: 'white'
           },
-          iconCls: 'fa fa-cog fa-spin timechart-spinner'
+          iconCls: 'fa fa-cog fa-spin shpr-timechart-spinner'
         }
         ]},
       {
@@ -1398,7 +1398,7 @@ Ext.application({
     if (!window.navigator.msSaveBlob) {
       main.down('#exportTableSwedish').setHref(' ');
     }
-    var controller = Ext.ComponentQuery.query('#spider')[0].getController()
+    var controller = Ext.ComponentQuery.query('#compass')[0].getController()
     controller.api = 'kpl_compass'
     controller.apikey = 'MpuYxfbtp5I='
     controller.requests = 0
@@ -1411,10 +1411,7 @@ Shpr.controller.selectCss = Ext.os.deviceType === 'Phone' ? 'height: 50px;' : ''
 Ext.util.CSS.removeStyleSheet('shpr');
 Ext.util.CSS.createStyleSheet(
   ' '
-  + '.foo {'
-  + '  background-color: red;'
-  + '}'
-  
+
   + '.numRatingsAxis {'
   + '  white-space: normal;'
   + '  width: 200px;'
@@ -1460,11 +1457,11 @@ Ext.util.CSS.createStyleSheet(
   + '  margin-top: 5px;'
   + ' }'
 
-  + '.shpr-radar .x-panel-body-default{'
+  + '.shpr-compass .x-panel-body-default{'
   + '     border-bottom: 0px;'
   + ' }'
 
-  + '.timechart-spinner {'
+  + '.shpr-timechart-spinner {'
   + '  color: #bbb;'
   + '  font-size: 20px;'
   + '}'
