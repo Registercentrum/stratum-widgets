@@ -552,8 +552,94 @@ Ext.define('RC.UserAdministration.view.CreateUser', {
   ]
 })
 
-Ext.define('RC.UserAdministration.controller.CreateUser', {
+Ext.define('RC.UserAdministration.controller.Form', {
   extend: 'Ext.app.ViewController',
+  alias: 'controller.form',
+
+  test: function() {
+    console.log('form')
+  },
+
+  init: function () {
+    console.log('init')
+    var personalid = this.getView().down('rcuserform').getViewModel().get('user').PersonalId
+    if (personalid) {
+      this.lookup('personalid').show()
+      this.lookup('hsaid').hide()
+    } else {
+      this.lookup('personalid').hide()
+      this.lookup('hsaid').show()
+    }
+
+    if (this.getView().down('form').getIsCreation()) {
+      this.lookup('latestLogin').setHidden(true)
+    } else {
+      this.lookup('username').vtype && delete this.lookup('username').vtype
+    }
+  },
+
+  onSaveUser: function () {
+    var user = this.getView().down('rcuserform').getViewModel().data.user
+    var extra = this.getView().down('rcuserform').up().Info || {}
+    extra[Profile.Site.Register.RegisterID] = user.Info
+    var updatedUser = {
+      UserID: user.UserID,
+      WorkTitle: user.WorkTitle,
+      Username: user.Username,
+      Email: user.Email,
+      FirstName: user.FirstName,
+      LastName: user.LastName,
+      HSAID: user.HSAID,
+      Organization: user.Organization,
+      Title: user.Title,
+      Extra: JSON.stringify(extra)
+    }
+    this.saveUser(updatedUser)
+    this.getView().destroy()
+  },
+  
+  saveUser: function (user) {
+    var controller = this
+    Ext.Ajax.request({
+      url: '/stratum/api/metadata/users/' + user.UserID,
+      method: 'PUT',
+      jsonData: user,
+      withCredentials: true,
+      success: function (result, request) {
+        controller.updateUser(user, controller)
+      },
+      failure: function (result, request) {
+        console.log(result.responseText);
+      }
+    });
+  },
+
+  updateUser: function (user, controller) {
+    Ext.Ajax.request({
+      url: '/stratum/api/metadata/contexts/user/' + user.UserID,
+      method: 'GET',
+      jsonData: user,
+      withCredentials: true,
+      success: function (result, request) {
+        var index = Ext.ComponentQuery.query('usergrid')[0].getStore().find('UserID', user.UserID)
+        var userToUpdate = Ext.ComponentQuery.query('usergrid')[0].getStore().getAt(index)
+        user.Contexts = Ext.decode(result.responseText).data
+        var units = Ext.ComponentQuery.query('usergrid').pop().lookup('unitFilter').getStore().getData().items.map(function (item) { return item.data.UnitID })
+        user.Contexts = user.Contexts.filter(function (context) { return units.indexOf(context.Unit.UnitID) >= 0 })
+        Ext.ComponentQuery.query('usergrid')[0].getStore().removeAt(index)
+        Ext.ComponentQuery.query('usergrid')[0].getStore().add(user)
+      },
+      failure: function (result, request) {
+        console.log(result.responseText);
+      }
+    })
+  }
+})
+
+
+Ext.define('RC.UserAdministration.controller.CreateUser', {
+  //extend: 'Ext.app.ViewController',
+  extend: 'RC.UserAdministration.controller.Form',
   alias: 'controller.createuser',
 
   onFormChanged: function () {
@@ -603,11 +689,26 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
         && (email.length < 3 || Ext.String.startsWith(match.Email, email, true))
     })
     return matches
+  },
+
+  onSithIdChoosen: function () {
+    this.lookup('hsaid').show()
+    this.lookup('hsaid').setDisabled(false)
+    this.lookup('personalid').hide()
+    this.lookup('personalid').setDisabled(true)
+  },
+
+  onBankIdChoosen: function () {
+    this.lookup('hsaid').hide()
+    this.lookup('hsaid').setDisabled(true)
+    this.lookup('personalid').show()
+    this.lookup('personalid').setDisabled(false)
   }
 })
 
 Ext.define('RC.UserAdministration.view.EditUser', {
   extend: 'Ext.window.Window',
+  controller: 'edituser',
   config: {
     userData: [],
     contextData: []
@@ -659,6 +760,26 @@ Ext.define('RC.UserAdministration.view.EditUser', {
   ]
 })
 
+Ext.define('RC.UserAdministration.controller.EditUser', {
+  //extend: 'Ext.app.ViewController',
+  extend: 'RC.UserAdministration.controller.Form',
+  alias: 'controller.edituser',
+
+  onSithIdChoosen: function () {
+    this.lookup('hsaid').show()
+    this.lookup('hsaid').setDisabled(false)
+    this.lookup('personalid').hide()
+    this.lookup('personalid').setDisabled(true)
+  },
+
+  onBankIdChoosen: function () {
+    this.lookup('hsaid').hide()
+    this.lookup('hsaid').setDisabled(true)
+    this.lookup('personalid').show()
+    this.lookup('personalid').setDisabled(false)
+  }
+})
+
 Ext.define('RC.UserAdministration.view.MatchUser', {
   extend: 'Ext.grid.Panel',
   alias: 'widget.matchuser',
@@ -708,9 +829,11 @@ Ext.define('RC.UserAdministration.view.MatchUser', {
 Ext.define('RC.UserAdministration.form.User', {
   extend: 'Ext.form.Panel',
   xtype: 'rcuserform',
+
   config: {
     isCreation: false
   },
+  
   fieldDefaults: {
     validateOnChange: true		
   },
@@ -732,19 +855,19 @@ Ext.define('RC.UserAdministration.form.User', {
         },
       },
       items: [
-        { fieldLabel: 'Förnamn', name: 'firstName', bind: '{user.FirstName}', itemId: 'firstName' },
-        { fieldLabel: 'Efternamn', name: 'lastName', bind: '{user.LastName}', itemId: 'lastName' },
-        { fieldLabel: 'Epostadress', name: 'username', bind: '{user.Username}', itemId: 'username', vtype: 'username' },
-        { fieldLabel: 'Registerinfo', name: 'info', bind: '{user.Info}', itemId: 'registryInformation' },
+        { fieldLabel: 'Förnamn', name: 'firstName', bind: '{user.FirstName}', reference: 'firstName' },
+        { fieldLabel: 'Efternamn', name: 'lastName', bind: '{user.LastName}', reference: 'lastName' },
+        { fieldLabel: 'Epostadress', name: 'username', bind: '{user.Username}', reference: 'username', vtype: 'username' },
+        { fieldLabel: 'Registerinfo', name: 'info', bind: '{user.Info}', reference: 'registryInformation' },
       ]
     },
     {
       items: [
-        { fieldLabel: 'HSAID', name: 'hsaid', bind: '{user.HSAID}', itemId: 'hsaid', fieldStyle: { textTransform: 'uppercase' }, labelClsExtra: 'PrefixMandatory', maxLength: 64 },
-        { fieldLabel: 'Personnummer', disabled: true, name: 'personalid', bind: '{user.PersonalId}', itemId: 'personalid', vtype: 'personalId' },
+        { fieldLabel: 'HSAID', name: 'hsaid', bind: '{user.HSAID}', reference: 'hsaid', fieldStyle: { textTransform: 'uppercase' }, labelClsExtra: 'PrefixMandatory', maxLength: 64 },
+        { fieldLabel: 'Personnummer', disabled: true, name: 'personalid', bind: '{user.PersonalId}', reference: 'personalid', vtype: 'personalId' },
         { fieldLabel: 'Organisation', name: 'organisation', bind: '{user.Organization}' },
         { fieldLabel: 'Titel', name: 'title', bind: '{user.WorkTitle}' },
-        { fieldLabel: 'Senast inloggad', bind: '{user.LatestContextLogin}', cls: 'rc-info', itemId: 'latestLogin' }
+        { fieldLabel: 'Senast inloggad', bind: '{user.LatestContextLogin}', cls: 'rc-info', reference: 'latestLogin' }
       ]
     }
   ],
@@ -761,114 +884,24 @@ Ext.define('RC.UserAdministration.form.User', {
           xtype: 'button',
           text: 'Byt till Sithskort',
           minWidth: 80,
-          handler: function () {
-            this.up('form').down('#hsaid').show()
-            this.up('form').down('#hsaid').setDisabled(false)
-            this.up('form').down('#personalid').hide()
-            this.up('form').down('#personalid').setDisabled(true)
-          }
+          handler: 'onSithIdChoosen'
         },
         {
           xtype: 'button',
           text: 'Byt till BankID',
           minWidth: 80,
-          handler: function () {
-            this.up('form').down('#hsaid').hide()
-            this.up('form').down('#hsaid').setDisabled(true)
-            this.up('form').down('#personalid').show()
-            this.up('form').down('#personalid').setDisabled(false)
-          }
+          handler: 'onBankIdChoosen'
         },
         {
           xtype: 'button',
           text: 'Spara',
           formBind: true,
           minWidth: 80,
-          handler: function () {
-            var user = this.up('rcuserform').getViewModel().data.user
-            var extra = this.up('rcuserform').up().Info || {}
-            extra[Profile.Site.Register.RegisterID] = user.Info
-            var updatedUser = {
-              UserID: user.UserID,
-              WorkTitle: user.WorkTitle,
-              Username: user.Username,
-              Email: user.Email,
-              FirstName: user.FirstName,
-              LastName: user.LastName,
-              HSAID: user.HSAID,
-              Organization: user.Organization,
-              Title: user.Title,
-              Extra: JSON.stringify(extra)
-            }
-            this.up('form').saveUser(updatedUser)
-            this.up('window').destroy()
-          }
+          handler: 'onSaveUser'
         }
       ]
     }
-  ],
-
-  initComponent: function () {
-    this.callParent()
-    var personalid = this.getViewModel().get('user').PersonalId
-    if (personalid) {
-      this.down('#personalid').show()
-      this.down('#hsaid').hide()
-    } else {
-      this.down('#personalid').hide()
-      this.down('#hsaid').show()
-    }
-
-    if (this.getIsCreation()) {
-      this.down('#latestLogin').setHidden(true)
-    } else {
-      this.down('#username').vtype && delete this.down('#username').vtype
-    }
-  },
-
-  saveUser: function (user) {
-    var controller = this
-    Ext.Ajax.request({
-      url: '/stratum/api/metadata/users/' + user.UserID,
-      method: 'PUT',
-      jsonData: user,
-      withCredentials: true,
-      success: function (result, request) {
-        controller.updateUser(user, controller)
-      },
-      failure: function (result, request) {
-        console.log(result.responseText);
-      }
-    });
-  },
-
-  updateUser: function (user, controller) {
-    Ext.Ajax.request({
-      url: '/stratum/api/metadata/contexts/user/' + user.UserID,
-      method: 'GET',
-      jsonData: user,
-      withCredentials: true,
-      success: function (result, request) {
-        var index = Ext.ComponentQuery.query('usergrid')[0].getStore().find('UserID', user.UserID)
-        var userToUpdate = Ext.ComponentQuery.query('usergrid')[0].getStore().getAt(index)
-        user.Contexts = Ext.decode(result.responseText).data
-        var units = Ext.ComponentQuery.query('usergrid').pop().lookup('unitFilter').getStore().getData().items.map(function (item) { return item.data.UnitID })
-        user.Contexts = user.Contexts.filter(function (context) { return units.indexOf(context.Unit.UnitID) >= 0 })
-        Ext.ComponentQuery.query('usergrid')[0].getStore().removeAt(index)
-        Ext.ComponentQuery.query('usergrid')[0].getStore().add(user)
-      },
-      failure: function (result, request) {
-        console.log(result.responseText);
-      }
-    });
-  },
-
-  displayLatestLogin: function () {
-    var user = this.getViewModel().getData().user.UserID
-    var field = this.down('#latestLogin')
-    field.setValue(time.data[0].PerformedAt.slice(0, 10))
-  }
-
+  ]
 })
 
 Ext.define('RC.UserAdministration.view.ContextGrid', {
