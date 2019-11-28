@@ -556,13 +556,9 @@ Ext.define('RC.UserAdministration.controller.Form', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.form',
 
-  test: function() {
-    console.log('form')
-  },
-
   init: function () {
     console.log('init')
-    var personalid = this.getView().down('rcuserform').getViewModel().get('user').PersonalId
+    var personalid = this.lookup('userform').getViewModel().get('user').PersonalId
     if (personalid) {
       this.lookup('personalid').show()
       this.lookup('hsaid').hide()
@@ -579,8 +575,8 @@ Ext.define('RC.UserAdministration.controller.Form', {
   },
 
   onSaveUser: function () {
-    var user = this.getView().down('rcuserform').getViewModel().data.user
-    var extra = this.getView().down('rcuserform').up().Info || {}
+    var user = this.lookup('userform').getViewModel().data.user
+    var extra = this.lookup('userform').up().Info || {}
     extra[Profile.Site.Register.RegisterID] = user.Info
     var updatedUser = {
       UserID: user.UserID,
@@ -638,7 +634,6 @@ Ext.define('RC.UserAdministration.controller.Form', {
 
 
 Ext.define('RC.UserAdministration.controller.CreateUser', {
-  //extend: 'Ext.app.ViewController',
   extend: 'RC.UserAdministration.controller.Form',
   alias: 'controller.createuser',
 
@@ -724,9 +719,10 @@ Ext.define('RC.UserAdministration.view.EditUser', {
   items: [
     {
       xtype: 'rcuserform',
+      reference: 'userform',
       viewModel: {
         stores: {
-          user: [] // record.data
+          user: []
         }
       }
     },
@@ -736,7 +732,7 @@ Ext.define('RC.UserAdministration.view.EditUser', {
       height: 300,
       plugin: true,
       store: {
-        data: [] //record.data.Contexts
+        data: []
       },
     }
   ],
@@ -761,7 +757,6 @@ Ext.define('RC.UserAdministration.view.EditUser', {
 })
 
 Ext.define('RC.UserAdministration.controller.EditUser', {
-  //extend: 'Ext.app.ViewController',
   extend: 'RC.UserAdministration.controller.Form',
   alias: 'controller.edituser',
 
