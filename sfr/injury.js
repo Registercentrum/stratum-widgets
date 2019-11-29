@@ -133,15 +133,15 @@ Ext.define('Rc.component.Selector', {
       }
     };
   },
-  constructor: function (config) {
+  constructor: function (config) { 
     var tpl = new Ext.XTemplate(
       '<tpl for=".">',
       '<tpl if="Children.length">',
-      '<div style="margin: 0; padding: 0 15px; overflow: hidden; min-width: 200px;" class="sfr-menu-item">',
-      '<div><span class="sfr-angle-left">&#xf104</span>{ValueName}<span class="sfr-angle-right">&#xf105</span></div>',
+      '<div style="margin: 0; padding: 4px 15px; overflow: hidden; min-width: 200px;" class="sfr-menu-item">',
+      '<div style=" display: flex;"><span class="sfr-angle-left">&#xf0d9</span>{ValueName}<div class="sfr-angle-right">&#xf0da</div></div>',
       '<tpl else>',
-      '<div style="margin: 0; padding: 0 15px; overflow: hidden; min-width: 200px;" class="sfr-menu-item">',
-      '<div><span class="sfr-angle-left">&#xf104</span>{ValueName}</div>',
+      '<div style="margin: 0; padding: 4px 15px; overflow: hidden; min-width: 200px;" class="sfr-menu-item">',
+      '<div><span class="sfr-angle-left">&#xf0d9</span>{ValueName}</div>',
       '</tpl>',
       '</div>',
       '</tpl>'
@@ -222,6 +222,8 @@ Ext.util.CSS.createStyleSheet(''
   + '  display: inline;'
   + '  padding-left: 5px;'
   + '  color: #aaa;'
+  + '  flex: 1;'
+  + '  text-align: right;'
   + ' }'
   + '.x-item-selected .sfr-angle-left {'
   + '  display: inline;'
@@ -238,6 +240,6 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
   + '.sfr-menu-item {'
   + '  border-bottom: 1px solid #eee;'
-  + '  padding: 5px 15px 5px 15px !important;'
+  + '  padding: 6px 15px 6px 15px !important;'
   + '}', 
 'sfr-selector');
