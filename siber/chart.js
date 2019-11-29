@@ -1,3 +1,9 @@
+var UNIT_FILTER='#unitFilter';
+var gCurrentAreaCode;
+var gIS_INIT=true;
+if(widgetConfig.isDemo){
+  UNIT_FILTER= UNIT_FILTER + 'DEMO';
+}
 var controller;
 Ext.define('CustomAxis', {
   extend: 'Ext.chart.axis.Category',
@@ -61,10 +67,13 @@ Ext.define('Siber.controller.Start', {
     spinner.show();
 
     controller.currentCounty = view.down('#countyFilter').getDisplayValue() || 'Alla';
-    view.down('#unitFilter').getStore().clearFilter();
-    view.down('#unitFilter').getFilters().add(controller.filterUnits.bind(controller));
-    if (widgetConfig.isDashboard) {
-      view.down('#unitFilter').setValue(Profile.Context.Unit.UnitCode);
+    view.down(UNIT_FILTER).getStore().clearFilter();
+    view.down(UNIT_FILTER).getFilters().add(controller.filterUnits.bind(controller));
+    if (widgetConfig.isDashboard && gIS_INIT) {
+      var c=view.down(UNIT_FILTER);
+      c.setValue(Profile.Context.Unit.UnitCode);
+      gCurrentAreaCode=c.getSelectedRecord().data.AreaCode;
+      gIS_INIT=false;
     }
 
     var url = controller.createUrl();
@@ -86,18 +95,18 @@ Ext.define('Siber.controller.Start', {
 
   createUrl: function () {
     var view = this.getView();
-    var county = view.down('#countyFilter').getValue();
-    var unit = view.down('#unitFilter').getValue();
+    var county = view.down('#countyFilter').getValue();    
+    var unit = view.down(UNIT_FILTER).getValue();
     var indicator = view.down('#indicatorFilter').getValue();
-
-    var isQuarterly = this.api.indexOf('ybars') >= 0;
-
+    var isQuarterly = this.api.indexOf('ybars') >= 0; //TODO:Bugg sedan innan?
     county = county[0] === '0' ? county[1] : county;
     var level = unit !== '00' || (isQuarterly && county !== '0') ? 'unit' : 'county';
-    var id = level === 'county' || isQuarterly ? county : unit;
+    var id = level === 'county' || isQuarterly ? county : unit;    
     var group = level === 'unit' || county !== '0' ? '&group=' + id : '';
+    if(level=='unit' && id<0){
+      level='area';
+    }
     var indication = widgetConfig.showIndicatorFilter ? '&indication=' + indicator : '';
-
     var url = '/stratum/api/statistics/siber/' + this.api + '?agglevel=' + level + group + indication + '&apikey=KbxAwmlwLM4=';
     return url;
   },
@@ -110,15 +119,36 @@ Ext.define('Siber.controller.Start', {
       cors: true,
       url: '/stratum/api/metadata/units/bindings/155?apikey=KbxAwmlwLM4=',
       success: function (response) {
-        var result = Ext.decode(response.responseText).data;
-        controller.unitCounties = result;
+        
+        var countiesResult = Ext.decode(response.responseText).data;
+        controller.unitCounties = countiesResult;
         controller.getView().down('#countyFilter').getFilters().add(controller.filterCounties.bind(controller));
-        controller.updateCharts();
+        Ext.Ajax.request({
+            type: 'ajax',
+            method: 'get',
+            cors: true,
+            url: '/stratum/api/statistics/siber/siberw-get-clinic-areas-v3?returntype=json&apikey=KbxAwmlwLM4=&_dc=1573476075645',
+            success: function (response) {                            
+              var result = Ext.decode(response.responseText).data;              
+              var unitsAreas=mergeUnitsAndAreas(result)
+              var i=0;
+              for(i=0; i<unitsAreas.areaList.length; i++){
+                var areaName=unitsAreas.areaList[i].AreaName;
+                var countyName=unitsAreas.areaList[i].CountyName;
+                controller.unitCounties[areaName]={County: countyName };
+              }
+              Ext.get(UNIT_FILTER.replace('#','')).component.getStore().loadData(unitsAreas.completeList);
+              controller.updateCharts(true);
+            }
+          });                                    
       }
     });
   },
 
   filterUnits: function (item) {
+    if(widgetConfig.isDashboard){
+      return item.data.UnitCode==Profile.Context.Unit.UnitCode || item.data.UnitCode == gCurrentAreaCode || (item.data.AreaCode && item.data.AreaCode == gCurrentAreaCode);
+    }
     return item.data.UnitName !== 'Registercentrum' && (item.data.UnitName === 'Alla' || (this.unitCounties[item.data.UnitName] && this.unitCounties[item.data.UnitName].County === this.currentCounty) || this.currentCounty === 'Alla');
   },
 
@@ -129,8 +159,8 @@ Ext.define('Siber.controller.Start', {
   },
 
   countySelected: function () {
-    this.getView().down('#unitFilter').setValue('00');
-    this.updateCharts();
+    this.getView().down(UNIT_FILTER).setValue('00');
+    this.updateCharts(false);
   },
 
   unitCounties: {},
@@ -195,7 +225,7 @@ Ext.define('Siber.view.Start', {
               { ValueName: 'Dysmorfofobi', ValueCode: 'dysmorphic' },
               { ValueName: 'Ångestsyndrom unga RCADS-47', ValueCode: 'anxiety_young_rcads47' },
               { ValueName: 'Ångestsyndrom unga RCADS-25', ValueCode: 'anxiety_young_rcads25' },
-			  { ValueName: 'Ångestsyndrom unga*', ValueCode: 'anxiety_young' }
+			        { ValueName: 'Ångestsyndrom unga', ValueCode: 'anxiety_young' }
 
 
               /*{ ValueName: 'Separationsångest', ValueCode: 'separation_anxiety'}*/
@@ -268,9 +298,9 @@ Ext.define('Siber.view.Start', {
       },
       items: [
         {
-          itemId: 'unitFilter',
+          itemId: UNIT_FILTER.replace('#', ''),
           xtype: 'siberfilter',
-          hidden: !widgetConfig.showUnitFilter,
+          hidden: !widgetConfig.showUnitFilter || widgetConfig.isDemo,
           displayField: 'UnitName',
           valueField: 'UnitCode',
           fieldLabel: 'Enhet:',
@@ -301,13 +331,62 @@ Ext.define('Siber.view.Start', {
             }
           }
         },
-      ]
-	},
+        {
+          itemId: UNIT_FILTER.replace('#', ''),
+          id: UNIT_FILTER.replace('#', ''),
+          xtype: 'siberfilter',
+          hidden: !widgetConfig.showUnitFilter || !widgetConfig.isDemo,
+          displayField: 'UnitName',
+          valueField: 'UnitCode',
+          fieldLabel: 'Område/Enhet:',
+          labelStyle: 'text-align: right;',
+          flex: 1,
+          labelWidth: 100,
+          value: '00',
+          listeners: {
+            select: 'updateCharts'
+          },
+          store: Ext.create('Ext.data.Store', { }),
+          tpl: Ext.create(
+            'Ext.XTemplate',
+            '<tpl for=".">',
+            '<div class="{[this.getClass(values)]}">{UnitName}</div>',
+            '</tpl>',
+            {
+              getClass: function (rec) {               
+                return rec.UnitCode < 0 ? 'x-boundlist-item bsw-county-item' : 'x-boundlist-item';
+              }
+            }
+          )
+          /*store: {
+            fields: ['ValueCode', 'ValueName'],
+            autoLoad: true,
+            proxy: {
+              type: 'ajax',
+              url: '/stratum/api/metadata/units/register/155?apikey=KbxAwmlwLM4=',
+              withCredentials: true,
+              reader: {
+                type: 'json',
+                rootProperty: 'data'
+              },
+            },
+            /*listeners: {
+              load: function (store) {
+                store.add({ ValueName: 'Alla', ValueCode: '00' });
+                //store.sort({ property: 'ValueName', direction: 'ASC' });
+              }
+            }
+          }*/
+        }
+    ]
+},
+     
+    
 	{
 		xtype:'component',
 		height:'200',
-		html: '<p><i>Håll muspekaren över staplarna för mer information om antal eller andelar.</i></p>',
-		hidden: textExists() //Remove after demo stage
+		html: widgetConfig.helpNote ?  '<p><i>' + widgetConfig.helpNote+'</i></p>' : widgetConfig.isDashboard && Profile && Profile.Context ? '<p><i>Håll muspekaren över staplarna för mer information om antal eller andelar</i></p>' : widgetConfig.isDashboard ? 'Denna sida kräver inlogg.' : '',
+		hidden: !(widgetConfig.helpNote || widgetConfig.isDashboard) 
   	},
     getChartItems(),
     {
@@ -456,6 +535,9 @@ function createChart(id) {
 
 }
 
+
+
+
 function getChartConfig(id, widgetConfig) {
   if (!widgetConfig.isDashboard) //TODO
     return widgetConfig;
@@ -523,11 +605,12 @@ function getChartConfig(id, widgetConfig) {
         api: 'siberw-qbars-structured-diagnostics',
 		id: 'StruktDiagKv',
         xField: 'YQ',
-        yField: 'freq',
+        yField: 'proportion',
         title: 'Strukturerad diagnostik',
         // colors: ['#C95D63'],
         colors: ['#E47C7B'],
         flipXY: false,
+		asPercentages: true,
         numericPosition: 'bottom'
       }
       break;
@@ -592,6 +675,14 @@ Ext.util.CSS.createStyleSheet(
   + '  height: 40px;'
   + '  border-radius: 3px;'
   + '}'
+
+  + ' .bsw-county-item {'
+  + '     padding-top: 10px;'
+  + '     padding-bottom: 6px;'
+  + '     border-top: 1px dashed #000;'
+  + '     font-weight: bold;'
+  + '     margin-top: 5px;'
+  + ' }'
 
   + '.siber-select input {'
   + '  color: #3F73A6;'
@@ -712,6 +803,35 @@ function getHeaderTextCmp(id) {
   return null;
 }
 
+function mergeUnitsAndAreas(data){
+    var currentAreaCode=0;
+    var result={};
+    var completeList=[];
+    var areaList=[];
+    var i=0;
+    completeList.push({UnitName: 'Alla', UnitCode:'00'});   
+    
+    for(i=0; i<data.length; i++){
+        var aCode=data[i].AreaCode;
+        var name='';
+        var code='';
+        if(aCode!==currentAreaCode){
+          currentAreaCode=aCode;
+            name=/*'<b>' +*/ data[i].AreaName /*+ '</b>'*/;
+            code=data[i].AreaCode;
+            
+            completeList.push({UnitCode: code, UnitName: name});
+            areaList.push({CountyName: data[i].CountyName, AreaName: data[i].AreaName});
+        }        
+        name=data[i].UnitName;   
+        code=data[i].UnitCode;        
+        completeList.push({UnitCode: code, UnitName: name, AreaCode: data[i].AreaCode});
+    }
+    result.completeList=completeList;
+    result.areaList=areaList;
+    return result;
+}
+
 function printObject(obj){	
 	console.log('{');	
 	for(var p in obj){
@@ -738,16 +858,12 @@ Ext.util.CSS.createStyleSheet(
   
   , 'sibercharts'
 )
-
-function textExists(){
-	var aTags = document.getElementsByTagName("p");
-	var searchText = "När du står";	
-	for (var i = 0; i < aTags.length; i++) {
-		if (aTags[i].textContent.indexOf(searchText)>=0) {
-			return true;
-		}	
-	}
-	return false;
-}
-
 //# sourceURL=SIBER/Chart
+
+
+
+
+
+
+
+
