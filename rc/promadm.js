@@ -1,4 +1,3 @@
-// JavaScript source code
 
 (function () {
 	
@@ -128,8 +127,8 @@
                             fields: [{ name: 'FormID', type: 'int' },
                                     { name: 'FormTitle', type: 'string' },
                                     { name: 'FormName', type: 'string' },
-                                    { name: 'FormScope', type: 'int' }/*,
-									{ name: 'ParentFormID', type: 'int' }*/
+                                    { name: 'FormScope', type: 'int' },
+									{ name: 'ParentFormID', type: 'int' }
                             ],
                             proxy: {
                                 type: 'rest',
@@ -594,11 +593,12 @@
                                 click: function () {
                                     //todo Lägg in egen funktion
                                     var form = this.ownerCt.ownerCt;
-									if(!getCmpByName('FormID',form).getValue()){
+									var formID=getCmpByName('FormID',form).getValue();
+									if(!formID){
 										Ext.Msg.alert('Fel', 'Måste ange vilket formulär som skall bjudas');
 										return;
 									}
-									if(!getCmpByName('SourceEventID',form).getValue() && getCmpByName('SourceEventID',form).store.data.length>0 ){
+									if(hasParent(formID) && !getCmpByName('SourceEventID',form).getValue()){
 										Ext.Msg.alert('Fel', 'Måste ange till vilket formulär bjudningen tillhör');
 										return;
 									}
@@ -629,15 +629,15 @@
 											var pinCmp=getCmpByName('PinCode',form);
 											var pin=getPinCode(d.data.ProxyID);
 											pinCmp.setValue(pin);	
-											alertMessage('Bjudning skapad. PIN-kod:' + pin);											
+											Ext.Msg.alert('Bjudning skapad', 'PIN-kod:' + pin);											
 										},
 										failure : function(response){
 											var d = Ext.decode(response.responseText);
 											if(d.message=='Proxy already exists'){
-												alertMessage('Fel. En sådan bjudning för patienten existerar redan');
+												Ext.Msg.alert('Fel', 'En sådan bjudning för patienten existerar redan');																							
 											}
 											else {
-												alertMessage('Okänt fel. Lyckades inte spara bjudning');
+												Ext.Msg.alert('Okänt fel', 'Lyckades inte spara bjudning');																																			
 											}
 											var i=0;
 											
@@ -1374,7 +1374,15 @@
 		var s=proxyID.toString();
 		return s.substring(s.length-4, s.length);
 	}
-	
+	function hasParent(formID){
+		for(var i=0; i< pageManager.formInfoStore.data.items.length; i++){
+			var f=pageManager.formInfoStore.data.items[i].data;
+			if(f.FormID==formID && f.Parent!==null){
+				return true;
+			}
+		}
+		return false;
+	}
 	function CreateHelpNoteButton(aHelpNote)
 	{
 		return { 
