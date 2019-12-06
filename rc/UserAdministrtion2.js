@@ -490,27 +490,12 @@ Ext.define('RC.UserAdministration.controller.User', {
   },
 
   userClicked: function (component, record, item, index) {
-    var etxra, info
+    var info
     record.data.LastActive = this.getLatestContextLogin(record.data)
-
-    if (record.data.Contexts && record.data.Extra) {
-      record.data.Contexts.forEach(function (item) {
-        if (typeof item.User.Extra !== 'string') return;
-        item.User.Extra = JSON.parse(item.User.Extra)
-        record.data.Info = item.User.Extra[Profile.Site.Register.RegisterID]
-        info = item.User.Extra
-        record.data.Extra = null
-      })
-    }
-
-    record.data.Extra = null
+    record.data.Info = JSON.parse(record.data.Extra || '{}')[Profile.Site.Register.RegisterID]
     record.data.PersonalId = this.checkIfPersonalId(record.data.HSAID) ? record.data.HSAID : null
-    var userWindow = Ext.create('RC.UserAdministration.view.EditUser', { userData: record, contextData: record.data.Contexts })
-    userWindow.show()
-    userWindow.Info = info
-    if (!record.data.Contexts) {
-      this.loadContexts(userWindow, record.data.UserID)
-    }
+
+    var userWindow = Ext.create('RC.UserAdministration.view.EditUser', { userData: record, contextData: record.data.Contexts }).show()
   },
 
   onColumnHidden: function (component, column, eOpts) {
@@ -588,6 +573,15 @@ Ext.define('RC.UserAdministration.controller.Form', {
         Role: {RoleId: form.role}
     }
     return context
+  },
+
+  transformUser: function () {
+    var form = this.lookup('userform').getForm().getValues()
+    var completeInfo = this.lookup('userform').up().Info || {}
+    completeInfo[Profile.Site.Register.RegisterID] = form.Info
+    form.Extra = JSON.stringify(completeInfo)
+    this.lookup('userform').getForm().setValues(form)
+    return form.UserID
   },
   
   saveUser: function (user) {
@@ -858,9 +852,9 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
 
   onSaveUser: function () {
     var controller = this
-    var user = this.getUser()
+    var user = this.transformUser()
     this.lookup('userform').getForm().updateRecord()
-    Ext.StoreManager.lookup('users').sync({callback: function (){console.log('synced')}})
+    Ext.StoreManager.lookup('users').sync({callback: function (){ console.log('synced') }})
     this.getView().destroy()
   },
 
@@ -962,6 +956,7 @@ Ext.define('RC.UserAdministration.form.User', {
         { fieldLabel: 'Roll',            name: 'Role',         reference: 'role',       xtype: 'combobox', store: 'roles', valueField: 'RoleID', displayField: 'RoleName'},
         { fieldLabel: 'Användarid',      name: 'UserID',       reference: 'userid',     hidden: true},
         { fieldLabel: 'Title',           name: 'WorkTitle',    reference: 'worktitle',  hidden: true},
+        { fieldLabel: 'Extra',           name: 'Extra',        reference: 'extra',  hidden: true},
   ],
   dockedItems: [
     {
