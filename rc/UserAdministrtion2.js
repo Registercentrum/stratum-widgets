@@ -546,18 +546,14 @@ Ext.define('RC.UserAdministration.controller.User', {
     }
   },
 
-  getLatestLogin: function (user) {
-    if (!this.getLoader() || !this.getLoader().getLoginsSith()) return ''
-    var bankIdLog = this.getLoader().getLoginsBankId().filter(function (logitem) { return logitem.Context.User.UserID === user })[0];
-    var latestBankIdLogin = bankIdLog ? bankIdLog.PerformedAt.slice(0, 10) : ''
-    var sithsLog = this.getLoader().getLoginsSith().filter(function (logitem) { return logitem.Context.User.UserID === user })[0]
-    var latestSithsLogin = sithsLog ? sithsLog.PerformedAt.slice(0, 10) : ''
-    var latestOfAll = latestBankIdLogin > latestSithsLogin ? latestBankIdLogin : latestSithsLogin
-    return latestOfAll
-  },
-
   getLatestContextLogin: function (user) {
-    return user.Contexts.reduce(function (total, current) { total.ActivatedAt = total.ActivatedAt || ''; if (total.ActivatedAt < current.ActivatedAt) { return current; } return total }).ActivatedAt || 'Okänt'
+    return user.Contexts.reduce(function (total, current) { 
+      total.ActivatedAt = total.ActivatedAt || ''; 
+      if (total.ActivatedAt < current.ActivatedAt) { 
+        return current; 
+      } 
+      return total }
+    ).ActivatedAt || 'Okänt'
   }
 })
 
@@ -944,13 +940,13 @@ Ext.define('RC.UserAdministration.form.User', {
   fieldDefaults: {
     validateOnChange: true		
   },
-  bodyPadding: 5,
+  bodyPadding: 7,
   defaults: {
     layout: 'form',
     xtype: 'textfield',
     columnWidth: 0.49,
     labelWidth: 115,
-    padding: 5,
+    padding: 7,
     listeners: {
       change: 'onFormChanged'
     },
