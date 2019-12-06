@@ -20,6 +20,7 @@ Ext.define('RC.UserAdministration.store.User', {
   extend: 'Ext.data.Store',
   model: 'Stratum.User',
   storeId: 'users',
+  /*
   autoLoad: true,
   proxy: {
     type: 'ajax',
@@ -28,7 +29,7 @@ Ext.define('RC.UserAdministration.store.User', {
       type: 'json',
       rootProperty: 'data'
     }
-  }
+  }*/
 })
 
 Ext.define('RC.UserAdministration.store.Unit', {
@@ -101,15 +102,15 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
     columnShow: 'onColumnShown',
     selectionchange: 'onSelectionChange'
   },
-
-  store: {
+  store: 'users',
+/*  store: {
     // groupField: 'FirstName',
     data: [],
     filters: [],
     sorters: {
       property: 'LastName'
     },
-  },
+  },*/
 
   columns: [
     {
@@ -490,7 +491,7 @@ Ext.define('RC.UserAdministration.controller.User', {
 
   userClicked: function (component, record, item, index) {
     var etxra, info
-    record.data.LastActive = this.getLatestContextLogin(record.data).substring(0, 16).replace('T', ' ')
+    record.data.LastActive = this.getLatestContextLogin(record.data)
 
     if (record.data.Contexts && record.data.Extra) {
       record.data.Contexts.forEach(function (item) {
@@ -546,13 +547,15 @@ Ext.define('RC.UserAdministration.controller.User', {
   },
 
   getLatestContextLogin: function (user) {
-    return user.Contexts.reduce(function (total, current) { 
+    var time = user.Contexts.reduce(function (total, current) { 
       total.ActivatedAt = total.ActivatedAt || ''; 
       if (total.ActivatedAt < current.ActivatedAt) { 
         return current; 
       } 
       return total }
-    ).ActivatedAt || 'Okänt'
+    )
+    time = time.ActivatedAt.substring(0, 16).replace('T', ' ')
+    return time || 'Okänt'
   }
 })
 
@@ -569,17 +572,8 @@ Ext.define('RC.UserAdministration.controller.Form', {
     this.lookup('hsaid').setDisabled(personalidIsUsed)
   },
 
-  onSaveUser: function () {
-    var controller = this
+  getUser: function () {
     var form = this.lookup('userform').getForm().getValues()
-    var user = this.getUser(form)
-    var context = this.getContext(form)
-    this.type === 'createuser' && this.saveUser(user).then(function () {controller.saveContext(context)}).then(function (){controller.updateUser(user)})
-    this.type === 'edituser' && this.saveUser(user).then(function (){controller.updateUser(user)})
-    this.getView().destroy()
-  },
-
-  getUser: function (form) {
     var completeInfo = this.lookup('userform').up().Info || {}
     completeInfo[Profile.Site.Register.RegisterID] = form.Info
     form.Extra = JSON.stringify(completeInfo)
@@ -722,6 +716,14 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
     }
   },
 
+  onSaveUser: function () {
+    var controller = this
+    var user = this.getUser()
+    var context = this.getContext()
+    this.saveUser(user).then(function () {controller.saveContext(context)}).then(function (){controller.updateUser(user)})
+    this.getView().destroy()
+  },
+
   onFormChanged: function () {
     var me = this
     var query = this.getQueryFromInputs()
@@ -844,9 +846,8 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
 
   init: function () {
     this.callParent()
-    //this.getView().down('rcuserform').getViewModel().setData({ user: this.getView().getUserData() })
     this.getView().down('grid').getStore().loadData(this.getView().getContextData())
-    this.getView().down('rcuserform').loadRecord(this.getView().getUserData())
+    this.lookup('userform').loadRecord(this.getView().getUserData())
     delete this.lookup('username').vtype
     this.lookup('unit').hide()
     this.lookup('role').hide()
@@ -854,6 +855,15 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     this.lookup('username').setEditable(false)
     this.lookup('username').addCls('rc-info')
   },
+
+  onSaveUser: function () {
+    var controller = this
+    var user = this.getUser()
+    this.lookup('userform').getForm().updateRecord()
+    Ext.StoreManager.lookup('users').sync({callback: function (){console.log('synced')}})
+    this.getView().destroy()
+  },
+
 
   onSithIdChoosen: function () {
     this.lookup('hsaid').show()
@@ -989,6 +999,7 @@ Ext.define('RC.UserAdministration.form.User', {
 Ext.define('RC.UserAdministration.view.ContextGrid', {
   extend: 'Ext.grid.Panel',
   alias: 'widget.contextgrid',
+  reference: 'contextgrid',
   controller: 'context',
   multiSelect: true,
   selModel: 'rowmodel',
