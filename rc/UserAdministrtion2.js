@@ -490,7 +490,6 @@ Ext.define('RC.UserAdministration.controller.User', {
 
   userClicked: function (component, record, item, index) {
     var etxra, info
-    record.data.LatestLogin = this.getLatestLogin(record.data.UserID)
     record.data.LatestContextLogin = this.getLatestContextLogin(record.data).substring(0, 16).replace('T', ' ')
 
     if (record.data.Contexts && record.data.Extra) {
@@ -748,11 +747,7 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
     var query = this.getQueryFromInputs()
     query !== '' && this.loadUser(query).then(function (response) { me.showMatchingUsers(response) })
   },
-/*
-  init: function () {
-    console.log('creating user')
-  },
-*/
+
   getQueryFromInputs: function () {
     var view = this.getView()
     var inputs = ''
@@ -814,18 +809,15 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
 Ext.define('RC.UserAdministration.view.EditUser', {
   extend: 'Ext.window.Window',
   controller: 'edituser',
+  modal: true,
+  width: 1000,
+  title: 'Användare',
+  
   config: {
     userData: [],
     contextData: []
   },
-  initComponent: function (arguments) {
-    this.callParent(arguments)
-    this.down('rcuserform').getViewModel().setData({ user: this.getUserData() })
-    this.down('grid').getStore().loadData(this.getContextData())
-  },
-  modal: true,
-  width: 1000,
-  title: 'Användare',
+  
   items: [
     {
       xtype: 'rcuserform',
@@ -869,6 +861,13 @@ Ext.define('RC.UserAdministration.view.EditUser', {
 Ext.define('RC.UserAdministration.controller.EditUser', {
   extend: 'RC.UserAdministration.controller.Form',
   alias: 'controller.edituser',
+
+  init: function () {
+    this.callParent()
+    this.getView().down('rcuserform').getViewModel().setData({ user: this.getView().getUserData() })
+    this.getView().down('grid').getStore().loadData(this.getView().getContextData())
+    // this.getView().down('rcuserform').loadRecord(this.user)
+  },
 
   onSithIdChoosen: function () {
     this.lookup('hsaid').show()
