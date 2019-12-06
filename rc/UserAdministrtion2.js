@@ -490,7 +490,7 @@ Ext.define('RC.UserAdministration.controller.User', {
 
   userClicked: function (component, record, item, index) {
     var etxra, info
-    record.data.LatestContextLogin = this.getLatestContextLogin(record.data).substring(0, 16).replace('T', ' ')
+    record.data.LastActive = this.getLatestContextLogin(record.data).substring(0, 16).replace('T', ' ')
 
     if (record.data.Contexts && record.data.Extra) {
       record.data.Contexts.forEach(function (item) {
@@ -504,7 +504,7 @@ Ext.define('RC.UserAdministration.controller.User', {
 
     record.data.Extra = null
     record.data.PersonalId = this.checkIfPersonalId(record.data.HSAID) ? record.data.HSAID : null
-    var userWindow = Ext.create('RC.UserAdministration.view.EditUser', { userData: record.data, contextData: record.data.Contexts })
+    var userWindow = Ext.create('RC.UserAdministration.view.EditUser', { userData: record, contextData: record.data.Contexts })
     userWindow.show()
     userWindow.Info = info
     if (!record.data.Contexts) {
@@ -561,33 +561,12 @@ Ext.define('RC.UserAdministration.controller.Form', {
   alias: 'controller.form',
 
   init: function () {
-    var personalid = this.lookup('userform').getViewModel().get('user').PersonalId
-    if (personalid) {
-      this.lookup('personalid').show()
-      this.lookup('personalid').enable()
-      this.lookup('hsaid').hide()
-      this.lookup('hsaid').disable()
-    }
-
-    if (this.type === 'createuser') {
-      this.lookup('registryinfo').hide()
-      this.lookup('organisation').hide()
-      this.lookup('latestLogin').hide()
-      this.lookup('email').hide()
-      this.lookup('username').setFieldLabel('Epost')
-      this.lookup('username').setEditable(true)
-      this.lookup('username').removeCls('rc-info')
-    } else {
-      delete this.lookup('username').vtype
-      this.lookup('unit').hide()
-      this.lookup('role').hide()
-      this.lookup('username').setFieldLabel('Användarnamn')
-      this.lookup('username').setEditable(false)
-      this.lookup('username').addCls('rc-info')
-    }
-    if(Profile.Context.User.UserID < 200) {
-      this.lookup('username').setFieldLabel('Användarnamn')
-    }
+    var personalidIsUsed = this.lookup('userform').getForm().getValues().PersonalId
+    
+    this.lookup('personalid').setHidden(!personalidIsUsed)
+    this.lookup('personalid').setDisabled(!personalidIsUsed)
+    this.lookup('hsaid').setHidden(personalidIsUsed)
+    this.lookup('hsaid').setDisabled(personalidIsUsed)
   },
 
   onSaveUser: function () {
@@ -602,22 +581,9 @@ Ext.define('RC.UserAdministration.controller.Form', {
 
   getUser: function (form) {
     var completeInfo = this.lookup('userform').up().Info || {}
-    completeInfo[Profile.Site.Register.RegisterID] = form.info
-    form.extra = JSON.stringify(completeInfo)
-
-    var user = {
-      UserID:       form.userid,
-      WorkTitle:    form.worktitle,
-      Username:     form.username,
-      Email:        form.email,
-      FirstName:    form.firstname,
-      LastName:     form.lastname,
-      HSAID:        form.hsaid,
-      Organization: form.organisation,
-      Extra:        form.extra
-    }
-    
-    return user
+    completeInfo[Profile.Site.Register.RegisterID] = form.Info
+    form.Extra = JSON.stringify(completeInfo)
+    return form
   },
 
   getContext: function (form) {
@@ -742,6 +708,20 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
   extend: 'RC.UserAdministration.controller.Form',
   alias: 'controller.createuser',
 
+  init: function () {
+    this.callParent()
+    this.lookup('registryinfo').hide()
+    this.lookup('organisation').hide()
+    this.lookup('lastactive').hide()
+    this.lookup('email').hide()
+    this.lookup('username').setFieldLabel('Epost')
+    this.lookup('username').setEditable(true)
+    this.lookup('username').removeCls('rc-info')
+    if(Profile.Context.User.UserID < 200) {
+      this.lookup('username').setFieldLabel('Användarnamn')
+    }
+  },
+
   onFormChanged: function () {
     var me = this
     var query = this.getQueryFromInputs()
@@ -751,8 +731,8 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
   getQueryFromInputs: function () {
     var view = this.getView()
     var inputs = ''
-    inputs += this.lookup('firstName').getValue().length > 2 ? this.lookup('firstName').getValue() + ' ' : ''
-    inputs += this.lookup('lastName').getValue().length  > 2 ? this.lookup('lastName').getValue()  + ' ' : ''
+    inputs += this.lookup('firstname').getValue().length > 2 ? this.lookup('firstname').getValue() + ' ' : ''
+    inputs += this.lookup('lastname').getValue().length  > 2 ? this.lookup('lastname').getValue()  + ' ' : ''
     inputs += this.lookup('username').getValue().length  > 2 ? this.lookup('username').getValue()  + ' ' : ''
     inputs = inputs.length > 0 ? inputs.substring(0, inputs.length - 1) : ''
     return inputs
@@ -780,8 +760,8 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
 
   filterMactches: function (matches) {
     var view = this.getView()
-    var firstName = this.lookup('firstName').getValue()
-    var lastName = this.lookup('lastName').getValue()
+    var firstName = this.lookup('firstname').getValue()
+    var lastName = this.lookup('lastname').getValue()
     var email = this.lookup('username').getValue()
     matches = matches.filter(function (match) {
       return (firstName.length < 3 || Ext.String.startsWith(match.FirstName, firstName, true))
@@ -864,9 +844,15 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
 
   init: function () {
     this.callParent()
-    this.getView().down('rcuserform').getViewModel().setData({ user: this.getView().getUserData() })
+    //this.getView().down('rcuserform').getViewModel().setData({ user: this.getView().getUserData() })
     this.getView().down('grid').getStore().loadData(this.getView().getContextData())
-    // this.getView().down('rcuserform').loadRecord(this.user)
+    this.getView().down('rcuserform').loadRecord(this.getView().getUserData())
+    delete this.lookup('username').vtype
+    this.lookup('unit').hide()
+    this.lookup('role').hide()
+    this.lookup('username').setFieldLabel('Användarnamn')
+    this.lookup('username').setEditable(false)
+    this.lookup('username').addCls('rc-info')
   },
 
   onSithIdChoosen: function () {
@@ -953,24 +939,19 @@ Ext.define('RC.UserAdministration.form.User', {
   layout: 'column',
   width: '100%',
   items: [
-        { fieldLabel: 'Förnamn', name: 'firstname', bind: '{user.FirstName}', reference: 'firstName' },
-        { fieldLabel: 'Efternamn', name: 'lastname', bind: '{user.LastName}', reference: 'lastName' },
-        
-        { fieldLabel: 'HSAID', name: 'hsaid', bind: '{user.HSAID}', reference: 'hsaid', fieldStyle: { textTransform: 'uppercase' }, labelClsExtra: 'PrefixMandatory', maxLength: 64 },
-        { fieldLabel: 'Personnummer', disabled: true, hidden: true, name: 'personalid', bind: '{user.PersonalId}', reference: 'personalid', vtype: 'personalId' },
-        { fieldLabel: 'Epost', name: 'email', bind: '{user.Email}', reference: 'email', vtype: 'email' },
-        
-        { fieldLabel: 'Registerinfo', name: 'info', bind: '{user.Info}', reference: 'registryinfo' },
-        { fieldLabel: 'Organisation', name: 'organisation', bind: '{user.Organization}', reference: 'organisation' },
-        
-        { fieldLabel: 'Användarnamn', name: 'username', bind: '{user.Username}', reference: 'username', vtype: 'username' },
-        { fieldLabel: 'Senast inloggad', bind: '{user.LatestContextLogin}', cls: 'rc-info', reference: 'latestLogin' },
-        
-        { fieldLabel: 'Enhet', name: 'unit', xtype: 'combobox', store: 'units', valueField: 'UnitID', displayField: 'UnitName', reference: 'unit'},
-        { fieldLabel: 'Roll', name: 'role', xtype: 'combobox', store: 'roles', valueField: 'RoleID', displayField: 'RoleName', reference: 'role'},
-
-        { fieldLabel: 'Användarid', name: 'userid', bind: '{user.UserID}', reference: 'userid', hidden: true},
-        { fieldLabel: 'Title', name: 'worktitle', bind: '{user.WorkTitle}', reference: 'worktitle', hidden: true},
+        { fieldLabel: 'Förnamn',         name: 'FirstName',    reference: 'firstname' },
+        { fieldLabel: 'Efternamn',       name: 'LastName',     reference: 'lastname' },
+        { fieldLabel: 'HSAID',           name: 'HSAID',        reference: 'hsaid',      fieldStyle: { textTransform: 'uppercase' }, labelClsExtra: 'PrefixMandatory', maxLength: 64 },
+        { fieldLabel: 'Personnummer',    name: 'PersonalId',   reference: 'personalid', vtype: 'personalId' },
+        { fieldLabel: 'Epost',           name: 'Email',        reference: 'email',      vtype: 'email' },
+        { fieldLabel: 'Registerinfo',    name: 'Info',         reference: 'registryinfo' },
+        { fieldLabel: 'Organisation',    name: 'Organization', reference: 'organisation' },
+        { fieldLabel: 'Användarnamn',    name: 'Username',     reference: 'username',   vtype: 'username' },
+        { fieldLabel: 'Senast inloggad', name: 'LastActive',   reference: 'lastactive', cls: 'rc-info' },
+        { fieldLabel: 'Enhet',           name: 'Unit',         reference: 'unit',       xtype: 'combobox', store: 'units', valueField: 'UnitID', displayField: 'UnitName' },
+        { fieldLabel: 'Roll',            name: 'Role',         reference: 'role',       xtype: 'combobox', store: 'roles', valueField: 'RoleID', displayField: 'RoleName'},
+        { fieldLabel: 'Användarid',      name: 'UserID',       reference: 'userid',     hidden: true},
+        { fieldLabel: 'Title',           name: 'WorkTitle',    reference: 'worktitle',  hidden: true},
   ],
   dockedItems: [
     {
