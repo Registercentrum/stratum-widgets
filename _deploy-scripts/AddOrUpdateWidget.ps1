@@ -54,28 +54,9 @@ if (-Not $config.widgetId) {
     Write-Error "Widget ID was not specified in config file." -ErrorAction Stop
 }
 
-# OLD WAY OF GETTING META DATA OF SCRIPT
-# if($pageContent -match "// SiteId: (\d+)") {
-#     $SiteId = $Matches[1]
-# }
-# else {
-#     Write-Error "Widget script did not contain SiteId."
-#     Exit-PSSession
-# }
-# if($pageContent -match "// WidgetId: ([a-zA-Z0-9]+/[a-zA-Z0-9]+)") {
-#     $WidgetId = $Matches[1]
-# }
-# else {
-#     Write-Error "Widget script did not contain WidgetId."
-#     Exit-PSSession
-# }
-# if($pageContent -match "// WidgetName: ([a-zA-Z0-9 ]+)") {
-#     $WidgetName = $Matches[1]
-# }
-# else {
-#     Write-Error "Widget script did not contain WidgetName."
-#     Exit-PSSession
-# }
+if (-Not $config.siteId) {
+    Write-Error "Site ID was not specified in config file." -ErrorAction Stop
+}
 
 $pageId = GetWidgetPageId -WidgetId $config.widgetId
 $newPageContent = "<!-- Widget: $($config.widgetId) -->
@@ -88,5 +69,5 @@ if($pageId) {
     UpdateWidget -WidgetId $config.widgetId -WidgetName $config.widgetName -PageContent $newPageContent -PageId $pageId
 }
 else {
-    CreateWidget -PageContent $newPageContent -WidgetName $config.widgetName -SiteId $SiteId
+    CreateWidget -PageContent $newPageContent -WidgetName $config.widgetName -SiteId $config.siteId
 }
