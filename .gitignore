@@ -3,3 +3,5 @@
 test.html
 test.js
 _backup/
+node_modules/
+dist/
