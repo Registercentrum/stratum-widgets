@@ -504,7 +504,7 @@ Ext.define('Shpr.controller.Compass', {
     var compass = data.compass;
     compass.forEach(function (item) {
       item.indicator = translations[item.indicator]
-      item.background = 1
+      item.background = 0.9999
       if (item.unit_value === 'NA') {
         item.unit_value = 0
       }
@@ -575,7 +575,7 @@ Ext.define('Shpr.controller.Compass', {
     var unit = view.down('#unitFilter').getDisplayValue()
     var compasschart = view.down('polar')
     var timechart = view.down('shprtime')
-    compasschart.getSeries()[0].setTitle(unit || (Profile.Context ? Profile.Context.Unit.UnitName : 'Riket'))
+    compasschart.getSeries()[0].setTitle(unit || (Profile.Context ? Profile.Context.Unit.UnitName : 'Stockholm'))
     compasschart.getSeries()[1].setTitle(comparison || 'Riket')
     timechart.getSeries()[2].setTitle(unit || (Profile.Context ? Profile.Context.Unit.UnitName : 'Riket'))
     timechart.getSeries()[3].setTitle(comparison || 'Riket')
@@ -895,7 +895,14 @@ Ext.define('Shpr.view.Main', {
               lineWidth: 0.5
             }
           }],
-          axes: [{
+          axes: [
+          {
+            type: 'numeric',
+            position: 'radial',
+            grid: false,
+            renderer: function () {return ''}
+          },
+          {
             type: 'category',
             position: 'angular',
             fields: 'indicator',
