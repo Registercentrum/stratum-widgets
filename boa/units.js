@@ -84,7 +84,7 @@ Ext.define('Boa.controller.Units', {
     var tag = document.getElementById('exportUnitList');
     if (!tag) return;
 
-    var content = 'Kod; Enhet; Landstingskod; Landsting;\n';
+    var content = 'Kod; Enhet; Regionkod; Region;\n';
     data.forEach(function (i) {
       content += i.id + ';' + i.name + ';' + i.cid + ';' + i.county + ';';
       content += '\n';
@@ -180,6 +180,7 @@ Ext.util.CSS.createStyleSheet(
 + '}'
 
 + '.bsw-button {'
+// + '  font-family: "Roboto-Slab";'
 + '  color: #245d71;'
 + '  border: 1px solid #245d71;'
 + '  margin: -7px 0 0 6px;'
