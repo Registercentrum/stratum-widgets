@@ -308,44 +308,57 @@ Ext.define('Shpr.controller.Compass', {
       cors: true,
       url: timeurl,
       success: function (response) {
-        var result = Ext.decode(response.responseText).data
-        result = controller.transformTimeData(result)
-        var percentageIndicators = ['reop2yrs', 'rev5yrs', 'rev10yrs', 'coverage', 'mort90', 'rev1yrs', 'adverse_events', 'reop6m']
-        timechart.usePercentages = percentageIndicators.indexOf(indicator) > -1
+        var result = controller.transformTimeData(response)
+        controller.togglePercentageIndicator(timechart, indicator)
+        controller.setMinimumForAxis(result, timechart, indicator)
+        controller.toggleConfidenceInterval(result, timechart)
+        controller.hideLoadingIndicator()
+        
+        timechart.getStore().loadData(result)
         timechart.show()
-        var minimum = 0
-        var useCalculatedMinimum = timechart.usePercentages && indicator !== 'reop2yrs'
-        if (useCalculatedMinimum) {
-          minimum = controller.findMinimum(result)
-        } else if (indicator === 'satis') {
-          minimum = 3
-        } 
-
-        if (controller.isSomeUnitDataMissing(result)) {
-          timechart.getSeries()[0].setStyle({ fillOpacity: 0 })
-        } else {
-          timechart.getSeries()[0].setStyle({ fillOpacity: 0.5 })
-        }
-
-        if (controller.isSomeComparisonDataMissing(result)) {
-          timechart.getSeries()[1].setStyle({ fillOpacity: 0 })
-        } else {
-          timechart.getSeries()[1].setStyle({ fillOpacity: 0.5 })
-        }
-        timechart.getAxes()[0].setMinimum(minimum)
-        timechart.getStore().loadData(result);
-        controller.requests -= 1
-        if (controller.requests < 1) {
-          view.down('#timeSpinner').hide()
-        }
       },
       failure: function (response) {
-        controller.requests -= 1
-        if (controller.requests < 1) {
-          view.down('#timeSpinner').hide()
-        }
+        controller.hideLoadingIndicator()
       }
     })
+  },
+
+  togglePercentageIndicator: function (chart, indicator) {
+    var percentageIndicators = ['reop2yrs', 'rev5yrs', 'rev10yrs', 'coverage', 'mort90', 'rev1yrs', 'adverse_events', 'reop6m']
+    chart.usePercentages = percentageIndicators.indexOf(indicator) > -1
+  },
+
+  hideLoadingIndicator: function () {
+    var view = this.getView()
+    this.requests -= 1
+        if (this.requests < 1) {
+          view.down('#timeSpinner').hide()
+        }
+  },
+
+  setMinimumForAxis: function (result, chart, indicator) {
+    var minimum = 0
+    var useCalculatedMinimum = chart.usePercentages && indicator !== 'reop2yrs'
+    if (useCalculatedMinimum) {
+      minimum = this.findMinimum(result)
+    } else if (indicator === 'satis') {
+      minimum = 3
+    } 
+    chart.getAxes()[0].setMinimum(minimum)
+  },
+
+  toggleConfidenceInterval: function (result, chart) {
+    if (this.isSomeUnitDataMissing(result)) {
+      chart.getSeries()[0].setStyle({ fillOpacity: 0 })
+    } else {
+      chart.getSeries()[0].setStyle({ fillOpacity: 0.5 })
+    }
+
+    if (this.isSomeComparisonDataMissing(result)) {
+      chart.getSeries()[1].setStyle({ fillOpacity: 0 })
+    } else {
+      chart.getSeries()[1].setStyle({ fillOpacity: 0.5 })
+    }    
   },
 
   message: function (indicator) {
@@ -378,11 +391,11 @@ Ext.define('Shpr.controller.Compass', {
     var view = me.getView()
     var diagnosis = view.down('#diagnosisFilter').getDisplayValue()
     if (diagnosis === 'Fraktur') {
-      view.down('#arthrosisExplantions').setHidden(true)
-      view.down('#fractureExplantions').setHidden(false)
+      view.down('#arthrosisExplantions').hide()
+      view.down('#fractureExplantions').show()
     } else {
-      view.down('#arthrosisExplantions').setHidden(false)
-      view.down('#fractureExplantions').setHidden(true)
+      view.down('#arthrosisExplantions').show()
+      view.down('#fractureExplantions').hide()
     }
   },
 
@@ -516,7 +529,8 @@ Ext.define('Shpr.controller.Compass', {
     return data
   },
 
-  transformTimeData: function (data) {
+  transformTimeData: function (response) {
+    var data =Ext.decode(response.responseText).data
     data.forEach(function (item) {
       item.y_unit_upper = item.y_unit_upper - item.y_unit_lower
       item.y_comparison_upper = item.y_comparison_upper - item.y_comparison_lower
