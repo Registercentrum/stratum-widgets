@@ -20,7 +20,17 @@ Ext.define('Shpr.view.Main', {
           displayField: 'ValueName',
           valueField: 'ValueCode',
           fieldLabel: 'Diagnos:',
-          width: '100%',
+          plugins: {
+            responsive: true
+          },
+          responsiveConfig: {
+            'width < 1200': {
+              width: '100%',
+            },
+            'width >= 1200': {
+              width: '50%',
+            }
+          },
           height: 40,
           labelStyle: 'text-align: right;',
           value: 1,
@@ -797,7 +807,7 @@ Ext.define('Shpr.chart.Casemix', {
       text: 'Casemix',
       align: 'left',
       style: {
-        color: '#c5c5c5'
+        color: '#677792'
       }
     }
   },
@@ -881,12 +891,12 @@ Ext.define('Shpr.chart.Time', {
     position: 'left',
     fields: ['y_unit', 'y_comparison', 'y_unit_lower', 'y_unit_upper', 'y_comparison_lower', 'y_comparison_upper'],
     style: {
-      strokeStyle: '#9aa8bc'
+      strokeStyle: '#677792'
     },
 
     label: {
       strokeOpacity: 0.2,
-      fillStyle: '#9aa8bc'
+      fillStyle: '#677792'
     },
 
     renderer: function (axis, label, context) {
@@ -900,16 +910,16 @@ Ext.define('Shpr.chart.Time', {
     position: 'bottom',
     title: {
       text: 'År för primäroperation',
-      color: '#9aa8bc',
+      color: '#677792',
       margin: 10
     },
     titleMargin: 5,
     fields: 'year',
     style: {
-      strokeStyle: '#9aa8bc'
+      strokeStyle: '#677792'
     },
     label: {
-      fillStyle: '#9aa8bc',
+      fillStyle: '#677792',
       strokeOpacity: 0.2,
     }
   }],
