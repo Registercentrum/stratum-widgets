@@ -12,7 +12,7 @@ function onReady() {
   Ext.create('RC.UserAdministration.store.User')
   Ext.create('RC.UserAdministration.store.Unit')
   Ext.create('RC.UserAdministration.store.Role')
-  RC.UserAdministration.app = Ext.create('Ext.tab.Panel', { renderTo: 'contentPanel', items: [{ title: 'Användare', xtype: 'usergrid' }] })
+  RC.UserAdministration.app = Ext.create('Ext.tab.Panel', { renderTo: 'contentPanel', items: [{ title: 'Användare', xtype: 'usergrid' }, { title: 'Enheter', xtype: 'unitgrid' }] })
   RC.UserAdministration.data = Ext.create('RC.UserAdministration.storage.Data', { observers: [RC.UserAdministration.app.down('usergrid')] })
 }
 
@@ -288,14 +288,10 @@ Ext.define('RC.UserAdministration.controller.User', {
     ownLoaded: false
   },
 
-  initComponent: function () {
-    this.callParent()
-  },
-
   export: function () {
     Ext.util.CSV.delimiter = ';'
     var grid = this.getView()
-    grid.saveDocumentAs({ type: 'xlsx', fileName: 'users.xlsx' })
+    grid.saveDocumentAs({ type: 'xlsx', fileName: 'användare.xlsx' })
   },
 
   mail: function () {
@@ -317,8 +313,7 @@ Ext.define('RC.UserAdministration.controller.User', {
   },
 
   create: function () {
-    var userWindow = Ext.create('RC.UserAdministration.view.CreateUser')
-    userWindow.show()
+    Ext.create('RC.UserAdministration.view.CreateUser').show()
   },
 
   updateStores: function (dataLoader) {
@@ -350,7 +345,6 @@ Ext.define('RC.UserAdministration.controller.User', {
   },
 
   loadOwnUsers: function (users, contexts) {
-    var userStore = this.getView().getStore()
     this.addContexts(users)
     this.join(users, contexts)
     this.updateGrid()
@@ -471,12 +465,11 @@ Ext.define('RC.UserAdministration.controller.User', {
   },
 
   userClicked: function (component, record, item, index) {
-    var info
     record.data.LastActive = this.getLatestContextLogin(record.data)
     record.data.Info = JSON.parse(record.data.Extra || '{}')[Profile.Site.Register.RegisterID]
     record.data.PersonalId = this.checkIfPersonalId(record.data.HSAID) ? record.data.HSAID : null
 
-    var userWindow = Ext.create('RC.UserAdministration.view.EditUser', { userData: record, contextData: record.data.Contexts }).show()
+    Ext.create('RC.UserAdministration.view.EditUser', { userData: record, contextData: record.data.Contexts }).show()
   },
 
   onColumnHidden: function (component, column, eOpts) {
@@ -525,12 +518,195 @@ Ext.define('RC.UserAdministration.controller.User', {
   }
 })
 
+Ext.define('RC.UserAdministration.view.UnitGrid', {
+  extend: 'Ext.grid.Panel',
+  alias: 'widget.unitgrid',
+  reference: 'unitgrid',
+  controller: 'unit',
+  multiSelect: true,
+  selModel: 'rowmodel',
+  width: '100%',
+  height: 500,
+
+  plugins: {
+    gridexporter: true,
+  },
+
+  store: 'units',
+  columns: [
+    {
+      text: 'Id',
+      dataIndex: 'UnitCode',
+      width: 60,
+      sortable: true,
+      hidden: localStorage.getItem('UnitCode') === 'hidden' || false
+    },
+    {
+      text: 'Namn',
+      dataIndex: 'UnitName',
+      flex: 1,
+      sortable: true,
+      hidden: localStorage.getItem('UnitName') === 'hidden' || false
+    },
+    {
+      text: 'Aktiv',
+      dataIndex: 'IsActive',
+      width: 60,
+      sortable: true,
+      hidden: localStorage.getItem('IsActive') === 'hidden' || false,
+      renderer: function (value, cellValues) {
+        value = value ? 'Ja' : 'Nej'
+        return value
+      },
+    }
+  ],
+
+  dockedItems: [
+    {
+      xtype: 'toolbar',
+      reference: 'search',
+      dock: 'top',
+      border: false,
+      items: [
+        {
+          xtype: 'textfield',
+          reference: 'unitFilter',
+          flex: 1,
+          keyMap: {
+            'enter': {
+              handler: 'searchUnits'
+            }
+          }
+        },
+        {
+          xtype: 'button',
+          reference: 'searchButton',
+          text: 'Sök',
+          width: 100,
+          handler: 'searchUnits',
+          disabled: false
+        },
+      ]
+    },
+    {
+      xtype: 'toolbar',
+      dock: 'top',
+      border: false,
+      items: [
+        {
+          reference: 'exportButton',
+          text: 'Exportera',
+          handler: 'export',
+          minWidth: 80,
+          disabled: false
+        },
+        {
+          reference: 'editButton',
+          text: 'Redigera',
+          handler: 'edit',
+          minWidth: 80,
+          disabled: true
+        },
+        {
+          reference: 'createButton',
+          text: 'Skapa',
+          handler: 'create',
+          minWidth: 80,
+          disabled: false
+        }
+      ]
+    }
+  ]
+})
+
+Ext.define('RC.UserAdministration.controller.Unit', {
+  extend: 'Ext.app.ViewController',
+  alias: 'controller.unit',
+  config: {
+    loader: null,
+    ownUsers: null,
+    ownLoaded: false
+  },
+
+  init: function () {
+    this.callParent()
+  },
+
+  export: function () {
+    Ext.util.CSV.delimiter = ';'
+    var grid = this.getView()
+    grid.saveDocumentAs({ type: 'xlsx', fileName: 'enheter.xlsx' })
+  },
+
+  edit: function () {
+    var selections = this.getView().getSelection()
+    if (selections.length === 1) {
+      this.unitClicked(null, selections[0])
+    }
+  },
+
+  create: function () {
+    Ext.create('RC.UserAdministration.view.CreateUnit').show()
+  },
+
+  unitClicked: function (component, record, item, index) {
+    Ext.create('RC.UserAdministration.view.EditUnit', { unit: record }).show()
+  },
+
+  onColumnHidden: function (component, column, eOpts) {
+    localStorage.setItem(column.dataIndex, 'hidden')
+  },
+
+  onColumnShown: function (component, column, eOpts) {
+    localStorage.setItem(column.dataIndex, 'shown')
+  },
+
+  onSelectionChange: function (component, record, index, eOpts) {
+    this.lookup('editButton').enable()
+  }
+})
+
+
 Ext.define('RC.UserAdministration.controller.Form', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.form',
 
+  init: function () {
+    this.callParent() 
+    var usedFields = this.getFields()
+    var fields = this.getForm().getFields().items
+    fields.forEach(function (field) { 
+      if (usedFields.indexOf(field.reference) < 0) {
+        field.hide()
+        field.disable()
+      }
+    })
+  },
+
+  onSithIdChoosen: function () {
+    this.lookup('hsaid').show()
+    this.lookup('hsaid').enable()
+    this.lookup('personalid').hide()
+    this.lookup('personalid').disable()
+    this.lookup('sithIdButton').hide()
+    this.lookup('bankIdButton').show()
+  },
+
+  onBankIdChoosen: function () {
+    this.lookup('hsaid').hide()
+    this.lookup('hsaid').disable()
+    this.lookup('personalid').show()
+    this.lookup('personalid').enable()
+    this.lookup('bankIdButton').hide()
+    this.lookup('sithIdButton').show()
+  },
+
+  onCreateContext: function () {
+    Ext.create('RC.UserAdministration.view.CreateContext', { user: this.getView().getUserData().data.UserID }).show()
+  },
+
   getUser: function () {
-    var form = this.lookup('userform').getForm().getValues()
+    var form = this.getForm().getValues()
     form.Email = form.Username
     var completeInfo = this.lookup('userform').up().Info || {}
     completeInfo[Profile.Site.Register.RegisterID] = form.Info
@@ -543,7 +719,7 @@ Ext.define('RC.UserAdministration.controller.Form', {
   },
 
   getContext: function () {
-    var form = this.lookup('userform').getForm().getValues()
+    var form = this.getForm().getValues()
     var context = {
       IsActive: true,
       User: { },
@@ -555,9 +731,9 @@ Ext.define('RC.UserAdministration.controller.Form', {
   },
 
   transformUser: function () {
-    var form = this.lookup('userform').getForm().getValues()
+    var form = this.getForm().getValues()
     this.transformExtra(form)
-    this.lookup('userform').getForm().setValues(form)
+    this.getForm().setValues(form)
     return form.UserID
   },
 
@@ -641,10 +817,7 @@ Ext.define('RC.UserAdministration.view.CreateUser', {
   modal: true,
   width: 1000,
   title: 'Användare',
-  initComponent: function () {
-    this.callParent()
-    this.down('rcuserform').getViewModel().setData({ passhash: '?' })
-  },
+  
   items: [
     {
       xtype: 'rcuserform',
@@ -665,24 +838,6 @@ Ext.define('RC.UserAdministration.view.CreateUser', {
         data: []
       },
     }
-  ],
-  dockedItems: [
-    {
-      xtype: 'toolbar',
-      dock: 'bottom',
-      items: [
-        {
-          xtype: 'tbspacer', flex: 1
-        },
-        {
-          text: 'Stäng',
-          minWidth: 80,
-          handler: function () {
-            this.up('window').destroy()
-          }
-        }
-      ]
-    },
   ]
 })
 
@@ -690,23 +845,23 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
   extend: 'RC.UserAdministration.controller.Form',
   alias: 'controller.createuser',
 
+  config: {
+    fields: ['username', 'firstname', 'lastname', 'hsaid', 'role', 'unit']
+  },
+
   init: function () {
     this.callParent()
-    this.lookup('registryinfo').hide()
-    this.lookup('organisation').hide()
-    this.lookup('lastactive').hide()
-    this.lookup('email').hide()
     this.lookup('username').setFieldLabel('Epost')
     this.lookup('username').enable()
     this.lookup('username').removeCls('rc-info')
+    this.onSithIdChoosen()
     if (Profile.Context.User.UserID < 200) {
       this.lookup('username').setFieldLabel('Användarnamn')
     }
   },
 
-  onSaveUser: function () {
+  onSave: function () {
     if (!this.getForm().isValid()) return
-    var controller = this
     var data = {}
     data.controller = this
     data.user = this.getUser()
@@ -752,7 +907,6 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
   },
 
   filterMactches: function (matches) {
-    var view = this.getView()
     var firstName = this.lookup('firstname').getValue()
     var lastName = this.lookup('lastname').getValue()
     var email = this.lookup('username').getValue()
@@ -762,20 +916,6 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
           && (email.length < 3     || Ext.String.startsWith(match.Email, email, true))
     })
     return matches
-  },
-
-  onSithIdChoosen: function () {
-    this.lookup('hsaid').show()
-    this.lookup('hsaid').enable()
-    this.lookup('personalid').hide()
-    this.lookup('personalid').disable()
-  },
-
-  onBankIdChoosen: function () {
-    this.lookup('hsaid').hide()
-    this.lookup('hsaid').disable()
-    this.lookup('personalid').show()
-    this.lookup('personalid').enable()
   }
 })
 
@@ -817,13 +957,13 @@ Ext.define('RC.UserAdministration.view.EditUser', {
       dock: 'bottom',
       items: [
         {
-          xtype: 'tbspacer', flex: 1
+          xtype: 'tbfill'
         },
         {
-          text: 'Stäng',
-          minWidth: 80,
-          handler: function () {
-            this.up('window').destroy()
+          xtype: 'label',
+          reference: 'statusbar',
+          style: {
+            fontWeight: 'normal'
           }
         }
       ]
@@ -834,20 +974,22 @@ Ext.define('RC.UserAdministration.view.EditUser', {
 Ext.define('RC.UserAdministration.controller.EditUser', {
   extend: 'RC.UserAdministration.controller.Form',
   alias: 'controller.edituser',
+  config: {
+    fields: ['username', 'firstname', 'lastname', 'hsaid', 'email', 'organisation', 'registryinfo', 'lastactive']
+  },
 
   init: function () {
     this.callParent()
     this.getView().down('grid').getStore().loadData(this.getView().getContextData())
     this.lookup('userform').loadRecord(this.getView().getUserData())
     delete this.lookup('username').vtype
-    this.lookup('unit').hide()
-    this.lookup('unit').disable()
-    this.lookup('role').hide()
-    this.lookup('role').disable()
+    delete this.lookup('hsaid').vtype // qqq
     this.lookup('username').setFieldLabel('Användarnamn')
     this.lookup('username').setEditable(false)
     this.lookup('username').addCls('rc-info')
-    var personalidIsUsed = this.lookup('userform').getForm().getValues().PersonalId
+    this.lookup('extra').enable()
+    var personalidIsUsed = this.getForm().getValues().PersonalId
+    this.updateStatusBar()
     if (personalidIsUsed) {
       this.onBankIdChoosen()
     } else {
@@ -855,27 +997,16 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     }
   },
 
-  onSaveUser: function () {
-    var controller = this
-    var user = this.transformUser()
-    this.lookup('userform').getForm().updateRecord()
+  updateStatusBar: function () {
+    var numberOfContexts = this.getView().getContextData().length
+    this.lookup('statusbar').setText('Antal ' + numberOfContexts)
+  },
+
+  onSave: function () {
+    this.transformUser()
+    this.getForm().updateRecord()
     Ext.StoreManager.lookup('users').sync({ callback: function () { } })
     this.getView().destroy()
-  },
-
-
-  onSithIdChoosen: function () {
-    this.lookup('hsaid').show()
-    this.lookup('hsaid').enable()
-    this.lookup('personalid').hide()
-    this.lookup('personalid').disable()
-  },
-
-  onBankIdChoosen: function () {
-    this.lookup('hsaid').hide()
-    this.lookup('hsaid').disable()
-    this.lookup('personalid').show()
-    this.lookup('personalid').enable()
   }
 })
 
@@ -925,6 +1056,50 @@ Ext.define('RC.UserAdministration.view.MatchUser', {
   ],
 })
 
+Ext.define('RC.UserAdministration.view.CreateContext', {
+  extend: 'Ext.window.Window',
+  controller: 'createcontext',
+  modal: true,
+  width: 1000,
+  title: 'Ny kontext',
+  config: {
+    user: null
+  },
+  
+  items: [
+    {
+      xtype: 'rcuserform',
+      reference: 'userform'
+    }
+  ]
+})
+
+Ext.define('RC.UserAdministration.controller.CreateContext', {
+  extend: 'RC.UserAdministration.controller.Form',
+  alias: 'controller.createcontext',
+  config: {
+    fields: ['unit', 'role']
+  },
+
+  onSave: function () {
+    if (!this.getForm().isValid()) return
+    var data = {}
+    data.context = this.getContext()
+    data.user = {}
+    data.user.UserID = this.getUser()
+    this.saveContext(data)
+    this.getView().destroy()
+  },
+
+  getForm: function () {
+    return this.lookup('userform').getForm()
+  },
+
+  getUser: function () {
+    return this.getView().getUser()
+  }
+})
+
 Ext.define('RC.UserAdministration.form.User', {
   extend: 'Ext.form.Panel',
   xtype: 'rcuserform',
@@ -957,9 +1132,9 @@ Ext.define('RC.UserAdministration.form.User', {
     { fieldLabel: 'Senast inloggad', name: 'LastActive',   reference: 'lastactive', cls: 'rc-info' },
     { fieldLabel: 'Enhet',           name: 'UnitID',       reference: 'unit',       allowBlank: false, xtype: 'combobox', store: 'units', valueField: 'UnitID', displayField: 'UnitName' },
     { fieldLabel: 'Roll',            name: 'RoleID',       reference: 'role',       allowBlank: false, xtype: 'combobox', store: 'roles', valueField: 'RoleID', displayField: 'RoleName' },
-    { fieldLabel: 'Användarid',      name: 'UserID',       reference: 'userid',     hidden: true },
-    { fieldLabel: 'Title',           name: 'WorkTitle',    reference: 'worktitle',  hidden: true },
-    { fieldLabel: 'Extra',           name: 'Extra',        reference: 'extra',      hidden: true },
+    { fieldLabel: 'Användarid',      name: 'UserID',       reference: 'userid',     },
+    { fieldLabel: 'Title',           name: 'WorkTitle',    reference: 'worktitle',  },
+    { fieldLabel: 'Extra',           name: 'Extra',        reference: 'extra',      },
   ],
   dockedItems: [
     {
@@ -972,20 +1147,36 @@ Ext.define('RC.UserAdministration.form.User', {
         },
         {
           xtype: 'button',
+          reference: 'createContextButton',
+          text: 'Skapa ny kontext',
+          handler: 'onCreateContext',
+          minWidth: 80
+        },
+        {
+          xtype: 'button',
+          reference: 'sithIdButton',
           text: 'Byt till Sithskort',
           handler: 'onSithIdChoosen',
           minWidth: 80
         },
         {
           xtype: 'button',
+          reference: 'bankIdButton',
           text: 'Byt till BankID',
           handler: 'onBankIdChoosen',
           minWidth: 80
         },
         {
+          text: 'Stäng',
+          minWidth: 80,
+          handler: function () {
+            this.up('window').destroy()
+          }
+        },
+        {
           xtype: 'button',
           text: 'Spara',
-          handler: 'onSaveUser',
+          handler: 'onSave',
           formBind: true,
           minWidth: 80
         }
