@@ -22,3 +22,12 @@ export function openScreeningQuestionDialog(current, subject, subjectManagement)
         }
     });
 }
+
+export function alert(title, message) {
+    Ext.MessageBox.show ({
+        title: title,
+        msg: message,
+        buttons: Ext.MessageBox.OK,
+        cls: "screening-dialog"
+    });
+}

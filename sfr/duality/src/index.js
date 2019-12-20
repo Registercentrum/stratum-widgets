@@ -1,6 +1,6 @@
 import * as api from "./services/api";
 import * as logger from "./services/logger";
-import * as ui from "./ui/dialogs";
+import * as dialogs from "./ui/dialogs";
 import * as screeningDialog from "./ui/screening-dialog";
 import * as userTexts from "./models/user-texts";
 
@@ -16,7 +16,7 @@ export function evaluateForScreening(current, subject, subjectManagement) {
                     api.getCandidate(current).then(candidate => {
                         if(!candidate.isScreened) {
                             logger.log("Subject has not been screened. Showing dialog to offer screening...");
-                            ui.openScreeningQuestionDialog(current, subject, subjectManagement);
+                            dialogs.openScreeningQuestionDialog(current, subject, subjectManagement);
                         }
                         else {
                             logger.log("Subject is already screened. Quitting...");
@@ -28,10 +28,9 @@ export function evaluateForScreening(current, subject, subjectManagement) {
                     if(subjectResponse.eventId == current.EventID) {
                         logger.log("Same injury found. Will re-save initial study data...");
                         api.writeInitialStudyData(current, subject).then(() => { }, () => {
-                            Ext.Msg.alert(
+                            dialogs.alert(
                                 userTexts.STUDY_ERROR_TITLE, 
-                                userTexts.UPDATE_STUDY_DATA_FAILURE, 
-                                Ext.emptyFn
+                                userTexts.UPDATE_STUDY_DATA_FAILURE
                             );
                         });
                     }
@@ -59,16 +58,14 @@ export function validateIfMattersHaveChanged(current, subject) {
             if(subjectResponse.eventId == current.EventID) {
                 logger.log("Same injury found. Will re-save initial study data and let user know that matters have changed...");
                 api.writeInitialStudyData(current, subject).then(() => { 
-                    Ext.Msg.alert(
+                    dialogs.alert(
                         userTexts.STUDY_TITLE, 
-                        userTexts.UPDATE_STUDY_DATE_INCONSISTENCY, 
-                        Ext.emptyFn
+                        userTexts.UPDATE_STUDY_DATE_INCONSISTENCY
                     );
                 }, () => {
-                    Ext.Msg.alert(
+                    dialogs.alert(
                         userTexts.STUDY_ERROR_TITLE, 
-                        userTexts.UPDATE_STUDY_DATA_FAILURE, 
-                        Ext.emptyFn
+                        userTexts.UPDATE_STUDY_DATA_FAILURE
                     );
                 });
             }
@@ -88,10 +85,9 @@ export function openScreeningDialog(current, subject, subjectManagement) {
             screeningDialog.init(current, subject, subjectManagement);
         }
         else {
-            Ext.Msg.alert(
+            dialogs.alert(
                 userTexts.STUDY_TITLE, 
-                userTexts.UNIT_NOT_ACTIVE,
-                Ext.emptyFn
+                userTexts.UNIT_NOT_ACTIVE
             );
         }
     });

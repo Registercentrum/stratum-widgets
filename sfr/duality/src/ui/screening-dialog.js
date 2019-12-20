@@ -3,6 +3,7 @@ import * as logger from "../services/logger";
 import * as api from "../services/api";
 import * as userTexts from "../models/user-texts";
 import * as webClient from "../services/web-client";
+import * as dialogs from "./dialogs";
 
 var _screening, _current, _subject, _screeningWindow;
 
@@ -103,10 +104,9 @@ function showWindow() {
             _screeningWindow.show();         
         }
         else {
-            Ext.Msg.alert(
+            dialogs.alert(
                 userTexts.STUDY_ERROR_TITLE, 
-                userTexts.UNKNOWN_ERROR, 
-                Ext.emptyFn
+                userTexts.UNKNOWN_ERROR
             );
         }
     })    
@@ -205,7 +205,7 @@ function getWindowItems() {
                 border: false,
                 items: [
                     {
-                        html: "<h2>Denna patient uppfyller inklusionkriterierna för DUALITY med randomisering mellan STANDARDCUP och DUBBELCUP vid ZZZZZ frakturer. Besvara följande frågor endast om du vill försöka randomisera.</h2>",
+                        html: `<h2>${userTexts.SCREENING_INFO}</h2>`,
                         border: false,
                         columnWidth: 1
                     },
@@ -541,26 +541,23 @@ function showScreeningDialog() {
                             updateStatus("Randomiserad");
                             api.writeInitialStudyData(_current, _subject)
                                 .then(function() {
-                                    Ext.Msg.alert(
+                                    dialogs.alert(
                                         userTexts.STUDY_TITLE, 
-                                        'Patienten är nu inkluderad i DUALITY och randomiserad till: ' + json.data.StudyGroup, 
-                                        Ext.emptyFn
+                                        'Patienten är nu inkluderad i DUALITY och randomiserad till: ' + json.data.StudyGroup
                                     );
                                 }, function() {
-                                    Ext.Msg.alert(
+                                    dialogs.alert(
                                         userTexts.STUDY_ERROR_TITLE, 
-                                        userTexts.RANDOMIZATION_INITIAL_STUDY_VARIABLES_FAILURE, 
-                                        Ext.emptyFn
+                                        userTexts.RANDOMIZATION_INITIAL_STUDY_VARIABLES_FAILURE
                                     );
                                 });
                         },
                         failure: function(response) {
                             logger.log("Failure. Response:");
                             logger.log(response);
-                            Ext.Msg.alert(
+                            dialogs.alert(
                                 userTexts.STUDY_ERROR_TITLE, 
-                                userTexts.RANDOMIZATION_FAILURE, 
-                                Ext.emptyFn
+                                userTexts.RANDOMIZATION_FAILURE
                             );
                             var json = Ext.util.JSON.decode(response.responseText);
                             logger.log(json);
@@ -602,10 +599,9 @@ function showScreeningFailDialog() {
                             updateStatus("Screening fail");
                         },
                         failure: function() {
-                            Ext.Msg.alert(
+                            dialogs.alert(
                                 userTexts.STUDY_ERROR_TITLE, 
-                                userTexts.SCREENING_FAILURE, 
-                                Ext.emptyFn
+                                userTexts.SCREENING_FAILURE
                             );
                         }
                     });
