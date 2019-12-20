@@ -1,9 +1,13 @@
+var widgetConfig  = widgetConfig || {}
+widgetConfig.Roles = [0, 901, 903, 907, 908]
+widgetConfig.devMode = Profile.Context && Profile.Context.User.UserID <= 200
+widgetConfig.devMode = false // qqq
 
 function startWidget() {
   Ext.Loader.loadScript({
     url: '/stratum/extjs/scripts/exporter.js',
     onLoad: function () { onReady() }
-  })
+  }) // 
 }
 
 function onReady() {
@@ -25,7 +29,7 @@ Ext.define('RC.UserAdministration.store.User', {
 Ext.define('RC.UserAdministration.store.Unit', {
   extend: 'Ext.data.Store',
   model: 'Stratum.Unit',
-  storeId: 'units',
+  alias: 'store.unit',
   autoLoad: true,
   proxy: {
     type: 'ajax',
@@ -52,7 +56,7 @@ Stratum.Role || Ext.define('Stratum.Role', {
 Ext.define('RC.UserAdministration.store.Role', {
   extend: 'Ext.data.Store',
   model: 'Stratum.Role',
-  storeId: 'roles',
+  alias: 'store.role',
   data: [
     { RoleID: 101, RoleName: 'Dataleverantör' },
     { RoleID: 201, RoleName: 'API-klient' },
@@ -64,7 +68,13 @@ Ext.define('RC.UserAdministration.store.Role', {
     { RoleID: 906, RoleName: 'Systemutvecklare' },
     { RoleID: 907, RoleName: 'Patientobsertvatör' },
     { RoleID: 908, RoleName: 'Rapportobsertvatör' }
-  ]
+  ],
+  filters: [{
+    filterFn: function (item) {
+      return widgetConfig.Roles.indexOf(item.data.RoleID) >= 0 || widgetConfig.devMode
+    }
+  }],
+  sorters: 'RoleID'
 })
 
 Ext.define('RC.UserAdministration.view.UserGrid', {
@@ -211,10 +221,12 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
           sortfield: 'RoleName',
           sortdirection: 'DESC',
           selectCallback: 'updateGrid',
-          store: 'roles',
+          store: {
+            type: 'role', 
+          },
           listeners: {
             change: 'updateGrid',
-            beforerender: function () { this.getStore().insert(0, { RoleID: 0, RoleName: 'Alla' }); this.setValue(0) }
+            beforeRender: 'addDefault'
           }
         },
         {
@@ -364,14 +376,17 @@ Ext.define('RC.UserAdministration.controller.User', {
     })
   },
 
+  addDefault: function () {
+    var dropdown = this.lookup('roleFilter')
+    dropdown.getStore().add({ RoleID: 0, RoleName: 'Alla' })
+    dropdown.setValue(0)
+  },
+
   createUserFilter: function (user, role) {
     var filter = function (item) {
+      if (item.data.UserID < 200 && !widgetConfig.devMode) return false
       var contexts = item.data.Contexts
       if (contexts) {
-        // var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906; }).length !== 0;
-        var isDeveloper = item.data.UserID < 200
-        var showDevelopers = role === 906
-        if (isDeveloper && !showDevelopers) { return false }
         if (user === '') { return true }
         var unitContexts = contexts.filter(function (context) {
           return Ext.String.startsWith(context.User.Username, user, true)
@@ -392,10 +407,6 @@ Ext.define('RC.UserAdministration.controller.User', {
     var filter = function (item) {
       var contexts = item.data.Contexts
       if (contexts) {
-        // var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906; }).length !== 0;
-        var isDeveloper = item.data.UserID < 200
-        var showDevelopers = role === 906
-        if (isDeveloper && !showDevelopers) { return false }
         if (unit === 0) { return true }
         var unitContexts = contexts.filter(function (context) { return context.Unit.UnitID === unit })
         var isPartOfUnit = unitContexts.length !== 0
@@ -408,12 +419,17 @@ Ext.define('RC.UserAdministration.controller.User', {
 
   createRoleFilter: function (role) {
     var filter = function (item) {
+      var roles
+      var isInRole
       var contexts = item.data.Contexts
       if (contexts && role) {
-        // var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906; }).length !== 0;
-        var isDeveloper = item.data.UserID < 200
-        var roles = contexts.filter(function (context) { return context.Role.RoleID === role && (role === 906 || !isDeveloper) })
-        var isInRole = roles.length !== 0
+        roles = contexts.filter(function (context) { return context.Role.RoleID === role })
+        isInRole = roles.length !== 0
+        return isInRole
+      }
+      if (contexts) {
+        roles = contexts.filter(function (context) { return widgetConfig.Roles.indexOf(context.Role.RoleID) >= 0 || widgetConfig.devMode })
+        isInRole = roles.length !== 0
         return isInRole
       }
       return true
@@ -426,9 +442,6 @@ Ext.define('RC.UserAdministration.controller.User', {
     var filter = function (item) {
       var contexts = item.data.Contexts
       if (contexts) {
-        var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906 }).length !== 0
-        var showDevelopers = role === 906
-        if (isDeveloper && !showDevelopers) { return false }
         if (active === 0) { return true }
         var activeContexts = contexts.filter(function (context) { return context.IsActive === true })
         var isActive = activeContexts.length !== 0
@@ -532,7 +545,9 @@ Ext.define('RC.UserAdministration.view.UnitGrid', {
     gridexporter: true,
   },
 
-  store: 'units',
+  store: {
+    type: 'unit'
+  },
   columns: [
     {
       text: 'Id',
@@ -1130,8 +1145,8 @@ Ext.define('RC.UserAdministration.form.User', {
     { fieldLabel: 'Organisation',    name: 'Organization', reference: 'organisation' },
     { fieldLabel: 'Användarnamn',    name: 'Username',     reference: 'username',   vtype: 'username', allowBlank: false },
     { fieldLabel: 'Senast inloggad', name: 'LastActive',   reference: 'lastactive', cls: 'rc-info' },
-    { fieldLabel: 'Enhet',           name: 'UnitID',       reference: 'unit',       allowBlank: false, xtype: 'combobox', store: 'units', valueField: 'UnitID', displayField: 'UnitName' },
-    { fieldLabel: 'Roll',            name: 'RoleID',       reference: 'role',       allowBlank: false, xtype: 'combobox', store: 'roles', valueField: 'RoleID', displayField: 'RoleName' },
+    { fieldLabel: 'Enhet',           name: 'UnitID',       reference: 'unit',       allowBlank: false, xtype: 'combobox', store: { type: 'unit' }, valueField: 'UnitID', displayField: 'UnitName' },
+    { fieldLabel: 'Roll',            name: 'RoleID',       reference: 'role',       allowBlank: false, xtype: 'combobox', store: { type: 'role' }, valueField: 'RoleID', displayField: 'RoleName' },
     { fieldLabel: 'Användarid',      name: 'UserID',       reference: 'userid',     },
     { fieldLabel: 'Title',           name: 'WorkTitle',    reference: 'worktitle',  },
     { fieldLabel: 'Extra',           name: 'Extra',        reference: 'extra',      },
