@@ -36,7 +36,7 @@ Ext.define('Sesar.chart.Time', {
   border: false,
   cls: 'sesar-timechart',
   colors: ['#DD4C39', '#0791AB'],
-  // colors: ['#a12b1b', '#36d7f7'],
+  colors: ['#ee442f', '#63acbe'],
   padding: '10 0 0 0',
   insetPadding: '0 35 20 10',
   innerPadding: '10 10 10 10',
@@ -159,6 +159,7 @@ Ext.define('Sesar.chart.AgeGroups', {
   border: false,
   cls: 'sesar-timechart',
   colors: ['#DD4C39', '#0791AB'],
+  colors: ['#ee442f', '#63acbe'],
   padding: '10 0 0 0',
   innerPadding: '10 10 10 0',
   insetPadding: '0 35 20 10',
@@ -883,6 +884,7 @@ Ext.define('Sesar.view.Main', {
       xtype: 'progressbar',
       margin: 10,
       maxHeight: 5,
+      focusable: false,
       cls: 'sesar-progressbar'
     }
   ]
@@ -965,7 +967,6 @@ Ext.util.CSS.createStyleSheet(
   + '  border-right: solid 1px #00528F; '
   + '  border-bottom: solid 1px white; '
   + '  background-color: white; '
-  + '  outline: none;'
   + '}'
 
   + '.ton-tab .x-tab-inner-default { '
@@ -996,6 +997,12 @@ Ext.util.CSS.createStyleSheet(
   + '.sesar-tooltip-blue {'
   + '  background-color: #26879B;'
   + '  border-color: #26879B;'
+  + '}'
+
+  + '.sesar-tooltip-lightblue {'
+  + '  background-color: #63acbe;'
+  + '  border-color: #63acbe;'
+  + '  color: black;'
   + '}'
 
   + '.sesar-tooltip-yellow {'

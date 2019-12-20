@@ -119,7 +119,7 @@ Ext.define('Boa.view.Report', {
         fields: ['UnitCode', 'UniName'],
         data: [
           { UnitCode: 0, UnitName: 'Kliniken' },
-          { UnitCode: 1, UnitName: 'Landstinget' }
+          { UnitCode: 1, UnitName: 'Regionen' }
         ]
       }
     },
@@ -207,15 +207,15 @@ Ext.define('Boa.view.ReportTable', {
         html += '<tr><td>{report.Tables.' + i + '.options.' + j + '.option}</td><td>{report.Tables.' + i + '.options.' + j + '.FVPat_.Number}</td><td>{report.Tables.' + i + '.options.' + j + '.FVPat_.Percent}%</td><td>{report.Tables.' + i + '.options.' + j + '.M3Pat_.Number}</td><td>{report.Tables.' + i + '.options.' + j + '.M3Pat_.Percent}%</td><td>{report.Tables.' + i + '.options.' + j + '.Y1Pat_.Number}</td><td>{report.Tables.' + i + '.options.' + j + '.Y1Pat_.Percent}%</td></tr>';
       }
     }
-    /*
+/*
     questions = [6, 6];
     for (i = 2; i < 4; i++) {
       html += '<tr><td>{report.Tables.' + i + '.question}</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
       for (j = 0; j < questions[i - 2]; j++) {
         html += '<tr><td>{report.Tables.' + i + '.options.' + j + '.option}</td><td>-</td><td>-</td><td>{report.Tables.' + i + '.options.' + j + '.M3Pat_.Number}</td><td>{report.Tables.' + i + '.options.' + j + '.M3Pat_.Percent}%</td><td>{report.Tables.' + i + '.options.' + j + '.Y1Pat_.Number}</td><td>{report.Tables.' + i + '.options.' + j + '.Y1Pat_.Percent}%</td></tr>';
       }
-    } 
-    */
+    }
+*/
     html += '<tr><td>{report.Tables.' + i + '.question}</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
     for (j = 0; j < 6; j++) {
       html += '<tr><td>{report.Tables.' + i + '.options.' + j + '.option}</td><td>{report.Tables.' + i + '.options.' + j + '.FVPT_.Number}</td><td>{report.Tables.' + i + '.options.' + j + '.FVPT_.Percent}%</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>';

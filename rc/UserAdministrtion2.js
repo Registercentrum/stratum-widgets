@@ -1,17 +1,71 @@
 
-function start() {
+function startWidget() {
   Ext.Loader.loadScript({
     url: '/stratum/extjs/scripts/exporter.js',
-    onLoad: function () { onReady(); }
-  });
+    onLoad: function () { onReady() }
+  })
 }
 
 function onReady() {
   Ext.tip.QuickTipManager.init()
   // Ext.create('RC.UserAdministration.view.FileDrop').show();
-  RC.UserAdministration.app = Ext.create('Ext.tab.Panel', { renderTo: 'contentPanel', items: [{ title: 'Användare', xtype: 'usergrid' }] });
-  RC.UserAdministration.data = Ext.create('RC.UserAdministration.storage.Data', { observers: [RC.UserAdministration.app.down('usergrid')] });
+  Ext.create('RC.UserAdministration.store.User')
+  Ext.create('RC.UserAdministration.store.Unit')
+  Ext.create('RC.UserAdministration.store.Role')
+  RC.UserAdministration.app = Ext.create('Ext.tab.Panel', { renderTo: 'contentPanel', items: [{ title: 'Användare', xtype: 'usergrid' }] })
+  RC.UserAdministration.data = Ext.create('RC.UserAdministration.storage.Data', { observers: [RC.UserAdministration.app.down('usergrid')] })
 }
+
+Ext.define('RC.UserAdministration.store.User', {
+  extend: 'Ext.data.Store',
+  model: 'Stratum.User',
+  storeId: 'users'
+})
+
+Ext.define('RC.UserAdministration.store.Unit', {
+  extend: 'Ext.data.Store',
+  model: 'Stratum.Unit',
+  storeId: 'units',
+  autoLoad: true,
+  proxy: {
+    type: 'ajax',
+    url: '/stratum/api/metadata/units/register/' + Profile.Site.Register.RegisterID,
+    reader: {
+      type: 'json',
+      rootProperty: 'data'
+    }
+  }
+})
+
+Stratum.Role || Ext.define('Stratum.Role', {
+  extend: 'Stratum.Model',
+  fields: [
+    { name: 'RoleID', type: 'int', allowNull: false },
+    { name: 'RoleName', type: 'string' },
+  ],
+  idProperty: 'RoleID',
+  proxy: {
+    type: 'memory'
+  }
+})
+
+Ext.define('RC.UserAdministration.store.Role', {
+  extend: 'Ext.data.Store',
+  model: 'Stratum.Role',
+  storeId: 'roles',
+  data: [
+    { RoleID: 101, RoleName: 'Dataleverantör' },
+    { RoleID: 201, RoleName: 'API-klient' },
+    { RoleID: 301, RoleName: 'Integratör' },
+    { RoleID: 701, RoleName: 'Patient' },
+    { RoleID: 901, RoleName: 'Registrerare' },
+    { RoleID: 902, RoleName: 'Plusregistrerare' },
+    { RoleID: 903, RoleName: 'Koordinatorer' },
+    { RoleID: 906, RoleName: 'Systemutvecklare' },
+    { RoleID: 907, RoleName: 'Patientobsertvatör' },
+    { RoleID: 908, RoleName: 'Rapportobsertvatör' }
+  ]
+})
 
 Ext.define('RC.UserAdministration.view.UserGrid', {
   extend: 'Ext.grid.Panel',
@@ -31,23 +85,14 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
     unitsloaded: 'updateDropdowns',
     loginsloaded: 'updateLogins',
     dataloaded: 'updateStores',
-    groupclick: function () { return false; },
+    groupclick: function () { return false },
     itemdblclick: 'userClicked',
     refresh: function () { this.update() },
     columnhide: 'onColumnHidden',
     columnShow: 'onColumnShown',
     selectionchange: 'onSelectionChange'
   },
-
-  store: {
-    // groupField: 'FirstName',
-    data: [],
-    filters: [],
-    sorters: {
-      property: 'LastName'
-    },
-  },
-
+  store: 'users',
   columns: [
     {
       text: 'Förnamn',
@@ -149,36 +194,27 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
           valueField: 'UnitID',
           displayField: 'UnitName',
           value: localStorage.getItem('selectedunit') || 0,
-          selectCallback: 'updateGrid',
           store: {
+            storeId: 'unitStore',
             fields: ['UnitID', 'UnitName']
+          },
+          listeners: {
+            change: 'updateGrid'
           }
         }, {
           xtype: 'rcfilter',
           reference: 'roleFilter',
           cls: 'scw-select',
           flex: 1,
-          valueField: 'ValueCode',
-          displayField: 'ValueName',
-          value: 0,
-          sortfield: 'ValueName',
+          valueField: 'RoleID',
+          displayField: 'RoleName',
+          sortfield: 'RoleName',
           sortdirection: 'DESC',
           selectCallback: 'updateGrid',
-          store: {
-            fields: ['ValueCode', 'ValueName'],
-            data: [
-              { ValueCode: 0, ValueName: 'Alla' },
-              { ValueCode: 101, ValueName: 'Dataleverantör' },
-              { ValueCode: 201, ValueName: 'API-klient' },
-              { ValueCode: 301, ValueName: 'Integratör' },
-              { ValueCode: 701, ValueName: 'Patient' },
-              { ValueCode: 901, ValueName: 'Registrerare' },
-              { ValueCode: 902, ValueName: 'Plusregistrerare' },
-              { ValueCode: 903, ValueName: 'Koordinatorer' },
-              { ValueCode: 906, ValueName: 'Systemutvecklare' },
-              { ValueCode: 907, ValueName: 'Patientobsertvatör' },
-              { ValueCode: 908, ValueName: 'Rapportobsertvatör' }
-            ]
+          store: 'roles',
+          listeners: {
+            change: 'updateGrid',
+            beforerender: function () { this.getStore().insert(0, { RoleID: 0, RoleName: 'Alla' }); this.setValue(0) }
           }
         },
         {
@@ -191,7 +227,9 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
           value: 0,
           sortfield: 'ValueName',
           sortdirection: 'DESC',
-          selectCallback: 'updateGrid',
+          listeners: {
+            change: 'updateGrid'
+          },
           store: {
             fields: ['ValueCode', 'ValueName'],
             data: [
@@ -255,9 +293,9 @@ Ext.define('RC.UserAdministration.controller.User', {
   },
 
   export: function () {
-    Ext.util.CSV.delimiter = ';';
+    Ext.util.CSV.delimiter = ';'
     var grid = this.getView()
-    grid.saveDocumentAs({ type: 'xlsx', fileName: 'users.xlsx' });
+    grid.saveDocumentAs({ type: 'xlsx', fileName: 'users.xlsx' })
   },
 
   mail: function () {
@@ -284,18 +322,18 @@ Ext.define('RC.UserAdministration.controller.User', {
   },
 
   updateStores: function (dataLoader) {
-    var users = dataLoader.getUsers();
-    var contexts = dataLoader.getContexts();
+    var users = dataLoader.getUsers()
+    var contexts = dataLoader.getContexts()
 
-    this.loadOwnUsers(users, contexts);
-    this.setLoader(dataLoader);
-    this.lookup('searchButton').setDisabled(false)
+    this.loadOwnUsers(users, contexts)
+    this.setLoader(dataLoader)
+    this.lookup('searchButton').enable()
     this.searchOwn()
   },
 
   updateDropdowns: function (dataLoader) {
-    var units = dataLoader.getUnits();
-    this.loadOwnUnits(units);
+    var units = dataLoader.getUnits()
+    this.loadOwnUnits(units)
   },
 
   updateLogins: function (dataLoader) {
@@ -304,108 +342,108 @@ Ext.define('RC.UserAdministration.controller.User', {
 
   loadOwnUnits: function (units) {
     var unitFilter = this.lookup('unitFilter')
-    var unitStore = unitFilter.getStore();
-    unitStore.loadData(units);
-    unitStore.add({ UnitName: ' Alla', UnitID: 0 });
-    unitStore.sort({ property: 'UnitName', direction: 'ASC' });
-    unitFilter.setValue(0);
+    var unitStore = unitFilter.getStore()
+    unitStore.loadData(units)
+    unitStore.add({ UnitName: ' Alla', UnitID: 0 })
+    unitStore.sort({ property: 'UnitName', direction: 'ASC' })
+    unitFilter.setValue(0)
   },
 
   loadOwnUsers: function (users, contexts) {
-    var userStore = this.getView().getStore();
-    this.addContexts(users);
-    this.join(users, contexts);
-    this.updateGrid();
-    this.ownUsers = users;
+    var userStore = this.getView().getStore()
+    this.addContexts(users)
+    this.join(users, contexts)
+    this.updateGrid()
+    this.ownUsers = users
   },
 
   join: function (a, b) {
     b.forEach(function (context) {
-      var user = a.filter(function (item) { return context.User.Username === item.Username; });
-      user[0].Contexts.push(context);
-    });
+      var user = a.filter(function (item) { return context.User.Username === item.Username })
+      user[0].Contexts.push(context)
+    })
   },
 
   addContexts: function (users) {
     users.forEach(function (item) {
-      item.Contexts = [];
-    });
+      item.Contexts = []
+    })
   },
 
   createUserFilter: function (user, role) {
     var filter = function (item) {
-      var contexts = item.data.Contexts;
+      var contexts = item.data.Contexts
       if (contexts) {
         // var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906; }).length !== 0;
         var isDeveloper = item.data.UserID < 200
-        var showDevelopers = role === 906;
-        if (isDeveloper && !showDevelopers) { return false; }
-        if (user === '') { return true; }
+        var showDevelopers = role === 906
+        if (isDeveloper && !showDevelopers) { return false }
+        if (user === '') { return true }
         var unitContexts = contexts.filter(function (context) {
           return Ext.String.startsWith(context.User.Username, user, true)
             || Ext.String.startsWith(context.User.FirstName, user, true)
             || Ext.String.startsWith(context.User.LastName, user, true)
-            || context.User.Extra && (typeof context.User.Extra === 'string') && Ext.String.startsWith(JSON.parse(context.User.Extra)[Profile.Site.Register.RegisterID], user, true)
-            || context.User.Extra && (typeof context.User.Extra === 'object') && Ext.String.startsWith(context.User.Extra[Profile.Site.Register.RegisterID], user, true)
-        });
-        var isPartOfUnit = unitContexts.length !== 0;
-        return isPartOfUnit;
+            || (context.User.Extra && (typeof context.User.Extra === 'string') && Ext.String.startsWith(JSON.parse(context.User.Extra)[Profile.Site.Register.RegisterID], user, true))
+            || (context.User.Extra && (typeof context.User.Extra === 'object') && Ext.String.startsWith(context.User.Extra[Profile.Site.Register.RegisterID], user, true))
+        })
+        var isPartOfUnit = unitContexts.length !== 0
+        return isPartOfUnit
       }
-      return true;
-    };
-    return filter;
+      return true
+    }
+    return filter
   },
 
   createUnitFilter: function (unit, role) {
     var filter = function (item) {
-      var contexts = item.data.Contexts;
+      var contexts = item.data.Contexts
       if (contexts) {
         // var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906; }).length !== 0;
         var isDeveloper = item.data.UserID < 200
-        var showDevelopers = role === 906;
-        if (isDeveloper && !showDevelopers) { return false; }
-        if (unit === 0) { return true; }
-        var unitContexts = contexts.filter(function (context) { return context.Unit.UnitID === unit; });
-        var isPartOfUnit = unitContexts.length !== 0;
-        return isPartOfUnit;
+        var showDevelopers = role === 906
+        if (isDeveloper && !showDevelopers) { return false }
+        if (unit === 0) { return true }
+        var unitContexts = contexts.filter(function (context) { return context.Unit.UnitID === unit })
+        var isPartOfUnit = unitContexts.length !== 0
+        return isPartOfUnit
       }
-      return true;
-    };
-    return filter;
+      return true
+    }
+    return filter
   },
 
   createRoleFilter: function (role) {
     var filter = function (item) {
-      var contexts = item.data.Contexts;
+      var contexts = item.data.Contexts
       if (contexts && role) {
         // var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906; }).length !== 0;
         var isDeveloper = item.data.UserID < 200
-        var roles = contexts.filter(function (context) { return context.Role.RoleID === role && (role === 906 || !isDeveloper); });
-        var isInRole = roles.length !== 0;
-        return isInRole;
+        var roles = contexts.filter(function (context) { return context.Role.RoleID === role && (role === 906 || !isDeveloper) })
+        var isInRole = roles.length !== 0
+        return isInRole
       }
-      return true;
-    };
+      return true
+    }
 
-    return filter;
+    return filter
   },
 
   createActiveFilter: function (active, role) {
     var filter = function (item) {
-      var contexts = item.data.Contexts;
+      var contexts = item.data.Contexts
       if (contexts) {
-        var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906; }).length !== 0;
-        var showDevelopers = role === 906;
-        if (isDeveloper && !showDevelopers) { return false; }
-        if (active === 0) { return true; }
-        var activeContexts = contexts.filter(function (context) { return context.IsActive === true; });
-        var isActive = activeContexts.length !== 0;
-        return (active === 1 && isActive) || (active === 2 && !isActive);
+        var isDeveloper = contexts.filter(function (context) { return context.Role.RoleID === 906 }).length !== 0
+        var showDevelopers = role === 906
+        if (isDeveloper && !showDevelopers) { return false }
+        if (active === 0) { return true }
+        var activeContexts = contexts.filter(function (context) { return context.IsActive === true })
+        var isActive = activeContexts.length !== 0
+        return (active === 1 && isActive) || (active === 2 && !isActive)
       }
-      return true;
-    };
+      return true
+    }
 
-    return filter;
+    return filter
   },
 
   updateGrid: function () {
@@ -426,35 +464,19 @@ Ext.define('RC.UserAdministration.controller.User', {
 
   searchOwn: function () {
     if (!this.ownLoaded) {
-      this.getView().getStore().loadData(this.ownUsers);
-      this.ownLoaded = true;
+      this.getView().getStore().loadData(this.ownUsers)
+      this.ownLoaded = true
     }
-    this.updateGrid();
+    this.updateGrid()
   },
 
   userClicked: function (component, record, item, index) {
-    var etxra, info
-    record.data.LatestLogin = this.getLatestLogin(record.data.UserID)
-    record.data.LatestContextLogin = this.getLatestContextLogin(record.data).substring(0, 16).replace('T', ' ')
-
-    if (record.data.Contexts && record.data.Extra) {
-      record.data.Contexts.forEach(function (item) {
-        if (typeof item.User.Extra !== 'string') return;
-        item.User.Extra = JSON.parse(item.User.Extra)
-        record.data.Info = item.User.Extra[Profile.Site.Register.RegisterID]
-        info = item.User.Extra
-        record.data.Extra = null
-      })
-    }
-
-    record.data.Extra = null
+    var info
+    record.data.LastActive = this.getLatestContextLogin(record.data)
+    record.data.Info = JSON.parse(record.data.Extra || '{}')[Profile.Site.Register.RegisterID]
     record.data.PersonalId = this.checkIfPersonalId(record.data.HSAID) ? record.data.HSAID : null
-    var userWindow = Ext.create('RC.UserAdministration.view.EditUser', { userData: record.data, contextData: record.data.Contexts })
-    userWindow.show()
-    userWindow.Info = info
-    if (!record.data.Contexts) {
-      this.loadContexts(userWindow, record.data.UserID)
-    }
+
+    var userWindow = Ext.create('RC.UserAdministration.view.EditUser', { userData: record, contextData: record.data.Contexts }).show()
   },
 
   onColumnHidden: function (component, column, eOpts) {
@@ -466,8 +488,8 @@ Ext.define('RC.UserAdministration.controller.User', {
   },
 
   onSelectionChange: function (component, record, index, eOpts) {
-    this.lookup('emailButton').setDisabled(false)
-    this.lookup('editButton').setDisabled(false)
+    this.lookup('emailButton').enable()
+    this.lookup('editButton').enable()
   },
 
   checkIfPersonalId: function (value) {
@@ -486,22 +508,130 @@ Ext.define('RC.UserAdministration.controller.User', {
           var data = Ext.decode(result.responseText).data
           component.down('grid').getStore().loadData(data)
         }
-      });
+      })
     }
   },
 
-  getLatestLogin: function (user) {
-    if (!this.getLoader() || !this.getLoader().getLoginsSith()) return ''
-    var bankIdLog = this.getLoader().getLoginsBankId().filter(function (logitem) { return logitem.Context.User.UserID === user })[0];
-    var latestBankIdLogin = bankIdLog ? bankIdLog.PerformedAt.slice(0, 10) : ''
-    var sithsLog = this.getLoader().getLoginsSith().filter(function (logitem) { return logitem.Context.User.UserID === user })[0]
-    var latestSithsLogin = sithsLog ? sithsLog.PerformedAt.slice(0, 10) : ''
-    var latestOfAll = latestBankIdLogin > latestSithsLogin ? latestBankIdLogin : latestSithsLogin
-    return latestOfAll
+  getLatestContextLogin: function (user) {
+    var time = user.Contexts.reduce(function (total, current) { 
+      total.ActivatedAt = total.ActivatedAt || '' 
+      if (total.ActivatedAt < current.ActivatedAt) { 
+        return current 
+      } 
+      return total 
+    })
+    time = time.ActivatedAt ? time.ActivatedAt.substring(0, 16).replace('T', ' ') : null
+    return time || 'Okänt'
+  }
+})
+
+Ext.define('RC.UserAdministration.controller.Form', {
+  extend: 'Ext.app.ViewController',
+  alias: 'controller.form',
+
+  getUser: function () {
+    var form = this.lookup('userform').getForm().getValues()
+    form.Email = form.Username
+    var completeInfo = this.lookup('userform').up().Info || {}
+    completeInfo[Profile.Site.Register.RegisterID] = form.Info
+    form.Extra = JSON.stringify(completeInfo)
+    return form
   },
 
-  getLatestContextLogin: function (user) {
-    return user.Contexts.reduce(function (total, current) { total.ActivatedAt = total.ActivatedAt || ''; if (total.ActivatedAt < current.ActivatedAt) { return current; } return total }).ActivatedAt || 'Okänt'
+  getForm: function () {
+    return this.lookup('userform').getForm()
+  },
+
+  getContext: function () {
+    var form = this.lookup('userform').getForm().getValues()
+    var context = {
+      IsActive: true,
+      User: { },
+      Unit: { UnitID: form.UnitID },
+      Role: { RoleID: form.RoleID }
+    }
+    
+    return context
+  },
+
+  transformUser: function () {
+    var form = this.lookup('userform').getForm().getValues()
+    this.transformExtra(form)
+    this.lookup('userform').getForm().setValues(form)
+    return form.UserID
+  },
+
+  transformExtra: function (form) {
+    var completeInfo = this.lookup('userform').up().Info || {}
+    completeInfo[Profile.Site.Register.RegisterID] = form.Info
+    form.Extra = JSON.stringify(completeInfo)
+    return form
+  },
+
+  transformHsaid: function (component, value) {
+    value = value.toUpperCase()
+    component.setValue(value)
+  },
+  
+  saveUser: function (data) {
+    var deferred = new Ext.Deferred()
+    delete data.user.UserID
+    
+    Ext.Ajax.request({
+      url: '/stratum/api/metadata/users/',
+      method: 'POST',
+      jsonData: data.user,
+      withCredentials: true,
+      success: function (response) {
+        data.user = Ext.decode(response.responseText).data
+        deferred.resolve(data)
+      },
+      failure: function (response) {
+        deferred.reject(response)
+      }
+    })
+    return deferred.promise
+  },
+
+  saveContext: function (data) {
+    var deferred = new Ext.Deferred()
+    data.context.User.UserID = data.user.UserID
+    Ext.Ajax.request({
+      url: '/stratum/api/metadata/contexts/',
+      method: 'POST',
+      jsonData: data.context,
+      withCredentials: true,
+      success: function (response) {
+        deferred.resolve(data)
+      },
+      failure: function (response) {
+        deferred.reject(response)
+      }
+    })
+    return deferred
+  },
+
+  updateUser: function (data) {
+    var user = data.user
+    var controller = data.controller
+    Ext.Ajax.request({
+      url: '/stratum/api/metadata/contexts/user/' + user.UserID,
+      method: 'GET',
+      withCredentials: true,
+      success: function (result, request) {
+        user.Contexts = Ext.decode(result.responseText).data
+        var units = controller.getAllRegistryUnits()
+        user.Contexts = user.Contexts.filter(function (context) { return units.indexOf(context.Unit.UnitID) >= 0 })
+        Ext.ComponentQuery.query('usergrid')[0].getStore().add(user)
+      },
+      failure: function (result, request) {
+      }
+    })
+  },
+  
+  getAllRegistryUnits: function () {
+    return Ext.ComponentQuery.query('usergrid').pop().lookup('unitFilter').getStore()
+      .getData().items.map(function (item) { return item.data.UnitID })
   }
 })
 
@@ -511,14 +641,18 @@ Ext.define('RC.UserAdministration.view.CreateUser', {
   modal: true,
   width: 1000,
   title: 'Användare',
+  initComponent: function () {
+    this.callParent()
+    this.down('rcuserform').getViewModel().setData({ passhash: '?' })
+  },
   items: [
     {
       xtype: 'rcuserform',
       reference: 'userform',
-      isCreation: true,
       viewModel: {
         stores: {
-          user: {}
+          user: {
+          }
         }
       }
     },
@@ -552,90 +686,34 @@ Ext.define('RC.UserAdministration.view.CreateUser', {
   ]
 })
 
-Ext.define('RC.UserAdministration.controller.Form', {
-  extend: 'Ext.app.ViewController',
-  alias: 'controller.form',
+Ext.define('RC.UserAdministration.controller.CreateUser', {
+  extend: 'RC.UserAdministration.controller.Form',
+  alias: 'controller.createuser',
 
   init: function () {
-    console.log('init')
-    var personalid = this.lookup('userform').getViewModel().get('user').PersonalId
-    if (personalid) {
-      this.lookup('personalid').show()
-      this.lookup('hsaid').hide()
-    } else {
-      this.lookup('personalid').hide()
-      this.lookup('hsaid').show()
-    }
-
-    if (this.getView().down('form').getIsCreation()) {
-      this.lookup('latestLogin').setHidden(true)
-    } else {
-      this.lookup('username').vtype && delete this.lookup('username').vtype
+    this.callParent()
+    this.lookup('registryinfo').hide()
+    this.lookup('organisation').hide()
+    this.lookup('lastactive').hide()
+    this.lookup('email').hide()
+    this.lookup('username').setFieldLabel('Epost')
+    this.lookup('username').enable()
+    this.lookup('username').removeCls('rc-info')
+    if (Profile.Context.User.UserID < 200) {
+      this.lookup('username').setFieldLabel('Användarnamn')
     }
   },
 
   onSaveUser: function () {
-    var user = this.lookup('userform').getViewModel().data.user
-    var extra = this.lookup('userform').up().Info || {}
-    extra[Profile.Site.Register.RegisterID] = user.Info
-    var updatedUser = {
-      UserID: user.UserID,
-      WorkTitle: user.WorkTitle,
-      Username: user.Username,
-      Email: user.Email,
-      FirstName: user.FirstName,
-      LastName: user.LastName,
-      HSAID: user.HSAID,
-      Organization: user.Organization,
-      Title: user.Title,
-      Extra: JSON.stringify(extra)
-    }
-    this.saveUser(updatedUser)
+    if (!this.getForm().isValid()) return
+    var controller = this
+    var data = {}
+    data.controller = this
+    data.user = this.getUser()
+    data.context = this.getContext()
+    this.saveUser(data).then(this.saveContext).then(this.updateUser)
     this.getView().destroy()
   },
-  
-  saveUser: function (user) {
-    var controller = this
-    Ext.Ajax.request({
-      url: '/stratum/api/metadata/users/' + user.UserID,
-      method: 'PUT',
-      jsonData: user,
-      withCredentials: true,
-      success: function (result, request) {
-        controller.updateUser(user, controller)
-      },
-      failure: function (result, request) {
-        console.log(result.responseText);
-      }
-    });
-  },
-
-  updateUser: function (user, controller) {
-    Ext.Ajax.request({
-      url: '/stratum/api/metadata/contexts/user/' + user.UserID,
-      method: 'GET',
-      jsonData: user,
-      withCredentials: true,
-      success: function (result, request) {
-        var index = Ext.ComponentQuery.query('usergrid')[0].getStore().find('UserID', user.UserID)
-        var userToUpdate = Ext.ComponentQuery.query('usergrid')[0].getStore().getAt(index)
-        user.Contexts = Ext.decode(result.responseText).data
-        var units = Ext.ComponentQuery.query('usergrid').pop().lookup('unitFilter').getStore().getData().items.map(function (item) { return item.data.UnitID })
-        user.Contexts = user.Contexts.filter(function (context) { return units.indexOf(context.Unit.UnitID) >= 0 })
-        Ext.ComponentQuery.query('usergrid')[0].getStore().removeAt(index)
-        Ext.ComponentQuery.query('usergrid')[0].getStore().add(user)
-      },
-      failure: function (result, request) {
-        console.log(result.responseText);
-      }
-    })
-  }
-})
-
-
-Ext.define('RC.UserAdministration.controller.CreateUser', {
-  extend: 'RC.UserAdministration.controller.Form',
-  alias: 'controller.createuser',
 
   onFormChanged: function () {
     var me = this
@@ -646,25 +724,25 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
   getQueryFromInputs: function () {
     var view = this.getView()
     var inputs = ''
-    inputs += this.lookup('firstName').getValue().length > 2 ? this.lookup('firstName').getValue() + ' ' : ''
-    inputs += this.lookup('lastName').getValue().length  > 2 ? this.lookup('lastName').getValue()  + ' ' : ''
+    inputs += this.lookup('firstname').getValue().length > 2 ? this.lookup('firstname').getValue() + ' ' : ''
+    inputs += this.lookup('lastname').getValue().length  > 2 ? this.lookup('lastname').getValue()  + ' ' : ''
     inputs += this.lookup('username').getValue().length  > 2 ? this.lookup('username').getValue()  + ' ' : ''
     inputs = inputs.length > 0 ? inputs.substring(0, inputs.length - 1) : ''
     return inputs
   },
 
   loadUser: function (query) {
-    var deferred = new Ext.Deferred();
+    var deferred = new Ext.Deferred()
     Ext.Ajax.request({
       url: '/stratum/api/metadata/users?query=' + query,
       success: function (response) {
-        deferred.resolve(response);
+        deferred.resolve(response)
       },
       failure: function (response) {
-        deferred.reject(response);
+        deferred.reject(response)
       }
-    });
-    return deferred.promise;
+    })
+    return deferred.promise
   },
 
   showMatchingUsers: function (response) {
@@ -675,47 +753,44 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
 
   filterMactches: function (matches) {
     var view = this.getView()
-    var firstName = this.lookup('firstName').getValue()
-    var lastName = this.lookup('lastName').getValue()
+    var firstName = this.lookup('firstname').getValue()
+    var lastName = this.lookup('lastname').getValue()
     var email = this.lookup('username').getValue()
     matches = matches.filter(function (match) {
       return (firstName.length < 3 || Ext.String.startsWith(match.FirstName, firstName, true))
-        && (lastName.length < 3 || Ext.String.startsWith(match.LastName, lastName, true))
-        && (email.length < 3 || Ext.String.startsWith(match.Email, email, true))
+          && (lastName.length < 3  || Ext.String.startsWith(match.LastName, lastName, true))
+          && (email.length < 3     || Ext.String.startsWith(match.Email, email, true))
     })
     return matches
   },
 
   onSithIdChoosen: function () {
     this.lookup('hsaid').show()
-    this.lookup('hsaid').setDisabled(false)
+    this.lookup('hsaid').enable()
     this.lookup('personalid').hide()
-    this.lookup('personalid').setDisabled(true)
+    this.lookup('personalid').disable()
   },
 
   onBankIdChoosen: function () {
     this.lookup('hsaid').hide()
-    this.lookup('hsaid').setDisabled(true)
+    this.lookup('hsaid').disable()
     this.lookup('personalid').show()
-    this.lookup('personalid').setDisabled(false)
+    this.lookup('personalid').enable()
   }
 })
 
 Ext.define('RC.UserAdministration.view.EditUser', {
   extend: 'Ext.window.Window',
   controller: 'edituser',
+  modal: true,
+  width: 1000,
+  title: 'Användare',
+  
   config: {
     userData: [],
     contextData: []
   },
-  initComponent: function (arguments) {
-    this.callParent(arguments)
-    this.down('rcuserform').getViewModel().setData({ user: this.getUserData() })
-    this.down('grid').getStore().loadData(this.getContextData())
-  },
-  modal: true,
-  width: 1000,
-  title: 'Användare',
+  
   items: [
     {
       xtype: 'rcuserform',
@@ -760,18 +835,47 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
   extend: 'RC.UserAdministration.controller.Form',
   alias: 'controller.edituser',
 
+  init: function () {
+    this.callParent()
+    this.getView().down('grid').getStore().loadData(this.getView().getContextData())
+    this.lookup('userform').loadRecord(this.getView().getUserData())
+    delete this.lookup('username').vtype
+    this.lookup('unit').hide()
+    this.lookup('unit').disable()
+    this.lookup('role').hide()
+    this.lookup('role').disable()
+    this.lookup('username').setFieldLabel('Användarnamn')
+    this.lookup('username').setEditable(false)
+    this.lookup('username').addCls('rc-info')
+    var personalidIsUsed = this.lookup('userform').getForm().getValues().PersonalId
+    if (personalidIsUsed) {
+      this.onBankIdChoosen()
+    } else {
+      this.onSithIdChoosen()
+    }
+  },
+
+  onSaveUser: function () {
+    var controller = this
+    var user = this.transformUser()
+    this.lookup('userform').getForm().updateRecord()
+    Ext.StoreManager.lookup('users').sync({ callback: function () { } })
+    this.getView().destroy()
+  },
+
+
   onSithIdChoosen: function () {
     this.lookup('hsaid').show()
-    this.lookup('hsaid').setDisabled(false)
+    this.lookup('hsaid').enable()
     this.lookup('personalid').hide()
-    this.lookup('personalid').setDisabled(true)
+    this.lookup('personalid').disable()
   },
 
   onBankIdChoosen: function () {
     this.lookup('hsaid').hide()
-    this.lookup('hsaid').setDisabled(true)
+    this.lookup('hsaid').disable()
     this.lookup('personalid').show()
-    this.lookup('personalid').setDisabled(false)
+    this.lookup('personalid').enable()
   }
 })
 
@@ -825,46 +929,37 @@ Ext.define('RC.UserAdministration.form.User', {
   extend: 'Ext.form.Panel',
   xtype: 'rcuserform',
 
-  config: {
-    isCreation: false
-  },
-  
   fieldDefaults: {
-    validateOnChange: true		
+    validateOnChange: true
   },
-  
+  bodyPadding: 7,
   defaults: {
     layout: 'form',
-    xtype: 'container',
-    defaultType: 'textfield',
+    xtype: 'textfield',
     columnWidth: 0.49,
-    
+    labelWidth: 115,
+    padding: 7,
+    listeners: {
+      change: 'onFormChanged'
+    },
   },
   layout: 'column',
   width: '100%',
   items: [
-    {
-      defaults: {
-        listeners: {
-          change: 'onFormChanged'
-        },
-      },
-      items: [
-        { fieldLabel: 'Förnamn', name: 'firstName', bind: '{user.FirstName}', reference: 'firstName' },
-        { fieldLabel: 'Efternamn', name: 'lastName', bind: '{user.LastName}', reference: 'lastName' },
-        { fieldLabel: 'Epostadress', name: 'username', bind: '{user.Username}', reference: 'username', vtype: 'username' },
-        { fieldLabel: 'Registerinfo', name: 'info', bind: '{user.Info}', reference: 'registryInformation' },
-      ]
-    },
-    {
-      items: [
-        { fieldLabel: 'HSAID', name: 'hsaid', bind: '{user.HSAID}', reference: 'hsaid', fieldStyle: { textTransform: 'uppercase' }, labelClsExtra: 'PrefixMandatory', maxLength: 64 },
-        { fieldLabel: 'Personnummer', disabled: true, name: 'personalid', bind: '{user.PersonalId}', reference: 'personalid', vtype: 'personalId' },
-        { fieldLabel: 'Organisation', name: 'organisation', bind: '{user.Organization}' },
-        { fieldLabel: 'Titel', name: 'title', bind: '{user.WorkTitle}' },
-        { fieldLabel: 'Senast inloggad', bind: '{user.LatestContextLogin}', cls: 'rc-info', reference: 'latestLogin' }
-      ]
-    }
+    { fieldLabel: 'Förnamn',         name: 'FirstName',    reference: 'firstname',  allowBlank: false },
+    { fieldLabel: 'Efternamn',       name: 'LastName',     reference: 'lastname',   allowBlank: false },
+    { fieldLabel: 'HSAID',           name: 'HSAID',        reference: 'hsaid',      allowBlank: false, vtype: 'hsaid', listeners: { change: 'transformHsaid' }, fieldStyle: { textTransform: 'uppercase' }, labelClsExtra: 'PrefixMandatory', maxLength: 64 },
+    { fieldLabel: 'Personnummer',    name: 'PersonalId',   reference: 'personalid', allowBlank: false, vtype: 'personalid' },
+    { fieldLabel: 'Epost',           name: 'Email',        reference: 'email',      vtype: 'email' },
+    { fieldLabel: 'Registerinfo',    name: 'Info',         reference: 'registryinfo' },
+    { fieldLabel: 'Organisation',    name: 'Organization', reference: 'organisation' },
+    { fieldLabel: 'Användarnamn',    name: 'Username',     reference: 'username',   vtype: 'username', allowBlank: false },
+    { fieldLabel: 'Senast inloggad', name: 'LastActive',   reference: 'lastactive', cls: 'rc-info' },
+    { fieldLabel: 'Enhet',           name: 'UnitID',       reference: 'unit',       allowBlank: false, xtype: 'combobox', store: 'units', valueField: 'UnitID', displayField: 'UnitName' },
+    { fieldLabel: 'Roll',            name: 'RoleID',       reference: 'role',       allowBlank: false, xtype: 'combobox', store: 'roles', valueField: 'RoleID', displayField: 'RoleName' },
+    { fieldLabel: 'Användarid',      name: 'UserID',       reference: 'userid',     hidden: true },
+    { fieldLabel: 'Title',           name: 'WorkTitle',    reference: 'worktitle',  hidden: true },
+    { fieldLabel: 'Extra',           name: 'Extra',        reference: 'extra',      hidden: true },
   ],
   dockedItems: [
     {
@@ -878,21 +973,21 @@ Ext.define('RC.UserAdministration.form.User', {
         {
           xtype: 'button',
           text: 'Byt till Sithskort',
-          minWidth: 80,
-          handler: 'onSithIdChoosen'
+          handler: 'onSithIdChoosen',
+          minWidth: 80
         },
         {
           xtype: 'button',
           text: 'Byt till BankID',
-          minWidth: 80,
-          handler: 'onBankIdChoosen'
+          handler: 'onBankIdChoosen',
+          minWidth: 80
         },
         {
           xtype: 'button',
           text: 'Spara',
+          handler: 'onSaveUser',
           formBind: true,
-          minWidth: 80,
-          handler: 'onSaveUser'
+          minWidth: 80
         }
       ]
     }
@@ -902,6 +997,7 @@ Ext.define('RC.UserAdministration.form.User', {
 Ext.define('RC.UserAdministration.view.ContextGrid', {
   extend: 'Ext.grid.Panel',
   alias: 'widget.contextgrid',
+  reference: 'contextgrid',
   controller: 'context',
   multiSelect: true,
   selModel: 'rowmodel',
@@ -915,13 +1011,13 @@ Ext.define('RC.UserAdministration.view.ContextGrid', {
       width: 60,
       sortable: true,
       renderer: function (value, cellValues) {
-        cellValues.innerCls = cellValues.innerCls.replace(' synced', '');
+        cellValues.innerCls = cellValues.innerCls.replace(' synced', '')
         if (cellValues.record.data.isSynced) {
-          cellValues.innerCls += ' synced';
+          cellValues.innerCls += ' synced'
         }
 
-        var content = this.defaultRenderer(value, cellValues);
-        return content;
+        var content = this.defaultRenderer(value, cellValues)
+        return content
       },
       listeners: {
         beforecheckchange: function (aColumn, anRowIndex, isChecked) {
@@ -931,13 +1027,13 @@ Ext.define('RC.UserAdministration.view.ContextGrid', {
     },
     {
       text: 'Enhet',
-      renderer: function (value, metaData, record) { return record.get('Unit').UnitName; },
+      renderer: function (value, metaData, record) { return record.get('Unit').UnitName },
       flex: 1,
       sortable: true
     },
     {
       text: 'Roll',
-      renderer: function (value, metaData, record) { return record.get('Role').RoleName; },
+      renderer: function (value, metaData, record) { return record.get('Role').RoleName },
       flex: 1,
       sortable: true
     },
@@ -949,7 +1045,7 @@ Ext.define('RC.UserAdministration.view.ContextGrid', {
     },
     {
       text: 'Slutdatum',
-      renderer: function (value, metaData, record) { return record.get('User').ExpireDate; },
+      renderer: function (value, metaData, record) { return record.get('User').ExpireDate },
       flex: 1,
       sortable: true,
       hidden: true
@@ -985,13 +1081,12 @@ Ext.define('RC.UserAdministration.controller.Context', {
       jsonData: params,
       withCredentials: true,
       success: function (result, request) {
-        record.data.isSynced = true;
+        record.data.isSynced = true
         view.addRowCls(index, 'synced')
       },
       failure: function (result, request) {
-        console.log(result.responseText);
       }
-    });
+    })
   }
 })
 
@@ -1009,36 +1104,42 @@ Ext.define('RC.UserAdministration.view.Filter', {
   checkChangeEvents: ['change', 'keyup'],
 
   constructor: function (config) {
-    config.queryMode = 'local';
-    config.listeners = { select: config.selectCallback };
-    this.callParent(arguments);
+    config.queryMode = 'local'
+    // config.listeners = { select: config.selectCallback };
+    this.callParent(arguments)
   }
 })
 
 Ext.define('RC.UserAdministration.Validators', {
   override: 'Ext.form.field.VTypes',
-  personalId: function(value) {
-    var validator = new RegExp(/^\d{8}-\w{4}$/)
-    return validator.test(value) ? true : false
+  hsaid: function (value) {
+    var validator = new RegExp(/^SE[a-zA-Z0-9-]{1,29}$/)
+    return validator.test(value)
+  },
+  hsaidText: 'Inget giltigt <br/>HSAID',
+
+  personalid: function (value) {
+    var validator = new RegExp(/^(19|20)[0-9]{10}$/)
+    return validator.test(value)
   },
 
-  personalIdText: 'Inget giltigt personnummer ÅÅÅÅMMDD-XXXX',
+  personalidText: 'Inget giltigt personnummer <br/>ÅÅÅÅMMDDXXXX',
 
   username: function (value, field) {
     var isValid = false
-    if(value===field.lastTry)return field.lastTryResult
+    if (value === field.lastTry) return field.lastTryResult
     field.lastTry = value
     
     Ext.Ajax.request({
-            async: false,
-			url: '/stratum/api/metadata/users/exists/' + value,
-			method: 'GET',
-			success: function(response, opts) {
-              isValid = false
-			},
-			failure: function(response, opts) {
-              isValid = true
-			}
+      async: false,
+      url: '/stratum/api/metadata/users/exists/' + value,
+      method: 'GET',
+      success: function (response, opts) {
+        isValid = false
+      },
+      failure: function (response, opts) {
+        isValid = true
+      }
     })
     field.lastTryResult = isValid
     return isValid
@@ -1058,54 +1159,36 @@ Ext.define('RC.UserAdministration.storage.Data', {
     loginsBankId: []
   },
   constructor: function (config) {
-    this.initConfig(config);
-    this.callParent(config);
-    this.loadData();
+    this.initConfig(config)
+    this.callParent(config)
+    this.loadData()
   },
-  initComponent: function () {
-    debugger;
-  },
+  
   loadData: function () {
-    var controller = this;
+    var controller = this
     Ext.Promise.all([
       Ext.Ajax.request({ url: '/stratum/api/metadata/units/register/' + Profile.Site.Register.RegisterID }),
     ]).then(function (results) {
-      var units = Ext.decode(results[0].responseText).data;
-      controller.setUnits(units);
+      var units = Ext.decode(results[0].responseText).data
+      controller.setUnits(units)
       controller.getObservers().forEach(function (observer) {
-        observer.fireEvent('unitsloaded', controller);
+        observer.fireEvent('unitsloaded', controller)
       })
-    });
-    Ext.Promise.all([
-      Ext.Ajax.request({ url: '/stratum/api/metadata/logentries/latest/logtype/1102/', method: 'GET' }),
-      Ext.Ajax.request({ url: '/stratum/api/metadata/logentries/latest/logtype/1104/', method: 'GET' }),
-      Ext.Ajax.request({ url: '/stratum/api/metadata/units/register/' + Profile.Site.Register.RegisterID }),
-    ]).then(function (results) {
-      var loginsSith = Ext.decode(results[0].responseText).data;
-      var loginsBankid = Ext.decode(results[1].responseText).data;
-      var units = Ext.decode(results[2].responseText).data;
-
-      controller.setLoginsSith(loginsSith)
-      controller.setLoginsBankId(loginsBankid)
-      controller.setUnits(units);
-
-      controller.getObservers().forEach(function (observer) {
-        observer.fireEvent('loginsloaded', controller);
-      })
-    });
+    })
+    
     Ext.Promise.all([
       Ext.Ajax.request({ url: '/stratum/api/metadata/users/register/' + Profile.Site.Register.RegisterID }),
       Ext.Ajax.request({ url: '/stratum/api/metadata/contexts/register/' + Profile.Site.Register.RegisterID }),
     ]).then(function (results) {
-      var users = Ext.decode(results[0].responseText).data;
-      var contexts = Ext.decode(results[1].responseText).data;
+      var users = Ext.decode(results[0].responseText).data
+      var contexts = Ext.decode(results[1].responseText).data
 
-      controller.setUsers(users);
-      controller.setContexts(contexts);
+      controller.setUsers(users)
+      controller.setContexts(contexts)
       controller.getObservers().forEach(function (observer) {
-        observer.fireEvent('dataloaded', controller);
+        observer.fireEvent('dataloaded', controller)
       })
-    });
+    })
   }
 })
 
@@ -1128,7 +1211,7 @@ Ext.define('RC.UserAdministration.controller.FileDrop', {
   alias: 'controller.filedrop',
 
   afterRender: function (view) {
-    var body = view.body;
+    var body = view.body
 
     if (window.File && window.FileList && window.FileReader) {
       this.target = new Ext.drag.Target({
@@ -1140,47 +1223,46 @@ Ext.define('RC.UserAdministration.controller.FileDrop', {
           drop: this.onDrop,
           dragover: this.beforeDrop
         }
-      });
+      })
     } else {
       body.down('.drag-file-label').setHtml(
         'File dragging is not supported by your browser'
-      );
-      body.el.addCls('nosupport');
+      )
+      body.el.addCls('nosupport')
     }
   },
 
   onDragEnter: function () {
-    this.getView().body.addCls('rc-active');
+    this.getView().body.addCls('rc-active')
   },
 
   onDragLeave: function () {
-    this.getView().body.removeCls('rc-active');
+    this.getView().body.removeCls('rc-active')
   },
 
   beforeDrop: function () {
-    return true;
+    return true
   },
 
   onDrop: function (target, info) {
-    var view = this.getView();
-    var body = view.body;
+    var view = this.getView()
+    var body = view.body
     // var icon = body.down('.drag-file-icon');
-    var reader = new FileReader();
+    var reader = new FileReader()
 
-    body.removeCls('active');
-    reader.onload = this.read;
-    reader.readAsText(info.files[0]);
+    body.removeCls('active')
+    reader.onload = this.read
+    reader.readAsText(info.files[0])
   },
 
   destroy: function () {
-    Ext.undefer(this.timer);
-    this.target = Ext.destroy(this.target);
-    this.callParent();
+    Ext.undefer(this.timer)
+    this.target = Ext.destroy(this.target)
+    this.callParent()
   },
 
   read: function (e) {
-    var content = e.target.result;
-    console.log(content);
+    var content = e.target.result
   }
 })
 
@@ -1196,7 +1278,7 @@ Ext.util.CSS.createStyleSheet(
   + '}'
 
   + '.rc-info div {'
-  + '  border: none;'
-  + '}'
-  , 'useradministration'
+  + '  border-color: #eee;'
+  + '}',
+  'useradministration'
 )

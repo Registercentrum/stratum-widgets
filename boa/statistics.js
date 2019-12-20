@@ -5,10 +5,13 @@ Ext.util.CSS.createStyleSheet(
   + '.bsw-checkbox.x-form-type-checkbox.x-form-cb-checked .x-form-checkbox-default:before {'
   + '  content: url(https://stratum.blob.core.windows.net/boa/checkbox-boa.svg);'
   +  '}'
+
   + '.x-keyboard-mode .bsw-button.x-btn-focus {'
-  + '  background-color: #f0f7fb;'
+  + '  background-color: #caecf7              ;'
   + '  outline: none !important;'
+  + '  box-shadow: none;'
   + '}'
+  
   + ' .bsw-county-item {'
   + '     padding-top: 10px;'
   + '     padding-bottom: 6px;'
@@ -211,7 +214,7 @@ Ext.util.CSS.createStyleSheet(
   + '  }'
 
   + '.x-keyboard-mode .bsw-tabs a:focus, .x-keyboard-mode .bsw-tabs .x-tab-focus {'
-  + '      outline: 1px solid #42c1ef;'
+  + '      outline: 1px solid #245D71;'
   + '  }'
 
   + '  .bsw-tabs .x-tab.x-tab-active.x-tab-default {'
@@ -525,7 +528,12 @@ Ext.util.CSS.createStyleSheet(
   + '      background-color: #ffffff; '
   + '      border: solid 1px #3e9bbc;'
   + '      display: block;'
+  + '  padding: 0;    '
   + '  }'
+
+  + '.bsw-button:hover {'
+  + '  background-color: #caecf7;'
+  + '}'
 
   + '  .bsw-button .x-btn-inner {'
   + '      font-family: "Roboto Slab";'
@@ -2483,7 +2491,7 @@ Ext.define('Boa.view.Details', {
               xtype: 'container',
               name: 'title',
               bind: {
-                html: '<div class="bsw-chart-title"><h2>{legend.indicator}</h2></div><p>Här ser du en jämförelse mellan mottagningar eller mellan landsting hur väl de når målet för indikatorn. Datan är beräknad på de senaste 12 månaderna. Du väljer mellan att visa en jämförelse mellan enheter inom samma landsting eller en jämförelse mellan landstingen alternativt enheter/landsting med liknande patientsammansättning <img class="bsw-qtip" src="https://registercentrum.blob.core.windows.net/boa/r/Utdata-info-BJgYkJMKx.png" data-qtip="Här jämförs enheter eller landsting med liknande casemix, dvs de som är mest lika avseende andel över 65 år, andel män, andel på väntelista till operation, andel patienter som har besvär från tre eller fler ledsystem samt andel som uppger att de har gångsvårigheter av andra orsaker än ledbesvär.">.</p><p>Indikatorn visar måluppfyllnad vid {legend.period}.</p></div'
+                html: '<div class="bsw-chart-title"><h2>{legend.indicator}</h2></div><p>Här ser du en jämförelse mellan mottagningar eller mellan landsting hur väl de når målet för indikatorn. Datan är beräknad på de senaste 12 månaderna. Du väljer mellan att visa en jämförelse mellan enheter inom samma region eller en jämförelse mellan landstingen alternativt enheter/landsting med liknande patientsammansättning <img class="bsw-qtip" src="https://registercentrum.blob.core.windows.net/boa/r/Utdata-info-BJgYkJMKx.png" data-qtip="Här jämförs enheter eller landsting med liknande casemix, dvs de som är mest lika avseende andel över 65 år, andel män, andel på väntelista till operation, andel patienter som har besvär från tre eller fler ledsystem samt andel som uppger att de har gångsvårigheter av andra orsaker än ledbesvär.">.</p><p>Indikatorn visar måluppfyllnad vid {legend.period}.</p></div'
 
               },
               cls: 'bsw-header'
@@ -2503,7 +2511,7 @@ Ext.define('Boa.view.Details', {
                   items: [
                     {
                       xtype: 'button',
-                      text: 'Inom samma landsting',
+                      text: 'Inom samma region',
                       cls: 'bsw-active-button',
                       listeners: {
                         click: 'showRegion'
@@ -3487,6 +3495,13 @@ Ext.define('Boa.view.SecondaryGoals', {
           fn: function () {
             this.component.up().up().getController().details('age');
           }
+        },
+        keyup: {                         
+          element: 'el',
+          fn: function (e) {
+            if(e.keyCode!==13)return
+            this.component.up().up().getController().details('xray');
+          }
         }
       }
     },
@@ -3515,6 +3530,13 @@ Ext.define('Boa.view.SecondaryGoals', {
           fn: function () {
             this.component.up().up().getController().details('stop-medication');
           }
+        },
+        keyup: {                         
+          element: 'el',
+          fn: function (e) {
+            if(e.keyCode!==13)return
+            this.component.up().up().getController().details('xray');
+          }
         }
       }
     },
@@ -3528,6 +3550,13 @@ Ext.define('Boa.view.SecondaryGoals', {
           element: 'el',
           fn: function () {
             this.component.up().up().getController().details('completed-school');
+          }
+        },
+        keyup: {                         
+          element: 'el',
+          fn: function (e) {
+            if(e.keyCode!==13)return
+            this.component.up().up().getController().details('xray');
           }
         }
       }

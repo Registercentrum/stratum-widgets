@@ -2,3 +2,6 @@
 .eslintignore
 test.html
 test.js
+.sencha
+ext
+launch.json
