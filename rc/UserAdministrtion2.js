@@ -16,6 +16,7 @@ function onReady() {
   Ext.create('RC.UserAdministration.store.User')
   Ext.create('RC.UserAdministration.store.Unit')
   Ext.create('RC.UserAdministration.store.Role')
+  Ext.create('RC.UserAdministration.store.Bindings', { storeId: 'bindings' })
   RC.UserAdministration.app = Ext.create('Ext.tab.Panel', { renderTo: 'contentPanel', items: [{ title: 'Användare', xtype: 'usergrid' }, { title: 'Enheter', xtype: 'unitgrid' }] })
   RC.UserAdministration.data = Ext.create('RC.UserAdministration.storage.Data', { observers: [RC.UserAdministration.app.down('usergrid')] })
 }
@@ -26,18 +27,40 @@ Ext.define('RC.UserAdministration.store.User', {
   storeId: 'users'
 })
 
+Ext.define('RC.UserAdministration.store.Active', {
+  extend: 'Ext.data.Store',
+  alias: 'store.active',
+  fields: [
+    { name: 'ActiveCode', type: 'boolean', allowNull: false },
+    { name: 'ActiveName', type: 'string' },
+  ],
+  data: [
+    { ActiveCode: true, ActiveName: 'Ja' },
+    { ActiveCode: false, ActiveName: 'Nej' },
+  ],
+  idProperty: 'ActiveCode',
+  proxy: {
+    type: 'memory'
+  }
+})
+
 Ext.define('RC.UserAdministration.store.Unit', {
   extend: 'Ext.data.Store',
   model: 'Stratum.Unit',
   alias: 'store.unit',
   autoLoad: true,
   proxy: {
-    type: 'ajax',
     url: '/stratum/api/metadata/units/register/' + Profile.Site.Register.RegisterID,
+    type: 'rest',
     reader: {
       type: 'json',
       rootProperty: 'data'
-    }
+      
+    },
+    api: {
+      create: '/stratum/api/metadata/units',
+      update: '/stratum/api/metadata/units'
+    } 
   }
 })
 
@@ -75,6 +98,50 @@ Ext.define('RC.UserAdministration.store.Role', {
     }
   }],
   sorters: 'RoleID'
+})
+
+Stratum.Region || Ext.define('Stratum.Region', {
+  extend: 'Stratum.Model',
+  fields: [
+    { name: 'DomainValueID', type: 'int', allowNull: true },
+    { name: 'ValueCode', type: 'string' },
+    { name: 'ValueName', type: 'string' }
+  ],
+  idProperty: 'DomainValueID'
+})
+
+Ext.define('RC.UserAdministration.store.Region', {
+  extend: 'Ext.data.Store',
+  model: 'Stratum.Region',
+  alias: 'store.region',
+  autoLoad: true,
+  proxy: {
+    type: 'ajax',
+    url: '/stratum/api/metadata/domainvalues/domain/3003',
+    reader: {
+      type: 'json',
+      rootProperty: 'data'
+    },
+  },
+  listeners: {
+    load: function (store) {
+      store.sort('ValueName', 'ASC')
+    }
+  }
+})
+
+Ext.define('RC.UserAdministration.store.Bindings', {
+  extend: 'Ext.data.Store',
+  alias: 'store.bindings',
+  autoLoad: true,
+  proxy: {
+    type: 'ajax',
+    url: '/stratum/api/metadata/units/bindings/' + Profile.Site.Register.RegisterID,
+    reader: {
+      type: 'json',
+      rootProperty: 'data'
+    },
+  }
 })
 
 Ext.define('RC.UserAdministration.view.UserGrid', {
@@ -530,157 +597,6 @@ Ext.define('RC.UserAdministration.controller.User', {
     return time || 'Okänt'
   }
 })
-
-Ext.define('RC.UserAdministration.view.UnitGrid', {
-  extend: 'Ext.grid.Panel',
-  alias: 'widget.unitgrid',
-  reference: 'unitgrid',
-  controller: 'unit',
-  multiSelect: true,
-  selModel: 'rowmodel',
-  width: '100%',
-  height: 500,
-
-  plugins: {
-    gridexporter: true,
-  },
-
-  store: {
-    type: 'unit'
-  },
-  columns: [
-    {
-      text: 'Id',
-      dataIndex: 'UnitCode',
-      width: 60,
-      sortable: true,
-      hidden: localStorage.getItem('UnitCode') === 'hidden' || false
-    },
-    {
-      text: 'Namn',
-      dataIndex: 'UnitName',
-      flex: 1,
-      sortable: true,
-      hidden: localStorage.getItem('UnitName') === 'hidden' || false
-    },
-    {
-      text: 'Aktiv',
-      dataIndex: 'IsActive',
-      width: 60,
-      sortable: true,
-      hidden: localStorage.getItem('IsActive') === 'hidden' || false,
-      renderer: function (value, cellValues) {
-        value = value ? 'Ja' : 'Nej'
-        return value
-      },
-    }
-  ],
-
-  dockedItems: [
-    {
-      xtype: 'toolbar',
-      reference: 'search',
-      dock: 'top',
-      border: false,
-      items: [
-        {
-          xtype: 'textfield',
-          reference: 'unitFilter',
-          flex: 1,
-          keyMap: {
-            'enter': {
-              handler: 'searchUnits'
-            }
-          }
-        },
-        {
-          xtype: 'button',
-          reference: 'searchButton',
-          text: 'Sök',
-          width: 100,
-          handler: 'searchUnits',
-          disabled: false
-        },
-      ]
-    },
-    {
-      xtype: 'toolbar',
-      dock: 'top',
-      border: false,
-      items: [
-        {
-          reference: 'exportButton',
-          text: 'Exportera',
-          handler: 'export',
-          minWidth: 80,
-          disabled: false
-        },
-        {
-          reference: 'editButton',
-          text: 'Redigera',
-          handler: 'edit',
-          minWidth: 80,
-          disabled: true
-        },
-        {
-          reference: 'createButton',
-          text: 'Skapa',
-          handler: 'create',
-          minWidth: 80,
-          disabled: false
-        }
-      ]
-    }
-  ]
-})
-
-Ext.define('RC.UserAdministration.controller.Unit', {
-  extend: 'Ext.app.ViewController',
-  alias: 'controller.unit',
-  config: {
-    loader: null,
-    ownUsers: null,
-    ownLoaded: false
-  },
-
-  init: function () {
-    this.callParent()
-  },
-
-  export: function () {
-    Ext.util.CSV.delimiter = ';'
-    var grid = this.getView()
-    grid.saveDocumentAs({ type: 'xlsx', fileName: 'enheter.xlsx' })
-  },
-
-  edit: function () {
-    var selections = this.getView().getSelection()
-    if (selections.length === 1) {
-      this.unitClicked(null, selections[0])
-    }
-  },
-
-  create: function () {
-    Ext.create('RC.UserAdministration.view.CreateUnit').show()
-  },
-
-  unitClicked: function (component, record, item, index) {
-    Ext.create('RC.UserAdministration.view.EditUnit', { unit: record }).show()
-  },
-
-  onColumnHidden: function (component, column, eOpts) {
-    localStorage.setItem(column.dataIndex, 'hidden')
-  },
-
-  onColumnShown: function (component, column, eOpts) {
-    localStorage.setItem(column.dataIndex, 'shown')
-  },
-
-  onSelectionChange: function (component, record, index, eOpts) {
-    this.lookup('editButton').enable()
-  }
-})
-
 
 Ext.define('RC.UserAdministration.controller.Form', {
   extend: 'Ext.app.ViewController',
@@ -1295,6 +1211,303 @@ Ext.define('RC.UserAdministration.controller.Context', {
     })
   }
 })
+
+Ext.define('RC.UserAdministration.view.UnitGrid', {
+  extend: 'Ext.grid.Panel',
+  alias: 'widget.unitgrid',
+  reference: 'unitgrid',
+  controller: 'unit',
+  multiSelect: true,
+  selModel: 'rowmodel',
+  width: '100%',
+  height: 500,
+
+  plugins: {
+    gridexporter: true,
+  },
+  listeners: {
+    itemdblclick: 'unitClicked',
+    refresh: function () { this.update() },
+    selectionchange: 'onSelectionChange'
+  },
+
+  store: {
+    type: 'unit',
+    storeId: 'units'
+  },
+  columns: [
+    {
+      text: 'Id',
+      dataIndex: 'UnitCode',
+      width: 60,
+      sortable: true,
+      hidden: localStorage.getItem('UnitCode') === 'hidden' || false
+    },
+    {
+      text: 'Namn',
+      dataIndex: 'UnitName',
+      flex: 1,
+      sortable: true,
+      hidden: localStorage.getItem('UnitName') === 'hidden' || false
+    },
+    {
+      text: 'HSAID',
+      dataIndex: 'HSAID',
+      flex: 1,
+      sortable: true,
+      hidden: localStorage.getItem('HSAID') === 'hidden' || false
+    },
+    {
+      text: 'Aktiv',
+      dataIndex: 'IsActive',
+      width: 60,
+      sortable: true,
+      hidden: localStorage.getItem('IsActive') === 'hidden' || false,
+      renderer: function (value, cellValues) {
+        value = value ? 'Ja' : 'Nej'
+        return value
+      },
+    }
+  ],
+
+  dockedItems: [
+    {
+      xtype: 'toolbar',
+      reference: 'search',
+      dock: 'top',
+      border: false,
+      items: [
+        {
+          xtype: 'textfield',
+          reference: 'unitFilter',
+          flex: 1,
+          keyMap: {
+            'enter': {
+              handler: 'searchUnits'
+            }
+          }
+        },
+        {
+          xtype: 'button',
+          reference: 'searchButton',
+          text: 'Sök',
+          width: 100,
+          handler: 'searchUnits',
+          disabled: false
+        },
+      ]
+    },
+    {
+      xtype: 'toolbar',
+      dock: 'top',
+      border: false,
+      items: [
+        {
+          reference: 'exportButton',
+          text: 'Exportera',
+          handler: 'export',
+          minWidth: 80,
+          disabled: false
+        },
+        {
+          reference: 'editButton',
+          text: 'Redigera',
+          handler: 'edit',
+          minWidth: 80,
+          disabled: true
+        },
+        {
+          reference: 'createButton',
+          text: 'Skapa',
+          handler: 'create',
+          minWidth: 80,
+          disabled: false
+        }
+      ]
+    }
+  ]
+})
+
+Ext.define('RC.UserAdministration.controller.Unit', {
+  extend: 'Ext.app.ViewController',
+  alias: 'controller.unit',
+
+  export: function () {
+    Ext.util.CSV.delimiter = ';'
+    var grid = this.getView()
+    grid.saveDocumentAs({ type: 'xlsx', fileName: 'enheter.xlsx' })
+  },
+
+  edit: function () {
+    var selections = this.getView().getSelection()
+    if (selections.length === 1) {
+      this.unitClicked(null, selections[0])
+    }
+  },
+
+  create: function () {
+    Ext.create('RC.UserAdministration.view.CreateUnit').show()
+  },
+
+  unitClicked: function (component, record, item, index) {
+    Ext.create('RC.UserAdministration.view.EditUnit', { unit: record }).show()
+  },
+
+  onColumnHidden: function (component, column, eOpts) {
+    localStorage.setItem(column.dataIndex, 'hidden')
+  },
+
+  onColumnShown: function (component, column, eOpts) {
+    localStorage.setItem(column.dataIndex, 'shown')
+  },
+
+  onSelectionChange: function (component, record, index, eOpts) {
+    this.lookup('editButton').enable()
+  }
+})
+
+Ext.define('RC.UserAdministration.form.Unit', {
+  extend: 'Ext.form.Panel',
+  xtype: 'rcunitform',
+  layout: 'column',
+  width: '100%',
+  bodyPadding: 7,
+
+  fieldDefaults: {
+    validateOnChange: true
+  },
+  
+  defaults: {
+    layout: 'form',
+    xtype: 'textfield',
+    columnWidth: 1,
+    labelWidth: 115,
+    padding: 7,
+    listeners: {
+      change: 'onFormChanged'
+    },
+  },
+  
+  items: [
+    { fieldLabel: 'Namn', name: 'UnitName', reference: 'unitname',  allowBlank: false },
+    { fieldLabel: 'Enhetskod', name: 'UnitCode', reference: 'unitcode',  allowBlank: false },
+    { fieldLabel: 'Aktiv', name: 'IsActive', reference: 'active', hidden: true, allowBlank: false, xtype: 'combobox', store: { type: 'active' }, valueField: 'ActiveCode', displayField: 'ActiveName' },
+    { fieldLabel: 'HSA-id', name: 'HSAID', reference: 'HSAID',  allowBlank: false },
+    { fieldLabel: 'Region', name: 'Bindings', reference: 'region', allowBlank: false, xtype: 'combobox', store: { type: 'region' }, valueField: 'ValueCode', displayField: 'ValueName' },
+    { fieldLabel: 'Register', name: 'Register', reference: 'registry', hidden: true }
+  ],
+
+  dockedItems: [
+    {
+      xtype: 'toolbar',
+      dock: 'bottom',
+      border: false,
+      items: [
+        {
+          xtype: 'tbspacer', flex: 1
+        },
+        {
+          text: 'Stäng',
+          minWidth: 80,
+          handler: function () {
+            this.up('window').destroy()
+          }
+        },
+        {
+          xtype: 'button',
+          text: 'Spara',
+          handler: 'onSave',
+          formBind: true,
+          minWidth: 80
+        }
+      ]
+    }
+  ]
+})
+
+Ext.define('RC.UserAdministration.controller.UnitForm', {
+  extend: 'Ext.app.ViewController',
+  alias: 'controller.unitform',
+
+  getForm: function () {
+    return this.lookup('unitform').getForm()
+  },
+})
+
+Ext.define('RC.UserAdministration.view.EditUnit', {
+  extend: 'Ext.window.Window',
+  controller: 'editunit',
+  modal: true,
+  width: 600,
+  title: 'Redigera enhet',
+  
+  config: {
+    unit: [],
+  },
+  
+  items: [
+    {
+      xtype: 'rcunitform',
+      reference: 'unitform'
+    }
+  ]
+})
+
+Ext.define('RC.UserAdministration.controller.EditUnit', {
+  extend: 'RC.UserAdministration.controller.UnitForm',
+  alias: 'controller.editunit',
+  config: {
+    fields: ['unitname']
+  },
+
+  init: function () {
+    this.lookup('unitform').loadRecord(this.getView().getUnit())
+  },
+
+  onSave: function () {
+    this.getForm().updateRecord()
+    Ext.StoreManager.lookup('units').sync({ callback: function () { } })
+    this.getView().destroy()
+  }
+})
+
+Ext.define('RC.UserAdministration.view.CreateUnit', {
+  extend: 'Ext.window.Window',
+  controller: 'createunit',
+  modal: true,
+  width: 600,
+  title: 'Skapa enhet',
+  
+  config: {
+    unit: [],
+  },
+  
+  items: [
+    {
+      xtype: 'rcunitform',
+      reference: 'unitform'
+    }
+  ]
+})
+
+Ext.define('RC.UserAdministration.controller.CreateUnit', {
+  extend: 'RC.UserAdministration.controller.UnitForm',
+  alias: 'controller.createunit',
+  config: {
+    fields: ['unitname']
+  },
+
+  init: function () {
+    // this.lookup('unitform').loadRecord(this.getView().getUnit())
+  },
+
+  onSave: function () {
+    this.getForm().updateRecord()
+    Ext.StoreManager.lookup('units').sync({ callback: function () { } })
+    this.getView().destroy()
+  }
+})
+
 
 Ext.define('RC.UserAdministration.view.Filter', {
   extend: 'Ext.form.field.ComboBox',
