@@ -57,7 +57,7 @@ export function writeInitialStudyData(current, subject) {
         var injuryDate = Ext.Date.parse(current.Parent.Inj_Dat, "Y-m-dTH:i:s");
         var jsonData = [
             {id: "SE_SCREENING::1::F_SCREENING_1::1::IG_SCREE_SCREENING::1::I_SCREE_INJ_CAUSE", value: current.Parent.Inj_Cause},
-            {id: "SE_SCREENING::1::F_SCREENING_1::1::IG_SCREE_SCREENING::1::I_SCREE_INJ_DAT", value: injuryDate}, 
+            {id: "SE_SCREENING::1::F_SCREENING_1::1::IG_SCREE_SCREENING::1::I_SCREE_INJ_DAT", value: current.Parent.Inj_Dat}, 
             {id: "SE_SCREENING::1::F_SCREENING_1::1::IG_SCREE_SCREENING::1::I_SCREE_INJ_AGE", value: Repository.Global.Methods.CalculateAge(subject.SubjectKey, injuryDate)},
             {id: "SE_SCREENING::1::F_SCREENING_1::1::IG_SCREE_SCREENING::1::I_SCREE_FX_XRAYDAT", value: current.Fx_XrayDat ? current.Fx_XrayDat.substring(0, 10) : null},
             {id: "SE_SCREENING::1::F_SCREENING_1::1::IG_SCREE_SCREENING::1::I_SCREE_FX_XRAYTIME", value: current.Fx_XrayTime},
