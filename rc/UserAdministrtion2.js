@@ -18,8 +18,30 @@ function onReady() {
   Ext.create('RC.UserAdministration.store.Role')
   Ext.create('RC.UserAdministration.store.Bindings', { storeId: 'bindings' })
   RC.UserAdministration.app = Ext.create('Ext.tab.Panel', { renderTo: 'contentPanel', items: [{ title: 'Användare', xtype: 'usergrid' }, { title: 'Enheter', xtype: 'unitgrid' }] })
-  RC.UserAdministration.data = Ext.create('RC.UserAdministration.storage.Data', { observers: [RC.UserAdministration.app.down('usergrid')] })
+  RC.UserAdministration.data = Ext.create('RC.UserAdministration.storage.Data', { observers: [RC.UserAdministration.app.down('usergrid'), RC.UserAdministration.app.down('unitgrid')] })
 }
+
+Stratum.Role || Ext.define('Stratum.Role', {
+  extend: 'Stratum.Model',
+  fields: [
+    { name: 'RoleID', type: 'int', allowNull: false },
+    { name: 'RoleName', type: 'string' },
+  ],
+  idProperty: 'RoleID',
+  proxy: {
+    type: 'memory'
+  }
+})
+
+Stratum.Region || Ext.define('Stratum.Region', {
+  extend: 'Stratum.Model',
+  fields: [
+    { name: 'DomainValueID', type: 'int', allowNull: true },
+    { name: 'ValueCode', type: 'string' },
+    { name: 'ValueName', type: 'string' }
+  ],
+  idProperty: 'DomainValueID'
+})
 
 Ext.define('RC.UserAdministration.store.User', {
   extend: 'Ext.data.Store',
@@ -64,18 +86,6 @@ Ext.define('RC.UserAdministration.store.Unit', {
   }
 })
 
-Stratum.Role || Ext.define('Stratum.Role', {
-  extend: 'Stratum.Model',
-  fields: [
-    { name: 'RoleID', type: 'int', allowNull: false },
-    { name: 'RoleName', type: 'string' },
-  ],
-  idProperty: 'RoleID',
-  proxy: {
-    type: 'memory'
-  }
-})
-
 Ext.define('RC.UserAdministration.store.Role', {
   extend: 'Ext.data.Store',
   model: 'Stratum.Role',
@@ -98,16 +108,6 @@ Ext.define('RC.UserAdministration.store.Role', {
     }
   }],
   sorters: 'RoleID'
-})
-
-Stratum.Region || Ext.define('Stratum.Region', {
-  extend: 'Stratum.Model',
-  fields: [
-    { name: 'DomainValueID', type: 'int', allowNull: true },
-    { name: 'ValueCode', type: 'string' },
-    { name: 'ValueName', type: 'string' }
-  ],
-  idProperty: 'DomainValueID'
 })
 
 Ext.define('RC.UserAdministration.store.Region', {
@@ -160,14 +160,13 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
 
   listeners: {
     unitsloaded: 'updateDropdowns',
-    loginsloaded: 'updateLogins',
     dataloaded: 'updateStores',
-    groupclick: function () { return false },
     itemdblclick: 'userClicked',
-    refresh: function () { this.update() },
     columnhide: 'onColumnHidden',
     columnShow: 'onColumnShown',
-    selectionchange: 'onSelectionChange'
+    selectionchange: 'onSelectionChange',
+    groupclick: function () { return false },
+    refresh: function () { this.update() },
   },
   store: 'users',
   columns: [
@@ -408,10 +407,6 @@ Ext.define('RC.UserAdministration.controller.User', {
   updateDropdowns: function (dataLoader) {
     var units = dataLoader.getUnits()
     this.loadOwnUnits(units)
-  },
-
-  updateLogins: function (dataLoader) {
-    this.setLoader(dataLoader)
   },
 
   loadOwnUnits: function (units) {
@@ -1225,16 +1220,21 @@ Ext.define('RC.UserAdministration.view.UnitGrid', {
   plugins: {
     gridexporter: true,
   },
+
   listeners: {
     itemdblclick: 'unitClicked',
-    refresh: function () { this.update() },
-    selectionchange: 'onSelectionChange'
+    unitsloaded: 'onDataLoaded',
+    selectionchange: 'onSelectionChange',
+    columnhide: 'onColumnHidden',
+    columnShow: 'onColumnShown',
+    refresh: function () { this.update() }
   },
 
   store: {
-    type: 'unit',
+    model: 'Stratum.Unit',
     storeId: 'units'
   },
+
   columns: [
     {
       text: 'Id',
@@ -1258,11 +1258,25 @@ Ext.define('RC.UserAdministration.view.UnitGrid', {
       hidden: localStorage.getItem('HSAID') === 'hidden' || false
     },
     {
+      text: 'Region',
+      dataIndex: 'County',
+      flex: 1,
+      sortable: true,
+      hidden: localStorage.getItem('County') === 'hidden' || false
+    },
+    {
+      text: 'PARID',
+      dataIndex: 'PARID',
+      flex: 1,
+      sortable: true,
+      hidden: localStorage.getItem('PARID') === 'hidden' || localStorage.getItem('PARID') === null
+    },
+    {
       text: 'Aktiv',
       dataIndex: 'IsActive',
       width: 60,
       sortable: true,
-      hidden: localStorage.getItem('IsActive') === 'hidden' || false,
+      hidden: localStorage.getItem('IsActive') === 'hidden' || localStorage.getItem('PARID') === null,
       renderer: function (value, cellValues) {
         value = value ? 'Ja' : 'Nej'
         return value
@@ -1332,6 +1346,22 @@ Ext.define('RC.UserAdministration.controller.Unit', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.unit',
 
+  searchUnits: function () {
+    var store   = this.getView().getStore()
+    var unit    = this.lookup('unitFilter').getValue()
+    store.clearFilter()
+    store.addFilter(this.createUnitFilter(unit))
+  },
+
+  onDataLoaded: function (dataLoader) {
+    var units = dataLoader.getUnits()
+    var bindings = dataLoader.getBindings()
+    units.forEach(function (unit) {
+      unit.County = bindings[unit.UnitName].County
+    })
+    this.getView().getStore().loadData(units)
+  },
+
   export: function () {
     Ext.util.CSV.delimiter = ';'
     var grid = this.getView()
@@ -1363,7 +1393,14 @@ Ext.define('RC.UserAdministration.controller.Unit', {
 
   onSelectionChange: function (component, record, index, eOpts) {
     this.lookup('editButton').enable()
-  }
+  },
+
+  createUnitFilter: function (unit) {
+    var filter = function (item) {
+      return Ext.String.startsWith(item.data.UnitName, unit, true)
+    }
+    return filter
+  },
 })
 
 Ext.define('RC.UserAdministration.form.Unit', {
@@ -1392,9 +1429,10 @@ Ext.define('RC.UserAdministration.form.Unit', {
     { fieldLabel: 'Namn', name: 'UnitName', reference: 'unitname',  allowBlank: false },
     { fieldLabel: 'Enhetskod', name: 'UnitCode', reference: 'unitcode',  allowBlank: false },
     { fieldLabel: 'Aktiv', name: 'IsActive', reference: 'active', hidden: true, allowBlank: false, xtype: 'combobox', store: { type: 'active' }, valueField: 'ActiveCode', displayField: 'ActiveName' },
-    { fieldLabel: 'HSA-id', name: 'HSAID', reference: 'HSAID',  allowBlank: false },
-    { fieldLabel: 'Region', name: 'Bindings', reference: 'region', allowBlank: false, xtype: 'combobox', store: { type: 'region' }, valueField: 'ValueCode', displayField: 'ValueName' },
-    { fieldLabel: 'Register', name: 'Register', reference: 'registry', hidden: true }
+    { fieldLabel: 'HSA-id', name: 'HSAID', reference: 'hsaid',  allowBlank: true },
+    { fieldLabel: 'PAR-id', name: 'PARID', reference: 'parid',  allowBlank: true },
+    { fieldLabel: 'Region', name: 'County', reference: 'region', allowBlank: false, xtype: 'combobox', store: { type: 'region' }, valueField: 'DomainValueID', displayField: 'ValueName' },
+    // { fieldLabel: 'Register', name: 'Register', reference: 'registry', hidden: true }
   ],
 
   dockedItems: [
@@ -1462,12 +1500,21 @@ Ext.define('RC.UserAdministration.controller.EditUnit', {
 
   init: function () {
     this.lookup('unitform').loadRecord(this.getView().getUnit())
+    this.lookup('region').hide()
+    this.lookup('region').disable()
   },
 
   onSave: function () {
+    // this.transformRegion()
     this.getForm().updateRecord()
     Ext.StoreManager.lookup('units').sync({ callback: function () { } })
     this.getView().destroy()
+  },
+
+  transformRegion: function () {
+    var form = this.getForm().getValues()
+    form.Bindings = [{ DomainValueId: form.County }] // qqq
+    this.getForm().setValues(form)
   }
 })
 
@@ -1498,16 +1545,48 @@ Ext.define('RC.UserAdministration.controller.CreateUnit', {
   },
 
   init: function () {
-    // this.lookup('unitform').loadRecord(this.getView().getUnit())
+    this.lookup('active').setValue(true)
   },
 
   onSave: function () {
+    this.transformRegion()
     this.getForm().updateRecord()
-    Ext.StoreManager.lookup('units').sync({ callback: function () { } })
+    var unit = this.getForm().getValues()
+    unit.Bindings = [{ DomainValueID: unit.County }]
+    unit.Register = { RegisterID: Profile.Site.Register.RegisterID }
+    unit.HSAID = unit.HSAID || null
+    unit.PARID = unit.PARID || null
+    this.saveUnit(unit)
     this.getView().destroy()
-  }
-})
+  },
 
+  transformRegion: function () {
+    var form = this.getForm().getValues()
+    form.Bindings = { DomainValueId: form.County } // qqq
+    this.getForm().setValues(form)
+  },
+
+  saveUnit: function (unit) {
+    var deferred = new Ext.Deferred()
+    delete unit.UnitID
+    delete unit.County
+    
+    Ext.Ajax.request({
+      url: '/stratum/api/metadata/units/',
+      method: 'POST',
+      jsonData: unit,
+      withCredentials: true,
+      success: function (response) {
+        unit = Ext.decode(response.responseText).data
+        deferred.resolve(unit)
+      },
+      failure: function (response) {
+        deferred.reject(response)
+      }
+    })
+    return deferred.promise
+  },
+})
 
 Ext.define('RC.UserAdministration.view.Filter', {
   extend: 'Ext.form.field.ComboBox',
@@ -1573,6 +1652,7 @@ Ext.define('RC.UserAdministration.storage.Data', {
     users: [],
     contexts: [],
     units: [],
+    bindings: [],
     observers: [],
     loginsSith: [],
     loginsBankId: []
@@ -1587,9 +1667,12 @@ Ext.define('RC.UserAdministration.storage.Data', {
     var controller = this
     Ext.Promise.all([
       Ext.Ajax.request({ url: '/stratum/api/metadata/units/register/' + Profile.Site.Register.RegisterID }),
+      Ext.Ajax.request({ url: '/stratum/api/metadata/units/bindings/' + Profile.Site.Register.RegisterID }),
     ]).then(function (results) {
       var units = Ext.decode(results[0].responseText).data
+      var bindings = Ext.decode(results[1].responseText).data
       controller.setUnits(units)
+      controller.setBindings(bindings)
       controller.getObservers().forEach(function (observer) {
         observer.fireEvent('unitsloaded', controller)
       })
