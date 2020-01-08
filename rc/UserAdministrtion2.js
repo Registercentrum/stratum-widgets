@@ -1556,17 +1556,18 @@ Ext.define('RC.UserAdministration.controller.CreateUnit', {
     unit.Register = { RegisterID: Profile.Site.Register.RegisterID }
     unit.HSAID = unit.HSAID || null
     unit.PARID = unit.PARID || null
-    this.saveUnit(unit)
+    this.saveUnit(unit).then(this.updateGrid)
     this.getView().destroy()
   },
 
   transformRegion: function () {
     var form = this.getForm().getValues()
-    form.Bindings = { DomainValueId: form.County } // qqq
+    form.Bindings = { DomainValueId: form.County }
     this.getForm().setValues(form)
   },
 
   saveUnit: function (unit) {
+    var controller = this
     var deferred = new Ext.Deferred()
     delete unit.UnitID
     delete unit.County
@@ -1586,6 +1587,10 @@ Ext.define('RC.UserAdministration.controller.CreateUnit', {
     })
     return deferred.promise
   },
+
+  updateGrid: function (unit) {
+    Ext.ComponentQuery.query('unitgrid').pop().getStore().add(unit)
+  }
 })
 
 Ext.define('RC.UserAdministration.view.Filter', {
