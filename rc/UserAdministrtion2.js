@@ -7,7 +7,7 @@ function startWidget() {
   Ext.Loader.loadScript({
     url: '/stratum/extjs/scripts/exporter.js',
     onLoad: function () { onReady() }
-  }) // 
+  })
 }
 
 function onReady() {
@@ -1505,7 +1505,6 @@ Ext.define('RC.UserAdministration.controller.EditUnit', {
   },
 
   onSave: function () {
-    // this.transformRegion()
     this.getForm().updateRecord()
     Ext.StoreManager.lookup('units').sync({ callback: function () { } })
     this.getView().destroy()
@@ -1513,7 +1512,7 @@ Ext.define('RC.UserAdministration.controller.EditUnit', {
 
   transformRegion: function () {
     var form = this.getForm().getValues()
-    form.Bindings = [{ DomainValueId: form.County }] // qqq
+    form.Bindings = [{ DomainValueId: form.County }]
     this.getForm().setValues(form)
   }
 })
@@ -1549,29 +1548,19 @@ Ext.define('RC.UserAdministration.controller.CreateUnit', {
   },
 
   onSave: function () {
-    this.transformRegion()
-    this.getForm().updateRecord()
     var unit = this.getForm().getValues()
     unit.Bindings = [{ DomainValueID: unit.County }]
     unit.Register = { RegisterID: Profile.Site.Register.RegisterID }
     unit.HSAID = unit.HSAID || null
     unit.PARID = unit.PARID || null
+    delete unit.UnitID
+    delete unit.County
     this.saveUnit(unit).then(this.updateGrid)
     this.getView().destroy()
   },
 
-  transformRegion: function () {
-    var form = this.getForm().getValues()
-    form.Bindings = { DomainValueId: form.County }
-    this.getForm().setValues(form)
-  },
-
   saveUnit: function (unit) {
-    var controller = this
     var deferred = new Ext.Deferred()
-    delete unit.UnitID
-    delete unit.County
-    
     Ext.Ajax.request({
       url: '/stratum/api/metadata/units/',
       method: 'POST',
