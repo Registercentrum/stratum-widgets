@@ -4597,6 +4597,7 @@ var skeletonWidget = function (current, callback, loadonly, inFreeMode) {
 						icdSuffix = '.X'
 						break;
 					case '85':
+						icdSuffix = '.Y'
 						icdCodes[0] = 'S92.2';
 						icdCodes[1] = 'S93.2';
 						icdCodes[2] = 'S92.3';
@@ -4614,13 +4615,18 @@ var skeletonWidget = function (current, callback, loadonly, inFreeMode) {
 								icd10 = icdCodes[2];
 								break;
 						}
-						icdSuffix = '.Y'
+						icdCodes[0]+= icdSuffix;
+						icdCodes[1]+= icdSuffix;
+						icdCodes[2]+= icdSuffix;
 						break;
 					case '87':
 						var ICD_SUFFIX_87A = '.A';
 						var ICD_SUFFIX_87B = '.B';
 						var ICD_SUFFIX_87C = '.Z';
-						var ICD10_87A = 'S92.3'
+						var ICD10_87A = 'S92.3';						
+						icdCodes[0] = ICD10_87A + ICD_SUFFIX_87A;
+						icdCodes[1] = ICD10_87A + ICD_SUFFIX_87B;
+						icdCodes[2] = ICD10_87A + ICD_SUFFIX_87C;
 						icd10 = ICD10_87A;
 						switch (aAO) {
 							case "A":
@@ -4642,6 +4648,9 @@ var skeletonWidget = function (current, callback, loadonly, inFreeMode) {
 						var ICD_SUFFIX_88C = '.B'
 						var ICD10_88A = 'S92.4';
 						var ICD10_88B_C = 'S92.5';
+						icdCodes[0] = ICD10_88A;
+						icdCodes[1] =ICD10_88B_C + ICD_SUFFIX_88B;
+						icdCodes[2] = ICD10_88B_C + ICD_SUFFIX_88C;
 						switch (aAO) {
 							case "A":
 								icd10 = ICD10_88A;
@@ -4799,7 +4808,7 @@ var skeletonWidget = function (current, callback, loadonly, inFreeMode) {
 				if (isBackFracture(aPictureID)) {
 					result.FxS_ICD10 = backHandler.determineICD(result.Open, result.Class)[0];
 				}
-				result.icdCodes = icdCodes.map(function(item){return item + result.Open});
+				result.icdCodes = icdCodes.map(function(item){return item.substring(0,5) + result.Open + item.substring(5)});
 				if (aoImagesNavigationHandler.inProsthesisMode) {
 					var icdArr;
 					if (!Ext.isEmpty(icd10)) {
@@ -6501,7 +6510,7 @@ var skeletonWidget = function (current, callback, loadonly, inFreeMode) {
 			if(Repository.Local.Methods.Consensus.isActive(fxClass)){
 				Ext.MessageBox.show({
 					title: 'Bekräfta',
-					msg: Repository.Local.Methods.Consensus.getConfirmText(fxClass),
+					msg: Repository.Local.Methods.Consensus.getTexts(fxClass).confirmText,
 					buttons: Ext.Msg.OKCANCEL,
 					icon: Ext.MessageBox.INFO,
 					fn: function (c) {

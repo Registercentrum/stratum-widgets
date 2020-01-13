@@ -32,7 +32,7 @@ Ext.define('Boa.controller.Report', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: '/stratum/api/statistics/BOA/boaw-rapport?grouptype=' + unitType + '&unitcode=' + unit + '&year=' + year + '&fear=1&wantsurg=1&liked=1&using=1&explanation=1&intervention=1',
+      url: '/stratum/api/statistics/BOA/boaw-rapport?grouptype=' + unitType + '&unitcode=' + unit + '&year=' + year + '&fear=1&wantsurg=1&liked=0&using=0&explanation=1&intervention=1',
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
         if (!controller.getViewModel()) return;
@@ -77,7 +77,7 @@ Ext.define('Boa.view.Report', {
       label: 'År för första besök',
       labelWidth: 140,
       labelStyle: 'vertical-align: middle;',
-      cls: 'bsw-select col-md-6',
+      cls: 'bsw-select col-xs-6',
       value: 0,
       sortfield: 'YearName',
       sortdirection: 'DESC',
@@ -88,6 +88,7 @@ Ext.define('Boa.view.Report', {
         fields: ['YearCode', 'YearName'],
         data: [
           { YearCode: 0, YearName: 'Alla år' },
+          { YearCode: 2019, YearName: '2019' },
           { YearCode: 2018, YearName: '2018' },
           { YearCode: 2017, YearName: '2017' },
           { YearCode: 2016, YearName: '2016' },
@@ -107,7 +108,7 @@ Ext.define('Boa.view.Report', {
       label: 'Enhet:',
       labelWidth: '60px !important;',
       labelStyle: 'vertical-align: middle;',
-      cls: 'bsw-select col-md-6',
+      cls: 'bsw-select col-xs-6',
       value: 0,
       sortfield: 'UnitName',
       sortdirection: 'DESC',
@@ -118,34 +119,34 @@ Ext.define('Boa.view.Report', {
         fields: ['UnitCode', 'UniName'],
         data: [
           { UnitCode: 0, UnitName: 'Kliniken' },
-          { UnitCode: 1, UnitName: 'Landstinget' }
+          { UnitCode: 1, UnitName: 'Regionen' }
         ]
       }
     },
     {
       xtype: 'container',
-      cls: 'col-md-12 bsw-summary',
+      cls: 'bsw-summary col-xs-12',
       items: [
         {
           xtype: 'label',
           bind: {
             html: '<div>Första besök</div><div>{report.FormInfo.0.Number}</div><div>Inmatade forumlär</div>'
           },
-          cls: 'col-md-4'
+          cls: 'col-xs-4'
         },
         {
           xtype: 'label',
           bind: {
             html: '<div>3 månader</div><div>{report.FormInfo.2.Number}</div><div>Inmatade formulär</div>'
           },
-          cls: 'col-md-4'
+          cls: 'col-xs-4'
         },
         {
           xtype: 'label',
           bind: {
             html: '<div>1 år</div><div>{report.FormInfo.4.Number}</div><div>Inmatade formulär</div>'
           },
-          cls: 'col-md-4'
+          cls: 'col-xs-4'
         }
       ]
     },
@@ -155,7 +156,7 @@ Ext.define('Boa.view.Report', {
       style: {
         padding: 0
       },
-      cls: 'col-md-12',
+      cls: 'col-xs-12',
       bind: {
         html: 'foo'
       }
@@ -206,7 +207,7 @@ Ext.define('Boa.view.ReportTable', {
         html += '<tr><td>{report.Tables.' + i + '.options.' + j + '.option}</td><td>{report.Tables.' + i + '.options.' + j + '.FVPat_.Number}</td><td>{report.Tables.' + i + '.options.' + j + '.FVPat_.Percent}%</td><td>{report.Tables.' + i + '.options.' + j + '.M3Pat_.Number}</td><td>{report.Tables.' + i + '.options.' + j + '.M3Pat_.Percent}%</td><td>{report.Tables.' + i + '.options.' + j + '.Y1Pat_.Number}</td><td>{report.Tables.' + i + '.options.' + j + '.Y1Pat_.Percent}%</td></tr>';
       }
     }
-
+/*
     questions = [6, 6];
     for (i = 2; i < 4; i++) {
       html += '<tr><td>{report.Tables.' + i + '.question}</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
@@ -214,7 +215,7 @@ Ext.define('Boa.view.ReportTable', {
         html += '<tr><td>{report.Tables.' + i + '.options.' + j + '.option}</td><td>-</td><td>-</td><td>{report.Tables.' + i + '.options.' + j + '.M3Pat_.Number}</td><td>{report.Tables.' + i + '.options.' + j + '.M3Pat_.Percent}%</td><td>{report.Tables.' + i + '.options.' + j + '.Y1Pat_.Number}</td><td>{report.Tables.' + i + '.options.' + j + '.Y1Pat_.Percent}%</td></tr>';
       }
     }
-
+*/
     html += '<tr><td>{report.Tables.' + i + '.question}</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
     for (j = 0; j < 6; j++) {
       html += '<tr><td>{report.Tables.' + i + '.options.' + j + '.option}</td><td>{report.Tables.' + i + '.options.' + j + '.FVPT_.Number}</td><td>{report.Tables.' + i + '.options.' + j + '.FVPT_.Percent}%</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>';
@@ -274,8 +275,16 @@ Ext.util.CSS.createStyleSheet(
 + '      height: 42px;'
 + '      border-radius: 3px;'
 + '      background-color: #ffffff;'
-+ '      border: solid 1px rgba(36, 93, 113, 0.5);'
+// + '      border: solid 1px rgba(36, 93, 113, 0.5);'
 + '  }'
+
+  + '.bsw-select .x-form-trigger-wrap {'
+  + '  border: solid 1px rgba(36, 93, 113, 0.5);'
+  + '}'
+  
+  + '.bsw-select .x-form-trigger-wrap.x-form-trigger-wrap-focus {'
+  + '  border-color: #42c1ef;'
+  + '}'
 
 + '  .bsw-select input {'
 + '      color: #245d71;'
@@ -411,7 +420,7 @@ Ext.util.CSS.createStyleSheet(
  + '  .bsw-summary {'
  + '      border-top: dashed 2px #3e9bbc;'
  + '      color: #245d71;'
- + '      padding-top: 20px;'
+ + '      padding: 15px;'
  + '      margin-top: 24px;'
  + '  }'
 

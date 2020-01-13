@@ -21,64 +21,66 @@ var treatmentWidget = function (current, callback, loadonly) {
   if (loadonly) return;
 
   initValues();
-
-  Ext.create('Rc.component.Selector', {
-    widget: treatmentWidget,
-    addValueCodes: true,
-    alignTarget: '',
-    levels: [
-      {
-        data: treatmentWidget.valueGroups[4056],
-        restore: function () {
-          treatmentWidget.valueGroups[6031] = Ext.decode(treatmentWidget.backups[6031]).data;
-          treatmentWidget.valueGroups[6030] = Ext.decode(treatmentWidget.backups[6030]).data;
-          attachChildren(6031);
+  
+  function createWindow() {
+    Ext.create('Rc.component.Selector', {
+      widget: treatmentWidget,
+      addValueCodes: true,
+      alignTarget: '',
+      levels: [
+        {
+          data: treatmentWidget.valueGroups[4056],
+          restore: function () {
+            treatmentWidget.valueGroups[6031] = Ext.decode(treatmentWidget.backups[6031]).data;
+            treatmentWidget.valueGroups[6030] = Ext.decode(treatmentWidget.backups[6030]).data;
+            attachChildren(6031);
+          },
+          click: function (record) {
+            treatmentWidget.trttype = record.data.ValueCode;
+            treatmentWidget.result.Trt_Type = treatmentWidget.trttype;
+            filterAllValues();
+            return { data: treatmentWidget.valueGroups[6031] };
+          }
         },
-        click: function (record) {
-          treatmentWidget.trttype = record.data.ValueCode;
-          treatmentWidget.result.Trt_Type = treatmentWidget.trttype;
-          filterAllValues();
-          return { data: treatmentWidget.valueGroups[6031] };
-        }
-      },
-      {
-        click: function (record) {
-          var values = {};
-          var code = record.data.ValueCode;
-          if (code.indexOf('M') === 0) {
-            treatmentWidget.result.Inj_Cause = code;
-          } else {
-            values.domainId = record.data.Domain.DomainID;
-            values.domainValueId = record.data.DomainValueID;
+        {
+          click: function (record) {
+            var values = {};
+            var code = record.data.ValueCode;
+            if (code.indexOf('M') === 0) {
+              treatmentWidget.result.Inj_Cause = code;
+            } else {
+              values.domainId = record.data.Domain.DomainID;
+              values.domainValueId = record.data.DomainValueID;
+            }
+            values.data = record.data.ValueName === record.data.Children[0].ValueName ? record.data.Children[0].Children : record.data.Children;
+            return values;
           }
-          values.data = record.data.ValueName === record.data.Children[0].ValueName ? record.data.Children[0].Children : record.data.Children;
-          return values;
-        }
-      },
-      {
-        click: function (record) {
-          var values = {};
-          var code = record.data.ValueCode;
-          var children = record.data.Children;
-          if (children) {
-            values.data = children;
-          } else {
-            treatmentWidget.result.Trt_Code = code;
-          }
+        },
+        {
+          click: function (record) {
+            var values = {};
+            var code = record.data.ValueCode;
+            var children = record.data.Children;
+            if (children) {
+              values.data = children;
+            } else {
+              treatmentWidget.result.Trt_Code = code;
+            }
 
-          return values;
+            return values;
+          }
+        },
+        {
+          click: function (record) {
+            var values = {};
+            var code = record.data.ValueCode;
+            treatmentWidget.result.Trt_Code = code;
+            return values;
+          }
         }
-      },
-      {
-        click: function (record) {
-          var values = {};
-          var code = record.data.ValueCode;
-          treatmentWidget.result.Trt_Code = code;
-          return values;
-        }
-      }
-    ]
-  }).show();
+      ]
+    }).show();
+  }
 
   function fetchValueGroup(domain) {
     Ext.Ajax.request({
@@ -105,6 +107,7 @@ var treatmentWidget = function (current, callback, loadonly) {
     treatmentWidget.valueGroups[6031] = Ext.decode(treatmentWidget.backups[6031]).data;
     treatmentWidget.valueGroups[6030] = Ext.decode(treatmentWidget.backups[6030]).data;
     attachChildren(6031);
+    createWindow();
   }
 
   function attachChildren(domain) {
@@ -271,11 +274,11 @@ Ext.define('Rc.component.Selector', {
     var tpl = new Ext.XTemplate(
       '<tpl for=".">',
       '<tpl if="Children.length">',
-      '<div style="margin: 0; padding: 0 15px; overflow: hidden; min-width: 200px;" class="sfr-menu-item">',
-      '<div><span class="sfr-angle-left">&#xf104</span>{ValueName}<span class="sfr-angle-right">&#xf105</span></div>',
+      '<div style="margin: 0; padding: 4px 15px; overflow: hidden; min-width: 200px;" class="sfr-menu-item">',
+      '<div style=" display: flex;"><span class="sfr-angle-left">&#xf0d9</span>{ValueName}<div class="sfr-angle-right">&#xf0da</div></div>',
       '<tpl else>',
-      '<div style="margin: 0; padding: 0 15px; overflow: hidden; min-width: 200px;" class="sfr-menu-item">',
-      '<div><span class="sfr-angle-left">&#xf104</span><span class="sfr-value-code">({ValueCode})</span> {ValueName}</div>',
+      '<div style="margin: 0; padding: 4px 15px; overflow: hidden; min-width: 200px;" class="sfr-menu-item">',
+      '<div><span class="sfr-angle-left">&#xf0d9</span>{ValueName}</div>',
       '</tpl>',
       '</div>',
       '</tpl>'
@@ -356,7 +359,9 @@ Ext.util.CSS.createStyleSheet(''
   + '  font-family: FontAwesome;'
   + '  display: inline;'
   + '  padding-left: 5px;'
-  + '  color: #aaa;'
+  + '  color: #666;'
+  + '  flex: 1;'
+  + '  text-align: right;'
   + ' }'
   + '.x-item-selected .sfr-angle-left {'
   + '  display: inline;'
@@ -373,7 +378,7 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
   + '.sfr-menu-item {'
   + '  border-bottom: 1px solid #eee;'
-  + '  padding: 5px 15px 5px 15px !important;'
+  + '  padding: 7px 15px 7px 15px !important;'
   + '}'
   + '.sfr-value-code{'
   + '  display: none;'

@@ -5,9 +5,13 @@ Ext.util.CSS.createStyleSheet(
   + '.bsw-checkbox.x-form-type-checkbox.x-form-cb-checked .x-form-checkbox-default:before {'
   + '  content: url(https://stratum.blob.core.windows.net/boa/checkbox-boa.svg);'
   +  '}'
+
   + '.x-keyboard-mode .bsw-button.x-btn-focus {'
-  + '  background-color: #245d71;'
+  + '  background-color: #caecf7              ;'
+  + '  outline: none !important;'
+  + '  box-shadow: none;'
   + '}'
+  
   + ' .bsw-county-item {'
   + '     padding-top: 10px;'
   + '     padding-bottom: 6px;'
@@ -47,8 +51,15 @@ Ext.util.CSS.createStyleSheet(
   + '      height: 42px;'
   + '      border-radius: 3px;'
   + '      background-color: #ffffff;'
-  + '      border: solid 1px rgba(36, 93, 113, 0.5);'
   + '  }'
+
+  + '.bsw-select .x-form-trigger-wrap {'
+  + '  border: solid 1px rgba(36, 93, 113, 0.5);'
+  + '}'
+  
+  + '.bsw-select .x-form-trigger-wrap.x-form-trigger-wrap-focus {'
+  + '  border-color: #42c1ef;'
+  + '}'
 
   + '  .bsw-select input {'
   + '      color: #245d71;'
@@ -202,8 +213,8 @@ Ext.util.CSS.createStyleSheet(
   + '      box-shadow: inset 0px -10px 9px -7px rgba(0,0,0,0.2);'
   + '  }'
 
-  + '  .bsw-tabs a:focus, .bsw-tabs .x-tab-focus {'
-  + '      outline: none !important;'
+  + '.x-keyboard-mode .bsw-tabs a:focus, .x-keyboard-mode .bsw-tabs .x-tab-focus {'
+  + '      outline: 1px solid #245D71;'
   + '  }'
 
   + '  .bsw-tabs .x-tab.x-tab-active.x-tab-default {'
@@ -281,6 +292,10 @@ Ext.util.CSS.createStyleSheet(
   + '      margin: 0;'
   + '  }'
 
+  + '.bsw-checkbox span.x-form-checkbox-focus {'
+  + '  outline: 1px solid #42c1ef;'
+  + '}'
+  
   + '  .bsw-checkbox.x-form-cb-checked input {'
   + '      background-position: -8px -38px !important;'
   + '  }'
@@ -349,6 +364,10 @@ Ext.util.CSS.createStyleSheet(
   + '      color: #009666;'
   + '      display: flex;'
   + '  }'
+
+  + '.bsw-secondary:focus {'
+  + '  background-color: #f0f7fb !important;'
+  + '}'
 
   + '  .bsw-secondary.bsw-grade-almost {'
   + '      background-position: -6px -41px !important;'
@@ -509,7 +528,12 @@ Ext.util.CSS.createStyleSheet(
   + '      background-color: #ffffff; '
   + '      border: solid 1px #3e9bbc;'
   + '      display: block;'
+  + '  padding: 0;    '
   + '  }'
+
+  + '.bsw-button:hover {'
+  + '  background-color: #caecf7;'
+  + '}'
 
   + '  .bsw-button .x-btn-inner {'
   + '      font-family: "Roboto Slab";'
@@ -519,8 +543,11 @@ Ext.util.CSS.createStyleSheet(
   + '      font-stretch: normal;'
   + '      line-height: 1.67;'
   + '      color: #245d71;'
-
   + '  }'
+
+  + '.bsw-button.x-btn-focus .x-btn-inner {'
+//  + '  color: white;'
+  + '}'
 
   + '  .bsw-hidden {'
   + '      display: hidden'
@@ -546,7 +573,7 @@ Ext.util.CSS.createStyleSheet(
   + '  }'
 
   + '  .bsw-pills a:focus {'
-  + '      outline: none;'
+//  + '      outline: none;'
   + '  }'
 
   + '  .bsw-pills .x-tab.x-tab-active.x-tab-default .x-tab-inner-default {'
@@ -867,10 +894,6 @@ Ext.util.CSS.createStyleSheet(
 
   + '  .bsw-body .x-btn.x-btn-pressed.x-btn-default-large span {'
   + '      color: white;'
-  + '  }'
-
-  + '  .bsw-body .x-form-trigger-wrap-default {'
-  + '      border:none;'
   + '  }'
 
   + '  .bsw-body .x-tab-bar-default-top>.x-tab-bar-body-default {'
@@ -2468,7 +2491,7 @@ Ext.define('Boa.view.Details', {
               xtype: 'container',
               name: 'title',
               bind: {
-                html: '<div class="bsw-chart-title"><h2>{legend.indicator}</h2></div><p>Här ser du en jämförelse mellan mottagningar eller mellan landsting hur väl de når målet för indikatorn. Datan är beräknad på de senaste 12 månaderna. Du väljer mellan att visa en jämförelse mellan enheter inom samma landsting eller en jämförelse mellan landstingen alternativt enheter/landsting med liknande patientsammansättning <img class="bsw-qtip" src="https://registercentrum.blob.core.windows.net/boa/r/Utdata-info-BJgYkJMKx.png" data-qtip="Här jämförs enheter eller landsting med liknande casemix, dvs de som är mest lika avseende andel över 65 år, andel män, andel på väntelista till operation, andel patienter som har besvär från tre eller fler ledsystem samt andel som uppger att de har gångsvårigheter av andra orsaker än ledbesvär.">.</p><p>Indikatorn visar måluppfyllnad vid {legend.period}.</p></div'
+                html: '<div class="bsw-chart-title"><h2>{legend.indicator}</h2></div><p>Här ser du en jämförelse mellan mottagningar eller mellan landsting hur väl de når målet för indikatorn. Datan är beräknad på de senaste 12 månaderna. Du väljer mellan att visa en jämförelse mellan enheter inom samma region eller en jämförelse mellan landstingen alternativt enheter/landsting med liknande patientsammansättning <img class="bsw-qtip" src="https://registercentrum.blob.core.windows.net/boa/r/Utdata-info-BJgYkJMKx.png" data-qtip="Här jämförs enheter eller landsting med liknande casemix, dvs de som är mest lika avseende andel över 65 år, andel män, andel på väntelista till operation, andel patienter som har besvär från tre eller fler ledsystem samt andel som uppger att de har gångsvårigheter av andra orsaker än ledbesvär.">.</p><p>Indikatorn visar måluppfyllnad vid {legend.period}.</p></div'
 
               },
               cls: 'bsw-header'
@@ -2488,7 +2511,7 @@ Ext.define('Boa.view.Details', {
                   items: [
                     {
                       xtype: 'button',
-                      text: 'Inom samma landsting',
+                      text: 'Inom samma region',
                       cls: 'bsw-active-button',
                       listeners: {
                         click: 'showRegion'
@@ -3442,7 +3465,7 @@ Ext.define('Boa.view.SecondaryGoals', {
     {
       xtype: 'panel',
       bind: {
-        html: '<div class="bsw-secondary bsw-grade-{first.output.grade}"><div>{first.output.result}</div><div><div class="patient-rate">{first.output.indicatorText}</div><div class="goal-level">{first.output.targetText}</div></div></div>'
+        html: '<div tabindex="0" class="bsw-secondary bsw-grade-{first.output.grade}"><div>{first.output.result}</div><div><div class="patient-rate">{first.output.indicatorText}</div><div class="goal-level">{first.output.targetText}</div></div></div>'
       },
       cls: ' bsw-secondary-line',
       listeners: {
@@ -3451,12 +3474,19 @@ Ext.define('Boa.view.SecondaryGoals', {
           fn: function () {
             this.component.up().up().getController().details('xray');
           }
+        },
+        keyup: {                         
+          element: 'el',
+          fn: function (e) {
+            if(e.keyCode!==13)return
+            this.component.up().up().getController().details('xray');
+          }
         }
       }
     },
     {
       bind: {
-        html: '<div class="bsw-secondary bsw-grade-{second.output.grade}"><div>{second.output.result}</div><div><div class="patient-rate">{second.output.indicatorText}</div><div class="goal-level">{second.output.targetText}</div></div></div>'
+        html: '<div tabindex="0" class="bsw-secondary bsw-grade-{second.output.grade}"><div>{second.output.result}</div><div><div class="patient-rate">{second.output.indicatorText}</div><div class="goal-level">{second.output.targetText}</div></div></div>'
       },
       cls: ' bsw-secondary-line',
       listeners: {
@@ -3465,12 +3495,19 @@ Ext.define('Boa.view.SecondaryGoals', {
           fn: function () {
             this.component.up().up().getController().details('age');
           }
+        },
+        keyup: {                         
+          element: 'el',
+          fn: function (e) {
+            if(e.keyCode!==13)return
+            this.component.up().up().getController().details('xray');
+          }
         }
       }
     },
     {
       bind: {
-        html: '<div class="bsw-secondary bsw-grade-{third.output.grade}"><div>{third.output.result}</div><div><div class="patient-rate">{third.output.indicatorText}</div><div class="goal-level">{third.output.targetText}</div></div></div>'
+        html: '<div tabindex="0" class="bsw-secondary bsw-grade-{third.output.grade}"><div>{third.output.result}</div><div><div class="patient-rate">{third.output.indicatorText}</div><div class="goal-level">{third.output.targetText}</div></div></div>'
       },
       cls: ' bsw-secondary-line',
       listeners: {
@@ -3484,7 +3521,7 @@ Ext.define('Boa.view.SecondaryGoals', {
     },
     {
       bind: {
-        html: '<div class="bsw-secondary bsw-grade-{fourth.output.grade}"><div>{fourth.output.result}</div><div><div class="patient-rate">{fourth.output.indicatorText}</div><div class="goal-level">{fourth.output.targetText}</div></div></div>'
+        html: '<div tabindex="0" class="bsw-secondary bsw-grade-{fourth.output.grade}"><div>{fourth.output.result}</div><div><div class="patient-rate">{fourth.output.indicatorText}</div><div class="goal-level">{fourth.output.targetText}</div></div></div>'
       },
       cls: ' bsw-secondary-line',
       listeners: {
@@ -3493,12 +3530,19 @@ Ext.define('Boa.view.SecondaryGoals', {
           fn: function () {
             this.component.up().up().getController().details('stop-medication');
           }
+        },
+        keyup: {                         
+          element: 'el',
+          fn: function (e) {
+            if(e.keyCode!==13)return
+            this.component.up().up().getController().details('xray');
+          }
         }
       }
     },
     {
       bind: {
-        html: '<div class="bsw-secondary bsw-grade-{fifth.output.grade}"><div>{fifth.output.result}</div><div><div class="patient-rate">{fifth.output.indicatorText}</div><div class="goal-level">{fifth.output.targetText}</div></div></div>'
+        html: '<div tabindex="0" class="bsw-secondary bsw-grade-{fifth.output.grade}"><div>{fifth.output.result}</div><div><div class="patient-rate">{fifth.output.indicatorText}</div><div class="goal-level">{fifth.output.targetText}</div></div></div>'
       },
       cls: ' bsw-secondary-line',
       listeners: {
@@ -3506,6 +3550,13 @@ Ext.define('Boa.view.SecondaryGoals', {
           element: 'el',
           fn: function () {
             this.component.up().up().getController().details('completed-school');
+          }
+        },
+        keyup: {                         
+          element: 'el',
+          fn: function (e) {
+            if(e.keyCode!==13)return
+            this.component.up().up().getController().details('xray');
           }
         }
       }
@@ -3656,7 +3707,7 @@ Ext.define('Boa.view.Table', {
       + '<div class="rect5"></div>'
       + '</div>'
   },
-
+/*
   createExcelLink: function (data) {
     var tag = document.getElementById('exportComparison');
     if (!tag) return;
@@ -3684,7 +3735,7 @@ Ext.define('Boa.view.Table', {
     }
 
     document.getElementById('exportTableBar').setAttribute('class', 'bsw-visible');
-  }
+  }*/
 });
 
 Ext.define('Boa.view.Trend', {
