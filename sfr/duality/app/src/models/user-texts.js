@@ -8,7 +8,7 @@ export const SCREENING_QUESTION_1 = "Är patienten redan behandlad för den aktu
 export const SCREENING_QUESTION_2 = "Är patienten enligt er lokala rutin lämplig för helprotes?";
 export const SCREENING_QUESTION_3 = "Kan både op med standardcup och med dubbelcup utföras på kliniken för aktuell patient?";
 export const SCREENING_QUESTION_4 = "Har patienten givit informerat skriftligt samtycke till medverkan i studien?";
-export const SCREENING_QUESTION_4_HELP_NOTE = 'Se <a href="#" target="_blank">denna länk</a> för skriftligt samtyckesformulär.';
+export const SCREENING_QUESTION_4_HELP_NOTE = 'Se <a href="https://sfr.registercentrum.se/forskning/duality/p/SklsPtj6S" target="_blank">denna länk</a> för skriftligt samtyckesformulär.';
 export const SCREENING_QUESTION_4_DETAILS = "Vad är orsaken till att inget samtycke erhållits?";
 export const SCREENING_FAIL_WARNING = "Svaren som angetts kommer leda till en screening fail.";
 export const SCREENING_FAIL_QUESTION = "Svaren som angetts kommer leda till en screening fail. Randomisering kommer INTE att ske. Vill du fortsätta?";
