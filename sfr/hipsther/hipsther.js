@@ -30,11 +30,11 @@ var hipstherWidget = function(parameters, _subjectManagement) {
         eventId: parameters.eventId
     };
 
-    _subjectManagement.GetPerson(scope.subject.subjectKey, function(result) {
-        Repository.Local.Methods.Hipsther.log("Result from GetPerson:");
-        Repository.Local.Methods.Hipsther.log(result);
-        if(result.success) {
-            scope.subject.fullName = result.data.FirstName + " " + result.data.LastName;
+    _subjectManagement.GetPerson(scope.subject.subjectKey, function(response) {
+        Repository.Local.Methods.Hipsther.log("Response from GetPerson:");
+        Repository.Local.Methods.Hipsther.log(response);
+        if(response.success) {
+            scope.subject.fullName = response.data.FirstName + " " + response.data.LastName;
             initWidget();
         }
     });
@@ -87,9 +87,9 @@ var hipstherWidget = function(parameters, _subjectManagement) {
             }
         });
 
-        getScreening().then(function(data) {
+        Repository.Local.Methods.Hipsther.getResource("/candidates/" + scope.eventId).then(function(data) {
             scope.subject.screened = true;
-            Repository.Local.Methods.Hipsther.log("Result from getScreening:");
+            Repository.Local.Methods.Hipsther.log("Response from: /candidates/" + scope.eventId);
             Repository.Local.Methods.Hipsther.log(data);
             if(!data.Included) {
                 hipstherWindow.show();         
@@ -97,8 +97,8 @@ var hipstherWidget = function(parameters, _subjectManagement) {
                 return;
             }
 
-            getSubject().then(function(data) {
-                Repository.Local.Methods.Hipsther.log("Result from getSubject:");
+            Repository.Local.Methods.Hipsther.getResource("/subjects/" + scope.subject.subjectKey).then(function(data) {
+                Repository.Local.Methods.Hipsther.log("Response from getSubject:");
                 Repository.Local.Methods.Hipsther.log(data);
                 scope.subject.studyGroup = data.StudyGroup;
                 scope.subject.subjectId = data.SubjectId;
@@ -109,9 +109,9 @@ var hipstherWidget = function(parameters, _subjectManagement) {
                 Repository.Local.Methods.Hipsther.log("Subject not there...");
                 hipstherWindow.show();         
             });
-        }, function(result) {
-            Repository.Local.Methods.Hipsther.log(result);
-            if(result.code === 404) {
+        }, function(response) {
+            Repository.Local.Methods.Hipsther.log(response);
+            if(response.code === 404) {
                 Repository.Local.Methods.Hipsther.log("Subject not screened...");
                 hipstherWindow.show();         
             }
@@ -493,49 +493,6 @@ var hipstherWidget = function(parameters, _subjectManagement) {
         updateUi();
     }
 
-    function getSubject() {
-        return new Ext.Promise(function (resolve, reject) {
-            Ext.Ajax.request({
-                url: BASE_URL + "/subjects/" + scope.subject.subjectKey,
-                success: function (response) {
-                    if(response.status !== 200){
-                        reject();
-                    }
-                    var responseJson = Ext.util.JSON.decode(response.responseText);
-                    if(responseJson.success === false || responseJson.code !== 0) {
-                        reject();
-                    }
-                    resolve(responseJson.data);
-                },
-                failure: function () {
-                    reject();
-                }
-            });
-        });
-    }
-
-    function getScreening() {
-        return new Ext.Promise(function (resolve, reject) {
-            Ext.Ajax.request({
-                url: BASE_URL + "/candidates/" + scope.eventId,
-                success: function (response) {
-                    if(response.status !== 200){
-                        reject();
-                    }
-                    var responseJson = Ext.util.JSON.decode(response.responseText);
-                    if(responseJson.success === false || responseJson.code !== 0) {
-                        reject();
-                    }
-                    resolve(responseJson.data);
-                },
-                failure: function (response) {
-                    var responseJson = Ext.util.JSON.decode(response.responseText);
-                    reject(responseJson);
-                }
-            });
-        });
-    }
-
     function handleContinueClick() {
         Repository.Local.Methods.Hipsther.log("Participation questions:");
         Repository.Local.Methods.Hipsther.log(scope.participationQuestions);
@@ -588,19 +545,20 @@ var hipstherWidget = function(parameters, _subjectManagement) {
                                 Repository.Local.Methods.Hipsther.log("Inj_Age:     " + parameters.studyVariables.ageAtInjuryDate);
                                 Repository.Local.Methods.Hipsther.log("Fx_XrayDat:  " + parameters.studyVariables.xRayDate);
                                 Repository.Local.Methods.Hipsther.log("Fx_XrayTime: " + parameters.studyVariables.xRayTime);
-                                Repository.Local.Methods.Hipsther.writeInitialStudyData(parameters, scope.subject.subjectKey).then(function(result) {
-                                    Ext.Msg.alert(
-                                        'HIPSTHER', 
-                                        'Patienten är nu inkluderad i HIPSTHER och randomiserad till: ' + json.data.StudyGroup, 
-                                        Ext.emptyFn
-                                    );
-                                }, function(result) {
-                                    Ext.Msg.alert(
-                                        'FEL: HIPSTHER', 
-                                        'Patienten blev randomiserad men initiala studievariabler kunde inte sparas. Vänligen kontakta studieledningen.', 
-                                        Ext.emptyFn
-                                    );
-                                });
+                                Repository.Local.Methods.Hipsther.writeInitialStudyData(parameters, scope.subject.subjectKey)
+                                    .then(function() {
+                                        Ext.Msg.alert(
+                                            'HIPSTHER', 
+                                            'Patienten är nu inkluderad i HIPSTHER och randomiserad till: ' + json.data.StudyGroup, 
+                                            Ext.emptyFn
+                                        );
+                                    }, function() {
+                                        Ext.Msg.alert(
+                                            'FEL: HIPSTHER', 
+                                            'Patienten blev randomiserad men initiala studievariabler kunde inte sparas. Vänligen kontakta studieledningen.', 
+                                            Ext.emptyFn
+                                        );
+                                    });
                             },
                             failure: function(response) {
                                 Repository.Local.Methods.Hipsther.log("Failure. Response:");
