@@ -3,7 +3,8 @@ param(
     [Parameter(Mandatory=$true)] [String]$WidgetFileName
 )
 
-Import-Module .\Helpers -Force # -Verbose
+$helpersPath = Join-Path -Path $PSScriptRoot -ChildPath "Helpers"
+Import-Module $helpersPath -Force # -Verbose
 $ErrorActionPreference = "Stop"
 $serverInstance = ""
 

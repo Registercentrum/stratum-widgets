@@ -36,9 +36,11 @@ function Backup-Widget {
     [Parameter(Mandatory=$true)] [String]$WidgetName
   )
   Write-Host "Backing up widget: $WidgetName."
+  $backupPath = Join-Path -Path $PSScriptRoot -ChildPath "..\_backup"
   $widgetContent = Get-ScalarValue -Query "SELECT PageContent FROM cPages WHERE PageContent LIKE '<!-- Widget: $WidgetId -->%'"
   $DateString = (Get-Date).toString("yyyy-MM-dd--HH_mm_ss")
-  $widgetContent | Out-File -FilePath "..\_backup\$script:Environment-Widget--$WidgetName-$DateString.html"
+  New-Item -ItemType Directory -Force -Path $backupPath | Out-Null
+  $widgetContent | Out-File -FilePath "$backupPath\$script:Environment-Widget--$WidgetName-$DateString.html"
 }
 
 function Backup-SubmitScript {
