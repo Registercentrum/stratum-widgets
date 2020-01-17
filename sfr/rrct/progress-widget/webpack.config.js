@@ -4,10 +4,9 @@ module.exports = {
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'duality.screening-log.bundle.js'
+        filename: 'rrct.progress-widget.bundle.js'
     },
     mode: 'production',
-    //devtool: "eval-source-map",
     module: {
         rules: [
             {

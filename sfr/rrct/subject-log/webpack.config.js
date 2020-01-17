@@ -4,7 +4,7 @@ module.exports = {
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'duality.subject-log.bundle.js'
+        filename: 'rrct.subject-log.bundle.js'
     },
     mode: 'production',
     module: {

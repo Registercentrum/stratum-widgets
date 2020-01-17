@@ -5,10 +5,6 @@ export function setRrctBaseUrl(baseUrl) {
     RRCT_BASE_URL = baseUrl;
 }
 
-export function getSubjects() {
-    return getResource(RRCT_BASE_URL + "/subjects");
-}
-
 export function getCandidates() {
     return getResource(RRCT_BASE_URL + "/candidates?apikey=" + _apiKey);
 }

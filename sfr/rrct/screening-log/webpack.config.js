@@ -4,9 +4,10 @@ module.exports = {
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'hipsther.subject-log.bundle.js'
+        filename: 'rrct.screening-log.bundle.js'
     },
     mode: 'production',
+    //devtool: "eval-source-map",
     module: {
         rules: [
             {

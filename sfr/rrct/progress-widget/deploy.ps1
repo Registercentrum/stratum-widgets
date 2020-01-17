@@ -1,10 +1,8 @@
 param(
     [Parameter(Mandatory=$true)] [String]$Environment
 )
-$DistFileLocation = "..\sfr\hipsther\screening-log\dist\hipsther.screening-log.bundle.js"
-
+$DistFileLocation = "dist\rrct.progress-widget.bundle.js"
 Write-Host "Building... " -NoNewline
-
 Invoke-Expression -Command "npx webpack" | Out-Null
 
 if($LASTEXITCODE -ne 0) {
@@ -16,14 +14,10 @@ else {
 }
 
 try {
-    Push-Location "..\..\..\_deploy-scripts"
-    Invoke-Expression -Command ".\AddOrUpdateWidget.ps1 -Environment $Environment -WidgetFilename $DistFileLocation"
+    Invoke-Expression -Command "..\..\..\_deploy-scripts\AddOrUpdateWidget.ps1 -Environment $Environment -WidgetFilename $DistFileLocation"
     Write-Host "Deploy succeeded." -ForegroundColor Green
 }
 catch {
     Write-Host "An error occurred:"
     Write-Host $_
-}
-finally {
-    Pop-Location
 }
