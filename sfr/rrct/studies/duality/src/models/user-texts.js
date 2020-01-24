@@ -1,9 +1,11 @@
 export const STUDY_TITLE = "DUALITY";
 export const STUDY_ERROR_TITLE = "FEL: " + STUDY_TITLE;
 export const CONTINUE_WITH_SCREENING_QUESTION_TITLE = `Fråga från ${STUDY_TITLE}-studien:`;
-export const CONTINUE_WITH_SCREENING_QUESTION = `Denna patient uppfyller inklusionkriterierna för ${STUDY_TITLE} med randomisering mellan STANDARDCUP och DUBBELCUP vid Garden III-IV frakturer. Vill du screena patienten nu?`;
+export const CONTINUE_WITH_SCREENING_QUESTION = `Denna patient uppfyller inklusionkriterierna för ${STUDY_TITLE} med ` + 
+    `randomisering mellan STANDARDCUP och DUBBELCUP vid Garden III-IV frakturer. Om patienten är en kandidat för ` +
+    `helprotes kan du screena patienten för inkludering.Vill du gå vidare med screening nu?`;
 export const UNKNOWN_ERROR = "Ett oväntat fel uppstod. Försök igen senare eller kontakta studieledningen!";
-export const SCREENING_INFO = "Denna patient uppfyller inklusionkriterierna för DUALITY med randomisering mellan STANDARDCUP och DUBBELCUP vid Garden III-IV frakturer. Besvara följande frågor endast om du vill försöka randomisera.";
+export const SCREENING_INFO = `Denna patient uppfyller inklusionkriterierna för ${STUDY_TITLE} med randomisering mellan STANDARDCUP och DUBBELCUP vid Garden III-IV frakturer. Besvara följande frågor endast om du vill försöka randomisera.`;
 export const SCREENING_QUESTION_1 = "Är patienten redan behandlad för den aktuella höftfrakturen?";
 export const SCREENING_QUESTION_2 = "Är patienten enligt er lokala rutin lämplig för helprotes?";
 export const SCREENING_QUESTION_3 = "Kan både op med standardcup och med dubbelcup utföras på kliniken för aktuell patient?";
