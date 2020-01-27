@@ -1,11 +1,13 @@
 
 export function renderUI(model, container) {
+    console.log("Rendering UI with model:");
+    console.log(model);
     var formattedDate = Ext.Date.format(new Date(model.latestInclusionDate), "Y-m-d H:i");
     Ext.create("Ext.container.Container", {
         renderTo: container,
         margin: "0 0 20 0",
         items: [
-            getChart(model.numIncluded), {
+            getChart(model), {
                 xtype: "container",
                 html: `
                     <p>Senast inkluderande enhet:</p>
@@ -19,7 +21,7 @@ export function renderUI(model, container) {
     });
 }
 
-function getChart(numIncluded) {
+function getChart(model) {
     return Ext.create('Ext.chart.CartesianChart', {
         width: 150,
         height: 300,
@@ -32,13 +34,13 @@ function getChart(numIncluded) {
         store: {
             fields: ['name', 'numIncluded'],
             data: [
-                {"name": "", "numIncluded": numIncluded}
+                {"name": "", "numIncluded": model.numIncluded}
             ]
         },  
         axes: [{
             type: 'numeric',
             position: 'left',
-            maximum: 1440,
+            maximum: model.inclusionGoal,
             majorTickSteps: 10,
             minorTickSteps: 1
         }, {

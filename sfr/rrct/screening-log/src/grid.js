@@ -6,7 +6,7 @@ export function renderUI(store, container) {
         items: [
             getGrid(store)
         ]
-    })
+    });
 }
 
 function getGrid(store) {

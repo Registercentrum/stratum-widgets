@@ -15,6 +15,10 @@ if(!config.baseUrl) {
     throw "RRCT base url was not set!";
 }
 
+if(!config.inclusionGoal) {
+    throw "No inclusion goal set!";
+}
+
 api.setRrctBaseUrl(config.baseUrl);
 
 function simpleCompare(value1, value2) {
@@ -39,7 +43,8 @@ api.getCandidates()
             var model = {
                 numIncluded: includedCandidates.length,
                 latestIncludedUnitName: unit.UnitName,
-                latestInclusionDate: latestIncludedCandidate.Screening.DateConsidered
+                latestInclusionDate: latestIncludedCandidate.Screening.DateConsidered,
+                inclusionGoal: config.inclusionGoal
             }
     
             renderUI(model, config.container);
