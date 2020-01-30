@@ -12,7 +12,6 @@ export function get(resource) {
                 if(responseJson.success === false || responseJson.code !== 0) {
                     reject();
                 }
-                console.log(responseJson.data);
                 resolve(responseJson.data);
             },
             failure: function (response) {

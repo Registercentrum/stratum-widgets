@@ -19,9 +19,6 @@ Ext.util.CSS.createStyleSheet(''
 );
 
 export function init(current, subject, subjectManagement) {
-    console.log(current);
-    console.log(subject);
-    console.log(subjectManagement);
     _screening = {
         participationQuestions: {
             alreadyTreated: null,
