@@ -1,7 +1,5 @@
 
 export function renderUI(model, container) {
-    console.log("Rendering UI with model:");
-    console.log(model);
     var formattedDate = Ext.Date.format(new Date(model.latestInclusionDate), "Y-m-d H:i");
     Ext.create("Ext.container.Container", {
         renderTo: container,
