@@ -1,5 +1,6 @@
 .eslintrc
 .eslintignore
+.gitattributes
 test.html
 test.js
 _backup/
