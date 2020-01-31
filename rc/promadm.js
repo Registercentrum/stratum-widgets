@@ -1365,7 +1365,7 @@
                 var d = Ext.decode(r.responseText);
                 var i = 0;
                 i++;
-                cmp.setValue('https://stratum.registercentrum.se/Apps/PublicRegistrator/app.html?token=' + d.data);
+                cmp.setValue('https://svara.registercentrum.se/?token=' + d.data);
             }
         });
     }
