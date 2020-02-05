@@ -3046,6 +3046,14 @@ Ext.define('Boa.view.OverView', {
       }]
     };
 
+    var years = []
+    var currentYear = (new Date()).getFullYear()
+    for (i = 2011; i <= currentYear; i++) {
+      years.push({ YearCode: i, YearName: i })
+    }
+    years.push({ YearCode: 0, YearName: 'Alla år' })
+    years.reverse()
+
     var filters = {
       xtype: 'container',
       itemId: 'filters',
@@ -3095,12 +3103,11 @@ Ext.define('Boa.view.OverView', {
             store.sort('YearName', 'DESC');
           },
           listeners: {
-            select: 'updateSelection',
-            render: 'createDropdownItems'
+            select: 'updateSelection'
           },
           store: {
             fields: ['YearCode', 'YearName'],
-            data: []
+            data: years
           }
         },
         {
