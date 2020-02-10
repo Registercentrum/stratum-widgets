@@ -484,11 +484,12 @@ Ext.define('RC.UserAdministration.controller.User', {
           return Ext.String.startsWith(context.User.Username, user, true)
             || Ext.String.startsWith(context.User.FirstName, user, true)
             || Ext.String.startsWith(context.User.LastName, user, true)
-            || (context.User.Extra && (typeof context.User.Extra === 'string') && Ext.String.startsWith(JSON.parse(context.User.Extra)[Profile.Site.Register.RegisterID], user, true))
-            || (context.User.Extra && (typeof context.User.Extra === 'object') && Ext.String.startsWith(context.User.Extra[Profile.Site.Register.RegisterID], user, true))
+            // || (context.User.Extra && (typeof context.User.Extra === 'string') && Ext.String.startsWith(JSON.parse(context.User.Extra)[Profile.Site.Register.RegisterID], user, true))
+            // || (context.User.Extra && (typeof context.User.Extra === 'object') && Ext.String.startsWith(context.User.Extra[Profile.Site.Register.RegisterID], user, true))
         })
         var isPartOfUnit = unitContexts.length !== 0
-        return isPartOfUnit
+        var matchesExtraField = (JSON.parse(item.data.Extra) && Ext.String.startsWith(JSON.parse(item.data.Extra)[Profile.Site.Register.RegisterID], user, true)) ? true : false
+        return isPartOfUnit || matchesExtraField
       }
       return true
     }
@@ -769,10 +770,11 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
   onSave: function () {
     if (!this.getForm().isValid()) return
     var data = {}
+    var controller = this
     data.controller = this
     data.user = this.getUser()
     data.context = this.getContext()
-    this.saveUser(data).then(this.saveContext).then(this.updateUser)
+    this.saveUser(data).then(controller.saveContext).then(controller.updateUser)
     this.getView().destroy()
   },
 
@@ -998,6 +1000,13 @@ Ext.define('RC.UserAdministration.controller.CreateContext', {
     fields: ['unit', 'role']
   },
 
+  init: function () {
+    this.callParent() 
+    this.lookup('sithIdButton').hide()
+    this.lookup('bankIdButton').hide()
+    this.lookup('createContextButton').hide()
+  },
+
   onSave: function () {
     if (!this.getForm().isValid()) return
     var data = {}
@@ -1047,7 +1056,7 @@ Ext.define('RC.UserAdministration.form.User', {
     { fieldLabel: 'Organisation',    name: 'Organization', reference: 'organisation' },
     { fieldLabel: 'Användarnamn',    name: 'Username',     reference: 'username',   vtype: 'username', allowBlank: false },
     { fieldLabel: 'Senast inloggad', name: 'LastActive',   reference: 'lastactive', cls: 'rc-info' },
-    { fieldLabel: 'Enhet',           name: 'UnitID',       reference: 'unit',       allowBlank: false, xtype: 'combobox', store: { type: 'unit' }, valueField: 'UnitID', displayField: 'UnitName' },
+    { fieldLabel: 'Enhet',           name: 'UnitID',       reference: 'unit',       allowBlank: false, xtype: 'rcfilter', store: { type: 'unit' }, valueField: 'UnitID', displayField: 'UnitName' },
     { fieldLabel: 'Roll',            name: 'RoleID',       reference: 'role',       allowBlank: false, xtype: 'combobox', store: { type: 'role' }, valueField: 'RoleID', displayField: 'RoleName' },
     { fieldLabel: 'Användarid',      name: 'UserID',       reference: 'userid',     },
     { fieldLabel: 'Title',           name: 'WorkTitle',    reference: 'worktitle',  },
@@ -1184,6 +1193,11 @@ Ext.define('RC.UserAdministration.controller.Context', {
     var params = Ext.clone(record.data)
     params.IsActive = checked
     delete params.User
+    delete params.ExpireDate
+    delete params.ActivatedAt
+    delete params.Active
+    delete params.Unit
+    delete params.Role
     Ext.Ajax.request({
       url: '/stratum/api/metadata/contexts/' + params.ContextID,
       method: 'PUT',
