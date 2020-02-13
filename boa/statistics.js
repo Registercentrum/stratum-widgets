@@ -1,4 +1,6 @@
 
+widgetConfig = {}
+widgetConfig.apikey = 'MpuYxfbtp5I='
 Ext.util.CSS.removeStyleSheet('bsw');
 Ext.util.CSS.createStyleSheet(
   ' '
@@ -1130,7 +1132,7 @@ typeof Boa === 'undefined' && Ext.define('Boa.model.Infobar', {
     type: 'ajax',
     method: 'get',
     cors: true,
-    url: 'https://boa.registercentrum.se/stratum/api/statistics/BOA/boaw-antal-registrerade-forsta-besok?apikey=KbxAwmlwLM4=&year=2015&grupptyp=landsting&gruppkod=14&completeFollowUp=0',
+    url: 'https://boa.registercentrum.se/stratum/api/statistics/BOA/boaw-antal-registrerade-forsta-besok?apikey=MpuYxfbtp5I=&year=2015&grupptyp=landsting&gruppkod=14&completeFollowUp=0',
     reader: {
       type: 'json',
       rootProperty: 'data'
@@ -1145,7 +1147,7 @@ Ext.define('Boa.controller.DetailsController', {
   config: {
     unitsUrl: 'https://boa.registercentrum.se/stratum/api/metadata/units/register/104/',
     baseUrl: 'https://boa.registercentrum.se/stratum/api/statistics/BOA/',
-    apiKey: 'KbxAwmlwLM4=',
+    apiKey: 'MpuYxfbtp5I=',
     comparisonGroup: 'inomlandsting'
   },
 
@@ -1423,7 +1425,7 @@ Ext.define('Boa.controller.DetailsController', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: 'https://boa.registercentrum.se/stratum/api/statistics/BOA/boaw-jamfor-' + this.indicator + '?apikey=KbxAwmlwLM4=&rinvoke=1&formulartyp=ForstaPat&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeData=' + this.interview + '&Sex=' + this.sexes + '&ageGroup=' + this.ages + '&Hip=' + this.hip + '&Knee=' + this.knee + '&Hand=' + this.hand + '&visning=' + this.getComparisonGroup(),
+      url: 'https://boa.registercentrum.se/stratum/api/statistics/BOA/boaw-jamfor-' + this.indicator + '?apikey=MpuYxfbtp5I=&rinvoke=1&formulartyp=ForstaPat&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeData=' + this.interview + '&Sex=' + this.sexes + '&ageGroup=' + this.ages + '&Hip=' + this.hip + '&Knee=' + this.knee + '&Hand=' + this.hand + '&visning=' + this.getComparisonGroup(),
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
         result.output.indicator = controller.indicator;
@@ -1494,7 +1496,7 @@ Ext.define('Boa.controller.DetailsController', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: 'https://boa.registercentrum.se/stratum/api/statistics/BOA/boaw-tabell-' + this.indicator + '?apikey=KbxAwmlwLM4=&rinvoke=1&formulartyp=ForstaPat&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeData=' + this.interview + '&Sex=' + this.sexes + '&ageGroup=' + this.ages + '&Hip=' + this.hip + '&Knee=' + this.knee + '&Hand=' + this.hand,
+      url: 'https://boa.registercentrum.se/stratum/api/statistics/BOA/boaw-tabell-' + this.indicator + '?apikey=bK3H9bwaG4o%3D&rinvoke=1&formulartyp=ForstaPat&grupptyp=' + this.group + '&gruppkod=' + this.unit + '&completeData=' + this.interview + '&Sex=' + this.sexes + '&ageGroup=' + this.ages + '&Hip=' + this.hip + '&Knee=' + this.knee + '&Hand=' + this.hand,
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
 
@@ -1629,7 +1631,7 @@ Ext.define('Boa.controller.OverviewController', {
   config: {
     unitsUrl: 'https://boa.registercentrum.se/stratum/api/metadata/units/register/104/',
     baseUrl: 'https://boa.registercentrum.se/stratum/api/statistics/BOA/',
-    apiKey: 'KbxAwmlwLM4=',
+    apiKey: 'MpuYxfbtp5I=',
     comparisonGroup: 'inomlandsting'
   },
 
@@ -1702,6 +1704,16 @@ Ext.define('Boa.controller.OverviewController', {
     }
 
     this.clearSimpleGoals();
+  },
+
+  createDropdownItems: function (component) {
+    var store = component.getStore()
+    var currentYear = (new Date()).getFullYear()
+    for (i = 2011; i <= currentYear; i++) {
+      store.insert(0, { YearCode: i, YearName: i })
+    }
+    store.insert(0, { YearCode: 0, YearName: 'Alla år' })
+    component.setSelection(0)
   },
 
   /**
@@ -2217,7 +2229,7 @@ Ext.define('Boa.view.Details', {
   cls: 'bsw-body',
   itemId: 'detailsView',
   unitsUrl: 'https://boa.registercentrum.se/stratum/api/metadata/units/register/104/',
-  apiKey: 'KbxAwmlwLM4=',
+  apiKey: 'bK3H9bwaG4o%3D=',
 
   items: [
     {
@@ -2244,7 +2256,7 @@ Ext.define('Boa.view.Details', {
           displayField: 'etikett',
           valueField: 'gruppkod',
           url: 'https://boa.registercentrum.se/stratum/api/metadata/units/register/104/',
-          key: 'KbxAwmlwLM4=',
+          key: 'MpuYxfbtp5I=',
           value: 'R0',
           fields: ['etikett', 'gruppkod', 'grupptyp'],
           listeners: {
@@ -2269,7 +2281,7 @@ Ext.define('Boa.view.Details', {
           cls: 'col-md-6',
           valueField: 'IndicatorCode',
           url: '/app/data/indicators.json',
-          key: 'KbxAwmlwLM4=',
+          key: 'MpuYxfbtp5I=',
           displayField: 'IndicatorName',
           value: 'fysisk-aktivitet',
           fields: ['IndicatorName', 'IndicatorCode'],
@@ -2311,7 +2323,7 @@ Ext.define('Boa.view.Details', {
           cls: 'col-md-3',
           valueField: 'InterviewCode',
           url: '/app/data/interviews.json',
-          key: 'KbxAwmlwLM4=',
+          key: 'MpuYxfbtp5I=',
           displayField: 'InterviewName',
           value: 'FV',
           fields: ['InterviewName', 'InterviewCode'],
@@ -2333,7 +2345,7 @@ Ext.define('Boa.view.Details', {
           cls: 'col-md-3',
           valueField: 'GenderCode',
           url: '/app/data/genders.json',
-          key: 'KbxAwmlwLM4=',
+          key: 'MpuYxfbtp5I=',
           displayField: 'GenderName',
           value: 'total',
           fields: ['GenderName', 'GenderCode'],
@@ -2355,7 +2367,7 @@ Ext.define('Boa.view.Details', {
           cls: 'col-md-3',
           valueField: 'AgeCode',
           url: '/app/data/ages.json',
-          key: 'KbxAwmlwLM4=',
+          key: 'MpuYxfbtp5I=',
           displayField: 'AgeName',
           value: 'alla',
           fields: ['AgeName', 'AgeCode'],
@@ -2897,14 +2909,15 @@ Ext.define('Boa.view.GoalYear', {
       ]
     };
 
-    this.axes[0].setLimits({
+    this.axes[0].setLimits([{
       value: output.target,
       line: {
         strokeStyle: '#009666',
         lineDash: [4, 3],
         lineWidth: 2
       }
-    });
+    }]);
+    this.setHeight(this.getHeight()+1)
     this.setStore(store);
     this.redraw();
   },
@@ -2924,6 +2937,7 @@ Ext.define('Boa.view.GoalYear', {
         lineWidth: 2
       }
     });
+    this.setHeight(this.getHeight()-1)
   }
 });
 
@@ -3032,6 +3046,14 @@ Ext.define('Boa.view.OverView', {
       }]
     };
 
+    var years = []
+    var currentYear = (new Date()).getFullYear()
+    for (i = 2011; i <= currentYear; i++) {
+      years.push({ YearCode: i, YearName: i })
+    }
+    years.push({ YearCode: 0, YearName: 'Alla år' })
+    years.reverse()
+
     var filters = {
       xtype: 'container',
       itemId: 'filters',
@@ -3044,7 +3066,7 @@ Ext.define('Boa.view.OverView', {
           valueField: 'gruppkod',
           cls: 'col-md-4',
           url: 'https://boa.registercentrum.se/stratum/api/statistics/BOA/boaw-choices-riket-landsting-enhet?rinvoke=1&',
-          key: 'KbxAwmlwLM4=',
+          key: 'MpuYxfbtp5I=',
           fields: ['etikett', 'gruppkod', 'grupptyp'],
           listeners: {
             select: 'updateSelection'
@@ -3069,7 +3091,7 @@ Ext.define('Boa.view.OverView', {
           valueField: 'YearCode',
           cls: 'col-md-4',
           url: '',
-          key: 'KbxAwmlwLM4=',
+          key: 'MpuYxfbtp5I=',
           value: 0,
           sortfield: 'YearName',
           sortdirection: 'DESC',
@@ -3085,17 +3107,7 @@ Ext.define('Boa.view.OverView', {
           },
           store: {
             fields: ['YearCode', 'YearName'],
-            data: [
-              { YearCode: 0, YearName: 'Alla år' },
-              { YearCode: 2018, YearName: 2018 },
-              { YearCode: 2017, YearName: 2017 },
-              { YearCode: 2016, YearName: 2016 },
-              { YearCode: 2015, YearName: 2015 },
-              { YearCode: 2014, YearName: 2014 },
-              { YearCode: 2013, YearName: 2013 },
-              { YearCode: 2012, YearName: 2012 },
-              { YearCode: 2011, YearName: 2011 }
-            ]
+            data: years
           }
         },
         {
@@ -4101,7 +4113,7 @@ Ext.application({
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: 'https://boa.registercentrum.se/stratum/api/statistics/BOA/boaw-choices-riket-landsting-enhet?rinvoke=1&apiKey=KbxAwmlwLM4%3D',
+      url: 'https://boa.registercentrum.se/stratum/api/statistics/BOA/boaw-choices-riket-landsting-enhet?rinvoke=1&apiKey=MpuYxfbtp5I=',
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
         var stateUnit = { gruppkod: 'R0', etikett: 'Riket' };
