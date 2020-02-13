@@ -8,7 +8,7 @@ Ext.util.CSS.removeStyleSheet('shpr-companymodule');
       + '  margin: 0 0 18px 0;'
      // + '  display: inline-block'
       + '}'
-    
+    //
      /* + '.scw-label {'
       + '  width: 25%;'
       + '  padding-left: 2px;'
