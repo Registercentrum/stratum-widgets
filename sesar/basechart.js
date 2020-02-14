@@ -450,7 +450,7 @@ var ctrlr=Ext.define('Sesar.controller.Main', {
   },
 
   createUrl: function (type, filters) {
-    return '/stratum/api/statistics/sesar/sesarw-publicstatistics-' + type + '?startyear=' + filters.start + '&stopyear=' + filters.end + '&indicator=' + filters.report + '&sex=' + filters.sex + '&clinic=' + filters.clinic + '&apikey=KbxAwmlwLM4='
+    return '/stratum/api/statistics/sesar/sesarw-publicstatistics-' + type + '?startyear=' + filters.start + '&stopyear=' + filters.end + '&indicator=' + filters.report + '&sex=' + filters.sex + '&clinic=' + filters.clinic + '&apikey=MpuYxfbtp5I='
   },
 
   sortDesc: function (a, b) {
@@ -628,7 +628,7 @@ Ext.define('Sesar.view.Main', {
             data: [{ UnitName: 'Välj en enhet', UnitCode: 'alla' }],
             proxy: {
               type: 'ajax',
-              url: '/stratum/api/metadata/units/register/117?apikey=KbxAwmlwLM4=',
+              url: '/stratum/api/metadata/units/register/117?apikey=MpuYxfbtp5I=',
               withCredentials: true,
               reader: {
                 type: 'json',
