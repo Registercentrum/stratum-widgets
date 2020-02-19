@@ -148,6 +148,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
   selModel: 'rowmodel',
   width: '100%',
   height: 500,
+  cls: 'rc-useradministration',
 
   plugins: {
     gridexporter: true,
@@ -873,6 +874,7 @@ Ext.define('RC.UserAdministration.view.EditUser', {
   modal: true,
   width: 1000,
   title: 'Användare',
+  cls: 'rc-useradministration',
 
   listeners: {
     contextadded: 'onContextAdded'
@@ -1292,6 +1294,7 @@ Ext.define('RC.UserAdministration.view.UnitGrid', {
   selModel: 'rowmodel',
   width: '100%',
   height: 500,
+  cls: 'rc-useradministration',
 
   plugins: {
     gridexporter: true,
@@ -1884,6 +1887,15 @@ Ext.util.CSS.createStyleSheet(
 
   + '.rc-useradministration .x-form-item-label-default {'
   + '  padding-left: 11px;'
+  + '}'
+
+  + '.rc-useradministration .x-grid-item-selected {'
+  + '  color: #f0f0f0;'
+  + '  background-color: #666;'
+  + '}'
+
+  + '.rc-useradministration .x-grid-item-selected .x-grid-item-focused {'
+  + '  color: #f0f0f0;'
   + '}'
 
   + '.rc-info div {'
