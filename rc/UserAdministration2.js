@@ -365,6 +365,14 @@ Ext.define('RC.UserAdministration.controller.User', {
     ownLoaded: false
   },
 
+  init: function () {
+    var columns = this.getView().getColumns()
+    var defaultHiddenColumns = ['WorkTitle', 'Organization']
+    columns.forEach(function (column) {
+      column.hidden = localStorage.getItem(column.dataIndex) === 'hidden' || (localStorage.getItem(column.dataIndex) === null && defaultHiddenColumns.indexOf(column.dataIndex)>-1)
+    })
+  },
+
   export: function () {
     Ext.util.CSV.delimiter = ';'
     var grid = this.getView()
@@ -615,6 +623,10 @@ Ext.define('RC.UserAdministration.controller.Form', {
   },
 
   onSithIdChoosen: function () {
+    this.lookup('firstname').allowBlank = true
+    this.lookup('firstname').removeCls('rc-required')
+    this.lookup('lastname').allowBlank = true
+    this.lookup('lastname').removeCls('rc-required')
     this.lookup('hsaid').show()
     this.lookup('hsaid').enable()
     this.lookup('personalid').hide()
@@ -624,6 +636,10 @@ Ext.define('RC.UserAdministration.controller.Form', {
   },
 
   onBankIdChoosen: function () {
+    this.lookup('firstname').allowBlank = false
+    this.lookup('firstname').addCls('rc-required')
+    this.lookup('lastname').allowBlank = false
+    this.lookup('lastname').addCls('rc-required')
     this.lookup('hsaid').hide()
     this.lookup('hsaid').disable()
     this.lookup('personalid').show()
@@ -747,6 +763,7 @@ Ext.define('RC.UserAdministration.view.CreateUser', {
   modal: true,
   width: 1000,
   title: 'Användare',
+  cls: 'rc-useradministration',
   
   items: [
     {
@@ -1088,7 +1105,7 @@ Ext.define('RC.UserAdministration.form.User', {
     layout: 'form',
     xtype: 'textfield',
     columnWidth: 0.49,
-    labelWidth: 115,
+    labelWidth: 125,
     padding: 7,
     listeners: {
       change: 'onFormChanged'
@@ -1097,17 +1114,17 @@ Ext.define('RC.UserAdministration.form.User', {
   layout: 'column',
   width: '100%',
   items: [
-    { fieldLabel: 'Förnamn',         name: 'FirstName',    reference: 'firstname',  allowBlank: false },
-    { fieldLabel: 'Efternamn',       name: 'LastName',     reference: 'lastname',   allowBlank: false },
-    { fieldLabel: 'HSAID',           name: 'HSAID',        reference: 'hsaid',      allowBlank: false, vtype: 'hsaid', listeners: { change: 'transformHsaid' }, /*fieldStyle: { textTransform: 'uppercase' },*/ labelClsExtra: 'PrefixMandatory', maxLength: 64 },
-    { fieldLabel: 'Personnummer',    name: 'PersonalId',   reference: 'personalid', allowBlank: false, vtype: 'personalid' },
+    { fieldLabel: 'Förnamn',         name: 'FirstName',    reference: 'firstname',  allowBlank: true },
+    { fieldLabel: 'Efternamn',       name: 'LastName',     reference: 'lastname',   allowBlank: true },
+    { fieldLabel: 'HSAID',           name: 'HSAID',        reference: 'hsaid',      allowBlank: true, vtype: 'hsaid', listeners: { change: 'transformHsaid' }, /*fieldStyle: { textTransform: 'uppercase' },*/ labelClsExtra: 'PrefixMandatory', maxLength: 64 },
+    { fieldLabel: 'Personnummer',    name: 'PersonalId',   reference: 'personalid', allowBlank: false, vtype: 'personalid', labelClsExtra: 'rc-required' },
     { fieldLabel: 'Epost',           name: 'Email',        reference: 'email',      vtype: 'email' },
     { fieldLabel: 'Registerinfo',    name: 'Info',         reference: 'registryinfo' },
     { fieldLabel: 'Organisation',    name: 'Organization', reference: 'organisation' },
-    { fieldLabel: 'Användarnamn',    name: 'Username',     reference: 'username',   vtype: 'username', allowBlank: false },
+    { fieldLabel: 'Användarnamn',    name: 'Username',     reference: 'username',   vtype: 'username', allowBlank: false, labelClsExtra: 'rc-required' },
     { fieldLabel: 'Senast inloggad', name: 'LastActive',   reference: 'lastactive', cls: 'rc-info' },
-    { fieldLabel: 'Enhet',           name: 'UnitID',       reference: 'unit',       allowBlank: false, xtype: 'rcfilter', store: { type: 'unit' }, valueField: 'UnitID', displayField: 'UnitName' },
-    { fieldLabel: 'Roll',            name: 'RoleID',       reference: 'role',       allowBlank: false, xtype: 'rcfilter', store: { type: 'role' }, valueField: 'RoleID', displayField: 'RoleName' },
+    { fieldLabel: 'Enhet',           name: 'UnitID',       reference: 'unit',       allowBlank: false, xtype: 'rcfilter', store: { type: 'unit' }, valueField: 'UnitID', displayField: 'UnitName', labelClsExtra: 'rc-required' },
+    { fieldLabel: 'Roll',            name: 'RoleID',       reference: 'role',       allowBlank: false, xtype: 'rcfilter', store: { type: 'role' }, valueField: 'RoleID', displayField: 'RoleName', labelClsExtra: 'rc-required' },
     { fieldLabel: 'Användarid',      name: 'UserID',       reference: 'userid',     },
     { fieldLabel: 'Title',           name: 'WorkTitle',    reference: 'worktitle',  },
     { fieldLabel: 'Extra',           name: 'Extra',        reference: 'extra',      },
@@ -1297,49 +1314,49 @@ Ext.define('RC.UserAdministration.view.UnitGrid', {
   columns: [
     {
       text: 'Id',
+      dataIndex: 'UnitID',
+      width: 60,
+      sortable: true
+    },
+    {
+      text: 'Kod',
       dataIndex: 'UnitCode',
       width: 60,
-      sortable: true,
-      hidden: localStorage.getItem('UnitCode') === 'hidden' || false
+      sortable: true
     },
     {
       text: 'Namn',
       dataIndex: 'UnitName',
       flex: 1,
-      sortable: true,
-      hidden: localStorage.getItem('UnitName') === 'hidden' || false
+      sortable: true
     },
     {
       text: 'HSAID',
       dataIndex: 'HSAID',
       flex: 1,
-      sortable: true,
-      hidden: localStorage.getItem('HSAID') === 'hidden' || false
+      sortable: true
     },
     {
       text: 'Region',
       dataIndex: 'County',
       flex: 1,
-      sortable: true,
-      hidden: localStorage.getItem('County') === 'hidden' || false
+      sortable: true
     },
     {
       text: 'PARID',
       dataIndex: 'PARID',
       flex: 1,
-      sortable: true,
-      hidden: localStorage.getItem('PARID') === 'hidden' || localStorage.getItem('PARID') === null
+      sortable: true
     },
     {
       text: 'Aktiv',
       dataIndex: 'IsActive',
       width: 60,
       sortable: true,
-      hidden: localStorage.getItem('IsActive') === 'hidden' || localStorage.getItem('PARID') === null,
       renderer: function (value, cellValues) {
         value = value ? 'Ja' : 'Nej'
         return value
-      },
+      }
     }
   ],
 
@@ -1404,6 +1421,14 @@ Ext.define('RC.UserAdministration.view.UnitGrid', {
 Ext.define('RC.UserAdministration.controller.Unit', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.unit',
+
+  init: function () {
+    var columns = this.getView().getColumns()
+    var defaultHiddenColumns = ['UnitID', 'PARID']
+    columns.forEach(function (column) {
+      column.hidden = localStorage.getItem(column.dataIndex) === 'hidden' || (localStorage.getItem(column.dataIndex) === null && defaultHiddenColumns.indexOf(column.dataIndex)>-1)
+    })
+  },
 
   searchUnits: function () {
     var store   = this.getView().getStore()
@@ -1851,6 +1876,14 @@ Ext.util.CSS.createStyleSheet(
 
   + '.synced .x-grid-dirty-cell .x-grid-cell-inner:after, .x-grid-dirty-cell .synced.x-grid-cell-inner:after {'
   + '  color: #0db52b;'
+  + '}'
+
+  + '.rc-required {'
+  + '  background: url(https://stratum.registercentrum.se/Images/IconMandatory.png) 0px 5px no-repeat;'
+  + '}'
+
+  + '.rc-useradministration .x-form-item-label-default {'
+  + '  padding-left: 11px;'
   + '}'
 
   + '.rc-info div {'
