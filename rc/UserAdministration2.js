@@ -14,7 +14,6 @@ function onReady() {
   Ext.create('RC.UserAdministration.store.Bindings', { storeId: 'bindings' })
   RC.UserAdministration.app = Ext.create('Ext.tab.Panel', { renderTo: 'contentPanel', items: [{ title: 'Användare', xtype: 'usergrid' }, { title: 'Enheter', xtype: 'unitgrid' }] })
   RC.UserAdministration.data = Ext.create('RC.UserAdministration.storage.Data', { observers: [RC.UserAdministration.app.down('usergrid'), RC.UserAdministration.app.down('unitgrid')] })
-  
 }
 
 Stratum.Role || Ext.define('Stratum.Role', {
@@ -511,11 +510,9 @@ Ext.define('RC.UserAdministration.controller.User', {
       if (contexts) {
         if (user === '') { return true }
         var unitContexts = contexts.filter(function (context) {
-          return Ext.String.startsWith(context.User.Username, user, true)
-            || Ext.String.startsWith(context.User.FirstName, user, true)
-            || Ext.String.startsWith(context.User.LastName, user, true)
-            // || (context.User.Extra && (typeof context.User.Extra === 'string') && Ext.String.startsWith(JSON.parse(context.User.Extra)[Profile.Site.Register.RegisterID], user, true))
-            // || (context.User.Extra && (typeof context.User.Extra === 'object') && Ext.String.startsWith(context.User.Extra[Profile.Site.Register.RegisterID], user, true))
+          return context.User.Username.toLowerCase().indexOf(user) > -1
+              || (context.User.FirstName && context.User.FirstName.toLowerCase().indexOf(user) > -1)
+              || (context.User.LastName && context.User.LastName.toLowerCase().indexOf(user) > -1)
         })
         var isPartOfUnit = unitContexts.length !== 0
         var matchesExtraField = (JSON.parse(item.data.Extra) && Ext.String.startsWith(JSON.parse(item.data.Extra)[Profile.Site.Register.RegisterID], user, true)) ? true : false
@@ -655,6 +652,7 @@ Ext.define('RC.UserAdministration.controller.Form', {
     var completeInfo = this.lookup('userform').up().Info || {}
     completeInfo[Profile.Site.Register.RegisterID] = form.Info
     form.Extra = JSON.stringify(completeInfo)
+    form.HSAID = form.HSAID ? form.HSAID : form.PersonalId
     return form
   },
 
@@ -676,6 +674,7 @@ Ext.define('RC.UserAdministration.controller.Form', {
 
   transformUser: function () {
     var form = this.getForm().getValues()
+    this.transformPersonalId(form)
     this.transformExtra(form)
     this.getForm().setValues(form)
     return form.UserID
@@ -693,6 +692,13 @@ Ext.define('RC.UserAdministration.controller.Form', {
       value = value.toUpperCase()
     }
     component.setValue(value)
+  },
+
+  transformPersonalId: function (form) {
+    if(!form.PersonalId) return
+    this.lookup('hsaid').setValue(form.PersonalId)
+    this.lookup('hsaid').enable()
+    this.lookup('personalid').disable()
   },
   
   saveUser: function (data) {
@@ -755,6 +761,41 @@ Ext.define('RC.UserAdministration.controller.Form', {
   getAllRegistryUnits: function () {
     return Ext.ComponentQuery.query('usergrid').pop().lookup('unitFilter').getStore()
       .getData().items.map(function (item) { return item.data.UnitID })
+  },
+
+  onSendWelcomeMail: function () {
+    var newline = '' + escape('\n')
+    var site = Profile.Site.SiteName
+    var registry = Profile.Site.Register.ShortName.toLowerCase()
+    var recipient = this.lookup('username').getValue() || ''
+    var name = (this.lookup('firstname').getValue() + ' ' + this.lookup('lastname').getValue())
+    name = name !== ' ' ? ' ' + name : ''
+    var sender = Profile.Context.User.FirstName + ' ' + Profile.Context.User.LastName
+    var subject = 'Välkommen till ' + registry.toUpperCase()
+    var content = this.lookup('personalid').isDisabled() ? this.getSithsMail() : this.getBankIdMail()
+    content = content.replace(/\{recipient}/g, recipient).replace(/\{sender}/g, sender).replace(/\{site}/g, site).replace(/\{registry}/g, registry).replace(/\{nl}/g, newline).replace(/\{name}/g, name)
+    var mail = 'mailto:' + recipient + '?subject=' + subject + '&body=' + content
+    window.location = mail
+  },
+
+  getSithsMail: function () {
+    var content = 'Hej{name}!{nl}{nl}Välkommen till {site}.{nl}' 
+                + 'Du har nu fått ett inloggningskonto till {site}, men behöver först koppla ditt {nl}'
+                + 'SITHS-kort. Gå till https://{registry}.registercentrum.se och logga in: {nl}{nl}'
+                + 'Användarnamn: {recipient}{nl}' 
+                + 'Lösenord: sa52re{nl}{nl}'
+                + 'Med vänlig hälsning,{nl}'
+                + '{sender}'
+    return widgetConfig.sithsMail || content
+  },
+
+  getBankIdMail: function () {
+    var content = 'Hej{name}!{nl}{nl}Välkommen till {site}.{nl}' 
+                + 'Du kan nu logga in på {site} via mobilt Bank ID.{nl}'
+                + 'Gå till https://{registry}.registercentrum.se och logga in med ditt BankID: {nl}{nl}'
+                + 'Med vänlig hälsning,{nl}'
+                + '{sender}'
+    return widgetConfig.bankidMail || content
   }
 })
 
@@ -783,7 +824,9 @@ Ext.define('RC.UserAdministration.view.CreateUser', {
       height: 300,
       plugin: true,
       store: {
-        data: []
+        data: [],
+        type: 'user',
+        storeId: 'matchingusers'
       },
     }
   ]
@@ -802,6 +845,7 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
     this.lookup('username').setFieldLabel('Epost')
     this.lookup('username').enable()
     this.lookup('username').removeCls('rc-info')
+    this.lookup('createContextButton').hide()
     this.onSithIdChoosen()
     if (Profile.Context.User.UserID < 200) {
       this.lookup('username').setFieldLabel('Användarnamn')
@@ -950,12 +994,14 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     this.getView().down('grid').getStore().loadData(this.getView().getContextData())
     this.lookup('userform').loadRecord(this.getView().getUserData())
     delete this.lookup('username').vtype
-    delete this.lookup('hsaid').vtype // qqq
+    delete this.lookup('hsaid').vtype
+    this.lookup('WelcomeLetterButton').hide()
     this.lookup('username').setFieldLabel('Användarnamn')
     this.lookup('username').setEditable(false)
     this.lookup('username').addCls('rc-info')
+    this.lookup('username').labelClsExtra = ''
     this.lookup('extra').enable()
-    var personalidIsUsed = this.getForm().getValues().PersonalId
+    var personalidIsUsed = this.getView().getUserData().data.PersonalId
     this.updateStatusBar()
     if (personalidIsUsed) {
       this.onBankIdChoosen()
@@ -991,6 +1037,12 @@ Ext.define('RC.UserAdministration.view.MatchUser', {
   alias: 'widget.matchuser',
   reference: 'matchUser',
   width: '100%',
+  controller: 'matchuser',
+
+  listeners: {
+    itemdblclick: 'onEditUser'
+  },
+
   columns: [
     {
       text: 'Förnamn',
@@ -1032,12 +1084,84 @@ Ext.define('RC.UserAdministration.view.MatchUser', {
   ],
 })
 
+Ext.define('RC.UserAdministration.controller.MatchUser', {
+  extend: 'Ext.app.ViewController',
+  alias: 'controller.matchuser',
+
+  init: function () {
+    
+  },
+
+  onEditUser: function (component, record, item, index) {
+    var data = { controller: this, user: record.data}
+    this.loadUserContexts(data).then(this.loadUser)
+  },
+
+  loadUser: function (data) {
+    var me = data.controller
+    var user = data.user
+    var record = me.getView().getStore().getById(data.user.UserID)
+    user.Contexts = user.Contexts || [] 
+    user.LastActive = me.getLatestContextLogin(data.user)
+    user.Info = JSON.parse(record.data.Extra || '{}')[Profile.Site.Register.RegisterID]
+    user.PersonalId = me.checkIfPersonalId(record.data.HSAID) ? record.data.HSAID : null
+    Ext.create('RC.UserAdministration.view.EditUser', { userData: record, contextData: Ext.clone(record.data.Contexts), contextsForValidation: Ext.clone(record.data.Contexts) }).show()
+  },
+
+  /* Duplicated code from usergrid - Refactor if time allows*/
+  getLatestContextLogin: function (user) {
+    if(user.Contexts.length===0) return 'Okänt'
+    var time = user.Contexts.reduce(function (total, current) { 
+      total.ActivatedAt = total.ActivatedAt || '' 
+      if (total.ActivatedAt < current.ActivatedAt) { 
+        return current 
+      } 
+      return total 
+    })
+    time = time.ActivatedAt ? time.ActivatedAt.substring(0, 16).replace('T', ' ') : null
+    return time || 'Okänt'
+  },
+
+  checkIfPersonalId: function (value) {
+    return value && (value.indexOf('19') === 0 || value.indexOf('20') === 0)
+  },
+
+  loadUserContexts: function (data) {
+    var controller = this
+    var deferred = new Ext.Deferred()
+    
+    Ext.Ajax.request({
+      url: '/stratum/api/metadata/contexts/user/' + data.user.UserID,
+      method: 'GET',
+      withCredentials: true,
+      success: function (result, request) {
+        var contexts = Ext.decode(result.responseText).data
+        var units = controller.getAllRegistryUnits()
+        contexts = contexts.filter(function (context) { return units.indexOf(context.Unit.UnitID) >= 0 })
+        controller.getView().getStore().getById(data.user.UserID).set('Contexts', contexts)
+        deferred.resolve(data)
+      },
+      failure: function (result, request) {
+        deferred.reject()
+      }
+    })
+    return deferred.promise
+  },
+
+  getAllRegistryUnits: function () {
+    return Ext.ComponentQuery.query('usergrid').pop().lookup('unitFilter').getStore()
+      .getData().items.map(function (item) { return item.data.UnitID })
+  }
+
+})
+
 Ext.define('RC.UserAdministration.view.CreateContext', {
   extend: 'Ext.window.Window',
   controller: 'createcontext',
   modal: true,
   width: 1000,
   title: 'Ny kontext',
+  cls: 'rc-useradministration',
   config: {
     user: null,
     contexts: [],
@@ -1064,8 +1188,9 @@ Ext.define('RC.UserAdministration.controller.CreateContext', {
     this.lookup('sithIdButton').hide()
     this.lookup('bankIdButton').hide()
     this.lookup('createContextButton').hide()
-    this.lookup('role').vtype = 'kontext'
-    this.lookup('unit').vtype = 'kontext'
+    this.lookup('WelcomeLetterButton').hide()
+    this.lookup('role').vtype = 'context'
+    this.lookup('unit').vtype = 'context'
   },
 
   onSave: function () {
@@ -1139,6 +1264,13 @@ Ext.define('RC.UserAdministration.form.User', {
       items: [
         {
           xtype: 'tbspacer', flex: 1
+        },
+        {
+          xtype: 'button',
+          reference: 'WelcomeLetterButton',
+          text: 'Välkomstbrev',
+          handler: 'onSendWelcomeMail',
+          minWidth: 80
         },
         {
           xtype: 'button',
@@ -1736,7 +1868,7 @@ Ext.define('RC.UserAdministration.Validators', {
 
   usernameText: 'Denna epostadress <br>används redan',
 
-  kontext: function (value, field) {
+  context: function (value, field) {
     var contexts = field.up('window').getContexts()
     var controller = field.up('window').getController()
     var unit = controller.lookup('unit').getValue()
@@ -1745,7 +1877,7 @@ Ext.define('RC.UserAdministration.Validators', {
     return !contexts.some(function (context) { return context.Role.RoleID === role && context.Unit.UnitID === unit })
   },
 
-  kontextText: 'En kontext med denna kombination <br> av enhet och roll finns redan'
+  contextText: 'En kontext med denna kombination <br> av enhet och roll finns redan'
 
 })
 
