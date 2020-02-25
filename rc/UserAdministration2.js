@@ -382,8 +382,9 @@ Ext.define('RC.UserAdministration.controller.User', {
   mail: function () {
     var selections = this.getView().getSelection()
     var mailList = ''
+    var validator = new Ext.data.validator.Email()
     selections.forEach(function (user) {
-      if (Ext.data.validator.Email(user.getData().Email)) {
+      if (validator.validate(user.getData().Email) === true) {
         mailList += user.getData().Email + ';'
       }
     })
@@ -506,15 +507,20 @@ Ext.define('RC.UserAdministration.controller.User', {
   createUserFilter: function (user, role) {
     var filter = function (item) {
       if (item.data.UserID < 200 && !widgetConfig.devMode) return false
+      if (user === '') { return true }
       var contexts = item.data.Contexts
       if (contexts) {
-        if (user === '') { return true }
-        var unitContexts = contexts.filter(function (context) {
-          return context.User.Username.toLowerCase().indexOf(user) > -1
-              || (context.User.FirstName && context.User.FirstName.toLowerCase().indexOf(user) > -1)
-              || (context.User.LastName && context.User.LastName.toLowerCase().indexOf(user) > -1)
+        var terms = user.split(' ')
+        terms.forEach(function (term) {
+          term = term.toLowerCase()
+          userContexts = contexts.filter(function (context) {
+            return context.User.Username.toLowerCase().indexOf(term) > -1
+               || (context.User.FirstName && context.User.FirstName.toLowerCase().indexOf(term) > -1)
+               || (context.User.LastName && context.User.LastName.toLowerCase().indexOf(term) > -1)
+               || (context.User.Email && context.User.Email.toLowerCase().indexOf(term) > -1)
+          })
         })
-        var isPartOfUnit = unitContexts.length !== 0
+        var isPartOfUnit = userContexts.length !== 0
         var matchesExtraField = (JSON.parse(item.data.Extra) && Ext.String.startsWith(JSON.parse(item.data.Extra)[Profile.Site.Register.RegisterID], user, true)) ? true : false
         return isPartOfUnit || matchesExtraField
       }
@@ -1000,6 +1006,8 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     this.lookup('username').setEditable(false)
     this.lookup('username').addCls('rc-info')
     this.lookup('username').labelClsExtra = ''
+    this.lookup('hsaid').labelClsExtra = 'rc-required'
+    this.lookup('hsaid').allowBlank = false
     this.lookup('extra').enable()
     var personalidIsUsed = this.getView().getUserData().data.PersonalId
     this.updateStatusBar()
@@ -1616,7 +1624,9 @@ Ext.define('RC.UserAdministration.controller.Unit', {
 
   createUnitFilter: function (unit) {
     var filter = function (item) {
-      return Ext.String.startsWith(item.data.UnitName, unit, true)
+      return item.data.UnitName.toLowerCase().indexOf(unit)>-1 
+          || item.data.UnitCode == unit
+          || item.data.County.toLowerCase().indexOf(unit)>-1 
     }
     return filter
   },
@@ -1647,11 +1657,11 @@ Ext.define('RC.UserAdministration.form.Unit', {
   items: [
     { fieldLabel: 'Namn', name: 'UnitName', reference: 'unitname',  allowBlank: false },
     { fieldLabel: 'Enhetskod', name: 'UnitCode', reference: 'unitcode',  allowBlank: false },
-    { fieldLabel: 'Aktiv', name: 'IsActive', reference: 'active', hidden: true, allowBlank: false, xtype: 'combobox', store: { type: 'active' }, valueField: 'ActiveCode', displayField: 'ActiveName' },
     { fieldLabel: 'HSA-id', name: 'HSAID', reference: 'hsaid',  allowBlank: true },
     { fieldLabel: 'PAR-id', name: 'PARID', reference: 'parid',  allowBlank: true },
-    { fieldLabel: 'Region', name: 'County', reference: 'region', allowBlank: false, xtype: 'combobox', store: { type: 'region' }, valueField: 'DomainValueID', displayField: 'ValueName' },
-    // { fieldLabel: 'Register', name: 'Register', reference: 'registry', hidden: true }
+    { fieldLabel: 'Region', name: 'County', reference: 'region', allowBlank: false, xtype: 'rcfilter', store: { type: 'region' }, valueField: 'DomainValueID', displayField: 'ValueName' },
+    { fieldLabel: 'Aktiv', name: 'IsActive', reference: 'active', hidden: false, allowBlank: false, xtype: 'combobox', store: { type: 'active' }, valueField: 'ActiveCode', displayField: 'ActiveName' },
+    // { fieldLabel: 'Bindings', name: 'Bindings', reference: 'bindings', hidden: true, allowBlank: false, xtype: 'hiddenfield'}
   ],
 
   dockedItems: [
