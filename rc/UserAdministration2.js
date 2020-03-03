@@ -170,6 +170,13 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
   },
   columns: [
     {
+      text: 'Id',
+      dataIndex: 'UserID',
+      width: 65,
+      sortable: true,
+      hidden: localStorage.getItem('UserID') === 'hidden' || false
+    },
+    {
       text: 'Förnamn',
       dataIndex: 'FirstName',
       flex: 1,
@@ -367,7 +374,7 @@ Ext.define('RC.UserAdministration.controller.User', {
 
   init: function () {
     var columns = this.getView().getColumns()
-    var defaultHiddenColumns = ['WorkTitle', 'Organization']
+    var defaultHiddenColumns = ['UserID', 'WorkTitle', 'Organization']
     columns.forEach(function (column) {
       column.hidden = localStorage.getItem(column.dataIndex) === 'hidden' || (localStorage.getItem(column.dataIndex) === null && defaultHiddenColumns.indexOf(column.dataIndex)>-1)
     })
@@ -432,7 +439,7 @@ Ext.define('RC.UserAdministration.controller.User', {
         var contexts = Ext.decode(result.responseText).data
         var units = controller.getAllRegistryUnits()
         contexts = contexts.filter(function (context) { return units.indexOf(context.Unit.UnitID) >= 0 })
-        controller.getView().getStore().getById(9).set('Contexts', contexts)
+        controller.getView().getStore().getById(user).set('Contexts', contexts)
       },
       failure: function (result, request) {
       }
@@ -513,14 +520,14 @@ Ext.define('RC.UserAdministration.controller.User', {
         var terms = user.split(' ')
         terms.forEach(function (term) {
           term = term.toLowerCase()
-          userContexts = contexts.filter(function (context) {
+          contexts = contexts.filter(function (context) {
             return context.User.Username.toLowerCase().indexOf(term) > -1
                || (context.User.FirstName && context.User.FirstName.toLowerCase().indexOf(term) > -1)
                || (context.User.LastName && context.User.LastName.toLowerCase().indexOf(term) > -1)
                || (context.User.Email && context.User.Email.toLowerCase().indexOf(term) > -1)
           })
         })
-        var isPartOfUnit = userContexts.length !== 0
+        var isPartOfUnit = contexts.length !== 0
         var matchesExtraField = (JSON.parse(item.data.Extra) && Ext.String.startsWith(JSON.parse(item.data.Extra)[Profile.Site.Register.RegisterID], user, true)) ? true : false
         return isPartOfUnit || matchesExtraField
       }
@@ -694,10 +701,12 @@ Ext.define('RC.UserAdministration.controller.Form', {
   },
 
   transformHsaid: function (component, value) {
-    if(value.indexOf('SE')>-1) {
+    var value = form.HSAID
+    if(value && value.indexOf('SE')>-1) {
       value = value.toUpperCase()
     }
-    component.setValue(value)
+
+    return value
   },
 
   transformPersonalId: function (form) {
@@ -777,7 +786,7 @@ Ext.define('RC.UserAdministration.controller.Form', {
     var name = (this.lookup('firstname').getValue() + ' ' + this.lookup('lastname').getValue())
     name = name !== ' ' ? ' ' + name : ''
     var sender = Profile.Context.User.FirstName + ' ' + Profile.Context.User.LastName
-    var subject = 'Välkommen till ' + registry.toUpperCase()
+    var subject = widgetConfig.mailTitle || ('Välkommen till ' + site)
     var content = this.lookup('personalid').isDisabled() ? this.getSithsMail() : this.getBankIdMail()
     content = content.replace(/\{recipient}/g, recipient).replace(/\{sender}/g, sender).replace(/\{site}/g, site).replace(/\{registry}/g, registry).replace(/\{nl}/g, newline).replace(/\{name}/g, name)
     var mail = 'mailto:' + recipient + '?subject=' + subject + '&body=' + content
@@ -843,7 +852,7 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
   alias: 'controller.createuser',
 
   config: {
-    fields: ['username', 'firstname', 'lastname', 'hsaid', 'role', 'unit']
+    fields: ['username', 'firstname', 'lastname', 'hsaid', 'role', 'unit', 'registryinfo']
   },
 
   init: function () {
@@ -853,7 +862,8 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
     this.lookup('username').removeCls('rc-info')
     this.lookup('createContextButton').hide()
     this.onSithIdChoosen()
-    if (Profile.Context.User.UserID < 200) {
+    widgetConfig.preferredRole && this.lookup('role').setValue(widgetConfig.preferredRole)
+    if (widgetConfig.devMode) {
       this.lookup('username').setFieldLabel('Användarnamn')
     }
   },
@@ -953,7 +963,10 @@ Ext.define('RC.UserAdministration.view.EditUser', {
       height: 300,
       plugin: true,
       store: {
-        fields: ['IsActive', 
+        fields: ['IsActive',
+          {
+            name: 'ContextID', dataIndex: 'ContextID'
+          }, 
           {
             name: 'Unit', convert: function (v, record) {return record.get('Unit').UnitName}
           },
@@ -1001,13 +1014,13 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     this.lookup('userform').loadRecord(this.getView().getUserData())
     delete this.lookup('username').vtype
     delete this.lookup('hsaid').vtype
-    this.lookup('WelcomeLetterButton').hide()
+    // this.lookup('WelcomeLetterButton').hide()
     this.lookup('username').setFieldLabel('Användarnamn')
-    this.lookup('username').setEditable(false)
-    this.lookup('username').addCls('rc-info')
-    this.lookup('username').labelClsExtra = ''
-    this.lookup('hsaid').labelClsExtra = 'rc-required'
-    this.lookup('hsaid').allowBlank = false
+    //this.lookup('username').setEditable(false)
+    //this.lookup('username').addCls('rc-info')
+    //this.lookup('username').labelClsExtra = ''
+    //this.lookup('hsaid').labelClsExtra = 'rc-required'
+    //this.lookup('hsaid').allowBlank = false
     this.lookup('extra').enable()
     var personalidIsUsed = this.getView().getUserData().data.PersonalId
     this.updateStatusBar()
@@ -1026,6 +1039,9 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
   onSave: function () {
     this.transformUser()
     this.getForm().updateRecord()
+    if(this.getForm().getRecord().data.HSAID===''){
+      this.getForm().getRecord().data.HSAID=null
+    }
     Ext.StoreManager.lookup('users').sync({ callback: function () { } })
     this.getView().destroy()
   },
@@ -1251,18 +1267,19 @@ Ext.define('RC.UserAdministration.form.User', {
   items: [
     { fieldLabel: 'Förnamn',         name: 'FirstName',    reference: 'firstname',  allowBlank: true },
     { fieldLabel: 'Efternamn',       name: 'LastName',     reference: 'lastname',   allowBlank: true },
-    { fieldLabel: 'HSAID',           name: 'HSAID',        reference: 'hsaid',      allowBlank: true, vtype: 'hsaid', listeners: { change: 'transformHsaid' }, /*fieldStyle: { textTransform: 'uppercase' },*/ labelClsExtra: 'PrefixMandatory', maxLength: 64 },
+    { fieldLabel: 'HSAID',           name: 'HSAID',        reference: 'hsaid',      allowBlank: true, vtype: 'hsaid', /*fieldStyle: { textTransform: 'uppercase' },*/ labelClsExtra: 'PrefixMandatory', maxLength: 64 },
     { fieldLabel: 'Personnummer',    name: 'PersonalId',   reference: 'personalid', allowBlank: false, vtype: 'personalid', labelClsExtra: 'rc-required' },
     { fieldLabel: 'Epost',           name: 'Email',        reference: 'email',      vtype: 'email' },
-    { fieldLabel: 'Registerinfo',    name: 'Info',         reference: 'registryinfo' },
     { fieldLabel: 'Organisation',    name: 'Organization', reference: 'organisation' },
     { fieldLabel: 'Användarnamn',    name: 'Username',     reference: 'username',   vtype: 'username', allowBlank: false, labelClsExtra: 'rc-required' },
-    { fieldLabel: 'Senast inloggad', name: 'LastActive',   reference: 'lastactive', cls: 'rc-info' },
     { fieldLabel: 'Enhet',           name: 'UnitID',       reference: 'unit',       allowBlank: false, xtype: 'rcfilter', store: { type: 'unit' }, valueField: 'UnitID', displayField: 'UnitName', labelClsExtra: 'rc-required' },
     { fieldLabel: 'Roll',            name: 'RoleID',       reference: 'role',       allowBlank: false, xtype: 'rcfilter', store: { type: 'role' }, valueField: 'RoleID', displayField: 'RoleName', labelClsExtra: 'rc-required' },
     { fieldLabel: 'Användarid',      name: 'UserID',       reference: 'userid',     },
     { fieldLabel: 'Title',           name: 'WorkTitle',    reference: 'worktitle',  },
+    { fieldLabel: 'Registerinfo',    name: 'Info',         reference: 'registryinfo' },
+    { fieldLabel: 'Senast inloggad', name: 'LastActive',   reference: 'lastactive', cls: 'rc-info' },
     { fieldLabel: 'Extra',           name: 'Extra',        reference: 'extra',      },
+    
   ],
   dockedItems: [
     {
@@ -1350,6 +1367,12 @@ Ext.define('RC.UserAdministration.view.ContextGrid', {
         },
         checkchange: 'syncStore'
       }
+    },
+    {
+      text: 'ID',
+      dataIndex: 'ContextID',
+      width: 65,
+      sortable: true
     },
     {
       text: 'Enhet',
@@ -1603,11 +1626,16 @@ Ext.define('RC.UserAdministration.controller.Unit', {
   },
 
   create: function () {
-    Ext.create('RC.UserAdministration.view.CreateUnit').show()
+    var nextId = this.getNextUnitId()
+    Ext.create('RC.UserAdministration.view.CreateUnit', {nextId: nextId}).show()
   },
 
   unitClicked: function (component, record, item, index) {
     Ext.create('RC.UserAdministration.view.EditUnit', { unit: record }).show()
+  },
+
+  getNextUnitId: function () {
+    return this.getView().getStore().getData().items.map(function(item){return item.data.UnitCode}).reduce(function(max, item) {return Math.max(max, item)}) +1 
   },
 
   onColumnHidden: function (component, column, eOpts) {
@@ -1626,7 +1654,7 @@ Ext.define('RC.UserAdministration.controller.Unit', {
     var filter = function (item) {
       return item.data.UnitName.toLowerCase().indexOf(unit)>-1 
           || item.data.UnitCode == unit
-          || item.data.County.toLowerCase().indexOf(unit)>-1 
+          || (item.data.County && item.data.County.toLowerCase().indexOf(unit)>-1 )
     }
     return filter
   },
@@ -1661,7 +1689,7 @@ Ext.define('RC.UserAdministration.form.Unit', {
     { fieldLabel: 'PAR-id', name: 'PARID', reference: 'parid',  allowBlank: true },
     { fieldLabel: 'Region', name: 'County', reference: 'region', allowBlank: false, xtype: 'rcfilter', store: { type: 'region' }, valueField: 'DomainValueID', displayField: 'ValueName' },
     { fieldLabel: 'Aktiv', name: 'IsActive', reference: 'active', hidden: false, allowBlank: false, xtype: 'combobox', store: { type: 'active' }, valueField: 'ActiveCode', displayField: 'ActiveName' },
-    // { fieldLabel: 'Bindings', name: 'Bindings', reference: 'bindings', hidden: true, allowBlank: false, xtype: 'hiddenfield'}
+    // { fieldLabel: 'Bindings', name: 'Bindings', reference: 'bindings', allowBlank: false, xtype: 'hiddenfield'}
   ],
 
   dockedItems: [
@@ -1729,8 +1757,8 @@ Ext.define('RC.UserAdministration.controller.EditUnit', {
 
   init: function () {
     this.lookup('unitform').loadRecord(this.getView().getUnit())
-    this.lookup('region').hide()
-    this.lookup('region').disable()
+    //this.lookup('region').hide()
+    //this.lookup('region').disable()
   },
 
   onSave: function () {
@@ -1755,6 +1783,7 @@ Ext.define('RC.UserAdministration.view.CreateUnit', {
   
   config: {
     unit: [],
+    nextId: 0
   },
   
   items: [
@@ -1769,11 +1798,15 @@ Ext.define('RC.UserAdministration.controller.CreateUnit', {
   extend: 'RC.UserAdministration.controller.UnitForm',
   alias: 'controller.createunit',
   config: {
-    fields: ['unitname']
+    fields: ['unitname'],
+    nextId: 0
   },
 
   init: function () {
+    var nextId = this.getView().getNextId()
+    this.lookup('unitcode').setValue(nextId)
     this.lookup('active').setValue(true)
+
   },
 
   onSave: function () {
