@@ -7,12 +7,13 @@ widgetConfig.devMode = Profile.Context && Profile.Context.User.UserID <= 200
 
 function onReady() {
   Ext.tip.QuickTipManager.init()
+  RC && RC.UserAdministration && RC.UserAdministration.app && RC.UserAdministration.app.destroy()
   // Ext.create('RC.UserAdministration.view.FileDrop').show();
   Ext.create('RC.UserAdministration.store.User')
   Ext.create('RC.UserAdministration.store.Unit')
   Ext.create('RC.UserAdministration.store.Role')
   Ext.create('RC.UserAdministration.store.Bindings', { storeId: 'bindings' })
-  RC.UserAdministration.app = Ext.create('Ext.tab.Panel', { renderTo: 'contentPanel', items: [{ title: 'Användare', xtype: 'usergrid' }, { title: 'Enheter', xtype: 'unitgrid' }] })
+  RC.UserAdministration.app = Ext.create('Ext.tab.Panel', { cls: 'navbar-default', renderTo: 'contentPanel', items: [{ title: 'Användare', xtype: 'usergrid' }, { title: 'Enheter', xtype: 'unitgrid' }] })
   RC.UserAdministration.data = Ext.create('RC.UserAdministration.storage.Data', { observers: [RC.UserAdministration.app.down('usergrid'), RC.UserAdministration.app.down('unitgrid')] })
 }
 
@@ -515,6 +516,7 @@ Ext.define('RC.UserAdministration.controller.User', {
     var filter = function (item) {
       if (item.data.UserID < 200 && !widgetConfig.devMode) return false
       if (user === '') { return true }
+      user = user.replace('<', '').replace('>', '')
       var contexts = item.data.Contexts
       if (contexts) {
         var terms = user.split(' ')
@@ -1025,6 +1027,7 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     var personalidIsUsed = this.getView().getUserData().data.PersonalId
     this.updateStatusBar()
     if (personalidIsUsed) {
+      this.lookup('hsaid').setValue(null)
       this.onBankIdChoosen()
     } else {
       this.onSithIdChoosen()
@@ -1053,6 +1056,7 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
   onContextAdded: function (context) {
     var store = this.lookup('contexts').getStore()
     store.add(context)
+    Ext.getStore('users').getById(context.User.UserID).data.Contexts.push(context)
   }
 })
 
@@ -1458,6 +1462,9 @@ Ext.define('RC.UserAdministration.view.UnitGrid', {
   width: '100%',
   height: 500,
   cls: 'rc-useradministration',
+  config: {
+    domains: []
+  },
 
   plugins: {
     gridexporter: true,
@@ -1466,6 +1473,7 @@ Ext.define('RC.UserAdministration.view.UnitGrid', {
   listeners: {
     itemdblclick: 'unitClicked',
     unitsloaded: 'onDataLoaded',
+    domainsLoaded: 'onDomainsLoaded',
     selectionchange: 'onSelectionChange',
     columnhide: 'onColumnHidden',
     columnShow: 'onColumnShown',
@@ -1605,11 +1613,26 @@ Ext.define('RC.UserAdministration.controller.Unit', {
 
   onDataLoaded: function (dataLoader) {
     var units = dataLoader.getUnits()
+    var domains = this.getView().getDomains()
     var bindings = dataLoader.getBindings()
     units.forEach(function (unit) {
       unit.County = bindings[unit.UnitName].County
+      domains.forEach(function (domain){
+        unit[domain.DomainName] = bindings[unit.UnitName][domain.DomainName]
+      })
     })
     this.getView().getStore().loadData(units)
+  },
+
+  onDomainsLoaded: function (dataLoader) {
+    this.getView().setDomains(dataLoader.getDomains())
+    var domains = this.getView().getDomains()
+    var bindings = dataLoader.getBindings()
+    var grid = this.getView().getHeaderContainer()
+    domains.forEach(function (domain){
+      grid.insert(Ext.create('Ext.grid.column.Column', { text: domain.DomainTitle, dataIndex: domain.DomainName, flex: 1 }))
+    })
+    this.onDataLoaded(dataLoader)
   },
 
   export: function () {
@@ -1627,11 +1650,11 @@ Ext.define('RC.UserAdministration.controller.Unit', {
 
   create: function () {
     var nextId = this.getNextUnitId()
-    Ext.create('RC.UserAdministration.view.CreateUnit', {nextId: nextId}).show()
+    Ext.create('RC.UserAdministration.view.CreateUnit', {nextId: nextId, domains: this.getView().getDomains()}).show()
   },
 
   unitClicked: function (component, record, item, index) {
-    Ext.create('RC.UserAdministration.view.EditUnit', { unit: record }).show()
+    Ext.create('RC.UserAdministration.view.EditUnit', { unit: record, domains: this.getView().getDomains() }).show()
   },
 
   getNextUnitId: function () {
@@ -1689,7 +1712,7 @@ Ext.define('RC.UserAdministration.form.Unit', {
     { fieldLabel: 'PAR-id', name: 'PARID', reference: 'parid',  allowBlank: true },
     { fieldLabel: 'Region', name: 'County', reference: 'region', allowBlank: false, xtype: 'rcfilter', store: { type: 'region' }, valueField: 'DomainValueID', displayField: 'ValueName' },
     { fieldLabel: 'Aktiv', name: 'IsActive', reference: 'active', hidden: false, allowBlank: false, xtype: 'combobox', store: { type: 'active' }, valueField: 'ActiveCode', displayField: 'ActiveName' },
-    // { fieldLabel: 'Bindings', name: 'Bindings', reference: 'bindings', allowBlank: false, xtype: 'hiddenfield'}
+    // { fieldLabel: 'Bindings', name: 'Bindings', reference: 'bindings', allowBlank: true, xtype: 'hiddenfield' }
   ],
 
   dockedItems: [
@@ -1738,6 +1761,7 @@ Ext.define('RC.UserAdministration.view.EditUnit', {
   
   config: {
     unit: [],
+    domains: []
   },
   
   items: [
@@ -1757,21 +1781,49 @@ Ext.define('RC.UserAdministration.controller.EditUnit', {
 
   init: function () {
     this.lookup('unitform').loadRecord(this.getView().getUnit())
+    this.addDomains()
     //this.lookup('region').hide()
     //this.lookup('region').disable()
   },
 
   onSave: function () {
-    this.getForm().updateRecord()
+    this.addBindings()
     Ext.StoreManager.lookup('units').sync({ callback: function () { } })
     this.getView().destroy()
   },
 
-  transformRegion: function () {
+  addBindings: function () {
     var form = this.getForm().getValues()
-    form.Bindings = [{ DomainValueId: form.County }]
-    this.getForm().setValues(form)
-  }
+    var domains = this.getView().getDomains()
+    if(typeof form.County !== "number") form.County = this.lookup('region').findRecordByDisplay('Västra Götaland').id
+    var bindings = [{ DomainValueID: form.County }]
+    domains.forEach(function(domain){
+      if(typeof form[domain.DomainName] !== "number") form[domain.DomainName] = this.lookup(domain.DomainName).findRecordByDisplay(form[domain.DomainName]).id
+      bindings.push({DomainValueID: form[domain.DomainName]})
+    })
+    this.getForm().getRecord().set('Bindings', bindings)
+  },
+
+  addDomains: function () {
+    var domains = this.getView().getDomains()
+    var form = this.getView().down()
+    var unit = this.getView().getUnit().getData()
+    domains.forEach(function (domain) {
+      form.add({
+        xtype: 'rcfilter',
+        name: domain.DomainName,
+        fieldLabel: domain.DomainTitle,
+        allowNull: false,
+        allowBlank: false,
+        valueField: 'DomainValueID', 
+        displayField: 'ValueName',
+        value: unit[domain.DomainName],
+        store: {
+          data: domain.DomainValues
+        }
+      })  
+    })
+  },
 })
 
 Ext.define('RC.UserAdministration.view.CreateUnit', {
@@ -1783,7 +1835,8 @@ Ext.define('RC.UserAdministration.view.CreateUnit', {
   
   config: {
     unit: [],
-    nextId: 0
+    nextId: 0,
+    domains: []
   },
   
   items: [
@@ -1799,21 +1852,47 @@ Ext.define('RC.UserAdministration.controller.CreateUnit', {
   alias: 'controller.createunit',
   config: {
     fields: ['unitname'],
-    nextId: 0
+    nextId: 0,
+    domains: []
   },
 
   init: function () {
     var nextId = this.getView().getNextId()
     this.lookup('unitcode').setValue(nextId)
     this.lookup('active').setValue(true)
+    this.addDomains()
+  },
 
+  addDomains: function () {
+    var domains = this.getView().getDomains()
+    var form = this.getView().down()
+    var controller = this
+    domains.forEach(function (domain) {
+      form.add({
+        xtype: 'rcfilter',
+        name: domain.DomainName,
+        fieldLabel: domain.DomainTitle,
+        allowNull: false,
+        valueField: 'DomainValueID', 
+        displayField: 'ValueName',
+        store: {
+          data: domain.DomainValues
+        }
+      })  
+    })
   },
 
   onSave: function () {
+    var controller = this
+    var domains = this.getView().getDomains()
     this.transformRegion()
     this.getForm().updateRecord()
     var unit = this.getForm().getValues()
     unit.Bindings = [{ DomainValueID: unit.County }]
+    domains.forEach(function(domain){
+      unit.Bindings.push({DomainValueID: unit[domain.DomainName]})
+    })
+    var extra = this.getView().getDomains().forEach(function(item){unit.Bindings.push({DomainValueID: controller.getForm().getValues()[item.DomainName]})})
     unit.Register = { RegisterID: Profile.Site.Register.RegisterID }
     unit.HSAID = unit.HSAID || null
     unit.PARID = unit.PARID || null
@@ -1930,6 +2009,7 @@ Ext.define('RC.UserAdministration.storage.Data', {
     users: [],
     contexts: [],
     units: [],
+    domains: [],
     bindings: [],
     observers: [],
     loginsSith: [],
@@ -1945,7 +2025,7 @@ Ext.define('RC.UserAdministration.storage.Data', {
     var controller = this
     Ext.Promise.all([
       Ext.Ajax.request({ url: '/stratum/api/metadata/units/register/' + Profile.Site.Register.RegisterID }),
-      Ext.Ajax.request({ url: '/stratum/api/metadata/units/bindings/' + Profile.Site.Register.RegisterID }),
+      Ext.Ajax.request({ url: '/stratum/api/metadata/units/bindings/' + Profile.Site.Register.RegisterID })
     ]).then(function (results) {
       var units = Ext.decode(results[0].responseText).data
       var bindings = Ext.decode(results[1].responseText).data
@@ -1966,6 +2046,27 @@ Ext.define('RC.UserAdministration.storage.Data', {
       controller.setContexts(contexts)
       controller.getObservers().forEach(function (observer) {
         observer.fireEvent('dataloaded', controller)
+      })
+    })
+
+    Ext.Promise.all([
+      Ext.Ajax.request({ url: 'stratum/api/metadata/domains/register/' + Profile.Site.Register.RegisterID })
+    ]).then(function(results) {
+      var domains = Ext.decode(results[0].responseText).data
+      var requests = []
+      domains = domains.filter(function (domain) {
+        return domain.DomainID >= 3000 &&  domain.DomainID < 3100
+      })
+      if(domains.length === 0) return
+      domains.forEach(function(domain){
+        requests.push(Ext.Ajax.request({ url: 'stratum/api/metadata/domains/' + domain.DomainID}))
+      })
+      Ext.Promise.all(requests).then(function (results) {
+        var domainvalues = Ext.decode(results[0].responseText).data
+        controller.setDomains([domainvalues])
+        controller.getObservers().forEach(function (observer) {
+        observer.fireEvent('domainsloaded', controller)
+      })
       })
     })
   }
