@@ -1,5 +1,5 @@
 
-var widgetConfig  = widgetConfig || {}
+var widgetConfig = widgetConfig || {}
 widgetConfig.Roles = [0, 901, 902, 903, 907, 908]
 widgetConfig.devMode = Profile.Context && Profile.Context.User.UserID <= 200
 // widgetConfig.devMode = false
@@ -13,8 +13,14 @@ function onReady() {
   Ext.create('RC.UserAdministration.store.Unit')
   Ext.create('RC.UserAdministration.store.Role')
   Ext.create('RC.UserAdministration.store.Bindings', { storeId: 'bindings' })
-  RC.UserAdministration.app = Ext.create('Ext.tab.Panel', { cls: 'navbar-default', renderTo: 'contentPanel', items: [{ title: 'Användare', xtype: 'usergrid' }, { title: 'Enheter', xtype: 'unitgrid' }] })
-  RC.UserAdministration.data = Ext.create('RC.UserAdministration.storage.Data', { observers: [RC.UserAdministration.app.down('usergrid'), RC.UserAdministration.app.down('unitgrid')] })
+  RC.UserAdministration.app = Ext.create('Ext.tab.Panel', {
+    cls: 'navbar-default',
+    renderTo: 'contentPanel',
+    items: [{ title: 'Användare', xtype: 'usergrid' }, { title: 'Enheter', xtype: 'unitgrid' }]
+  })
+  RC.UserAdministration.data = Ext.create('RC.UserAdministration.storage.Data', {
+    observers: [RC.UserAdministration.app.down('usergrid'), RC.UserAdministration.app.down('unitgrid')]
+  })
 }
 
 Stratum.Role || Ext.define('Stratum.Role', {
@@ -73,12 +79,12 @@ Ext.define('RC.UserAdministration.store.Unit', {
     reader: {
       type: 'json',
       rootProperty: 'data'
-      
+
     },
     api: {
       create: '/stratum/api/metadata/units',
       update: '/stratum/api/metadata/units'
-    } 
+    }
   }
 })
 
@@ -295,7 +301,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
           sortdirection: 'DESC',
           selectCallback: 'updateGrid',
           store: {
-            type: 'role', 
+            type: 'role',
           },
           listeners: {
             change: 'updateGrid',
@@ -338,7 +344,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
           minWidth: 80,
           disabled: false
         },
-        { 
+        {
           reference: 'emailButton',
           text: 'E-posta',
           handler: 'mail',
@@ -377,7 +383,9 @@ Ext.define('RC.UserAdministration.controller.User', {
     var columns = this.getView().getColumns()
     var defaultHiddenColumns = ['UserID', 'WorkTitle', 'Organization']
     columns.forEach(function (column) {
-      column.hidden = localStorage.getItem(column.dataIndex) === 'hidden' || (localStorage.getItem(column.dataIndex) === null && defaultHiddenColumns.indexOf(column.dataIndex)>-1)
+      column.hidden = localStorage.getItem(column.dataIndex) === 'hidden'
+        || (localStorage.getItem(column.dataIndex) === null
+          && defaultHiddenColumns.indexOf(column.dataIndex) > -1)
     })
   },
 
@@ -418,7 +426,7 @@ Ext.define('RC.UserAdministration.controller.User', {
     this.setLoader(dataLoader)
     this.lookup('searchButton').enable()
     this.searchOwn()
-    
+
   },
 
   updateDropdowns: function (dataLoader) {
@@ -439,7 +447,9 @@ Ext.define('RC.UserAdministration.controller.User', {
       success: function (result, request) {
         var contexts = Ext.decode(result.responseText).data
         var units = controller.getAllRegistryUnits()
-        contexts = contexts.filter(function (context) { return units.indexOf(context.Unit.UnitID) >= 0 })
+        contexts = contexts.filter(function (context) {
+          return units.indexOf(context.Unit.UnitID) >= 0
+        })
         controller.getView().getStore().getById(user).set('Contexts', contexts)
       },
       failure: function (result, request) {
@@ -502,9 +512,9 @@ Ext.define('RC.UserAdministration.controller.User', {
     var filter = function (item) {
       var contexts = item.data.Contexts
       if (contexts) {
-        contexts = contexts.filter(function (context) { return (unit === 0  || context.Unit.UnitID === unit) })
-        contexts = contexts.filter(function (context) { return role === 0   || context.Role.RoleID === role })
-        contexts = contexts.filter(function (context) { return active === 0 || context.IsActive    === (active === 1)})
+        contexts = contexts.filter(function (context) { return (unit === 0 || context.Unit.UnitID === unit) })
+        contexts = contexts.filter(function (context) { return role === 0 || context.Role.RoleID === role })
+        contexts = contexts.filter(function (context) { return active === 0 || context.IsActive === (active === 1) })
         return contexts.length !== 0
       }
       return true
@@ -524,13 +534,16 @@ Ext.define('RC.UserAdministration.controller.User', {
           term = term.toLowerCase()
           contexts = contexts.filter(function (context) {
             return context.User.Username.toLowerCase().indexOf(term) > -1
-               || (context.User.FirstName && context.User.FirstName.toLowerCase().indexOf(term) > -1)
-               || (context.User.LastName && context.User.LastName.toLowerCase().indexOf(term) > -1)
-               || (context.User.Email && context.User.Email.toLowerCase().indexOf(term) > -1)
+              || (context.User.FirstName && context.User.FirstName.toLowerCase().indexOf(term) > -1)
+              || (context.User.LastName && context.User.LastName.toLowerCase().indexOf(term) > -1)
+              || (context.User.Email && context.User.Email.toLowerCase().indexOf(term) > -1)
           })
         })
         var isPartOfUnit = contexts.length !== 0
-        var matchesExtraField = (JSON.parse(item.data.Extra) && Ext.String.startsWith(JSON.parse(item.data.Extra)[Profile.Site.Register.RegisterID], user, true)) ? true : false
+        var matchesExtraField = (
+          JSON.parse(item.data.Extra)
+          && Ext.String.startsWith(JSON.parse(item.data.Extra)[Profile.Site.Register.RegisterID], user, true)
+        ) ? true : false
         return isPartOfUnit || matchesExtraField
       }
       return true
@@ -539,11 +552,11 @@ Ext.define('RC.UserAdministration.controller.User', {
   },
 
   updateGrid: function () {
-    var store   = this.getView().getStore()
-    var user    = this.lookup('userFilter').getValue()
-    var unit    = this.lookup('unitFilter').getValue()
-    var role    = this.lookup('roleFilter').getValue()
-    var active  = this.lookup('activeFilter').getValue()
+    var store = this.getView().getStore()
+    var user = this.lookup('userFilter').getValue()
+    var unit = this.lookup('unitFilter').getValue()
+    var role = this.lookup('roleFilter').getValue()
+    var active = this.lookup('activeFilter').getValue()
 
     store.suspendEvents()
     store.clearFilter()
@@ -565,7 +578,10 @@ Ext.define('RC.UserAdministration.controller.User', {
     record.data.Info = JSON.parse(record.data.Extra || '{}')[Profile.Site.Register.RegisterID]
     record.data.PersonalId = this.checkIfPersonalId(record.data.HSAID) ? record.data.HSAID : null
 
-    Ext.create('RC.UserAdministration.view.EditUser', { userData: record, contextData: Ext.clone(record.data.Contexts), contextsForValidation: Ext.clone(record.data.Contexts) }).show()
+    Ext.create('RC.UserAdministration.view.EditUser', {
+      userData: record, contextData: Ext.clone(record.data.Contexts),
+      contextsForValidation: Ext.clone(record.data.Contexts)
+    }).show()
   },
 
   onColumnHidden: function (component, column, eOpts) {
@@ -586,7 +602,9 @@ Ext.define('RC.UserAdministration.controller.User', {
   },
 
   loadContexts: function (component, userId) {
-    var contexts = this.getLoader() && this.getLoader().getContexts().filter(function (c) { return c.User.UserID === userId })
+    var contexts = this.getLoader() && this.getLoader().getContexts().filter(function (c) {
+      return c.User.UserID === userId
+    })
     if (contexts.length !== 0) {
       component.down('grid').getStore().loadData(contexts)
     } else {
@@ -602,18 +620,18 @@ Ext.define('RC.UserAdministration.controller.User', {
   },
 
   getLatestContextLogin: function (user) {
-    var time = user.Contexts.reduce(function (total, current) { 
-      total.ActivatedAt = total.ActivatedAt || '' 
-      if (total.ActivatedAt < current.ActivatedAt) { 
-        return current 
-      } 
-      return total 
+    var time = user.Contexts.reduce(function (total, current) {
+      total.ActivatedAt = total.ActivatedAt || ''
+      if (total.ActivatedAt < current.ActivatedAt) {
+        return current
+      }
+      return total
     })
     time = time.ActivatedAt ? time.ActivatedAt.substring(0, 16).replace('T', ' ') : null
     return time || 'Okänt'
   },
 
-   getAllRegistryUnits: function () {
+  getAllRegistryUnits: function () {
     return Ext.ComponentQuery.query('usergrid').pop().lookup('unitFilter').getStore()
       .getData().items.map(function (item) { return item.data.UnitID })
   }
@@ -624,10 +642,10 @@ Ext.define('RC.UserAdministration.controller.Form', {
   alias: 'controller.form',
 
   init: function () {
-    this.callParent() 
+    this.callParent()
     var usedFields = this.getFields()
     var fields = this.getForm().getFields().items
-    fields.forEach(function (field) { 
+    fields.forEach(function (field) {
       if (usedFields.indexOf(field.reference) < 0) {
         field.hide()
         field.disable()
@@ -679,11 +697,11 @@ Ext.define('RC.UserAdministration.controller.Form', {
     var form = this.getForm().getValues()
     var context = {
       IsActive: true,
-      User: { },
+      User: {},
       Unit: { UnitID: form.UnitID },
       Role: { RoleID: form.RoleID }
     }
-    
+
     return context
   },
 
@@ -704,7 +722,7 @@ Ext.define('RC.UserAdministration.controller.Form', {
 
   transformHsaid: function (component, value) {
     var value = form.HSAID
-    if(value && value.indexOf('SE')>-1) {
+    if (value && value.indexOf('SE') > -1) {
       value = value.toUpperCase()
     }
 
@@ -712,16 +730,16 @@ Ext.define('RC.UserAdministration.controller.Form', {
   },
 
   transformPersonalId: function (form) {
-    if(!form.PersonalId) return
+    if (!form.PersonalId) return
     this.lookup('hsaid').setValue(form.PersonalId)
     this.lookup('hsaid').enable()
     this.lookup('personalid').disable()
   },
-  
+
   saveUser: function (data) {
     var deferred = new Ext.Deferred()
     delete data.user.UserID
-    
+
     Ext.Ajax.request({
       url: '/stratum/api/metadata/users/',
       method: 'POST',
@@ -767,14 +785,16 @@ Ext.define('RC.UserAdministration.controller.Form', {
       success: function (result, request) {
         user.Contexts = Ext.decode(result.responseText).data
         var units = controller.getAllRegistryUnits()
-        user.Contexts = user.Contexts.filter(function (context) { return units.indexOf(context.Unit.UnitID) >= 0 })
+        user.Contexts = user.Contexts.filter(function (context) {
+          return units.indexOf(context.Unit.UnitID) >= 0
+        })
         Ext.ComponentQuery.query('usergrid')[0].getStore().add(user)
       },
       failure: function (result, request) {
       }
     })
   },
-  
+
   getAllRegistryUnits: function () {
     return Ext.ComponentQuery.query('usergrid').pop().lookup('unitFilter').getStore()
       .getData().items.map(function (item) { return item.data.UnitID })
@@ -790,28 +810,32 @@ Ext.define('RC.UserAdministration.controller.Form', {
     var sender = Profile.Context.User.FirstName + ' ' + Profile.Context.User.LastName
     var subject = widgetConfig.mailTitle || ('Välkommen till ' + site)
     var content = this.lookup('personalid').isDisabled() ? this.getSithsMail() : this.getBankIdMail()
-    content = content.replace(/\{recipient}/g, recipient).replace(/\{sender}/g, sender).replace(/\{site}/g, site).replace(/\{registry}/g, registry).replace(/\{nl}/g, newline).replace(/\{name}/g, name)
+    content = content
+      .replace(/\{recipient}/g, recipient)
+      .replace(/\{sender}/g, sender).replace(/\{site}/g, site)
+      .replace(/\{registry}/g, registry).replace(/\{nl}/g, newline)
+      .replace(/\{name}/g, name)
     var mail = 'mailto:' + recipient + '?subject=' + subject + '&body=' + content
     window.location = mail
   },
 
   getSithsMail: function () {
-    var content = 'Hej{name}!{nl}{nl}Välkommen till {site}.{nl}' 
-                + 'Du har nu fått ett inloggningskonto till {site}, men behöver först koppla ditt {nl}'
-                + 'SITHS-kort. Gå till https://{registry}.registercentrum.se och logga in: {nl}{nl}'
-                + 'Användarnamn: {recipient}{nl}' 
-                + 'Lösenord: sa52re{nl}{nl}'
-                + 'Med vänlig hälsning,{nl}'
-                + '{sender}'
+    var content = 'Hej{name}!{nl}{nl}Välkommen till {site}.{nl}'
+      + 'Du har nu fått ett inloggningskonto till {site}, men behöver först koppla ditt {nl}'
+      + 'SITHS-kort. Gå till https://{registry}.registercentrum.se och logga in: {nl}{nl}'
+      + 'Användarnamn: {recipient}{nl}'
+      + 'Lösenord: sa52re{nl}{nl}'
+      + 'Med vänlig hälsning,{nl}'
+      + '{sender}'
     return widgetConfig.sithsMail || content
   },
 
   getBankIdMail: function () {
-    var content = 'Hej{name}!{nl}{nl}Välkommen till {site}.{nl}' 
-                + 'Du kan nu logga in på {site} via mobilt Bank ID.{nl}'
-                + 'Gå till https://{registry}.registercentrum.se och logga in med ditt BankID: {nl}{nl}'
-                + 'Med vänlig hälsning,{nl}'
-                + '{sender}'
+    var content = 'Hej{name}!{nl}{nl}Välkommen till {site}.{nl}'
+      + 'Du kan nu logga in på {site} via mobilt Bank ID.{nl}'
+      + 'Gå till https://{registry}.registercentrum.se och logga in med ditt BankID: {nl}{nl}'
+      + 'Med vänlig hälsning,{nl}'
+      + '{sender}'
     return widgetConfig.bankidMail || content
   }
 })
@@ -823,7 +847,7 @@ Ext.define('RC.UserAdministration.view.CreateUser', {
   width: 1000,
   title: 'Användare',
   cls: 'rc-useradministration',
-  
+
   items: [
     {
       xtype: 'rcuserform',
@@ -891,8 +915,8 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
     var view = this.getView()
     var inputs = ''
     inputs += this.lookup('firstname').getValue().length > 2 ? this.lookup('firstname').getValue() + ' ' : ''
-    inputs += this.lookup('lastname').getValue().length  > 2 ? this.lookup('lastname').getValue()  + ' ' : ''
-    inputs += this.lookup('username').getValue().length  > 2 ? this.lookup('username').getValue()  + ' ' : ''
+    inputs += this.lookup('lastname').getValue().length > 2 ? this.lookup('lastname').getValue() + ' ' : ''
+    inputs += this.lookup('username').getValue().length > 2 ? this.lookup('username').getValue() + ' ' : ''
     inputs = inputs.length > 0 ? inputs.substring(0, inputs.length - 1) : ''
     return inputs
   },
@@ -923,8 +947,8 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
     var email = this.lookup('username').getValue()
     matches = matches.filter(function (match) {
       return (firstName.length < 3 || Ext.String.startsWith(match.FirstName, firstName, true))
-          && (lastName.length < 3  || Ext.String.startsWith(match.LastName, lastName, true))
-          && (email.length < 3     || Ext.String.startsWith(match.Email, email, true))
+        && (lastName.length < 3 || Ext.String.startsWith(match.LastName, lastName, true))
+        && (email.length < 3 || Ext.String.startsWith(match.Email, email, true))
     })
     return matches
   }
@@ -941,13 +965,13 @@ Ext.define('RC.UserAdministration.view.EditUser', {
   listeners: {
     contextadded: 'onContextAdded'
   },
-  
+
   config: {
     userData: [],
     contextData: [],
     contextsForValidation: []
   },
-  
+
   items: [
     {
       xtype: 'rcuserform',
@@ -967,18 +991,24 @@ Ext.define('RC.UserAdministration.view.EditUser', {
       store: {
         fields: ['IsActive',
           {
-            name: 'ContextID', dataIndex: 'ContextID'
-          }, 
-          {
-            name: 'Unit', convert: function (v, record) {return record.get('Unit').UnitName}
+            name: 'ContextID',
+            dataIndex: 'ContextID'
           },
           {
-            name: 'Role', convert: function (v, record) { return record.get('Role').RoleName}
+            name: 'Unit',
+            convert: function (v, record) { return record.get('Unit').UnitName }
           },
           {
-            name: 'Active', convert: function(v, record) { return record.get('ActivatedAt') ? record.get('ActivatedAt').substring(0, 10) : '' }
+            name: 'Role',
+            convert: function (v, record) { return record.get('Role').RoleName }
+          },
+          {
+            name: 'Active',
+            convert: function (v, record) {
+              return record.get('ActivatedAt') ? record.get('ActivatedAt').substring(0, 10) : ''
+            }
           }
-          ],
+        ],
         data: []
       },
     }
@@ -1007,7 +1037,16 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
   extend: 'RC.UserAdministration.controller.Form',
   alias: 'controller.edituser',
   config: {
-    fields: ['username', 'firstname', 'lastname', 'hsaid', 'email', 'organisation', 'registryinfo', 'lastactive']
+    fields: [
+      'username',
+      'firstname',
+      'lastname',
+      'hsaid',
+      'email',
+      'organisation',
+      'registryinfo',
+      'lastactive'
+    ]
   },
 
   init: function () {
@@ -1042,15 +1081,19 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
   onSave: function () {
     this.transformUser()
     this.getForm().updateRecord()
-    if(this.getForm().getRecord().data.HSAID===''){
-      this.getForm().getRecord().data.HSAID=null
+    if (this.getForm().getRecord().data.HSAID === '') {
+      this.getForm().getRecord().data.HSAID = null
     }
     Ext.StoreManager.lookup('users').sync({ callback: function () { } })
     this.getView().destroy()
   },
 
   onCreateContext: function () {
-    Ext.create('RC.UserAdministration.view.CreateContext', { user: this.getView().getUserData().get('UserID'), contexts: this.getView().getContextsForValidation(), userForm: this.getView() }).show()
+    Ext.create('RC.UserAdministration.view.CreateContext', {
+      user: this.getView().getUserData().get('UserID'),
+      contexts: this.getView().getContextsForValidation(),
+      userForm: this.getView()
+    }).show()
   },
 
   onContextAdded: function (context) {
@@ -1117,11 +1160,11 @@ Ext.define('RC.UserAdministration.controller.MatchUser', {
   alias: 'controller.matchuser',
 
   init: function () {
-    
+
   },
 
   onEditUser: function (component, record, item, index) {
-    var data = { controller: this, user: record.data}
+    var data = { controller: this, user: record.data }
     this.loadUserContexts(data).then(this.loadUser)
   },
 
@@ -1129,22 +1172,26 @@ Ext.define('RC.UserAdministration.controller.MatchUser', {
     var me = data.controller
     var user = data.user
     var record = me.getView().getStore().getById(data.user.UserID)
-    user.Contexts = user.Contexts || [] 
+    user.Contexts = user.Contexts || []
     user.LastActive = me.getLatestContextLogin(data.user)
     user.Info = JSON.parse(record.data.Extra || '{}')[Profile.Site.Register.RegisterID]
     user.PersonalId = me.checkIfPersonalId(record.data.HSAID) ? record.data.HSAID : null
-    Ext.create('RC.UserAdministration.view.EditUser', { userData: record, contextData: Ext.clone(record.data.Contexts), contextsForValidation: Ext.clone(record.data.Contexts) }).show()
+    Ext.create('RC.UserAdministration.view.EditUser', {
+      userData: record,
+      contextData: Ext.clone(record.data.Contexts),
+      contextsForValidation: Ext.clone(record.data.Contexts)
+    }).show()
   },
 
   /* Duplicated code from usergrid - Refactor if time allows*/
   getLatestContextLogin: function (user) {
-    if(user.Contexts.length===0) return 'Okänt'
-    var time = user.Contexts.reduce(function (total, current) { 
-      total.ActivatedAt = total.ActivatedAt || '' 
-      if (total.ActivatedAt < current.ActivatedAt) { 
-        return current 
-      } 
-      return total 
+    if (user.Contexts.length === 0) return 'Okänt'
+    var time = user.Contexts.reduce(function (total, current) {
+      total.ActivatedAt = total.ActivatedAt || ''
+      if (total.ActivatedAt < current.ActivatedAt) {
+        return current
+      }
+      return total
     })
     time = time.ActivatedAt ? time.ActivatedAt.substring(0, 16).replace('T', ' ') : null
     return time || 'Okänt'
@@ -1157,7 +1204,7 @@ Ext.define('RC.UserAdministration.controller.MatchUser', {
   loadUserContexts: function (data) {
     var controller = this
     var deferred = new Ext.Deferred()
-    
+
     Ext.Ajax.request({
       url: '/stratum/api/metadata/contexts/user/' + data.user.UserID,
       method: 'GET',
@@ -1195,7 +1242,7 @@ Ext.define('RC.UserAdministration.view.CreateContext', {
     contexts: [],
     userForm: null
   },
-  
+
   items: [
     {
       xtype: 'rcuserform',
@@ -1212,7 +1259,7 @@ Ext.define('RC.UserAdministration.controller.CreateContext', {
   },
 
   init: function () {
-    this.callParent() 
+    this.callParent()
     this.lookup('sithIdButton').hide()
     this.lookup('bankIdButton').hide()
     this.lookup('createContextButton').hide()
@@ -1235,7 +1282,7 @@ Ext.define('RC.UserAdministration.controller.CreateContext', {
     data.controller.getView().getUserForm().fireEvent('contextadded', data.context)
     data.controller.getView().destroy()
   },
-  
+
   getForm: function () {
     return this.lookup('userform').getForm()
   },
@@ -1269,21 +1316,103 @@ Ext.define('RC.UserAdministration.form.User', {
   layout: 'column',
   width: '100%',
   items: [
-    { fieldLabel: 'Förnamn',         name: 'FirstName',    reference: 'firstname',  allowBlank: true },
-    { fieldLabel: 'Efternamn',       name: 'LastName',     reference: 'lastname',   allowBlank: true },
-    { fieldLabel: 'HSAID',           name: 'HSAID',        reference: 'hsaid',      allowBlank: true, vtype: 'hsaid', /*fieldStyle: { textTransform: 'uppercase' },*/ labelClsExtra: 'PrefixMandatory', maxLength: 64 },
-    { fieldLabel: 'Personnummer',    name: 'PersonalId',   reference: 'personalid', allowBlank: false, vtype: 'personalid', labelClsExtra: 'rc-required' },
-    { fieldLabel: 'Epost',           name: 'Email',        reference: 'email',      vtype: 'email' },
-    { fieldLabel: 'Organisation',    name: 'Organization', reference: 'organisation' },
-    { fieldLabel: 'Användarnamn',    name: 'Username',     reference: 'username',   vtype: 'username', allowBlank: false, labelClsExtra: 'rc-required' },
-    { fieldLabel: 'Enhet',           name: 'UnitID',       reference: 'unit',       allowBlank: false, xtype: 'rcfilter', store: { type: 'unit' }, valueField: 'UnitID', displayField: 'UnitName', labelClsExtra: 'rc-required' },
-    { fieldLabel: 'Roll',            name: 'RoleID',       reference: 'role',       allowBlank: false, xtype: 'rcfilter', store: { type: 'role' }, valueField: 'RoleID', displayField: 'RoleName', labelClsExtra: 'rc-required' },
-    { fieldLabel: 'Användarid',      name: 'UserID',       reference: 'userid',     },
-    { fieldLabel: 'Title',           name: 'WorkTitle',    reference: 'worktitle',  },
-    { fieldLabel: 'Registerinfo',    name: 'Info',         reference: 'registryinfo' },
-    { fieldLabel: 'Senast inloggad', name: 'LastActive',   reference: 'lastactive', cls: 'rc-info' },
-    { fieldLabel: 'Extra',           name: 'Extra',        reference: 'extra',      },
-    
+    {
+      fieldLabel: 'Förnamn',
+      name: 'FirstName',
+      reference: 'firstname',
+      allowBlank: true
+    },
+    {
+      fieldLabel: 'Efternamn',
+      name: 'LastName',
+      reference: 'lastname',
+      allowBlank: true
+    },
+    {
+      fieldLabel: 'HSAID',
+      name: 'HSAID',
+      reference: 'hsaid',
+      allowBlank: true,
+      vtype: 'hsaid',
+      labelClsExtra: 'PrefixMandatory',
+      maxLength: 64
+    },
+    {
+      fieldLabel: 'Personnummer',
+      name: 'PersonalId',
+      reference: 'personalid',
+      allowBlank: false,
+      vtype: 'personalid',
+      labelClsExtra: 'rc-required'
+    },
+    {
+      fieldLabel: 'Epost',
+      name: 'Email',
+      reference: 'email',
+      vtype: 'email'
+    },
+    {
+      fieldLabel: 'Organisation',
+      name: 'Organization',
+      reference: 'organisation'
+    },
+    {
+      fieldLabel: 'Användarnamn',
+      name: 'Username',
+      reference: 'username',
+      vtype: 'username',
+      allowBlank: false,
+      labelClsExtra: 'rc-required'
+    },
+    {
+      fieldLabel: 'Enhet',
+      name: 'UnitID',
+      reference: 'unit',
+      allowBlank: false,
+      xtype: 'rcfilter',
+      store: { type: 'unit' },
+      valueField: 'UnitID',
+      displayField: 'UnitName',
+      labelClsExtra: 'rc-required'
+    },
+    {
+      fieldLabel: 'Roll',
+      name: 'RoleID',
+      reference: 'role',
+      allowBlank: false,
+      xtype: 'rcfilter',
+      store: { type: 'role' },
+      valueField: 'RoleID',
+      displayField: 'RoleName',
+      labelClsExtra: 'rc-required'
+    },
+    {
+      fieldLabel: 'Användarid',
+      name: 'UserID',
+      reference: 'userid',
+    },
+    {
+      fieldLabel: 'Title',
+      name: 'WorkTitle',
+      reference: 'worktitle',
+    },
+    {
+      fieldLabel: 'Registerinfo',
+      name: 'Info',
+      reference: 'registryinfo'
+    },
+    {
+      fieldLabel: 'Senast inloggad',
+      name: 'LastActive',
+      reference: 'lastactive',
+      cls: 'rc-info'
+    },
+    {
+      fieldLabel: 'Extra',
+      name: 'Extra',
+      reference: 'extra'
+    },
+
   ],
   dockedItems: [
     {
@@ -1394,7 +1523,6 @@ Ext.define('RC.UserAdministration.view.ContextGrid', {
       text: 'Aktiv senast',
       dataIndex: 'Active',
       width: 100,
-      // renderer: function (value, metaData, record) { return record.get('ActivatedAt') ? record.get('ActivatedAt').substring(0, 10) : '' },
       sortable: true
     },
     {
@@ -1423,7 +1551,7 @@ Ext.define('RC.UserAdministration.view.ContextGrid', {
 Ext.define('RC.UserAdministration.controller.Context', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.context',
-  
+
   syncStore: function (column, index, checked, record, e, eOpts) {
     var view = column.getView()
     var observer = RC.UserAdministration.app.down('usergrid')
@@ -1435,7 +1563,7 @@ Ext.define('RC.UserAdministration.controller.Context', {
     delete params.Active
     delete params.Unit
     delete params.Role
-    
+
     Ext.Ajax.request({
       url: '/stratum/api/metadata/contexts/' + params.ContextID,
       method: 'PUT',
@@ -1600,13 +1728,14 @@ Ext.define('RC.UserAdministration.controller.Unit', {
     var columns = this.getView().getColumns()
     var defaultHiddenColumns = ['UnitID', 'PARID']
     columns.forEach(function (column) {
-      column.hidden = localStorage.getItem(column.dataIndex) === 'hidden' || (localStorage.getItem(column.dataIndex) === null && defaultHiddenColumns.indexOf(column.dataIndex)>-1)
+      column.hidden = localStorage.getItem(column.dataIndex) === 'hidden'
+        || (localStorage.getItem(column.dataIndex) === null && defaultHiddenColumns.indexOf(column.dataIndex) > -1)
     })
   },
 
   searchUnits: function () {
-    var store   = this.getView().getStore()
-    var unit    = this.lookup('unitFilter').getValue()
+    var store = this.getView().getStore()
+    var unit = this.lookup('unitFilter').getValue()
     store.clearFilter()
     store.addFilter(this.createUnitFilter(unit))
   },
@@ -1617,7 +1746,7 @@ Ext.define('RC.UserAdministration.controller.Unit', {
     var bindings = dataLoader.getBindings()
     units.forEach(function (unit) {
       unit.County = bindings[unit.UnitName].County
-      domains.forEach(function (domain){
+      domains.forEach(function (domain) {
         unit[domain.DomainName] = bindings[unit.UnitName][domain.DomainName]
       })
     })
@@ -1629,8 +1758,12 @@ Ext.define('RC.UserAdministration.controller.Unit', {
     var domains = this.getView().getDomains()
     var bindings = dataLoader.getBindings()
     var grid = this.getView().getHeaderContainer()
-    domains.forEach(function (domain){
-      grid.insert(Ext.create('Ext.grid.column.Column', { text: domain.DomainTitle, dataIndex: domain.DomainName, flex: 1 }))
+    domains.forEach(function (domain) {
+      grid.insert(Ext.create('Ext.grid.column.Column', {
+        text: domain.DomainTitle,
+        dataIndex: domain.DomainName,
+        flex: 1
+      }))
     })
     this.onDataLoaded(dataLoader)
   },
@@ -1650,15 +1783,23 @@ Ext.define('RC.UserAdministration.controller.Unit', {
 
   create: function () {
     var nextId = this.getNextUnitId()
-    Ext.create('RC.UserAdministration.view.CreateUnit', {nextId: nextId, domains: this.getView().getDomains()}).show()
+    Ext.create('RC.UserAdministration.view.CreateUnit', {
+      nextId: nextId,
+      domains: this.getView().getDomains()
+    }).show()
   },
 
   unitClicked: function (component, record, item, index) {
-    Ext.create('RC.UserAdministration.view.EditUnit', { unit: record, domains: this.getView().getDomains() }).show()
+    Ext.create('RC.UserAdministration.view.EditUnit', {
+      unit: record,
+      domains: this.getView().getDomains()
+    }).show()
   },
 
   getNextUnitId: function () {
-    return this.getView().getStore().getData().items.map(function(item){return item.data.UnitCode}).reduce(function(max, item) {return Math.max(max, item)}) +1 
+    return this.getView().getStore().getData().items.
+      map(function (item) { return item.data.UnitCode }).
+      reduce(function (max, item) { return Math.max(max, item) }) + 1
   },
 
   onColumnHidden: function (component, column, eOpts) {
@@ -1675,9 +1816,9 @@ Ext.define('RC.UserAdministration.controller.Unit', {
 
   createUnitFilter: function (unit) {
     var filter = function (item) {
-      return item.data.UnitName.toLowerCase().indexOf(unit)>-1 
-          || item.data.UnitCode == unit
-          || (item.data.County && item.data.County.toLowerCase().indexOf(unit)>-1 )
+      return item.data.UnitName.toLowerCase().indexOf(unit) > -1
+        || item.data.UnitCode == unit
+        || item.data.County && item.data.County.toLowerCase().indexOf(unit) > -1
     }
     return filter
   },
@@ -1693,7 +1834,7 @@ Ext.define('RC.UserAdministration.form.Unit', {
   fieldDefaults: {
     validateOnChange: true
   },
-  
+
   defaults: {
     layout: 'form',
     xtype: 'textfield',
@@ -1704,15 +1845,62 @@ Ext.define('RC.UserAdministration.form.Unit', {
       change: 'onFormChanged'
     },
   },
-  
+
   items: [
-    { fieldLabel: 'Namn', name: 'UnitName', reference: 'unitname',  allowBlank: false },
-    { fieldLabel: 'Enhetskod', name: 'UnitCode', reference: 'unitcode',  allowBlank: false },
-    { fieldLabel: 'HSA-id', name: 'HSAID', reference: 'hsaid',  allowBlank: true },
-    { fieldLabel: 'PAR-id', name: 'PARID', reference: 'parid',  allowBlank: true },
-    { fieldLabel: 'Region', name: 'County', reference: 'region', allowBlank: false, xtype: 'rcfilter', store: { type: 'region' }, valueField: 'DomainValueID', displayField: 'ValueName' },
-    { fieldLabel: 'Aktiv', name: 'IsActive', reference: 'active', hidden: false, allowBlank: false, xtype: 'combobox', store: { type: 'active' }, valueField: 'ActiveCode', displayField: 'ActiveName' },
-    // { fieldLabel: 'Bindings', name: 'Bindings', reference: 'bindings', allowBlank: true, xtype: 'hiddenfield' }
+    {
+      fieldLabel: 'Namn',
+      name: 'UnitName',
+      reference: 'unitname',
+      allowBlank: false
+    },
+    {
+      fieldLabel: 'Enhetskod',
+      name: 'UnitCode',
+      reference: 'unitcode',
+      allowBlank: false
+    },
+    {
+      fieldLabel: 'HSA-id',
+      name: 'HSAID',
+      reference: 'hsaid',
+      allowBlank: true
+    },
+    {
+      fieldLabel: 'PAR-id',
+      name: 'PARID',
+      reference: 'parid',
+      allowBlank: true
+    },
+    {
+      fieldLabel: 'Region',
+      name: 'County',
+      reference: 'region',
+      allowBlank: false,
+      xtype: 'rcfilter',
+      store: { type: 'region' },
+      valueField: 'DomainValueID',
+      displayField: 'ValueName'
+    },
+    {
+      fieldLabel: 'Aktiv',
+      name: 'IsActive',
+      reference: 'active',
+      hidden: false,
+      allowBlank: false,
+      xtype: 'combobox',
+      store: { type: 'active' },
+      valueField: 'ActiveCode',
+      displayField: 'ActiveName'
+    },
+    /*
+    { 
+      fieldLabel: 'Bindings', 
+      name: 'Bindings', 
+      reference: 'bindings', 
+      allowBlank: true, 
+      xtype: 'hiddenfield' 
+    }
+    */
   ],
 
   dockedItems: [
@@ -1758,12 +1946,12 @@ Ext.define('RC.UserAdministration.view.EditUnit', {
   modal: true,
   width: 600,
   title: 'Redigera enhet',
-  
+
   config: {
     unit: [],
     domains: []
   },
-  
+
   items: [
     {
       xtype: 'rcunitform',
@@ -1782,8 +1970,6 @@ Ext.define('RC.UserAdministration.controller.EditUnit', {
   init: function () {
     this.lookup('unitform').loadRecord(this.getView().getUnit())
     this.addDomains()
-    //this.lookup('region').hide()
-    //this.lookup('region').disable()
   },
 
   onSave: function () {
@@ -1795,11 +1981,18 @@ Ext.define('RC.UserAdministration.controller.EditUnit', {
   addBindings: function () {
     var form = this.getForm().getValues()
     var domains = this.getView().getDomains()
-    if(typeof form.County !== "number") form.County = this.lookup('region').findRecordByDisplay('Västra Götaland').id
+    if (typeof form.County !== "number") {
+      form.County = this.lookup('region').findRecordByDisplay('Västra Götaland').id
+    }
     var bindings = [{ DomainValueID: form.County }]
-    domains.forEach(function(domain){
-      if(typeof form[domain.DomainName] !== "number") form[domain.DomainName] = this.lookup(domain.DomainName).findRecordByDisplay(form[domain.DomainName]).id
-      bindings.push({DomainValueID: form[domain.DomainName]})
+    var controller = this
+    domains.forEach(function (domain) {
+      var domainValue = form[domain.DomainName]
+      var field = controller.lookup(domain.DomainName)
+      if (typeof domainValue !== "number") {
+        domainValue = field.findRecordByDisplay(domainValue).data.DomainValueID
+      }
+      bindings.push({ DomainValueID: domainValue })
     })
     this.getForm().getRecord().set('Bindings', bindings)
   },
@@ -1811,17 +2004,18 @@ Ext.define('RC.UserAdministration.controller.EditUnit', {
     domains.forEach(function (domain) {
       form.add({
         xtype: 'rcfilter',
+        reference: domain.DomainName,
         name: domain.DomainName,
         fieldLabel: domain.DomainTitle,
         allowNull: false,
         allowBlank: false,
-        valueField: 'DomainValueID', 
+        valueField: 'DomainValueID',
         displayField: 'ValueName',
         value: unit[domain.DomainName],
         store: {
           data: domain.DomainValues
         }
-      })  
+      })
     })
   },
 })
@@ -1832,13 +2026,13 @@ Ext.define('RC.UserAdministration.view.CreateUnit', {
   modal: true,
   width: 600,
   title: 'Skapa enhet',
-  
+
   config: {
     unit: [],
     nextId: 0,
     domains: []
   },
-  
+
   items: [
     {
       xtype: 'rcunitform',
@@ -1873,12 +2067,12 @@ Ext.define('RC.UserAdministration.controller.CreateUnit', {
         name: domain.DomainName,
         fieldLabel: domain.DomainTitle,
         allowNull: false,
-        valueField: 'DomainValueID', 
+        valueField: 'DomainValueID',
         displayField: 'ValueName',
         store: {
           data: domain.DomainValues
         }
-      })  
+      })
     })
   },
 
@@ -1889,10 +2083,12 @@ Ext.define('RC.UserAdministration.controller.CreateUnit', {
     this.getForm().updateRecord()
     var unit = this.getForm().getValues()
     unit.Bindings = [{ DomainValueID: unit.County }]
-    domains.forEach(function(domain){
-      unit.Bindings.push({DomainValueID: unit[domain.DomainName]})
+    domains.forEach(function (domain) {
+      unit.Bindings.push({ DomainValueID: unit[domain.DomainName] })
     })
-    var extra = this.getView().getDomains().forEach(function(item){unit.Bindings.push({DomainValueID: controller.getForm().getValues()[item.DomainName]})})
+    var extra = this.getView().getDomains().forEach(function (item) {
+      unit.Bindings.push({ DomainValueID: controller.getForm().getValues()[item.DomainName] })
+    })
     unit.Register = { RegisterID: Profile.Site.Register.RegisterID }
     unit.HSAID = unit.HSAID || null
     unit.PARID = unit.PARID || null
@@ -1911,7 +2107,7 @@ Ext.define('RC.UserAdministration.controller.CreateUnit', {
     var deferred = new Ext.Deferred()
     delete unit.UnitID
     delete unit.County
-    
+
     Ext.Ajax.request({
       url: '/stratum/api/metadata/units/',
       method: 'POST',
@@ -1972,7 +2168,7 @@ Ext.define('RC.UserAdministration.Validators', {
     var isValid = false
     if (value === field.lastTry) return field.lastTryResult
     field.lastTry = value
-    
+
     Ext.Ajax.request({
       async: false,
       url: '/stratum/api/metadata/users/exists/' + value,
@@ -1995,8 +2191,10 @@ Ext.define('RC.UserAdministration.Validators', {
     var controller = field.up('window').getController()
     var unit = controller.lookup('unit').getValue()
     var role = controller.lookup('role').getValue()
-    if(!(unit && role)) return true
-    return !contexts.some(function (context) { return context.Role.RoleID === role && context.Unit.UnitID === unit })
+    if (!(unit && role)) return true
+    return !contexts.some(function (context) {
+      return context.Role.RoleID === role && context.Unit.UnitID === unit
+    })
   },
 
   contextText: 'En kontext med denna kombination <br> av enhet och roll finns redan'
@@ -2020,7 +2218,7 @@ Ext.define('RC.UserAdministration.storage.Data', {
     this.callParent(config)
     this.loadData()
   },
-  
+
   loadData: function () {
     var controller = this
     Ext.Promise.all([
@@ -2035,7 +2233,7 @@ Ext.define('RC.UserAdministration.storage.Data', {
         observer.fireEvent('unitsloaded', controller)
       })
     })
-    
+
     Ext.Promise.all([
       Ext.Ajax.request({ url: '/stratum/api/metadata/users/register/' + Profile.Site.Register.RegisterID }),
       Ext.Ajax.request({ url: '/stratum/api/metadata/contexts/register/' + Profile.Site.Register.RegisterID }),
@@ -2051,22 +2249,22 @@ Ext.define('RC.UserAdministration.storage.Data', {
 
     Ext.Promise.all([
       Ext.Ajax.request({ url: 'stratum/api/metadata/domains/register/' + Profile.Site.Register.RegisterID })
-    ]).then(function(results) {
+    ]).then(function (results) {
       var domains = Ext.decode(results[0].responseText).data
       var requests = []
       domains = domains.filter(function (domain) {
-        return domain.DomainID >= 3000 &&  domain.DomainID < 3100
+        return domain.DomainID >= 3000 && domain.DomainID < 3100
       })
-      if(domains.length === 0) return
-      domains.forEach(function(domain){
-        requests.push(Ext.Ajax.request({ url: 'stratum/api/metadata/domains/' + domain.DomainID}))
+      if (domains.length === 0) return
+      domains.forEach(function (domain) {
+        requests.push(Ext.Ajax.request({ url: 'stratum/api/metadata/domains/' + domain.DomainID }))
       })
       Ext.Promise.all(requests).then(function (results) {
         var domainvalues = Ext.decode(results[0].responseText).data
         controller.setDomains([domainvalues])
         controller.getObservers().forEach(function (observer) {
-        observer.fireEvent('domainsloaded', controller)
-      })
+          observer.fireEvent('domainsloaded', controller)
+        })
       })
     })
   }
@@ -2184,5 +2382,5 @@ function start() {
   Ext.Loader.loadScript({
     url: '/stratum/extjs/scripts/exporter.js',
     onLoad: function () { onReady() }
-  }) // 
+  })
 }
