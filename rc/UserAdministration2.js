@@ -1973,22 +1973,25 @@ Ext.define('RC.UserAdministration.controller.EditUnit', {
   },
 
   onSave: function () {
-    this.updateRecord()
-    Ext.StoreManager.lookup('units').sync({ callback: function () { } })
+    this.updateRecords()
+    Ext.StoreManager.lookup('units').sync()
     this.getView().destroy()
   },
 
-  updateRecord: function () {
+  updateRecords: function () {
+    var controller = this
     var record = this.getForm().getRecord()
     var form = this.getForm().getValues()
     var domains = this.getView().getDomains()
-    var controller = this
+
+    this.getForm().updateRecord()
+    
     if (typeof form.County !== "number") {
       form.County = this.lookup('region').findRecordByDisplay('Västra Götaland').id
     }
     record.set('County', controller.lookup('region').getDisplayValue())
-    var bindings = [{ DomainValueID: form.County }]
     
+    var bindings = [{ DomainValueID: form.County }]
     domains.forEach(function (domain) {
       var domainValue = form[domain.DomainName]
       var field = controller.lookup(domain.DomainName)
@@ -2069,6 +2072,7 @@ Ext.define('RC.UserAdministration.controller.CreateUnit', {
       form.add({
         xtype: 'rcfilter',
         name: domain.DomainName,
+        reference: domain.DomainName,
         fieldLabel: domain.DomainTitle,
         allowNull: false,
         valueField: 'DomainValueID',
@@ -2080,56 +2084,23 @@ Ext.define('RC.UserAdministration.controller.CreateUnit', {
     })
   },
 
-  onSave: function () {
+ onSave: function () {
     var controller = this
     var domains = this.getView().getDomains()
-    this.transformRegion()
-    this.getForm().updateRecord()
-    var unit = this.getForm().getValues()
-    unit.Bindings = [{ DomainValueID: unit.County }]
-    domains.forEach(function (domain) {
-      unit.Bindings.push({ DomainValueID: unit[domain.DomainName] })
-    })
-    var extra = this.getView().getDomains().forEach(function (item) {
-      unit.Bindings.push({ DomainValueID: controller.getForm().getValues()[item.DomainName] })
-    })
-    unit.Register = { RegisterID: Profile.Site.Register.RegisterID }
-    unit.HSAID = unit.HSAID || null
-    unit.PARID = unit.PARID || null
-    this.saveUnit(unit).then(this.updateGrid)
-    this.getView().destroy()
-  },
-
-  transformRegion: function () {
     var form = this.getForm().getValues()
-    form.Bindings = { DomainValueId: form.County }
-    this.getForm().setValues(form)
-  },
-
-  saveUnit: function (unit) {
-    var controller = this
-    var deferred = new Ext.Deferred()
-    delete unit.UnitID
-    delete unit.County
-
-    Ext.Ajax.request({
-      url: '/stratum/api/metadata/units/',
-      method: 'POST',
-      jsonData: unit,
-      withCredentials: true,
-      success: function (response) {
-        unit = Ext.decode(response.responseText).data
-        deferred.resolve(unit)
-      },
-      failure: function (response) {
-        deferred.reject(response)
-      }
+    form.Bindings = [{ DomainValueID: form.County }]
+    form.County = this.lookup('region').getDisplayValue()
+    domains.forEach(function (domain) {
+      form.Bindings.push({ DomainValueID: form[domain.DomainName] })
+      form[domain.DomainName] = controller.lookup(domain.DomainName).getDisplayValue()
     })
-    return deferred.promise
-  },
-
-  updateGrid: function (unit) {
-    Ext.ComponentQuery.query('unitgrid').pop().getStore().add(unit)
+    form.Register = { RegisterID: Profile.Site.Register.RegisterID }
+    form.HSAID = form.HSAID || null
+    form.PARID = form.PARID || null
+    var unitStore = Ext.StoreManager.get('units')
+    unitStore.add(form)
+    unitStore.sync()
+    this.getView().destroy()
   }
 })
 
