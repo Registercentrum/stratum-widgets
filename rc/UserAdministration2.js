@@ -1973,28 +1973,32 @@ Ext.define('RC.UserAdministration.controller.EditUnit', {
   },
 
   onSave: function () {
-    this.addBindings()
+    this.updateRecord()
     Ext.StoreManager.lookup('units').sync({ callback: function () { } })
     this.getView().destroy()
   },
 
-  addBindings: function () {
+  updateRecord: function () {
+    var record = this.getForm().getRecord()
     var form = this.getForm().getValues()
     var domains = this.getView().getDomains()
+    var controller = this
     if (typeof form.County !== "number") {
       form.County = this.lookup('region').findRecordByDisplay('Västra Götaland').id
     }
+    record.set('County', controller.lookup('region').getDisplayValue())
     var bindings = [{ DomainValueID: form.County }]
-    var controller = this
+    
     domains.forEach(function (domain) {
       var domainValue = form[domain.DomainName]
       var field = controller.lookup(domain.DomainName)
       if (typeof domainValue !== "number") {
         domainValue = field.findRecordByDisplay(domainValue).data.DomainValueID
       }
+      record.set(domain.DomainName, field.getDisplayValue())
       bindings.push({ DomainValueID: domainValue })
     })
-    this.getForm().getRecord().set('Bindings', bindings)
+    record.set('Bindings', bindings)
   },
 
   addDomains: function () {
@@ -2144,7 +2148,6 @@ Ext.define('RC.UserAdministration.view.Filter', {
 
   constructor: function (config) {
     config.queryMode = 'local'
-    // config.listeners = { select: config.selectCallback };
     this.callParent(arguments)
   }
 })
