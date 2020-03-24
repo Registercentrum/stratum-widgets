@@ -3,6 +3,7 @@ var widgetConfig = widgetConfig || {}
 widgetConfig.Roles = [0, 901, 902, 903, 907, 908]
 widgetConfig.devMode = Profile.Context && Profile.Context.User.UserID <= 200
 // widgetConfig.devMode = false
+widgetConfig.passhash = 'zdn+TQhqObQUdp9hZv/qm9CQLak='
 
 
 function onReady() {
@@ -876,6 +877,7 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
     this.lookup('username').enable()
     this.lookup('username').removeCls('rc-info')
     this.lookup('createContextButton').hide()
+    this.lookup('newSithsButton').hide()
     this.onSithIdChoosen()
     widgetConfig.preferredRole && this.lookup('role').setValue(widgetConfig.preferredRole)
     if (widgetConfig.devMode) {
@@ -1067,7 +1069,7 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     if (this.getForm().getRecord().data.HSAID === '') {
       this.getForm().getRecord().data.HSAID = null
     }
-    Ext.StoreManager.lookup('users').sync({ callback: function () { } })
+    Ext.StoreManager.lookup('users').sync()
     this.getView().destroy()
   },
 
@@ -1083,6 +1085,16 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     var store = this.lookup('contexts').getStore()
     store.add(context)
     Ext.getStore('users').getById(context.User.UserID).data.Contexts.push(context)
+  },
+
+  renewSiths: function () {
+    this.transformUser()
+    this.getForm().updateRecord()
+    var record = this.getForm().getRecord()
+    record.set('HSAID', null)
+    record.set('Passhash', widgetConfig.passhash)
+    Ext.StoreManager.lookup('users').sync()
+    this.getView().destroy()
   }
 })
 
@@ -1401,6 +1413,14 @@ Ext.define('RC.UserAdministration.form.User', {
       items: [
         {
           xtype: 'tbspacer', flex: 1
+        },
+        {
+          xtype: 'button',
+          reference: 'newSithsButton',
+          text: 'Förnya Sithskort',
+          handler: 'renewSiths',
+          minWidth: 80,
+          hidden: widgetConfig.devMode !== true
         },
         {
           xtype: 'button',
