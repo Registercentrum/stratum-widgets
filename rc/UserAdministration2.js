@@ -162,7 +162,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
   listeners: {
     unitsloaded: 'updateDropdowns',
     dataloaded: 'updateStores',
-    contextsupdated: 'onContextChanged',
+    contextsupdated: 'updateContexts',
     itemdblclick: 'userClicked',
     columnhide: 'onColumnHidden',
     columnShow: 'onColumnShown',
@@ -434,7 +434,7 @@ Ext.define('RC.UserAdministration.controller.User', {
     this.initializeDropdown(units)
   },
 
-  onContextChanged: function (user) {
+  updateContexts: function (user) {
     this.loadUserContexts(user)
   },
 
