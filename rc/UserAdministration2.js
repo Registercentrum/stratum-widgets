@@ -224,7 +224,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
     }
   ],
 
-  features: [{ ftype: 'grouping', enableGroupingMenu: true }],
+  // features: [{ ftype: 'grouping', enableGroupingMenu: true }],
   /*
   features: [{
     id: 'group',
@@ -1084,7 +1084,7 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
   onContextAdded: function (context) {
     var store = this.lookup('contexts').getStore()
     store.add(context)
-    Ext.getStore('users').getById(context.User.UserID).data.Contexts.push(context)
+    RC.UserAdministration.app.down('usergrid').fireEvent('contextsupdated', context.User.UserID)
   },
 
   renewSiths: function () {
@@ -1095,6 +1095,30 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     record.set('Passhash', widgetConfig.passhash)
     Ext.StoreManager.lookup('users').sync()
     this.getView().destroy()
+  },
+
+  showLogg: function () {
+    console.log('logg')
+    this.fetchLogg().then(function(data){console.log(data)})
+  },
+
+  fetchLogg() {
+    var controller = this
+    var deferred = new Ext.Deferred()
+
+    Ext.Ajax.request({
+      url: '/stratum/api/metadata/logentries/latest/logtype/' + 1201,
+      method: 'GET',
+      withCredentials: true,
+      success: function (result, request) {
+        var data = Ext.decode(result.responseText).data
+        deferred.resolve(data)
+      },
+      failure: function (result, request) {
+        deferred.reject()
+      }
+    })
+    return deferred.promise
   }
 })
 
@@ -1257,6 +1281,8 @@ Ext.define('RC.UserAdministration.controller.CreateContext', {
     this.lookup('WelcomeLetterButton').hide()
     this.lookup('role').vtype = 'context'
     this.lookup('unit').vtype = 'context'
+    var contexts = RC.UserAdministration.app.down('usergrid').getStore().getById(this.getUser()).getData().Contexts
+    this.getView().setContexts(contexts)
   },
 
   onSave: function () {
@@ -1270,8 +1296,9 @@ Ext.define('RC.UserAdministration.controller.CreateContext', {
   },
 
   updateContexts: function (data) {
-    data.controller.getView().getUserForm().fireEvent('contextadded', data.context)
-    data.controller.getView().destroy()
+    var view = data.controller.getView()
+    view.getUserForm().fireEvent('contextadded', data.context)
+    view.destroy()
   },
 
   getForm: function () {
@@ -1413,6 +1440,14 @@ Ext.define('RC.UserAdministration.form.User', {
       items: [
         {
           xtype: 'tbspacer', flex: 1
+        },
+        {
+          xtype: 'button',
+          reference: 'showLogButton',
+          text: 'Logg',
+          handler: 'showLogg',
+          minWidth: 80,
+          hidden: widgetConfig.devMode !== true
         },
         {
           xtype: 'button',
