@@ -101,8 +101,8 @@ Ext.define('RC.UserAdministration.store.Role', {
     { RoleID: 902, RoleName: 'Plusregistrerare' },
     { RoleID: 903, RoleName: 'Koordinatorer' },
     { RoleID: 906, RoleName: 'Systemutvecklare' },
-    { RoleID: 907, RoleName: 'Patientobsertvatör' },
-    { RoleID: 908, RoleName: 'Rapportobsertvatör' }
+    { RoleID: 907, RoleName: 'Patientobservatör' },
+    { RoleID: 908, RoleName: 'Rapportobservatör' }
   ],
   filters: [{
     filterFn: function (item) {
@@ -167,6 +167,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
     itemdblclick: 'userClicked',
     columnhide: 'onColumnHidden',
     columnShow: 'onColumnShown',
+    adduser: 'addUser',
     selectionchange: 'onSelectionChange',
     groupclick: function () { return false },
     refresh: function () { this.update() },
@@ -216,7 +217,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
       sortable: true,
       hidden: localStorage.getItem('Organization') === 'hidden' || false
     }, {
-      text: 'Epost',
+      text: 'E-post',
       dataIndex: 'Email',
       flex: 1,
       sortable: true,
@@ -436,13 +437,15 @@ Ext.define('RC.UserAdministration.controller.User', {
   },
 
   updateContexts: function (user) {
-    this.loadUserContexts(user)
+    var data = { controller: this, user: {} }
+    data.user.UserID = user
+    this.loadUserContexts(data)
   },
 
-  loadUserContexts: function (user) {
-    var controller = this
+  loadUserContexts: function (data) {
+    var controller = data.controller
     Ext.Ajax.request({
-      url: '/stratum/api/metadata/contexts/user/' + user,
+      url: '/stratum/api/metadata/contexts/user/' + data.user.UserID,
       method: 'GET',
       withCredentials: true,
       success: function (result, request) {
@@ -451,7 +454,7 @@ Ext.define('RC.UserAdministration.controller.User', {
         contexts = contexts.filter(function (context) {
           return units.indexOf(context.Unit.UnitID) >= 0
         })
-        controller.getView().getStore().getById(user).set('Contexts', contexts)
+        controller.getView().getStore().getById(data.user.UserID).set('Contexts', contexts)
       }
     })
   },
@@ -590,6 +593,32 @@ Ext.define('RC.UserAdministration.controller.User', {
 
   checkIfPersonalId: function (value) {
     return value && (value.indexOf('19') === 0 || value.indexOf('20') === 0)
+  },
+
+  addUser: function (user) {
+    var controller = this
+    var data = {}
+    data.userId = user
+    data.controller = this
+    this.loadUser(data).then(controller.loadUserContexts)
+  },
+
+  loadUser: function (data) {
+    var deferred = new Ext.Deferred()
+    Ext.Ajax.request({
+      url: '/stratum/api/metadata/users/' + data.userId,
+      method: 'GET',
+      withCredentials: true,
+      success: function (response) {
+        data.user = Ext.decode(response.responseText).data
+        Ext.StoreManager.get('users').add(data.user)
+        deferred.resolve(data)
+      },
+      failure: function (response) {
+        deferred.reject(response)
+      }
+    })
+    return deferred.promise
   },
 
   loadContexts: function (component, userId) {
@@ -873,7 +902,7 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
 
   init: function () {
     this.callParent()
-    this.lookup('username').setFieldLabel('Epost')
+    this.lookup('username').setFieldLabel('E-post')
     this.lookup('username').enable()
     this.lookup('username').removeCls('rc-info')
     this.lookup('createContextButton').hide()
@@ -1084,7 +1113,13 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
   onContextAdded: function (context) {
     var store = this.lookup('contexts').getStore()
     store.add(context)
-    RC.UserAdministration.app.down('usergrid').fireEvent('contextsupdated', context.User.UserID)
+    var usergrid = RC.UserAdministration.app.down('usergrid')
+    var existingUser = Ext.StoreManager.get('users').getById(context.User.UserID)
+    if(existingUser === null) {
+       usergrid.fireEvent('adduser', context.User.UserID)
+    } else {
+      usergrid.fireEvent('contextsupdated', context.User.UserID)
+    }
   },
 
   renewSiths: function () {
@@ -1102,7 +1137,7 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     this.fetchLogg().then(function(data){console.log(data)})
   },
 
-  fetchLogg() {
+  fetchLogg: function () {
     var controller = this
     var deferred = new Ext.Deferred()
 
@@ -1165,7 +1200,7 @@ Ext.define('RC.UserAdministration.view.MatchUser', {
       sortable: true,
       hidden: localStorage.getItem('Organization') === 'hidden' || false
     }, {
-      text: 'Epost',
+      text: 'E-post',
       dataIndex: 'Email',
       flex: 1,
       sortable: true,
@@ -1281,8 +1316,11 @@ Ext.define('RC.UserAdministration.controller.CreateContext', {
     this.lookup('WelcomeLetterButton').hide()
     this.lookup('role').vtype = 'context'
     this.lookup('unit').vtype = 'context'
-    var contexts = RC.UserAdministration.app.down('usergrid').getStore().getById(this.getUser()).getData().Contexts
-    this.getView().setContexts(contexts)
+    var existingUser = RC.UserAdministration.app.down('usergrid').getStore().getById(this.getUser())
+    if(existingUser) {
+      var contexts = existingUser.getData().Contexts
+      this.getView().setContexts(contexts)
+    }
   },
 
   onSave: function () {
@@ -1292,7 +1330,9 @@ Ext.define('RC.UserAdministration.controller.CreateContext', {
     data.user = {}
     data.user.UserID = this.getUser()
     data.controller = this
-    this.saveContext(data).then(data.controller.updateContexts)
+    //if(!widgetConfig.devMode){
+      this.saveContext(data).then(data.controller.updateContexts)
+    //}
   },
 
   updateContexts: function (data) {
@@ -1364,7 +1404,7 @@ Ext.define('RC.UserAdministration.form.User', {
       labelClsExtra: 'rc-required'
     },
     {
-      fieldLabel: 'Epost',
+      fieldLabel: 'E-post',
       name: 'Email',
       reference: 'email',
       vtype: 'email'
@@ -2191,7 +2231,7 @@ Ext.define('RC.UserAdministration.Validators', {
     field.lastTryResult = isValid
     return isValid
   },
-  usernameText: 'Denna epostadress <br>används redan',
+  usernameText: 'Denna e-postadress <br>används redan',
 
   context: function (value, field) {
     var contexts = field.up('window').getContexts()
