@@ -53,7 +53,11 @@ Ext.util.CSS.createStyleSheet(''
   + '  background-color: transparent;'
   + '  margin: 0px 4px 0px 0;'
   + '}'
-  
+
+  + '.scw-multiselect li:first-child {'
+  //+ '  margin-top: 11px;'
+  + '}'
+
   + '.scw-multiselect li:hover {'
   + '  border: none !important;'
   + '}'
@@ -145,8 +149,11 @@ Ext.define('shpr.revisions.MainController', {
     var revisionReason = view.down('#causeDropdown').getValue();
     if (articleNumber[0] === 'Alla') articleNumber[0] = 'alla';
 
-    var startDate = view.down('#startDate').getValue().toLocaleDateString();
-    var endDate = view.down('#endDate').getValue().toLocaleDateString();
+    // var startDate = view.down('#startDate').getValue().toLocaleDateString();
+    // var endDate = view.down('#endDate').getValue().toLocaleDateString();
+
+    var startDate = Ext.Date.format(view.down('#startDate').getValue(),  'Y-m-d')
+    var endDate = Ext.Date.format(view.down('#endDate').getValue(),  'Y-m-d')
 
     /* IE hack */
     startDate = startDate.replace(/[^ -~]/g, '');
