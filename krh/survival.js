@@ -88,6 +88,10 @@ Ext.util.CSS.createStyleSheet(''
   + '  margin: 0px 4px 0px 0;'
   + '}'
 
+  + '.scw-multiselect li:first-child {'
+  //+ '  margin-top: 11px;'
+  + '}'
+
   + '.scw-multiselect li:hover {'
   + '  border: none !important;'
   + '}'
@@ -151,8 +155,11 @@ Ext.define('shpr.graph.MainController', {
     var method = view.down('#methodDropdown').getValue();
     var revisiontype = view.down('#revisionDropdown').getValue();
 
-    var startDate = view.down('#startDate').getValue().toLocaleDateString();
-    var endDate = view.down('#endDate').getValue().toLocaleDateString();
+    // var startDate = view.down('#startDate').getValue().toLocaleDateString();
+    // var endDate = view.down('#endDate').getValue().toLocaleDateString();
+
+    var startDate = Ext.Date.format(view.down('#startDate').getValue(),  'Y-m-d');
+    var endDate = Ext.Date.format(view.down('#endDate').getValue(),  'Y-m-d');
 
     startDate = this.stripControlCharacters(startDate);
     endDate = this.stripControlCharacters(endDate);
@@ -1185,17 +1192,17 @@ Ext.define('shpr.graph.view.Main', {
 });
 
 Ext.define('Novanti.overrides.chart.legend.SpriteLegend', {
-  override: 'Ext.chart.legend.SpriteLegend',
+    override: 'Ext.chart.legend.SpriteLegend',
 
 
-  isXType: function (xtype) {
-    return xtype === 'sprite';
-  },
+    isXType: function (xtype) {       
+        return xtype === 'sprite';
+    },
 
 
-  getItemId: function () {
-    return this.getId();
-  }
+    getItemId: function () {
+        return this.getId();
+    }
 });
 
 Ext.application({
