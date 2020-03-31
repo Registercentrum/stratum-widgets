@@ -160,8 +160,11 @@ Ext.define('shpr.volume.MainController', {
     if (clinic === 'Riket') clinic = '1000';
     if (articleNumber === 'Alla') articleNumber = 'alla';
 
-    var startDate = view.down('#startDate').getValue().toLocaleDateString();
-    var endDate = view.down('#endDate').getValue().toLocaleDateString();
+    // var startDate = view.down('#startDate').getValue().toLocaleDateString();
+    // var endDate = view.down('#endDate').getValue().toLocaleDateString();
+
+    var startDate = Ext.Date.format(view.down('#startDate').getValue(),  'Y-m-d')
+    var endDate = Ext.Date.format(view.down('#endDate').getValue(),  'Y-m-d')
 
     /* IE hack */
     startDate = startDate.replace(/[^ -~]/g, '');
@@ -181,7 +184,7 @@ Ext.define('shpr.volume.MainController', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: '/stratum/api/statistics/shpr/supplier-mod1?enhet=' + clinic + '&operationstyp=' + operationType + '&protestyp=' + protesis + '&artikeltyp=' + articleType + '&article_nr=' + articleNumber + '&start_datum=' + startDate + '&slut_datum=' + endDate,
+      url: '/stratum/api/statistics/shpr/supplier-mod1?enhet=' + clinic + '&operationstyp=' + operationType + '&protestyp=' + protesis + '&artikeltyp=' + articleType + '&article_nr=' + articleNumber + '&start_datum=' + startDate + '&slut_datum=' + endDate + '&diagnos=alla',
       success: function (response) {
         spinner && spinner.hide();
         var result = Ext.decode(response.responseText).data;
@@ -684,7 +687,7 @@ Ext.define('shpr.volume.view.Main', {
         {
           text: 'Antal',
           dataIndex: 'antal',
-          width: 70,
+          width:80,
           align: 'right',
           field: {
             xtype: 'numberfield'
