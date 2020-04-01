@@ -51,7 +51,10 @@ Ext.util.CSS.createStyleSheet(''
   + '  font-size: 13px;'
   + '}'
 
-  + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(3), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(4), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(5) {'
+  + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(3), '
+  + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(4), '
+  + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(5) '
+  + '{'
   + '  border-top: 1px black solid;'
   + '}'
 
@@ -455,7 +458,10 @@ Ext.define('shpr.revisions.view.Main', {
       {
         xtype: 'label',
         cls: 'scw-label',
-        html: 'Diagnos<div class="scw-info"><div data-qtip="För att välja flera komponenter samtidigt, håll inne CTRL-knappen när du gör nästa val.">i</div></div>'
+        html: 'Diagnos'
+            + '<div class="scw-info">'
+            + '<div data-qtip="För att välja flera komponenter samtidigt, '
+            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
       },
       {
         xtype: 'label',
@@ -565,12 +571,18 @@ Ext.define('shpr.revisions.view.Main', {
       {
         xtype: 'label',
         cls: 'scw-label',
-        html: 'Artikeltyp<div class="scw-info"><div data-qtip="För att välja flera komponenter samtidigt, håll inne CTRL-knappen när du gör nästa val.">i</div></div>'
+        html: 'Artikeltyp'
+            + '<div class="scw-info">'
+            + '<div data-qtip="För att välja flera komponenter samtidigt, '
+            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
       },
       {
         xtype: 'label',
         cls: 'scw-label',
-        html: 'Artikel<div class="scw-info"><div data-qtip="För att välja flera komponenter samtidigt, håll inne CTRL-knappen när du gör nästa val.">i</div></div>'
+        html: 'Artikel'
+            + '<div class="scw-info">'
+            + '<div data-qtip="För att välja flera komponenter samtidigt, '
+            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
       },
       {
         xtype: 'label',
@@ -675,7 +687,12 @@ Ext.define('shpr.revisions.view.Main', {
       width: 315,
       itemId: 'startDate',
       value: Ext.Date.add(new Date(), Ext.Date.YEAR, -1),
-      fieldLabel: 'Operationsdatum<div class="scw-info"><div data-qtip="De datum som väljs måste utgöra en period på minst ett år och ligga i spannet mellan 1999-01-01 och dagens datum.">i</div></div>mellan',
+      fieldLabel: 'Operationsdatum'
+                + '<div class="scw-info">'
+                + '<div data-qtip="De datum som väljs måste utgöra en period på minst ett år '
+                + 'och ligga i spannet mellan 1999-01-01 och dagens datum.">i'
+                + '</div>'
+                + '</div>',
       labelWidth: 188,
       format: 'Y-m-d',
       altFormats: 'ymd|Ymd',
@@ -831,7 +848,13 @@ Ext.define('shpr.revisions.view.Main', {
     height: 162,
     hidden: true,
     border: false,
-    html: '<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>'
+    html: '<div class="spinner">'
+        + '<div class="rect1"></div>'
+        + '<div class="rect2"></div>'
+        + '<div class="rect3"></div>'
+        + '<div class="rect4"></div>'
+        + '<div class="rect5"></div>'
+        + '</div>'
   },
   {
     xtype: 'panel',
@@ -851,7 +874,9 @@ Ext.application({
     'DetailsController'
   ],
   launch: function () {
-    var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['KRH/RevisionScope'] : 'contentPanel';
+    var target = (typeof Stratum.containers !== 'undefined') 
+                    ? Stratum.containers['KRH/RevisionScope'] 
+                    : 'contentPanel';
     var main = Ext.create('shpr.revisions.view.Main', {
       renderTo: target
     });
