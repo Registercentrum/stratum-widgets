@@ -1,7 +1,16 @@
 
+var devMode = Profile.Context.User.UserID === 9
 Ext.util.CSS.removeStyleSheet('shpr-companymodule');
 Ext.util.CSS.createStyleSheet(''
 
+  + '.scw-main ul {'
+  + '  padding: 0;'
+  + '}'
+
+  + '.scw-main ul>li {'
+  + '  list-style: initial;'
+  + '}'
+  
   + '.scw-header {'
   + '  width: 100%;'
   + '  padding: 0 0 0 2px;'
@@ -11,7 +20,7 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
 
   + '.scw-label {'
-  + '  width: 16.6667%;'
+  + '  width: 25%;'
   + '  padding-left: 2px;'
   + '  display: inline-block;'
   + '}'
@@ -21,7 +30,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  border-radius: 3px;'
   + '  background-color: #f9f9f9;'
   + '  border: solid 1px #b7b7b7;'
-  + '  width: 16.6667%;'
+  + '  width: 25%;'
   + '  padding-right: 5px;'
   + '  float: left;'
   + '  border: none;'
@@ -36,8 +45,34 @@ Ext.util.CSS.createStyleSheet(''
   + '  padding-right: 0px;'
   + '}'
 
-  + '.scw-main ul {'
-  + '  padding: 0;'
+  + '.scw-download-button span, .scw-download-image-button span {'
+  + '  font-family: FontAwesome, open_sans;'
+  + '  font-weight: normal;'
+  + '  font-size: 13px;'
+  + '}'
+
+  + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(3), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(4), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(5) {'
+  + '  border-top: 1px black solid;'
+  + '}'
+
+  + '.scw-missing-data-panel {'
+  + '  margin: 30px auto;'
+  + '  width: 210px;'
+  + '}'
+
+  + '.scw-spinner {'
+  + '  display: initial;'
+  + '}'
+
+  + '.scw-spinner.inactive {'
+  + '  display: none;'
+  + '}'
+
+  + '.scw-qtip {'
+  + '  width: 16px;'
+  + '  height: 16px;'
+  + '  display: inline-block;'
+  + '  margin-bottom: 10px;'
   + '}'
 
   + '.scw-multiselect ul {'
@@ -76,34 +111,10 @@ Ext.util.CSS.createStyleSheet(''
   + '  display:initial;'
   + '}'
 
-  + '.scw-download-button span {'
-  + '  font-family: FontAwesome, open_sans;'
-  + '  font-weight: normal;'
-  + '  font-size: 13px;'
-  + '}'
-
-  + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(3), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(4), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(5), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(6), .scw-grid .x-grid-row-summary .x-grid-cell:nth-child(7) {'
-  + '  border-top: 1px black solid;'
-  + '}'
-
-  + '.scw-missing-data-panel {'
-  + '  margin: 30px auto;'
-  + '  width: 210px;'
-  + '}'
-
-  + '.scw-spinner {'
-  + '  display: initial;'
-  + '}'
-
-  + '.scw-spinner.inactive {'
-  + '  display: none;'
-  + '}'
-
-  + '.scw-qtip {'
-  + '  width: 16px;'
-  + '  height: 16px;'
-  + '  display: inline-block;'
-  + '  margin-bottom: 10px;'
+  + '.scw-article-list-panel {'
+  + '  margin: 10px; 0 0 10px;'
+  + '  font-size: 10px;'
+  + '  color: grey;'
   + '}'
 
   + '.scw-info {'
@@ -126,11 +137,11 @@ Ext.util.CSS.createStyleSheet(''
   + '  background: #3e9bbc;'
   + '  display: inline-block;'
   + '  line-height: 10px;'
-  + '  letter-spacing: 1.75px;'
+  + '  letter-spacing: 1.5px;'
   + '  position: absolute;'
   + '  top: -18px;'
   + '  left: 1px;'
-  + '}', 'shpr-companymodule');
+  + '}', 'shpr-company');
 
 Ext.define('shpr.revisions.MainController', {
   extend: 'Ext.app.ViewController',
@@ -142,6 +153,7 @@ Ext.define('shpr.revisions.MainController', {
     var message = Ext.ComponentQuery.query('#missingDataPanel')[0];
 
     var operationType = view.down('#operationDropdown').getValue();
+    var diagnosis = view.down('#diagnosisDropdown').getValue();
     var protesis = view.down('#protesisDropdown').getValue();
     var revision = view.down('#revisionDropdown').getValue();
     var articleType = view.down('#articleTypeDropdown').getValue();
@@ -171,7 +183,7 @@ Ext.define('shpr.revisions.MainController', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: '/stratum/api/statistics/shpr/supplier-mod4?operationstyp=' + operationType + '&protestyp=' + protesis + '&rev_type=' + revision + '&artikeltyp=' + articleType + '&article_nr=' + articleNumber + '&rev_reason=' + revisionReason + '&start_datum=' + startDate + '&slut_datum=' + endDate,
+      url: '/stratum/api/statistics/shpr/supplier-mod4?operationstyp=' + operationType + '&diagnos=' +  diagnosis + '&protestyp=' + protesis + '&rev_type=' + revision + '&artikeltyp=' + articleType + '&article_nr=' + articleNumber + '&rev_reason=' + revisionReason + '&start_datum=' + startDate + '&slut_datum=' + endDate,
       success: function (response) {
         spinner && spinner.hide();
         var result = Ext.decode(response.responseText).data;
@@ -302,8 +314,8 @@ Ext.define('shpr.revisions.MainController', {
     return newContent;
   },
 
-  updatePart: function (record, part) {
-    var newChoices = this.enumerateNewChoices(record, part);
+  updatePart: function (record, part, code) {
+    var newChoices = this.enumerateNewChoices(record, code);
     var addition = this.checkForAdditions(newChoices, part);
     var deletion = this.checkForDeletions(newChoices, part);
     this.oldChoices[part] = newChoices;
@@ -338,9 +350,8 @@ Ext.define('shpr.revisions.MainController', {
     return '';
   },
 
-  enumerateNewChoices: function (record, part) {
+  enumerateNewChoices: function (record, code) {
     var newChoices = [];
-    var code = part === 'articleType' ? 'articleTypeCode' : 'artikelnummer';
     for (var item in record) {
       if (item === '') continue;
       newChoices.push(record[item].data[code]);
@@ -427,6 +438,9 @@ Ext.define('shpr.revisions.view.Main', {
   items: [{
     xtype: 'container',
     items: [
+    {
+      xtype: 'container',
+      items: [
       {
         xtype: 'label',
         width: '100%',
@@ -441,27 +455,17 @@ Ext.define('shpr.revisions.view.Main', {
       {
         xtype: 'label',
         cls: 'scw-label',
+        html: 'Diagnos<div class="scw-info"><div data-qtip="För att välja flera komponenter samtidigt, håll inne CTRL-knappen när du gör nästa val.">i</div></div>'
+      },
+      {
+        xtype: 'label',
+        cls: 'scw-label',
         text: 'Protestyp'
       },
       {
         xtype: 'label',
         cls: 'scw-label',
         text: 'Revisionstyp'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        html: 'Artikeltyp<div class="scw-info"><div data-qtip="För att välja flera komponenter samtidigt, håll inne CTRL-knappen när du gör nästa val.">i</div></div>'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        html: 'Artikel<div class="scw-info"><div data-qtip="För att välja flera komponenter samtidigt, håll inne CTRL-knappen när du gör nästa val.">i</div></div>'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        text: 'Revisionsorsak'
       },
       {
         xtype: 'rcfilter',
@@ -478,6 +482,40 @@ Ext.define('shpr.revisions.view.Main', {
           data: [
             { operationCode: 1, operationName: 'Primär' },
             { operationCode: 2, operationName: 'Revision' }
+          ]
+        }
+      },
+      {
+        xtype: 'tagfield',
+        itemId: 'diagnosisDropdown',
+        cls: 'scw-select scw-multiselect',
+        queryMode: 'local',
+        multiSelect: true,
+        stacked: true,
+        valueField: 'diagnosisCode',
+        displayField: 'diagnosisName',
+        value: 'alla',
+        sortfield: 'diagnosisName',
+        sortdirection: 'DESC',
+        listeners: {
+          select: function (combo, record) {
+            this.up().up().up().getController().updatePart(record, 'diagnosis', combo.valueField);
+          }
+        },
+        store: {
+          fields: ['diagnosisCode', 'diagnosisName'],
+          data: [
+            { diagnosisCode: 'alla', diagnosisName: 'Alla' },
+            { diagnosisCode: 1, diagnosisName: 'Primär artros' },
+            { diagnosisCode: 2, diagnosisName: 'Inflammatorisk ledsjukdom' },
+            { diagnosisCode: 3, diagnosisName: 'Akut trauma, höftfraktur' },
+            { diagnosisCode: 4, diagnosisName: 'Följdtillstånd barnsjukdom' },
+            { diagnosisCode: 5, diagnosisName: 'Idiopatisk nekros' },
+            { diagnosisCode: 6, diagnosisName: 'Följdtillstånd efter trauma/fraktur' },
+            { diagnosisCode: 7, diagnosisName: 'Tumör' },
+            { diagnosisCode: 8, diagnosisName: 'Annan sekundär artros' },
+            { diagnosisCode: 9, diagnosisName: 'Akut trauma, övriga' },
+            { diagnosisCode: 10, diagnosisName: 'Övrigt' }
           ]
         }
       },
@@ -518,6 +556,31 @@ Ext.define('shpr.revisions.view.Main', {
             { rev_type: 3, beskrivning: 'Första revision av annat slag' }
           ]
         }
+      }
+      ]
+    },
+    {
+      xtype: 'container',
+      items: [
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        html: 'Artikeltyp<div class="scw-info"><div data-qtip="För att välja flera komponenter samtidigt, håll inne CTRL-knappen när du gör nästa val.">i</div></div>'
+      },
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        html: 'Artikel<div class="scw-info"><div data-qtip="För att välja flera komponenter samtidigt, håll inne CTRL-knappen när du gör nästa val.">i</div></div>'
+      },
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        text: 'Revisionsorsak'
+      },
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        text: ''
       },
       {
         xtype: 'tagfield',
@@ -533,7 +596,7 @@ Ext.define('shpr.revisions.view.Main', {
         sortdirection: 'DESC',
         listeners: {
           select: function (combo, record) {
-            this.up().up().getController().updatePart(record, 'articleType');
+            this.up().up().up().getController().updatePart(record, 'articleType', combo.valueField);
           }
         },
         store: {
@@ -563,7 +626,7 @@ Ext.define('shpr.revisions.view.Main', {
         sortdirection: 'DESC',
         listeners: {
           select: function (combo, record) {
-            this.up().up().getController().updatePart(record, 'articleNumber');
+            this.up().up().up().getController().updatePart(record, 'artikelnummer', combo.valueField);
           }
         },
         store: {
@@ -576,7 +639,7 @@ Ext.define('shpr.revisions.view.Main', {
       {
         xtype: 'rcfilter',
         itemId: 'causeDropdown',
-        cls: 'scw-select  scw-select-last',
+        cls: 'scw-select',
         valueField: 'causeCode',
         displayField: 'causeName',
         value: 'alla',
@@ -593,7 +656,9 @@ Ext.define('shpr.revisions.view.Main', {
             { causeCode: 4, causeName: 'Alla aseptiska orsaker' }
           ]
         }
-      },
+      }
+      ]
+    }
     ]
   },
   {
@@ -797,6 +862,7 @@ Ext.application({
     main.getController().oldChoices = {};
     main.getController().oldChoices.articleType = ['alla'];
     main.getController().oldChoices.articleNumber = ['Alla'];
+    main.getController().oldChoices.diagnosis = ['alla'];
     main.getController().updateGrid();
     Ext.apply(Ext.QuickTips.getQuickTip(), {
       dismissDelay: 0
