@@ -14,6 +14,7 @@ export function getVariableStore(data) {
         fields: [
             'ColumnName',
             'Description',
+            'PrefixText'
         ],
         data: data
     });        

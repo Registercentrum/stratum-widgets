@@ -38,9 +38,9 @@ export function getGrid() {
                 }
             },
             {
-                text: "Beskrivning",
+                text: "Definition",
                 flex: 1,
-                dataIndex: "Description",
+                dataIndex: "PrefixText",
                 filter: {
                     type: "string"
                 }
