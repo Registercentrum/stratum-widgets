@@ -15,6 +15,7 @@ var gridPanel = ui.getGrid();
 function updateGridPanel(variableList) {
     var variableStore = store.getVariableStore(variableList);
     gridPanel.setStore(variableStore);
+    gridPanel.setHidden(false);
 }
 
 api.getRegisters().then(registers => {

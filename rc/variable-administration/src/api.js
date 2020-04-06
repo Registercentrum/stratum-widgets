@@ -13,10 +13,28 @@ export function getVariables(formId) {
     return getResource(BASE_URL + "metadata/questions/form/" + formId);
 }
 
+export function getVariable(questionId) {
+    return getResource(BASE_URL + "metadata/questions/" + questionId);
+}
+
+export function updateVariable(questionId, question) {
+    return putResource(BASE_URL + "metadata/questions/" + questionId, question); 
+}
+
 function getResource(resource) {
+    return performRequest(resource, "GET");
+}
+
+function putResource(resource, jsonData) {
+    return performRequest(resource, "PUT", jsonData);
+}
+
+function performRequest(resource, method, jsonData) {
     var deferred = new Ext.Deferred();
     Ext.Ajax.request({
         url: resource,
+        method: method,
+        jsonData: jsonData,
         success: function (response) {
             if(response.status !== 200){
                 deferred.reject();

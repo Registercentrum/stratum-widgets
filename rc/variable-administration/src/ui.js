@@ -28,6 +28,7 @@ export function getComboBox(registerStore, callback) {
 export function getGrid() {
     return Ext.create("Ext.grid.Panel", {
         plugins: "gridfilters",
+        hidden: true,
         columns: [
             {
                 text: "Variabel",
@@ -54,7 +55,13 @@ export function getGrid() {
             viewready: function(view) {
                 var footerText = getFooterText(view.store);
                 this.down("#toolbarText").setHtml(footerText);
-            }
+            },
+            dblclick: {
+                element: 'body', //bind to the underlying body property on the panel
+                fn: function(sender) { 
+                    showVariableEditor(sender.record.data);
+                }
+            },
         },
         dockedItems: [{
             xtype: 'toolbar',
@@ -64,6 +71,97 @@ export function getGrid() {
             ]
         }]
     });        
+}
+
+export function showVariableEditor(variable) {
+    api.getVariable(variable.QuestionID).then(question => {
+        var editor = new Ext.Window({
+            width: 640, 
+            modal: true,
+            layout: "fit",
+            //frame: false,
+            //scrollable: "vertical",
+            title: 'Variabeleditor',
+            items: [{
+                xtype: "container",
+                layout: "fit",
+                items: [{
+                    xtype: 'form',
+                    layout: 'form',
+                    id: 'variableForm',
+                    items: [
+                        {
+                            xtype: "textfield",
+                            fieldLabel: 'Variabel',
+                            name: 'variable',
+                            disabled: true,
+                            value: question.ColumnName,
+                        }, {
+                            xtype: 'textareafield',
+                            fieldLabel: 'Beskrivning',
+                            name: 'description',
+                            grow: true,
+                            minHeight: 200,
+                            value: question.Description
+                        }
+                    ],
+                    buttons: [
+                        {
+                            text: 'Spara',
+                            listeners: {
+                                click: function() {
+                                    // this.up('form').getForm()
+                                    api.updateVariable(question.QuestionID, {
+                                        Question: {
+                                            Description: 'test'
+                                        }
+                                    });
+                                    editor.close();
+                                }
+                            }
+                        }, {
+                            text: 'Avbryt',
+                            listeners: {
+                                click: function() {
+                                    var formIsDirty = this.up('form').getForm().isDirty();
+                                    if(formIsDirty) {
+                                        Ext.MessageBox.show ({
+                                            title: 'Spara ändringarna',
+                                            msg: 'Du har gjort förändringar i formuläret. Vill du spara dessa?',
+                                            buttons: Ext.MessageBox.YESNOCANCEL,
+                                            icon: Ext.MessageBox.QUESTION,
+                                            fn: function(answer) {
+                                                switch (answer) {
+                                                    case 'yes':
+                                                        editor.close();
+                                                        break;
+                                                    case 'no':
+                                                        editor.close();
+                                                        break;
+                                                    case 'cancel':
+                                                        break;
+                                                }
+                                            }
+                                        });        
+                                    
+                                    }
+                                    else {
+                                        editor.close();
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }]
+            }],
+            listeners: {
+                beforeclose: function() {
+                    return true;
+                }
+            }
+        });
+        editor.show();
+    });
 }
 
 function getFooterText(store) {
