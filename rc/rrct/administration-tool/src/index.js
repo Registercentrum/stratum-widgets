@@ -5,7 +5,6 @@ import "./unitsgrid.view";
 import config from "./config";
 import * as api from "./api";
 
-api.setRrctBaseUrl(config.baseUrl);
 api.getStudyDetails().then(studyDetails => {
 
     Ext.create('RC.RRCTAdministration.store.Unit', {
