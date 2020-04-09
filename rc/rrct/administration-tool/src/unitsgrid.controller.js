@@ -5,63 +5,46 @@ Ext.define('RC.RRCTAdministration.controller.Units', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.units',
     activate: function() {
-        var unit = this.view.selection.data;
-        var view = this.getView();
-        var record = view.getStore().getById(unit.UnitId);
-        var controller = this;
-        Ext.MessageBox.show({
-            title: 'Aktivera enhet',
-            msg: `Är du säker på att du vill aktivera enheten ${unit.UnitName} i studien ${config.studyName}?`,
-            buttons: Ext.MessageBox.YESNO,
-            buttonText: {
-                yes: 'Ja',
-                no: 'Nej'
-            },
-            fn: function(response) {
-                if (response == 'yes') {
-                    api.activateUnit(unit.UnitId).then(function() {
-                        record.set('Enabled', true);
-                        setButtonState(false, controller);
-                        view.fireEvent('storechange');
-                    }).catch(error => {
-                        console.log("Kunde inte aktivera enheten.");
-                        console.log(error);
-                    });
-                }
-            }
-        });
+        changeUnitState(true, this);
     },
     deactivate: function() {
-        var unit = this.view.selection.data;
-        var view = this.getView();
-        var record = view.getStore().getById(unit.UnitId);
-        var controller = this;
-        Ext.MessageBox.show({
-            title: 'Inaktivera enhet',
-            msg: `Är du säker på att du vill inaktivera enheten ${unit.UnitName} i studien ${config.studyName}?`,
-            buttons: Ext.MessageBox.YESNO,
-            buttonText: {
-                yes: 'Ja',
-                no: 'Nej'
-            },
-            fn: function(response) {
-                if (response == 'yes') {
-                    api.deactivateUnit(unit.UnitId).then(() => {
-                        record.set('Enabled', false);
-                        setButtonState(true, controller);
-                        view.fireEvent('storechange');
-                    }).catch(error => {
-                        console.log("Kunde inte avaktivera enheten.");
-                        console.log(error);
-                    });
-                }
-            }
-        });
+        changeUnitState(false, this);
     },
     onSelectionChange: function (component, record, index, eOpts) {
         setButtonState(!record[0].data.Enabled, this);
     },
 });
+
+function changeUnitState(activate, controller) {
+    var view = controller.getView();
+    var unit = view.selection.data;
+    var record = view.getStore().getById(unit.UnitId);
+    var title = activate ? 'Aktivera enhet' : 'Inaktivera enhet';
+    var actionText = activate ? 'aktivera' : 'inaktivera'
+    var message = `Är du säker på att du vill ${actionText} enheten ${unit.UnitName} i studien ${config.studyName}?`;
+    Ext.MessageBox.show({
+        title: title,
+        msg: message,
+        buttons: Ext.MessageBox.YESNO,
+        buttonText: {
+            yes: 'Ja',
+            no: 'Nej'
+        },
+        fn: function(response) {
+            if (response == 'yes') {
+                var action = activate ? api.activateUnit : api.deactivateUnit;
+                action(unit.UnitId).then(function() {
+                    record.set('Enabled', activate);
+                    setButtonState(!activate, controller);
+                    view.fireEvent('storechange');
+                }).catch(error => {
+                    console.log("Kunde inte ändra status på enheten.");
+                    console.log(error);
+                });
+            }
+        }
+    });
+}
 
 function setButtonState(activateEnabled, controller) {
     if(activateEnabled) {
