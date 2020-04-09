@@ -2,9 +2,10 @@ import "./unit.model";
 import "./unit.store";
 import "./unitsgrid.controller";
 import "./unitsgrid.view";
+import config from "./config";
 import * as api from "./api";
 
-api.setRrctBaseUrl('/stratum/api/rrct/clinicaltrial-duality-nationellariktlinjer.1.0.0/');
+api.setRrctBaseUrl(config.baseUrl);
 api.getStudyDetails().then(studyDetails => {
 
     Ext.create('RC.RRCTAdministration.store.Unit', {
@@ -13,7 +14,7 @@ api.getStudyDetails().then(studyDetails => {
     });
 
     Ext.create("Ext.container.Container", {
-        renderTo: 'sw-rrct-administration',
+        renderTo: config.domContainer,
         margin: "0 0 20 0",
         items: [
             { 
