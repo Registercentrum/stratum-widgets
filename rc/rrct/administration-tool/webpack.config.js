@@ -4,7 +4,7 @@ module.exports = {
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'rrct.progress-widget.bundle.js'
+        filename: 'rrct-administration-tool.bundle.js'
     },
     mode: 'production',
     module: {
