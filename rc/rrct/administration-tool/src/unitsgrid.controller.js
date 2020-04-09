@@ -10,7 +10,7 @@ Ext.define('RC.RRCTAdministration.controller.Units', {
     deactivate: function() {
         changeUnitState(false, this);
     },
-    onSelectionChange: function (component, record, index, eOpts) {
+    onSelectionChange: function (component, record) {
         setButtonState(!record[0].data.Enabled, this);
     },
 });
