@@ -50,17 +50,20 @@ Ext.define('RC.UserAdministration.view.UnitsGrid', {
         }
     ],
     listeners: {
-        viewready: function(view) {
-            var footerText = getFooterText(view.store);
-            this.down("#toolbarText").setHtml(footerText);
+        viewready: function() {
+            updateFooterText(this);
+        },
+        storechange: function() {
+            updateFooterText(this);
         },
         selectionchange: 'onSelectionChange'
     },
 });
 
-function getFooterText(store) {
-    var numIncluded = Ext.Array.filter(store.data.items, function(item) {
+function updateFooterText(view) {
+    var numIncluded = Ext.Array.filter(view.store.data.items, function(item) {
         return item.data.Enabled;
     }).length;
-    return "Antal: " + store.data.length + ". Aktiva: " + numIncluded;
+    var footerText = "Antal: " + view.store.data.length + ". Aktiva: " + numIncluded;
+    view.down("#toolbarText").setHtml(footerText);
 }

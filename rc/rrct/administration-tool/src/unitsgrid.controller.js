@@ -1,12 +1,13 @@
 import config from "./config";
-import api from "./api";
+import * as api from "./api";
 
 Ext.define('RC.RRCTAdministration.controller.Units', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.units',
     activate: function() {
         var unit = this.view.selection.data;
-        var record = this.getView().getStore().getById(unit.UnitId);
+        var view = this.getView();
+        var record = view.getStore().getById(unit.UnitId);
         var controller = this;
         Ext.MessageBox.show({
             title: 'Aktivera enhet',
@@ -18,15 +19,22 @@ Ext.define('RC.RRCTAdministration.controller.Units', {
             },
             fn: function(response) {
                 if (response == 'yes') {
-                    record.set('Enabled', true);
-                    setButtonState(false, controller);
+                    api.activateUnit(unit.UnitId).then(function() {
+                        record.set('Enabled', true);
+                        setButtonState(false, controller);
+                        view.fireEvent('storechange');
+                    }).catch(error => {
+                        console.log("Kunde inte aktivera enheten.");
+                        console.log(error);
+                    });
                 }
             }
         });
     },
     deactivate: function() {
         var unit = this.view.selection.data;
-        var record = this.getView().getStore().getById(unit.UnitId);
+        var view = this.getView();
+        var record = view.getStore().getById(unit.UnitId);
         var controller = this;
         Ext.MessageBox.show({
             title: 'Inaktivera enhet',
@@ -38,8 +46,14 @@ Ext.define('RC.RRCTAdministration.controller.Units', {
             },
             fn: function(response) {
                 if (response == 'yes') {
-                    record.set('Enabled', false);
-                    setButtonState(true, controller);
+                    api.deactivateUnit(unit.UnitId).then(() => {
+                        record.set('Enabled', false);
+                        setButtonState(true, controller);
+                        view.fireEvent('storechange');
+                    }).catch(error => {
+                        console.log("Kunde inte avaktivera enheten.");
+                        console.log(error);
+                    });
                 }
             }
         });
