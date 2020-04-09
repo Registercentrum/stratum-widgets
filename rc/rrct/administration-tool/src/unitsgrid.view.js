@@ -14,6 +14,9 @@ Ext.define('RC.UserAdministration.view.UnitsGrid', {
             text: 'Aktiv',
             dataIndex: 'Enabled',
             sortable: true,
+            renderer: function(value) {
+                return value ? "Ja" : "Nej";
+            }
         },
     ],
     dockedItems: [
@@ -28,7 +31,7 @@ Ext.define('RC.UserAdministration.view.UnitsGrid', {
                     text: 'Aktivera',
                     handler: 'activate',
                     minWidth: 80,
-                    disabled: false
+                    disabled: true
                 },
                 {
                     reference: 'deactivateUnitButton',
@@ -50,13 +53,14 @@ Ext.define('RC.UserAdministration.view.UnitsGrid', {
         viewready: function(view) {
             var footerText = getFooterText(view.store);
             this.down("#toolbarText").setHtml(footerText);
-        }
+        },
+        selectionchange: 'onSelectionChange'
     },
 });
 
 function getFooterText(store) {
     var numIncluded = Ext.Array.filter(store.data.items, function(item) {
-        return item.data.Enabled === "Ja";
+        return item.data.Enabled;
     }).length;
     return "Antal: " + store.data.length + ". Aktiva: " + numIncluded;
 }
