@@ -1,6 +1,7 @@
 
 var widgetConfig = widgetConfig || {}
-widgetConfig.Roles = [0, 901, 902, 903, 907, 908]
+widgetConfig.Roles = widgetConfig.Roles || widgetConfig.Roles || [901, 902, 903, 907, 908]
+widgetConfig.Roles.push(0)
 widgetConfig.devMode = Profile.Context && Profile.Context.User.UserID <= 200
 // widgetConfig.devMode = false
 widgetConfig.passhash = 'zdn+TQhqObQUdp9hZv/qm9CQLak='
@@ -99,7 +100,7 @@ Ext.define('RC.UserAdministration.store.Role', {
     { RoleID: 701, RoleName: 'Patient' },
     { RoleID: 901, RoleName: 'Registrerare' },
     { RoleID: 902, RoleName: 'Plusregistrerare' },
-    { RoleID: 903, RoleName: 'Koordinatorer' },
+    { RoleID: 903, RoleName: 'Koordinator' },
     { RoleID: 906, RoleName: 'Systemutvecklare' },
     { RoleID: 907, RoleName: 'Patientobservatör' },
     { RoleID: 908, RoleName: 'Rapportobservatör' }
@@ -180,7 +181,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
   
   columns: [
     {
-      text: 'Id',
+      text: 'ID',
       dataIndex: 'UserID',
       width: 65,
       sortable: true,
@@ -363,7 +364,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
         },
         {
           reference: 'createButton',
-          text: 'Skapa',
+          text: 'Lägg till användare',
           handler: 'create',
           minWidth: 80,
           disabled: false
@@ -519,30 +520,37 @@ Ext.define('RC.UserAdministration.controller.User', {
   createUserFilter: function (user, role) {
     var filter = function (item) {
       if (item.data.UserID < 200 && !widgetConfig.devMode) return false
-      if (user === '') { return true }
+      if(!item.data.Contexts) return false
+      if (user === '') return true
       user = user.replace('<', '').replace('>', '')
       var contexts = item.data.Contexts
-      if (contexts) {
-        var terms = user.split(' ')
-        terms.forEach(function (term) {
-          term = term.toLowerCase()
-          contexts = contexts.filter(function (context) {
-            return context.User.Username.toLowerCase().indexOf(term) > -1
-              || (context.User.FirstName && context.User.FirstName.toLowerCase().indexOf(term) > -1)
-              || (context.User.LastName && context.User.LastName.toLowerCase().indexOf(term) > -1)
-              || (context.User.Email && context.User.Email.toLowerCase().indexOf(term) > -1)
-          })
+      var terms = user.split(' ')
+      terms.forEach(function (term) {
+        term = term.toLowerCase()
+        contexts = contexts.filter(function (context) {
+          return context.User.Username.toLowerCase().indexOf(term) > -1
+            || (context.User.FirstName && context.User.FirstName.toLowerCase().indexOf(term) > -1)
+            || (context.User.LastName && context.User.LastName.toLowerCase().indexOf(term) > -1)
+            || (context.User.Email && context.User.Email.toLowerCase().indexOf(term) > -1)
         })
-        var isPartOfUnit = contexts.length !== 0
-        var matchesExtraField = (
-          JSON.parse(item.data.Extra)
-          && Ext.String.startsWith(JSON.parse(item.data.Extra)[Profile.Site.Register.RegisterID], user, true)
-        ) ? true : false
-        return isPartOfUnit || matchesExtraField
-      }
-      return true
+      })
+      var isPartOfUnit = contexts.length !== 0
+      var matchesExtraField = (
+        JSON.parse(item.data.Extra)
+        && Ext.String.startsWith(JSON.parse(item.data.Extra)[Profile.Site.Register.RegisterID], user, true)
+      ) ? true : false
+      return isPartOfUnit || matchesExtraField
     }
     return filter
+  },
+
+  createContextFilter: function () {
+    return function (context) {
+    return context.User.Username.toLowerCase().indexOf(term) > -1
+            || (context.User.FirstName && context.User.FirstName.toLowerCase().indexOf(term) > -1)
+            || (context.User.LastName && context.User.LastName.toLowerCase().indexOf(term) > -1)
+            || (context.User.Email && context.User.Email.toLowerCase().indexOf(term) > -1)
+    }
   },
 
   updateGrid: function () {
@@ -864,7 +872,7 @@ Ext.define('RC.UserAdministration.view.CreateUser', {
   controller: 'createuser',
   modal: true,
   width: 1000,
-  title: 'Användare',
+  title: 'Lägg till ny användare',
   cls: 'rc-useradministration',
 
   items: [
@@ -979,7 +987,7 @@ Ext.define('RC.UserAdministration.view.EditUser', {
   controller: 'edituser',
   modal: true,
   width: 1000,
-  title: 'Användare',
+  title: 'Redigera användare',
   cls: 'rc-useradministration',
 
   listeners: {
@@ -1492,7 +1500,7 @@ Ext.define('RC.UserAdministration.form.User', {
         {
           xtype: 'button',
           reference: 'newSithsButton',
-          text: 'Förnya Sithskort',
+          text: 'Förnya SITHS-kort',
           handler: 'renewSiths',
           minWidth: 80,
           hidden: widgetConfig.devMode !== true
@@ -1514,7 +1522,7 @@ Ext.define('RC.UserAdministration.form.User', {
         {
           xtype: 'button',
           reference: 'sithIdButton',
-          text: 'Byt till Sithskort',
+          text: 'Byt till SITHS-kort',
           handler: 'onSithIdChoosen',
           minWidth: 80
         },
@@ -1689,7 +1697,7 @@ Ext.define('RC.UserAdministration.view.UnitGrid', {
 
   columns: [
     {
-      text: 'Id',
+      text: 'ID',
       dataIndex: 'UnitID',
       width: 60,
       sortable: true
@@ -1784,7 +1792,7 @@ Ext.define('RC.UserAdministration.view.UnitGrid', {
         },
         {
           reference: 'createButton',
-          text: 'Skapa',
+          text: 'Lägg till enhet',
           handler: 'create',
           minWidth: 80,
           disabled: false
@@ -1934,16 +1942,17 @@ Ext.define('RC.UserAdministration.form.Unit', {
       allowBlank: false
     },
     {
-      fieldLabel: 'HSA-id',
+      fieldLabel: 'HSAID',
       name: 'HSAID',
       reference: 'hsaid',
       allowBlank: true
     },
     {
-      fieldLabel: 'PAR-id',
+      fieldLabel: 'PARID',
       name: 'PARID',
       reference: 'parid',
-      allowBlank: true
+      allowBlank: true,
+      hidden: true
     },
     {
       fieldLabel: 'Region',
@@ -2106,7 +2115,7 @@ Ext.define('RC.UserAdministration.view.CreateUnit', {
   controller: 'createunit',
   modal: true,
   width: 600,
-  title: 'Skapa enhet',
+  title: 'Lägg till enhet',
 
   config: {
     unit: [],
