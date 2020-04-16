@@ -4,7 +4,7 @@ import config from "./config";
 const RRCT_BASE_URL = config.baseUrl;
 
 export function getStudyDetails() {
-    return getResource(RRCT_BASE_URL + "details");
+    return getResource(RRCT_BASE_URL + "sites");
 }
 
 export function activateUnit(unitId) {
