@@ -9,9 +9,8 @@ module.exports = {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly",
         "Ext": false,
+        "Profile": false,
         "Repository": false,
-        "createHoveringHelpNote": false,
-        "createFloatingHelpNote": false
     },
     "parserOptions": {
         "ecmaVersion": 2018,
