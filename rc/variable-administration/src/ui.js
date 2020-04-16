@@ -110,11 +110,9 @@ export function showVariableEditor(variable) {
                             text: 'Spara',
                             listeners: {
                                 click: function() {
-                                    // this.up('form').getForm()
+                                    var form = this.up('form').getForm();
                                     api.updateVariable(question.QuestionID, {
-                                        Question: {
-                                            Description: 'test'
-                                        }
+                                        Description: form.getValues().description
                                     });
                                     editor.close();
                                 }
