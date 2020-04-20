@@ -1,8 +1,8 @@
-Ext.define("RC.ConfiguratorTool.view.DefaultView", {
+Ext.define("RC.ConfiguratorTool.view.StartView", {
     extend: "Ext.Panel",
-    alias: "widget.defaultview",
+    alias: "widget.startview",
     layout:'column',
-    controller: "default",
+    controller: "start",
     items: [{
         xtype: "container",
         layout: "center",

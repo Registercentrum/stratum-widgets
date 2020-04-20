@@ -1,19 +1,13 @@
-import "./controllers/main.controller"
-import "./controllers/default.controller"
-import "./controllers/forms.controller"
-import "./viewmodels/form-detail.viewmodel"
-import "./views/main.view"
-import "./views/default.view"
-import "./views/forms.view"
-import "./views/form-detail.view"
+import "./controllers/root.controller"
+import "./views/root.view"
 
-var mainItem = { 
+var rootItem = { 
     title: 'Registerkonfigurering', 
-    xtype: 'mainview',
+    xtype: 'rootview',
 };
 
 if(!Profile.Context) {
-    mainItem = {
+    rootItem = {
         xtype: "component",
         html: '<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-triangle pull-right"></i>Du måste vara inloggad för att arbeta med konfiguratörsverktyget.</div>'
     };
@@ -26,7 +20,7 @@ Ext.application({
         Ext.create('Ext.panel.Panel', {
             frame: false,
             renderTo: 'sw-konfiguratoersverktyg',
-            items: [ mainItem ]
+            items: [ rootItem ]
         });
     }            
 });

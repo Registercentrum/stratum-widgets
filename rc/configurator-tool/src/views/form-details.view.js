@@ -1,20 +1,25 @@
+import "../stores/questions.store"
+
 Ext.define("RC.ConfiguratorTool.view.FormDetailsView", {
-    extend: "Ext.Container",
+    extend: "Ext.panel.Panel",
     alias: "widget.formdetails",
-    itemId: "formdetails",
+    bind: {
+        title: '{formTitle}'
+    },
     viewModel: {
         type: "formdetails"
     },
+    controller: 'formdetails',
     items: [{
         xtype: 'form',
         itemId: "testform",
-        title: 'Testformulär',
+        title: 'Redigerar formulär',
         fieldLabel: 'Formulärtitel',
         items: [{
             xtype: "textfield",
             fieldLabel: 'Formulärnamn',
             bind: {
-                value: '{form.data.FormTitle}'
+                value: '{formTitle}'
             }
         }]
     }, {
@@ -23,36 +28,19 @@ Ext.define("RC.ConfiguratorTool.view.FormDetailsView", {
     }, {
         xtype: "grid",
         itemId: "FormsGrid",
-        store: loadQuestionsStore(1001), // todo: Remove hard coding
         selModel: {
             selType: 'rowmodel',
             allowDeselect: true,
             mode: "SINGLE",
             toggleOnClick: true
         },
-        bind: {
-            store: 'formdetailstore',
-        },
+        store: 'questions',
         columns: {
             items: [
                 { text: "Kolumnnamn", dataIndex: "ColumnName", flex: 1  },
                 { text: "Mapped to", dataIndex: "MappedTo", flex: 1  },
                 { text: "Prefix text", dataIndex: "PrefixText", flex: 1  },
             ]
-        }
+        },
     }]
 });
-
-function loadQuestionsStore(formId) {
-    return Ext.create("Ext.data.Store", {
-        autoLoad: true,
-        proxy: {
-            type: "ajax",
-            url: "/stratum/api/metadata/forms/" + formId,
-            reader: {
-                type: "json",
-                rootProperty: "data.Questions"
-            }
-        }
-    });
-}

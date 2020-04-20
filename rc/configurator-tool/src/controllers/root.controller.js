@@ -1,9 +1,13 @@
-var MAIN_VIEW = null;
+import "./start.controller"
+import "./forms.controller"
+import "./form-details.controller"
+
+var ROOT_VIEW = null;
 var CURRENT_VIEW = null;
 
-Ext.define("RC.ConfiguratorTool.controller.MainController", {
+Ext.define("RC.ConfiguratorTool.controller.RootController", {
     extend: 'Ext.app.ViewController',
-    alias: "controller.main",
+    alias: "controller.root",
     routes: {
         "default": {
             action: "default",
@@ -21,7 +25,7 @@ Ext.define("RC.ConfiguratorTool.controller.MainController", {
     },
     defaultToken : 'default',
     default: function() {
-        var view = Ext.create("RC.ConfiguratorTool.view.DefaultView");
+        var view = Ext.create("RC.ConfiguratorTool.view.StartView");
         loadView(view);
     },
     forms: function() {
@@ -39,12 +43,12 @@ Ext.define("RC.ConfiguratorTool.controller.MainController", {
 });
 
 function loadView(view) {
-    if(!MAIN_VIEW) {
-        MAIN_VIEW = Ext.ComponentQuery.query('#configuratorToolMainView')[0];
+    if(!ROOT_VIEW) {
+        ROOT_VIEW = Ext.ComponentQuery.query('#configuratorToolRootView')[0];
     }
     if(CURRENT_VIEW) {
-        MAIN_VIEW.remove(CURRENT_VIEW, true);
+        ROOT_VIEW.remove(CURRENT_VIEW, true);
     }
-    MAIN_VIEW.add(view);
+    ROOT_VIEW.add(view);
     CURRENT_VIEW = view;
 }

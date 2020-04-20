@@ -1,6 +1,6 @@
-Ext.define("RC.ConfiguratorTool.controller.DefaultController", {
+Ext.define("RC.ConfiguratorTool.controller.StartController", {
     extend: 'Ext.app.ViewController',
-    alias: "controller.default",
+    alias: "controller.start",
     onFormsButtonClick: function() {
         this.redirectTo('forms');
     },
