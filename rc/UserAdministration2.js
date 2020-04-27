@@ -1079,11 +1079,7 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
 
   init: function () {
     this.callParent()
-    var user = this.getView().getUserData()
-    var contexts = this.getView().getContextData()
-    var contextStore = this.getView().down('grid').getStore()
-    contextStore.loadData(contexts)
-    this.lookup('userform').loadRecord(user)
+    this.loadUserData()
     delete this.lookup('username').vtype
     delete this.lookup('hsaid').vtype
     this.lookup('username').setFieldLabel('Användarnamn')
@@ -1096,6 +1092,14 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     } else {
       this.onSithIdChoosen()
     }
+  },
+
+  loadUserData: function () {
+    var user = this.getView().getUserData()
+    var contexts = this.getView().getContextData()
+    var contextStore = this.getView().down('grid').getStore()
+    contextStore.loadData(contexts)
+    this.lookup('userform').loadRecord(user)
   },
 
   updateStatusBar: function () {
