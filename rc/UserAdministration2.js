@@ -1143,7 +1143,7 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     this.getView().destroy()
   },
 
-  showLogg: function () {
+  showLog: function () {
     console.log('logg')
     this.fetchLogg().then(function(data){console.log(data)})
   },
@@ -1328,6 +1328,8 @@ Ext.define('RC.UserAdministration.controller.CreateContext', {
     this.lookup('bankIdButton').hide()
     this.lookup('createContextButton').hide()
     this.lookup('WelcomeLetterButton').hide()
+    this.lookup('renewSithsButton').hide()
+    this.lookup('showLogButton').hide()
     this.lookup('role').vtype = 'context'
     this.lookup('unit').vtype = 'context'
     var existingUser = RC.UserAdministration.app.down('usergrid').getStore().getById(this.getUser())
@@ -1497,13 +1499,13 @@ Ext.define('RC.UserAdministration.form.User', {
           xtype: 'button',
           reference: 'showLogButton',
           text: 'Logg',
-          handler: 'showLogg',
+          handler: 'showLog',
           minWidth: 80,
           hidden: widgetConfig.devMode !== true
         },
         {
           xtype: 'button',
-          reference: 'newSithsButton',
+          reference: 'renewSithsButton',
           text: 'Förnya SITHS-kort',
           handler: 'renewSiths',
           minWidth: 80,
