@@ -1079,8 +1079,11 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
 
   init: function () {
     this.callParent()
-    this.getView().down('grid').getStore().loadData(this.getView().getContextData())
-    this.lookup('userform').loadRecord(this.getView().getUserData())
+    var user = this.getView().getUserData()
+    var contexts = this.getView().getContextData()
+    var contextStore = this.getView().down('grid').getStore()
+    contextStore.loadData(contexts)
+    this.lookup('userform').loadRecord(user)
     delete this.lookup('username').vtype
     delete this.lookup('hsaid').vtype
     this.lookup('username').setFieldLabel('Användarnamn')
@@ -1341,9 +1344,7 @@ Ext.define('RC.UserAdministration.controller.CreateContext', {
     data.user = {}
     data.user.UserID = this.getUser()
     data.controller = this
-    //if(!widgetConfig.devMode){
-      this.saveContext(data).then(data.controller.updateContexts)
-    //}
+    this.saveContext(data).then(data.controller.updateContexts)
   },
 
   updateContexts: function (data) {
