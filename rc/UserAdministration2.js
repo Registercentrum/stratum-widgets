@@ -1150,7 +1150,9 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     var deferred = new Ext.Deferred()
 
     Ext.Ajax.request({
-      url: '/stratum/api/metadata/logentries/latest/logtype/' + 1201,
+      // url: '/stratum/api/metadata/logentries/latest/logtype/' + 1201,
+      // url: '/stratum.registercentrum.se/api/metadata/logentries/context/ContextID?after=aFromDate',
+      url: '/stratum/api/metadata/users/register/110?expose=deep',
       method: 'GET',
       withCredentials: true,
       success: function (result, request) {
@@ -1184,6 +1186,7 @@ Ext.define('RC.UserAdministration.view.MatchUser', {
       sortable: true,
       hidden: localStorage.getItem('FirstName') === 'hidden' || false
     }, {
+      
       text: 'Efternamn',
       dataIndex: 'LastName',
       flex: 1,
@@ -1912,6 +1915,7 @@ Ext.define('RC.UserAdministration.form.Unit', {
   layout: 'column',
   width: '100%',
   bodyPadding: 7,
+  cls: 'rc-useradministration',
 
   fieldDefaults: {
     validateOnChange: true
@@ -1933,13 +1937,15 @@ Ext.define('RC.UserAdministration.form.Unit', {
       fieldLabel: 'Namn',
       name: 'UnitName',
       reference: 'unitname',
-      allowBlank: false
+      allowBlank: false,
+      labelClsExtra: 'rc-required'
     },
     {
       fieldLabel: 'Enhetskod',
       name: 'UnitCode',
       reference: 'unitcode',
-      allowBlank: false
+      allowBlank: false,
+      labelClsExtra: 'rc-required'
     },
     {
       fieldLabel: 'HSAID',
@@ -1962,7 +1968,8 @@ Ext.define('RC.UserAdministration.form.Unit', {
       xtype: 'rcfilter',
       store: { type: 'region' },
       valueField: 'DomainValueID',
-      displayField: 'ValueName'
+      displayField: 'ValueName',
+      labelClsExtra: 'rc-required'
     },
     {
       fieldLabel: 'Aktiv',
