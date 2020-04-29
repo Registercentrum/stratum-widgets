@@ -1,4 +1,5 @@
 
+var devMode = Profile.Context.User.UserID === 9 && true
 Ext.util.CSS.removeStyleSheet('shpr-companymodule');
 Ext.util.CSS.createStyleSheet(''
 
@@ -145,6 +146,77 @@ Ext.apply(Ext.QuickTips.getQuickTip(), {
   dismissDelay: 0
 });
 
+Ext.apply(Ext.data.SortTypes, {
+  asAllPlacedFirst: function (str) {
+    if(str==='Alla') return "0"
+    return str
+  }
+});
+
+Ext.define('RC.ui.Multiselect', {
+  extend: 'Ext.form.field.Tag',
+  xtype: 'rcmultiselect',
+  cls: 'scw-select scw-multiselect',
+  queryMode: 'local',
+  multiSelect: true,
+  stacked: true,
+
+  initComponent: function () {
+    this.oldChoices = [this.value]
+    this.callParent()      
+  },
+  
+  listeners: {
+    select: function (combo, record) {
+      this.updateDropdown(record)
+     }
+  },
+
+  updateDropdown: function (record) {
+    var newChoices = this.enumerateNewChoices(record);
+    var addition = this.checkForAdditions(newChoices);
+    var deletion = this.checkForDeletions(newChoices);
+    this.oldChoices = newChoices;
+    if (addition || deletion) {
+      if (!window.event.ctrlKey) {
+        var newValue = addition || deletion;
+        this.oldChoices = [];
+        this.oldChoices.push(newValue);
+        this.clearValue();
+        this.setValue(newValue);
+        this.collapse();
+      }
+    }
+  },
+
+  checkForAdditions: function (record) {
+    for (var item in record) {
+      if (!this.oldChoices.includes(record[item])) {
+        return record[item];
+      }
+    }
+    return '';
+  },
+
+  checkForDeletions: function (record) {
+    for (var item in this.oldChoices) {
+      if (!record.includes(this.oldChoices[item])) {
+        return this.oldChoices[item];
+      }
+    }
+    return '';
+  },
+
+  enumerateNewChoices: function (record) {
+    var newChoices = [];
+    for (var item in record) {
+      if (item === '') continue;
+      newChoices.push(record[item].data[this.valueField]);
+    }
+    return newChoices;
+  }
+})
+
 Ext.define('shpr.volume.MainController', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.volume.main',
@@ -160,9 +232,6 @@ Ext.define('shpr.volume.MainController', {
 
     if (clinic === 'Riket') clinic = '1000';
     if (articleNumber === 'Alla') articleNumber = 'alla';
-
-    // var startDate = view.down('#startDate').getValue().toLocaleDateString();
-    // var endDate = view.down('#endDate').getValue().toLocaleDateString();
 
     var startDate = Ext.Date.format(view.down('#startDate').getValue(),  'Y-m-d')
     var endDate = Ext.Date.format(view.down('#endDate').getValue(),  'Y-m-d')
@@ -186,15 +255,14 @@ Ext.define('shpr.volume.MainController', {
       method: 'get',
       cors: true,
       url: '/stratum/api/statistics/shpr/supplier-mod1?'
-         + 'enhet=' + clinic + 
+         + 'enhet=' + clinic
          + '&operationstyp=' + operationType 
          + '&diagnos=' + diagnosis 
          + '&protestyp=' + protesis 
          + '&artikeltyp=' + articleType 
          + '&article_nr=' + articleNumber 
          + '&start_datum=' + startDate 
-         + '&slut_datum=' + endDate 
-         + '&diagnos=alla',
+         + '&slut_datum=' + endDate,
       success: function (response) {
         spinner && spinner.hide();
         var result = Ext.decode(response.responseText).data;
@@ -425,6 +493,7 @@ Ext.define('shpr.view.Filter', {
 Ext.define('shpr.volume.view.Main', {
   extend: 'Ext.container.Container',
   controller: 'volume.main',
+  itemId: 'krhMain',
   cls: 'scw-main',
   items: [{
     xtype: 'container',
@@ -464,8 +533,6 @@ Ext.define('shpr.volume.view.Main', {
         valueField: 'P_Unit',
         displayField: 'sjukhus',
         value: '0',
-        sortfield: 'sjukhus',
-        sortdirection: 'DESC',
         selectCallback: 'updateGrid',
 
         store: {
@@ -483,6 +550,8 @@ Ext.define('shpr.volume.view.Main', {
           }
         }
       },
+
+      
       {
         xtype: 'rcfilter',
         itemId: 'operationDropdown',
@@ -490,8 +559,6 @@ Ext.define('shpr.volume.view.Main', {
         valueField: 'operationCode',
         displayField: 'operationName',
         value: 'alla',
-        sortfield: 'operationName',
-        sortdirection: 'DESC',
         fields: ['operationName', 'operationCode'],
         selectCallback: 'updateGrid',
         store: {
@@ -505,7 +572,8 @@ Ext.define('shpr.volume.view.Main', {
       },
       {
         xtype: 'tagfield',
-        itemId: 'diagnosisDropdown',
+        itemId: devMode ? 'diagnosisDropdownOld' : 'diagnosisDropdown',
+        hidden: devMode,
         cls: 'scw-select scw-multiselect',
         queryMode: 'local',
         multiSelect: true,
@@ -513,8 +581,6 @@ Ext.define('shpr.volume.view.Main', {
         valueField: 'diagnosisCode',
         displayField: 'diagnosisName',
         value: 'alla',
-        sortfield: 'diagnosisName',
-        sortdirection: 'DESC',
         listeners: {
           select: function (combo, record) {
             this.up().up().up().getController().updatePart(record, 'diagnosis', combo.valueField);
@@ -536,7 +602,36 @@ Ext.define('shpr.volume.view.Main', {
             { diagnosisCode: 10, diagnosisName: 'Övrigt' }
           ]
         }
-      }
+      },
+      {
+        xtype: 'rcmultiselect',
+        itemId: devMode ? 'diagnosisDropdown' : 'diagnosisDropdownNew',
+        valueField: 'diagnosisCode',
+        displayField: 'diagnosisName',
+        value: 'alla',
+        hidden: !devMode,
+         store: {
+          fields: ['diagnosisCode', 'diagnosisName'],
+          data: [
+            { diagnosisCode: 'alla', diagnosisName: 'Alla' },
+            { diagnosisCode: 1, diagnosisName: 'Primär artros' },
+            { diagnosisCode: 2, diagnosisName: 'Inflammatorisk ledsjukdom' },
+            { diagnosisCode: 3, diagnosisName: 'Akut trauma, höftfraktur' },
+            { diagnosisCode: 4, diagnosisName: 'Följdtillstånd barnsjukdom' },
+            { diagnosisCode: 5, diagnosisName: 'Idiopatisk nekros' },
+            { diagnosisCode: 6, diagnosisName: 'Följdtillstånd efter trauma/fraktur' },
+            { diagnosisCode: 7, diagnosisName: 'Tumör' },
+            { diagnosisCode: 8, diagnosisName: 'Annan sekundär artros' },
+            { diagnosisCode: 9, diagnosisName: 'Akut trauma, övriga' },
+            { diagnosisCode: 10, diagnosisName: 'Övrigt' }
+          ]
+        },
+        listeners: {
+          select: function () {
+            this.up('#krhMain').getController().updateGrid()
+          }
+        }
+      },
       ]
     },
     {
@@ -570,8 +665,6 @@ Ext.define('shpr.volume.view.Main', {
         valueField: 'protesisCode',
         displayField: 'protesisName',
         value: 'alla',
-        sortfield: 'protesisName',
-        sortdirection: 'DESC',
         fields: ['protesisName', 'protesisCode'],
         selectCallback: 'updateGrid',
         store: {
@@ -593,11 +686,9 @@ Ext.define('shpr.volume.view.Main', {
         valueField: 'articleTypeCode',
         displayField: 'articleTypeName',
         value: 'alla',
-        sortfield: 'articleTypeName',
-        sortdirection: 'DESC',
         listeners: {
           select: function (combo, record) {
-            this.up().up().getController().updatePart(record, 'articleType');
+            this.up().up().up().getController().updatePart(record, 'articleType', combo.valueField);
           }
         },
         store: {
@@ -623,18 +714,24 @@ Ext.define('shpr.volume.view.Main', {
         valueField: 'artikelnumer',
         displayField: 'artikelnumer',
         value: 'Alla',
-        sortfield: 'artikelnumer',
-        sortdirection: 'DESC',
         listeners: {
           select: function (combo, record) {
-            this.up().up().getController().updatePart(record, 'articleNumber');
+            this.up().up().up().getController().updatePart(record, 'articleNumber', combo.valueField);
           }
         },
         store: {
-          fields: ['artikelnumer'],
+          fields: [{
+            name: 'artikelnumer',
+            sortType: 'asAllPlacedFirst'
+            }],
           data: [
             { artikelnummer: 'Alla' }
-          ]
+          ],
+          
+          sorters: [{
+            property: 'artikelnumer',
+            direction: 'ASC'
+          }]
         }
       },
       ]
