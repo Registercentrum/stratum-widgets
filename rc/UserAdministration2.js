@@ -914,7 +914,7 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
     this.lookup('username').enable()
     this.lookup('username').removeCls('rc-info')
     this.lookup('createContextButton').hide()
-    this.lookup('newSithsButton').hide()
+    this.lookup('renewSithsButton').hide()
     this.onSithIdChoosen()
     widgetConfig.preferredRole && this.lookup('role').setValue(widgetConfig.preferredRole)
     if (widgetConfig.devMode) {
@@ -1618,6 +1618,20 @@ Ext.define('RC.UserAdministration.view.ContextGrid', {
       sortable: true
     },
     {
+        // text: 'test',
+        width: 40,
+        xtype: 'widgetcolumn',
+        widget: {
+            textAlign: 'center',
+            // text: 'Ta bort',
+            xtype: 'button',
+            cls: 'rc-gridbutton',
+            iconCls: 'x-fa fa-trash',
+            handler: 'onRemoveContext'
+        },
+        hidden: !widgetConfig.devMode
+    },
+    {
       text: 'Slutdatum',
       renderer: function (value, metaData, record) { return record.get('User').ExpireDate },
       flex: 1,
@@ -1665,6 +1679,40 @@ Ext.define('RC.UserAdministration.controller.Context', {
         record.data.isSynced = true
         view.addRowCls(index, 'synced')
         observer.fireEvent('contextsupdated', record.data.User.UserID)
+      },
+      failure: function (result, request) {
+      }
+    })
+  },
+
+  onRemoveContext: function(component) {
+    this.fetchContextLog(component)
+    this.removeContext(component)
+  },
+
+  removeContext: function(component){
+    var record = component.getWidgetRecord().getData()
+     Ext.Ajax.request({
+      url: '/stratum/api/metadata/contexts/' + record.ContextID,
+      method: 'DELETE',
+      jsonData: record,
+      withCredentials: true,
+      success: function (result, request) {
+        // observer.fireEvent('contextsupdated', record.data.User.UserID)
+      },
+      failure: function (result, request) {
+      }
+    })
+  },
+
+  fetchContextLog: function (component) {
+    var context = component.getWidgetRecord().get('ContextID')
+    Ext.Ajax.request({
+      url: '/stratum/api/metadata/logentries/context/' + context,
+      method: 'GET',
+      withCredentials: true,
+      success: function (result, request) {
+        // observer.fireEvent('contextsupdated', record.data.User.UserID)
       },
       failure: function (result, request) {
       }
@@ -2416,6 +2464,29 @@ Ext.util.CSS.createStyleSheet(
   ' '
   + '.rc-active {'
   + '  background-color: aquamarine;'
+  + '}'
+
+  + '.rc-gridbutton {'
+  + '  background-color: initial;'
+  + '  border-color: rgba(0,0,0,0);'
+  + '}'
+
+  + '.rc-gridbutton .x-btn-icon-el-default-small {'
+  + '  color: #a3a3a3;'
+  + '}'
+
+  + '.rc-gridbutton.x-btn-over.x-btn-default-small {'
+  + '  background-color: initial;'
+  + '  border-color: rgba(0,0,0,0);'
+  + '}'
+
+  + '.rc-gridbutton.x-btn-over .x-btn-icon-el-default-small {'
+  + '  color: #af1212;'
+  + '}'
+
+  + '.rc-gridbutton.x-btn-focus.x-btn-default-small {'
+  + '  border-color: #a3a3a3;'   
+  + '  background-color: initial;'
   + '}'
 
   + '.synced .x-grid-dirty-cell .x-grid-cell-inner:after, .x-grid-dirty-cell .synced.x-grid-cell-inner:after {'
