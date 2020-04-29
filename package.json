@@ -2,8 +2,7 @@
   "name": "stratum-widgets",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Registercentrum/stratum-widgets.git"
@@ -21,6 +20,6 @@
     "eslint": "^6.7.1",
     "eslint-loader": "^3.0.2",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.11"
   }
 }

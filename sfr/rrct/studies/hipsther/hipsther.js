@@ -230,7 +230,7 @@ var hipstherWidget = function(parameters, _subjectManagement) {
                         }),
                         getQuestionRow(
                             {
-                                label: "Klarar patienten båda behandlingarna? (Tex. ur anestesiologisk synpunkt eller olämplig pga symptomgivande artros)", 
+                                label: "Klarar patienten båda behandlingarna? (Tex. ur anestesiologisk synpunkt eller olämplig pga symptomgivande artros) OCH Är frakturen verifierad med slätröntgen? (Enbart CT eller MR gäller inte)", 
                                 store: yesNoStore,
                                 componentId: "SuitableComboBox",
                                 disabled: true,

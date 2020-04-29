@@ -1,0 +1,6 @@
+{
+    "widgetName": "RRCT Administration",
+    "widgetId": "RC/RRCTAdministration",
+    "siteId": "100",
+    "domContainer": "RRCTAdministrationContainer"
+}

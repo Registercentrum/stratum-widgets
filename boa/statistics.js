@@ -1,4 +1,5 @@
 
+
 widgetConfig = {}
 widgetConfig.apikey = 'MpuYxfbtp5I='
 Ext.util.CSS.removeStyleSheet('bsw');

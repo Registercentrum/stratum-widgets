@@ -109,8 +109,12 @@ Ext.define('shpr.market.MainController', {
     var protesis = view.down('#protesisDropdown').getValue();
     var articleType = view.down('#articleTypeDropdown').getValue();
     var fixation = view.down('#fixationDropdown').getValue();
-    var startDate = view.down('#startDate').getValue().toLocaleDateString();
-    var endDate = view.down('#endDate').getValue().toLocaleDateString();
+    
+    // var startDate = view.down('#startDate').getValue().toLocaleDateString();
+    // var endDate = view.down('#endDate').getValue().toLocaleDateString();
+
+    var startDate = Ext.Date.format(view.down('#startDate').getValue(),  'Y-m-d')
+    var endDate = Ext.Date.format(view.down('#endDate').getValue(),  'Y-m-d')
 
     /* IE hack */
     startDate = startDate.replace(/[^ -~]/g, '');
@@ -558,7 +562,7 @@ Ext.define('shpr.market.view.Main', {
         {
           text: 'Marknadsandel',
           dataIndex: 'andel',
-          width: 140,
+          width: 150,
           align: 'right',
           field: {
             xtype: 'numberfield'

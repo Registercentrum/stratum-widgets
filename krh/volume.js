@@ -11,7 +11,7 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
 
   + '.scw-label {'
-  + '  width: 20%;'
+  + '  width: 33%;'
   + '  padding-left: 2px;'
   + '  display: inline-block;'
   + '}'
@@ -21,7 +21,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  border-radius: 3px;'
   + '  background-color: #f9f9f9;'
   + '  border: solid 1px #b7b7b7;'
-  + '  width: 20%;'
+  + '  width: 33%;'
   + '  padding-right: 5px;'
   + '  float: left;'
   + '  border: none;'
@@ -153,6 +153,7 @@ Ext.define('shpr.volume.MainController', {
     var view = this.getView();
     var clinic = view.down('#clinicDropdown').getValue();
     var operationType = view.down('#operationDropdown').getValue();
+    var diagnosis = view.down('#diagnosisDropdown').getValue();
     var protesis = view.down('#protesisDropdown').getValue();
     var articleType = view.down('#articleTypeDropdown').getValue();
     var articleNumber = view.down('#articleNumberDropdown').getValue();
@@ -160,8 +161,11 @@ Ext.define('shpr.volume.MainController', {
     if (clinic === 'Riket') clinic = '1000';
     if (articleNumber === 'Alla') articleNumber = 'alla';
 
-    var startDate = view.down('#startDate').getValue().toLocaleDateString();
-    var endDate = view.down('#endDate').getValue().toLocaleDateString();
+    // var startDate = view.down('#startDate').getValue().toLocaleDateString();
+    // var endDate = view.down('#endDate').getValue().toLocaleDateString();
+
+    var startDate = Ext.Date.format(view.down('#startDate').getValue(),  'Y-m-d')
+    var endDate = Ext.Date.format(view.down('#endDate').getValue(),  'Y-m-d')
 
     /* IE hack */
     startDate = startDate.replace(/[^ -~]/g, '');
@@ -181,7 +185,16 @@ Ext.define('shpr.volume.MainController', {
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: '/stratum/api/statistics/shpr/supplier-mod1?enhet=' + clinic + '&operationstyp=' + operationType + '&protestyp=' + protesis + '&artikeltyp=' + articleType + '&article_nr=' + articleNumber + '&start_datum=' + startDate + '&slut_datum=' + endDate,
+      url: '/stratum/api/statistics/shpr/supplier-mod1?'
+         + 'enhet=' + clinic + 
+         + '&operationstyp=' + operationType 
+         + '&diagnos=' + diagnosis 
+         + '&protestyp=' + protesis 
+         + '&artikeltyp=' + articleType 
+         + '&article_nr=' + articleNumber 
+         + '&start_datum=' + startDate 
+         + '&slut_datum=' + endDate 
+         + '&diagnos=alla',
       success: function (response) {
         spinner && spinner.hide();
         var result = Ext.decode(response.responseText).data;
@@ -272,7 +285,9 @@ Ext.define('shpr.volume.MainController', {
       content += headers.el.component.columns[column].titleEl.component.initialConfig.text + separator;
     }
     content += '\n';
-    content = language === 'Swedish' ? content : this.translateContent(content, this.categoryTranslations);
+    content = language === 'Swedish' 
+            ? content 
+            : this.translateContent(content, this.categoryTranslations);
     var data = Ext.data.StoreManager.lookup('overviewStore');
     for (var i in data.data.items) {
       if (i === '') continue;
@@ -310,8 +325,8 @@ Ext.define('shpr.volume.MainController', {
     return selections;
   },
 
-  updatePart: function (record, part) {
-    var newChoices = this.enumerateNewChoices(record, part);
+  updatePart: function (record, part, code) {
+    var newChoices = this.enumerateNewChoices(record, code);
     var addition = this.checkForAdditions(newChoices, part);
     var deletion = this.checkForDeletions(newChoices, part);
     this.oldChoices[part] = newChoices;
@@ -346,15 +361,15 @@ Ext.define('shpr.volume.MainController', {
     return '';
   },
 
-  enumerateNewChoices: function (record, part) {
+  enumerateNewChoices: function (record, code) {
     var newChoices = [];
-    var code = part === 'articleType' ? 'articleTypeCode' : 'artikelnumer';
     for (var item in record) {
       if (item === '') continue;
       newChoices.push(record[item].data[code]);
     }
     return newChoices;
   },
+  
   categoryTranslations: {
     'Alla': 'All',
     'Antal': 'Quantity',
@@ -414,11 +429,15 @@ Ext.define('shpr.volume.view.Main', {
   items: [{
     xtype: 'container',
     items: [
+    {
+      xtype: 'container',
+      items: [
       {
         xtype: 'label',
         width: '100%',
         cls: 'scw-header',
-        text: 'Data inmatad efter senast publicerade årsrapport skall användas med stor försiktighet då den inte är komplett eller validerad.'
+        text: 'Data inmatad efter senast publicerade årsrapport skall användas'
+            + ' med stor försiktighet då den inte är komplett eller validerad.'
       },
       {
         xtype: 'label',
@@ -433,17 +452,10 @@ Ext.define('shpr.volume.view.Main', {
       {
         xtype: 'label',
         cls: 'scw-label',
-        text: 'Protestyp'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        html: 'Artikeltyp<div class="scw-info"><div data-qtip="För att välja flera komponenter samtidigt, håll inne CTRL-knappen när du gör nästa val.">i</div></div>'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        html: 'Artikel<div class="scw-info"><div data-qtip="För att välja flera komponenter samtidigt, håll inne CTRL-knappen när du gör nästa val.">i</div></div>'
+        html: 'Diagnos'
+            + '<div class="scw-info">'
+            + '<div data-qtip="För att välja flera komponenter samtidigt, '
+            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
       },
       {
         xtype: 'rcfilter',
@@ -490,6 +502,66 @@ Ext.define('shpr.volume.view.Main', {
             { operationCode: 2, operationName: 'Revision' }
           ]
         }
+      },
+      {
+        xtype: 'tagfield',
+        itemId: 'diagnosisDropdown',
+        cls: 'scw-select scw-multiselect',
+        queryMode: 'local',
+        multiSelect: true,
+        stacked: true,
+        valueField: 'diagnosisCode',
+        displayField: 'diagnosisName',
+        value: 'alla',
+        sortfield: 'diagnosisName',
+        sortdirection: 'DESC',
+        listeners: {
+          select: function (combo, record) {
+            this.up().up().up().getController().updatePart(record, 'diagnosis', combo.valueField);
+          }
+        },
+        store: {
+          fields: ['diagnosisCode', 'diagnosisName'],
+          data: [
+            { diagnosisCode: 'alla', diagnosisName: 'Alla' },
+            { diagnosisCode: 1, diagnosisName: 'Primär artros' },
+            { diagnosisCode: 2, diagnosisName: 'Inflammatorisk ledsjukdom' },
+            { diagnosisCode: 3, diagnosisName: 'Akut trauma, höftfraktur' },
+            { diagnosisCode: 4, diagnosisName: 'Följdtillstånd barnsjukdom' },
+            { diagnosisCode: 5, diagnosisName: 'Idiopatisk nekros' },
+            { diagnosisCode: 6, diagnosisName: 'Följdtillstånd efter trauma/fraktur' },
+            { diagnosisCode: 7, diagnosisName: 'Tumör' },
+            { diagnosisCode: 8, diagnosisName: 'Annan sekundär artros' },
+            { diagnosisCode: 9, diagnosisName: 'Akut trauma, övriga' },
+            { diagnosisCode: 10, diagnosisName: 'Övrigt' }
+          ]
+        }
+      }
+      ]
+    },
+    {
+      xtype: 'container',
+      items: [
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        text: 'Protestyp'
+      },
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        html: 'Artikeltyp'
+            + '<div class="scw-info">'
+            + '<div data-qtip="För att välja flera komponenter samtidigt, '
+            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
+      },
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        html: 'Artikel'
+            + '<div class="scw-info">'
+            + '<div data-qtip="För att välja flera komponenter samtidigt, '
+            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
       },
       {
         xtype: 'rcfilter',
@@ -565,6 +637,8 @@ Ext.define('shpr.volume.view.Main', {
           ]
         }
       },
+      ]
+    }
     ],
   },
   {
@@ -583,7 +657,12 @@ Ext.define('shpr.volume.view.Main', {
         width: 315,
         itemId: 'startDate',
         value: Ext.Date.add(new Date(), Ext.Date.YEAR, -1),
-        fieldLabel: 'Operationsdatum<div class="scw-info"><div data-qtip="De datum som väljs måste utgöra en period på minst 28 dagar och ligga i spannet mellan 1999-01-01 och dagens datum.">i</div></div>mellan',
+        fieldLabel: 'Operationsdatum'
+                  + '<div class="scw-info">'
+                  + '<div data-qtip="De datum som väljs måste utgöra en period på minst 28 dagar '
+                  + 'och ligga i spannet mellan 1999-01-01 och dagens datum.">i'
+                  + '</div>'
+                  + '</div>',
         labelWidth: 188,
         format: 'Y-m-d',
         altFormats: 'ymd|Ymd',
@@ -684,7 +763,7 @@ Ext.define('shpr.volume.view.Main', {
         {
           text: 'Antal',
           dataIndex: 'antal',
-          width: 70,
+          width:80,
           align: 'right',
           field: {
             xtype: 'numberfield'
@@ -709,7 +788,13 @@ Ext.define('shpr.volume.view.Main', {
       height: 162,
       hidden: true,
       border: false,
-      html: '<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>'
+      html: '<div class="spinner">'
+          + '<div class="rect1"></div>'
+          + '<div class="rect2"></div>'
+          + '<div class="rect3"></div>'
+          + '<div class="rect4"></div>'
+          + '<div class="rect5"></div>'
+          + '</div>'
     },
     {
       xtype: 'panel',
@@ -727,7 +812,9 @@ Ext.application({
   name: 'shpr',
   units: [],
   launch: function () {
-    var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['KRH/ComponentsUsed'] : 'contentPanel';
+    var target = (typeof Stratum.containers !== 'undefined') 
+                    ? Stratum.containers['KRH/ComponentsUsed'] 
+                    : 'contentPanel';
     var main = Ext.create('shpr.volume.view.Main', {
       renderTo: target
     });
@@ -738,6 +825,7 @@ Ext.application({
     main.getController().oldChoices = {};
     main.getController().oldChoices.articleType = ['alla'];
     main.getController().oldChoices.articleNumber = ['Alla'];
+    main.getController().oldChoices.diagnosis = ['alla'];
     main.getController().updateGrid();
   }
 });

@@ -59,8 +59,14 @@ if (-Not $config.siteId) {
     Write-Error "Site ID was not specified in config file." -ErrorAction Stop
 }
 
+$domContainer = ""
+if($config.domContainer) {
+    $domContainer = "<div id=""$($config.domContainer)""></div>"
+}
+
 $pageId = GetWidgetPageId -WidgetId $config.widgetId
 $newPageContent = "<!-- Widget: $($config.widgetId) -->
+$($domContainer)
 <script type=""text/javascript"">
 $($pageContent)
 //# sourceURL=$($config.widgetId)
