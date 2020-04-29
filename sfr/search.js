@@ -46,7 +46,7 @@ var SfrSearchList = function () {
 
   function createStore() {
     return Ext.create('Ext.data.Store', {
-      fields: ['Personnummer', 'Skadedatum'],
+      fields: ['Personnummer', 'Skadedatum', 'inj_incomplete', 'fx_incomplete', 'trt_incomplete' ],
       proxy: {
         type: 'memory',
         reader: {
@@ -68,8 +68,8 @@ var SfrSearchList = function () {
   }
 
   function createFilters() {
-    var components = SfrWidget.createFilterComponents(['from_dat', 'from_fx_savedate', 'bodypart', 'icd10', 'injtype', 'injgroup', 'trtgrp', 'trttype', 'trtcode', 'fxclass', 'fxclassgroup', 'open']);
-    var fractureTreatLabel = Ext.create('Ext.form.Label', { text: 'Fraktur/Behandling:' });
+    var components = SfrWidget.createFilterComponents(['from_dat', 'from_fx_savedate', 'bodypart', 'extremity', 'icd10', 'segment', 'injtype', 'injgroup', 'trtgrp', 'trttype', 'trtcode', 'fxclass', 'fxclassgroup', 'open']);
+    var fractureTreatLabel = Ext.create('Ext.form.Label', { text: 'Felregistreringstyp:' });
     var fractureTreatFilter = createFractureTreatFilter();
     var specialFractureLabel = Ext.create('Ext.form.Label', { text: 'Speciella frakturtyper:' });
     var specialFractureFilter = createSpecialFractureFilter();
@@ -89,8 +89,9 @@ var SfrSearchList = function () {
   function createFractureTreatFilter() {
     var fractureTreatOptions = [
       ['', null],
+	  ['(obs! under utveckling.)HÄMTA DÄR NÅGON DEL AV REGISTRERING ÄR INKOMPLETT', '12'],
       ['Hämta där enbart skadedatum är ifyllt', '1'],
-      ['Hämta där patient har närliggande skadetillfällen (inom 7 dagar)', '2'],
+     /* ['Hämta där patient har närliggande skadetillfällen (inom 7 dagar)', '2'],*/
       ['Hämta där fraktur saknas', '3'],
       ['Hämta där fraktur ej blivit klassificerad', '4'],
       ['Hämta där behandling saknas', '5'],
@@ -100,6 +101,7 @@ var SfrSearchList = function () {
       ['Hämta där Operation efter icke-kirurgi övergivits saknas men Icke-kirurgisk behandling tillsammans med Planerat följdingrepp finns', '9'],
       ['Hämta där patient vid PROM-ifyllande angett att denne reoperats men där endast primäroperationer finns registrerade', '10'],
       ['Hämta där registrering är överförd från SHPR (oavsett andra val)', '11']
+	  
     ];
     
     var fractureTreatStore = Ext.create('Ext.data.ArrayStore', {
@@ -111,6 +113,7 @@ var SfrSearchList = function () {
     
     var fractureTreatFilter = Ext.create('Ext.form.ComboBox', {
       parameterKey: SfrWidget.parameters.incomplete,
+	  id:'fracTreatCombo',
       width: '50%',
       mode: 'local',
       valueField: 'ValueCode',
@@ -185,6 +188,7 @@ var SfrSearchList = function () {
               data.splice(app.max, data.length - app.max); 
               app.warning.setVisible(true);
             }
+			hideShowIncompleteCols();
             app.store.loadData(data);
             button.setDisabled(false);
           }
@@ -192,6 +196,13 @@ var SfrSearchList = function () {
         updateExport(paramsString, app.panel);
       }
     });
+  }
+  
+  function hideShowIncompleteCols(){
+	var getIncompleteRegs=Ext.getCmp('fracTreatCombo').getValue()==12;			
+	app.grid.columnManager.getColumns()[2].setVisible(getIncompleteRegs);
+	app.grid.columnManager.getColumns()[3].setVisible(getIncompleteRegs);
+	app.grid.columnManager.getColumns()[4].setVisible(getIncompleteRegs);
   }
 
   function createGrid() {
@@ -215,12 +226,32 @@ var SfrSearchList = function () {
         format: 'Y-m-d',
         width: 110
 
+      }, {
+        header: 'Inkomplett skada',
+        dataIndex: 'inj_incomplete',
+		hidden: true,
+        width: 110
+
+      }, {
+        header: 'Inkomplett fraktur',
+        dataIndex: 'fx_incomplete',
+		hidden: true,
+        width: 110
+
+      }, {
+        header: 'Inkomplett behandling',
+        dataIndex: 'trt_incomplete',
+		hidden: true,
+        width: 110
+
       }],
       selModel: Ext.create('Ext.selection.RowModel', {
         listeners: {
-          select: function (model, record) {
-            Stratum.ManagerForSubjects.search(record.data.Personnummer);
+          select: function (model, record) {            
+			//window.open( '/registrering/#!form?id=1012&key=' + Repository.Global.Methods.EncryptNIN(record.data.Personnummer), '_blank');
+			Stratum.ManagerForSubjects.search(record.data.Personnummer);
             window.scrollToTop();
+			
           }
         }
       })
@@ -258,3 +289,4 @@ Ext.util.CSS.createStyleSheet(''
 'accidents');
 
 SfrSearchList();
+//# sourceURL=SFR/SearchList
