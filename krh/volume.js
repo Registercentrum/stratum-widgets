@@ -172,8 +172,18 @@ Ext.define('RC.ui.Multiselect', {
   
   listeners: {
     select: function (combo, record) {
+      if(this.skip){
+        this.skip = false
+        return
+      }
+      if(this.deselectEvent){
+        this.skip=true
+      }
       this.updateDropdown(record)
-     }
+    },
+    beforedeselect: function () {
+      this.deselectEvent = true
+    }
   },
 
   updateDropdown: function (record) {
@@ -257,16 +267,10 @@ Ext.define('shpr.volume.MainController', {
       articleGroup = 'alla'
       articleNumber = 'alla';
     }
-    if(!view.skip) {
-      view.oldgroup = view.newgroup
-      view.newgroup = articleGroup
-    } else {
-      view.skip = false
-    }
-    if(view.oldgroup !== view.newgroup) {
-      articleNumber = 'alla';
-      view.skip = true
-    }
+    
+    view.oldgroup = view.newgroup
+    view.newgroup = articleGroup + ''
+    if (view.oldgroup !== view.newgroup) articleNumber = 'alla'
     var baseUrl = '/stratum/api/statistics/shpr/supplier-mod1?'
     Ext.Ajax.request({
       type: 'ajax',
@@ -705,7 +709,7 @@ Ext.define('shpr.volume.view.Main', {
       },
       
       {
-        xtype: 'tagfield',
+        xtype: 'rcmultiselect',
         itemId: 'articleTypeDropdown',
         cls: 'scw-select scw-multiselect',
         queryMode: 'local',
@@ -716,7 +720,7 @@ Ext.define('shpr.volume.view.Main', {
         value: 'alla',
         listeners: {
           select: function (combo, record) {
-            this.up().up().up().getController().updatePart(record, 'articleType', combo.valueField);
+            this.up('#krhMain').getController().updateGrid()
           }
         },
         store: {
@@ -735,10 +739,6 @@ Ext.define('shpr.volume.view.Main', {
       {
         xtype: 'rcmultiselect',
         itemId: 'articleGroupDropdown',
-        cls: 'scw-select scw-multiselect',
-        queryMode: 'local',
-        multiSelect: true,
-        stacked: true,
         valueField: 'articleGroupCode',
         displayField: 'articleGroupName',
         value: 'alla',
@@ -791,7 +791,7 @@ Ext.define('shpr.volume.view.Main', {
             direction: 'ASC'
           }]
         }
-      },
+      }
       ]
     }
     ],
