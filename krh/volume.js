@@ -172,32 +172,20 @@ Ext.define('RC.ui.Multiselect', {
   
   listeners: {
     select: function (combo, record) {
-      if(this.skip){
-        this.skip = false
-        return
-      }
-      if(this.deselectEvent){
-        this.skip=true
-      }
       this.updateDropdown(record)
-    },
-    beforedeselect: function () {
-      this.deselectEvent = true
     }
   },
 
   updateDropdown: function (record) {
     var newChoices = this.enumerateNewChoices(record);
     var addition = this.checkForAdditions(newChoices);
-    var deletion = this.checkForDeletions(newChoices);
     this.oldChoices = newChoices;
-    if (addition || deletion) {
+    if (addition) {
       if (!window.event.ctrlKey) {
-        var newValue = addition || deletion;
         this.oldChoices = [];
-        this.oldChoices.push(newValue);
+        this.oldChoices.push(addition);
         this.clearValue();
-        this.setValue(newValue);
+        this.setValue(addition);
         this.collapse();
       }
     }
@@ -207,15 +195,6 @@ Ext.define('RC.ui.Multiselect', {
     for (var item in record) {
       if (!this.oldChoices.includes(record[item])) {
         return record[item];
-      }
-    }
-    return '';
-  },
-
-  checkForDeletions: function (record) {
-    for (var item in this.oldChoices) {
-      if (!record.includes(this.oldChoices[item])) {
-        return this.oldChoices[item];
       }
     }
     return '';
@@ -757,7 +736,18 @@ Ext.define('shpr.volume.view.Main', {
           }]
         },
         listeners: {
-          select: function () {
+          select: function() {
+            if(!this.getPicker().isVisible()){
+              if(this.skippedDuplicate) {
+                console.log('deleted')
+                this.up('#krhMain').getController().updateGrid()
+                this.skippedDuplicate = false
+              } else {
+                this.skippedDuplicate = true
+              }
+            }
+          },
+          collapse: function () {
             this.up('#krhMain').getController().updateGrid()
           }
         },
