@@ -1,14 +1,22 @@
 
-var devMode = Profile.Context.User.UserID === 9 && true
+var devMode = Profile.Context.User.UserID === 9
 Ext.util.CSS.removeStyleSheet('shpr-companymodule');
 Ext.util.CSS.createStyleSheet(''
 
+  + '.scw-main ul {'
+  + '  padding: 0;'
+  + '}'
+
+  + '.scw-main ul>li {'
+  + '  list-style: initial;'
+  + '}'
+  
   + '.scw-header {'
   + '  width: 100%;'
   + '  padding: 0 0 0 2px;'
   + '  font-weight: normal;'
   + '  margin: 0 0 18px 0;'
-  + '  display: inline-block'
+  + '  display: inline-block;'
   + '}'
 
   + '.scw-label {'
@@ -37,12 +45,37 @@ Ext.util.CSS.createStyleSheet(''
   + '  padding-right: 0px;'
   + '}'
 
-  + '.scw-multiselect .x-form-text-wrap {'
-  + '  overflow: visible;'
+  + '.scw-download-button span, .scw-download-image-button span {'
+  + '  font-family: FontAwesome, open_sans;'
+  + '  font-weight: normal;'
+  + '  font-size: 13px;'
   + '}'
 
-  + '.scw-main ul {'
-  + '  padding: 0;'
+  + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(3), '
+  + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(4), '
+  + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(5) '
+  + '{'
+  + '  border-top: 1px black solid;'
+  + '}'
+
+  + '.scw-missing-data-panel {'
+  + '  margin: 30px auto;'
+  + '  width: 210px;'
+  + '}'
+
+  + '.scw-spinner {'
+  + '  display: initial;'
+  + '}'
+
+  + '.scw-spinner.inactive {'
+  + '  display: none;'
+  + '}'
+
+  + '.scw-qtip {'
+  + '  width: 16px;'
+  + '  height: 16px;'
+  + '  display: inline-block;'
+  + '  margin-bottom: 10px;'
   + '}'
 
   + '.scw-multiselect ul {'
@@ -57,6 +90,10 @@ Ext.util.CSS.createStyleSheet(''
   + '  border: none;'
   + '  background-color: transparent;'
   + '  margin: 0px 4px 0px 0;'
+  + '}'
+
+  + '.scw-multiselect li:first-child {'
+  //+ '  margin-top: 11px;'
   + '}'
 
   + '.scw-multiselect li:hover {'
@@ -77,48 +114,10 @@ Ext.util.CSS.createStyleSheet(''
   + '  display:initial;'
   + '}'
 
-  + '.scw-download-area span {'
+  + '.scw-article-list-panel {'
+  + '  margin: 10px; 0 0 10px;'
+  + '  font-size: 10px;'
   + '  color: grey;'
-  + '  font-size: 15px;'
-  + '  font-weight: 100;'
-  + '}'
-
-  + '.scw-download-area div {'
-  + '  border: none;'
-  + '}'
-
-  + '.scw-spinner {'
-  + '  display: initial;'
-  + '}'
-
-  + '.scw-spinner.inactive {'
-  + '  display: none;'
-  + '}'
-
-  + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(4) {'
-  + '  border-top: 1px black solid;'
-  + '}'
-
-  + '.scw-download-button {'
-  // + '  visibility: hidden;'
-  + '}'
-
-  + '.scw-download-button span {'
-  + '  font-family: FontAwesome, open_sans;'
-  + '  font-weight: normal;'
-  + '  font-size: 13px;'
-  + '}'
-
-  + '.scw-missing-data-panel {'
-  + '  margin: 30px auto;'
-  + '  width: 210px;'
-  + '}'
-
-  + '.scw-qtip {'
-  + '  width: 16px;'
-  + '  height: 16px;'
-  + '  display: inline-block;'
-  + '  margin-bottom: 10px;'
   + '}'
 
   + '.scw-info {'
@@ -136,96 +135,37 @@ Ext.util.CSS.createStyleSheet(''
   + '  color: white;'
   + '  font-family: robotoslab;'
   + '  font-size: 10px;'
+  + '  font-weight: 500;'
   + '  font-style: italic;'
   + '  background: #3e9bbc;'
   + '  display: inline-block;'
   + '  line-height: 10px;'
-  + '  letter-spacing: 1.75px;'
+  + '  letter-spacing: 1.5px;'
   + '  position: absolute;'
   + '  top: -18px;'
   + '  left: 1px;'
   + '}', 'shpr-company');
 
-Ext.apply(Ext.QuickTips.getQuickTip(), {
-  dismissDelay: 0
-});
-
-Ext.apply(Ext.data.SortTypes, {
-  asAllPlacedFirst: function (str) {
-    if(str==='Alla') return "0"
-    return str
-  }
-});
-
-Ext.define('RC.ui.Multiselect', {
-  extend: 'Ext.form.field.Tag',
-  xtype: 'rcmultiselect',
-  cls: 'scw-select scw-multiselect',
-  queryMode: 'local',
-  multiSelect: true,
-  stacked: true,
-
-  initComponent: function () {
-    this.oldChoices = [this.value]
-    this.callParent()      
-  },
-  
-  listeners: {
-    select: function (combo, record) {
-      this.updateDropdown(record)
-    }
-  },
-
-  updateDropdown: function (record) {
-    var newChoices = this.enumerateNewChoices(record);
-    var addition = this.checkForAdditions(newChoices);
-    this.oldChoices = newChoices;
-    if (addition) {
-      if (!window.event.ctrlKey) {
-        this.oldChoices = [];
-        this.oldChoices.push(addition);
-        this.clearValue();
-        this.setValue(addition);
-        this.collapse();
-      }
-    }
-  },
-
-  checkForAdditions: function (record) {
-    for (var item in record) {
-      if (!this.oldChoices.includes(record[item])) {
-        return record[item];
-      }
-    }
-    return '';
-  },
-
-  enumerateNewChoices: function (record) {
-    var newChoices = [];
-    for (var item in record) {
-      if (item === '') continue;
-      newChoices.push(record[item].data[this.valueField]);
-    }
-    return newChoices;
-  }
-})
-
-Ext.define('shpr.volume.MainController', {
+Ext.define('shpr.revisions.MainController', {
   extend: 'Ext.app.ViewController',
-  alias: 'controller.volume.main',
+  alias: 'controller.revisions.main',
 
   updateGrid: function () {
     var view = this.getView();
-    var clinic = view.down('#clinicDropdown').getValue();
+    var spinner = Ext.ComponentQuery.query('#spinnerPanel')[0];
+    var message = Ext.ComponentQuery.query('#missingDataPanel')[0];
+
     var operationType = view.down('#operationDropdown').getValue();
     var diagnosis = view.down('#diagnosisDropdown').getValue();
     var protesis = view.down('#protesisDropdown').getValue();
+    var revision = view.down('#revisionDropdown').getValue();
     var articleType = view.down('#articleTypeDropdown').getValue();
-    var articleGroup = view.down('#articleGroupDropdown').getValue();
     var articleNumber = view.down('#articleNumberDropdown').getValue();
+    var revisionReason = view.down('#causeDropdown').getValue();
+    if (articleNumber[0] === 'Alla') articleNumber[0] = 'alla';
 
-    if (clinic === 'Riket') clinic = '1000';
-    if (articleNumber === 'Alla') articleNumber = 'alla';
+    // var startDate = view.down('#startDate').getValue().toLocaleDateString();
+    // var endDate = view.down('#endDate').getValue().toLocaleDateString();
 
     var startDate = Ext.Date.format(view.down('#startDate').getValue(),  'Y-m-d')
     var endDate = Ext.Date.format(view.down('#endDate').getValue(),  'Y-m-d')
@@ -235,51 +175,24 @@ Ext.define('shpr.volume.MainController', {
     endDate = endDate.replace(/[^ -~]/g, '');
 
     view.down('#dataPanel').updateGrid([]);
-    var spinner = view.down('#spinnerPanel');
-    var message = view.down('#missingDataPanel');
     spinner && spinner.show();
     message && message.hide();
 
     view.oldparameters = view.newparameters;
-    view.newparameters = operationType + protesis + articleType + startDate + endDate;
-    if (view.oldparameters !== view.newparameters) {
-      articleGroup = 'alla'
-      articleNumber = 'alla';
-    }
-    
-    view.oldgroup = view.newgroup
-    view.newgroup = articleGroup + ''
-    if (view.oldgroup !== view.newgroup) articleNumber = 'alla'
-    var baseUrl = '/stratum/api/statistics/shpr/supplier-mod1?'
+    view.newparameters = operationType + protesis + revision + articleType + revisionReason + startDate + endDate;
+    if (view.oldparameters !== view.newparameters) articleNumber = 'alla';
+
     Ext.Ajax.request({
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: baseUrl
-         + 'enhet=' + clinic
-         + '&operationstyp=' + operationType 
-         + '&diagnos=' + diagnosis 
-         + '&protestyp=' + protesis 
-         + '&artikeltyp=' + articleType 
-         + '&article_group=' + articleGroup
-         + '&article_nr=' + articleNumber 
-         + '&start_datum=' + startDate 
-         + '&slut_datum=' + endDate,
+      url: '/stratum/api/statistics/shpr/supplier-mod4?operationstyp=' + operationType + '&diagnos=' +  diagnosis + '&protestyp=' + protesis + '&rev_type=' + revision + '&artikeltyp=' + articleType + '&article_nr=' + articleNumber + '&rev_reason=' + revisionReason + '&start_datum=' + startDate + '&slut_datum=' + endDate,
       success: function (response) {
         spinner && spinner.hide();
         var result = Ext.decode(response.responseText).data;
         var gridData = result[0][0];
         var articles = result[1][0];
-        var articleGroups = result[2][0].map(function(item){return {articleGroupCode: item.artikelgrupp, articleGroupName: item.article_group_description}})
         if (view.oldparameters !== view.newparameters) {
-          view.down('#articleNumberDropdown').getStore().loadData(articles);
-          view.oldarticles = articles;
-          view.down('#articleNumberDropdown').select('Alla');
-          view.down('#articleGroupDropdown').getStore().loadData(articleGroups);
-          view.down('#articleGroupDropdown').select('alla')
-          view.down('#articleGroupDropdown').oldChoices=['alla']
-        }
-        if (view.oldgroup !== view.newgroup) {
           view.down('#articleNumberDropdown').getStore().loadData(articles);
           view.oldarticles = articles;
           view.down('#articleNumberDropdown').select('Alla');
@@ -298,9 +211,9 @@ Ext.define('shpr.volume.MainController', {
   updateStartDate: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
-    var endDate = view.down('#startDate').getValue();
+    var endDate = view.down('#endDate').getValue();
     if (startDate < new Date('1999-01-01')) view.down('#startDate').setValue(new Date('1999-01-01'));
-    if (this.isDifferenceLessThanThirtyDays()) {
+    if (this.isDifferenceLessThan28Days()) {
       endDate.setTime(startDate.getTime() + 27 * 24 * 60 * 60 * 1000 + 60 * 60 * 1000);
       view.down('#endDate').setValue(endDate);
     }
@@ -312,20 +225,20 @@ Ext.define('shpr.volume.MainController', {
     var startDate = view.down('#startDate').getValue();
     var endDate = view.down('#endDate').getValue();
     if (endDate > new Date()) view.down('#endDate').setValue(new Date());
-    if (this.isDifferenceLessThanThirtyDays()) {
+    if (this.isDifferenceLessThan28Days()) {
       startDate.setTime(endDate.getTime() - 27 * 24 * 60 * 60 * 1000);
       view.down('#startDate').setValue(startDate);
     }
     this.updateGrid();
   },
 
-  isDifferenceLessThanThirtyDays: function () {
+  isDifferenceLessThan28Days: function () {
     var view = this.getView();
     var startDate = view.down('#startDate').getValue();
     var endDate = view.down('#endDate').getValue();
     var dayInSeconds = 24 * 60 * 60 * 1000;
     var diffDays = Math.round((endDate.getTime() - startDate.getTime()) / (dayInSeconds));
-    return diffDays < 27;
+    return diffDays + 1 < 28;
   },
 
   exportTable: function (element) {
@@ -344,36 +257,35 @@ Ext.define('shpr.volume.MainController', {
   },
 
   createContentToDownload: function (language) {
-    var separator = language === 'Swedish' ? ';' : ';';
+    var view = this.getView();
     var selections = this.getSelections();
     var dateFormat = language === 'Swedish' ? 'Y-m-d' : 'd/m/Y';
-    var headers = 'Enhet; Operationstyp; Protestyp; Artikeltyp; Artikel;Startdatum; Slutdatum;\n';
     var content = '';
-    content += headers;
-    content += selections.clinic + separator;
-    content += selections.operation + separator;
-    content += selections.protesis + separator;
-    content += selections.articleType + separator;
-    content += selections.article === '' ? 'Alla;' : selections.article + separator;
-    content += Ext.Date.format(selections.startDate, dateFormat) + separator;
-    content += Ext.Date.format(selections.endDate, dateFormat) + separator;
+    content += 'Operationstyp; Protestyp; Revisionstyp; Artikeltyp; Artikel; Revisionsorsak; Startdatum; Slutdatum;\n';
+    content += selections.operation + ';';
+    content += selections.protesis + ';';
+    content += selections.revision + ';';
+    content += selections.articleType + ';';
+    content += selections.article === '' ? 'Alla;' : selections.article + ';';
+    content += selections.revisionReason + ';';
+    content += Ext.Date.format(selections.startDate, dateFormat) + ';';
+    content += Ext.Date.format(selections.endDate, dateFormat) + ';';
     content += '\n\n';
-    headers = this.getView().down('#dataPanel');
+
+    var headers = view.down('#dataPanel');
     for (var column in headers.el.component.columns) {
       if (column === '') continue;
-      content += headers.el.component.columns[column].titleEl.component.initialConfig.text + separator;
+      content += headers.el.component.columns[column].titleEl.component.initialConfig.text + ';';
     }
     content += '\n';
-    content = language === 'Swedish' 
-            ? content 
-            : this.translateContent(content, this.categoryTranslations);
+    content = language === 'Swedish' ? content : this.translateContent(content, this.categoryTranslations);
     var data = Ext.data.StoreManager.lookup('overviewStore');
     for (var i in data.data.items) {
       if (i === '') continue;
       for (var item in data.data.items[i].data) {
         if (item === 'id') continue;
         var value = data.data.items[i].data[item];
-        content += value + separator;
+        content += value + ';';
       }
       content += '\n';
     }
@@ -383,25 +295,26 @@ Ext.define('shpr.volume.MainController', {
     return content;
   },
 
+  getSelections: function () {
+    var selections = {};
+
+    selections.operation = this.getView().down('#operationDropdown').getDisplayValue();
+    selections.protesis = this.getView().down('#protesisDropdown').getDisplayValue();
+    selections.revision = this.getView().down('#revisionDropdown').getDisplayValue();
+    selections.articleType = this.getView().down('#articleTypeDropdown').getDisplayValue();
+    selections.article = this.getView().down('#articleNumberDropdown').getDisplayValue();
+    selections.revisionReason = this.getView().down('#causeDropdown').getDisplayValue();
+    selections.startDate = this.getView().down('#startDate').getValue();
+    selections.endDate = this.getView().down('#endDate').getValue();
+    return selections;
+  },
+
   translateContent: function (content, translations) {
     var newContent = content;
     for (var item in translations) {
       newContent = newContent.replace(new RegExp(item + '(?![A-z])', 'g'), translations[item]);
     }
     return newContent;
-  },
-
-  getSelections: function () {
-    var selections = {};
-    var view = this.getView();
-    selections.clinic = view.down('#clinicDropdown').getDisplayValue();
-    selections.operation = view.down('#operationDropdown').getDisplayValue();
-    selections.protesis = view.down('#protesisDropdown').getDisplayValue();
-    selections.articleType = view.down('#articleTypeDropdown').getDisplayValue();
-    selections.article = view.down('#articleNumberDropdown').getDisplayValue();
-    selections.startDate = view.down('#startDate').getValue();
-    selections.endDate = view.down('#endDate').getValue();
-    return selections;
   },
 
   updatePart: function (record, part, code) {
@@ -449,41 +362,50 @@ Ext.define('shpr.volume.MainController', {
     return newChoices;
   },
 
-  removeDuplicates: function (arrayToStrip) {
-    var uniqueArray = arrayToStrip.filter(function(item, index) {
-      var stringifiedItem = JSON.stringify(item);
-      return index === arrayToStrip.findIndex(function(object) {
-        return JSON.stringify(object) === stringifiedItem;
-      });
-    });
-    return uniqueArray
-  },
-  
   categoryTranslations: {
     'Alla': 'All',
     'Antal': 'Quantity',
     'Artikel': 'Item',
     'Artikelnummer': 'Item Number',
     'Artikeltyp': 'Type of Implant',
+    'Aseptisk': 'Aseptic',
+    'aseptiska': 'aseptic',
+    'av annat slag': 'of other than cup or stem',
     'Beskrivning': 'Description',
     'Caput': 'Head',
-    'Caputliner': 'Dual Mobility Liner',
+    'Caputliner': 'Dual mobility liner',
+    'cuprevision': 'cup revision',
+    'dagar': 'days',
+    'Djup': 'Deep',
     'Enhet': 'Unit',
+    'Första': 'First',
+    'förstagångsrevisioner': 'first time revisions',
     'Halv': 'Hemi',
+    'infektion': 'infection',
+    'Insatta': 'Inserted',
     'Klinik': 'Unit',
+    'lossning': 'loosening',
+    'Luxation': 'Dislocation',
+    'Mer': 'More',
     'Operationstyp': 'Type of Surgery',
+    'orsaker': 'causes',
     'Plugg': 'Plug',
     'Primär': 'Primary',
     'Protestyp': 'Type of Prothesis',
+    'Reviderade': 'Revised',
+    'Revisionsorsak': 'Cause of Revision',
+    'Revisionstyp': 'Type of Revision',
     'Riket': 'Sweden',
     'Samtliga': 'All',
     'Stam': 'Stem',
+    'stamrevision': 'stem revision',
+    'år': 'years',
+    'än': 'than',
     'Startdatum': 'Start Date',
     'Slutdatum': 'End Dat'
   },
 
   dataTranslations: {
-    'Riket': 'Sweden',
     'caput': 'head',
     'stam': 'stem',
     'plugg': 'plug',
@@ -511,10 +433,10 @@ Ext.define('shpr.view.Filter', {
   }
 });
 
-Ext.define('shpr.volume.view.Main', {
+Ext.define('shpr.revisions.view.Main', {
   extend: 'Ext.container.Container',
-  controller: 'volume.main',
-  itemId: 'krhMain',
+  controller: 'revisions.main',
+  itemId: 'mainView',
   cls: 'scw-main',
   items: [{
     xtype: 'container',
@@ -526,16 +448,7 @@ Ext.define('shpr.volume.view.Main', {
         xtype: 'label',
         width: '100%',
         cls: 'scw-header',
-        text: 'Data inmatad efter senast publicerade årsrapport skall användas'
-            + ' med stor försiktighet då den inte är komplett eller validerad.'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        html: 'Enhet'
-            + '<div class="scw-info">'
-            + '<div data-qtip="För att välja flera komponenter samtidigt, '
-            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
+        text: 'Data inmatad efter senast publicerade årsrapport skall användas med stor försiktighet då den inte är komplett eller validerad.'
       },
       {
         xtype: 'label',
@@ -556,62 +469,46 @@ Ext.define('shpr.volume.view.Main', {
         text: 'Protestyp'
       },
       {
-        xtype: 'rcmultiselect',
-        itemId: 'clinicDropdown',
-        cls: 'scw-select scw-multiselect',
-        valueField: 'P_Unit',
-        displayField: 'sjukhus',
-        value: 0,
-        //selectCallback: 'updateGrid',
-
-        store: {
-          fields: ['P_Unit', 'sjukhus'],
-          autoLoad: true,
-          proxy: {
-            type: 'ajax',
-            method: 'get',
-            cors: true,
-            url: '/stratum/api/statistics/shpr/supplier-mod-hospitals',
-            reader: {
-              type: 'json',
-              rootProperty: 'data[0]'
-            }
-          }
-        },
-
-        listeners: {
-          select: function () {
-            this.up('#krhMain').getController().updateGrid()
-          }
-        }
+        xtype: 'label',
+        cls: 'scw-label',
+        text: 'Revisionstyp'
       },
-
-      
       {
         xtype: 'rcfilter',
         itemId: 'operationDropdown',
         cls: 'scw-select',
         valueField: 'operationCode',
         displayField: 'operationName',
-        value: 'alla',
-        fields: ['operationName', 'operationCode'],
+        value: '1',
+        sortfield: 'operationName',
+        sortdirection: 'DESC',
         selectCallback: 'updateGrid',
         store: {
           fields: ['operationCode', 'operationName'],
           data: [
-            { operationCode: 'alla', operationName: 'Alla' },
             { operationCode: 1, operationName: 'Primär' },
             { operationCode: 2, operationName: 'Revision' }
           ]
         }
       },
       {
-        xtype: 'rcmultiselect',
+        xtype: 'tagfield',
         itemId: 'diagnosisDropdown',
+        cls: 'scw-select scw-multiselect',
+        queryMode: 'local',
+        multiSelect: true,
+        stacked: true,
         valueField: 'diagnosisCode',
         displayField: 'diagnosisName',
         value: 'alla',
-         store: {
+        sortfield: 'diagnosisName',
+        sortdirection: 'DESC',
+        listeners: {
+          select: function (combo, record) {
+            this.up().up().up().getController().updatePart(record, 'diagnosis', combo.valueField);
+          }
+        },
+        store: {
           fields: ['diagnosisCode', 'diagnosisName'],
           data: [
             { diagnosisCode: 'alla', diagnosisName: 'Alla' },
@@ -626,11 +523,6 @@ Ext.define('shpr.volume.view.Main', {
             { diagnosisCode: 9, diagnosisName: 'Akut trauma, övriga' },
             { diagnosisCode: 10, diagnosisName: 'Övrigt' }
           ]
-        },
-        listeners: {
-          select: function () {
-            this.up('#krhMain').getController().updateGrid()
-          }
         }
       },
       {
@@ -639,36 +531,47 @@ Ext.define('shpr.volume.view.Main', {
         cls: 'scw-select',
         valueField: 'protesisCode',
         displayField: 'protesisName',
-        value: 'alla',
-        fields: ['protesisName', 'protesisCode'],
+        value: '1',
+        sortfield: 'protesisName',
+        sortdirection: 'DESC',
         selectCallback: 'updateGrid',
         store: {
           fields: ['protesisCode', 'protesisName'],
           data: [
-            { protesisCode: 'alla', protesisName: 'Alla' },
             { protesisCode: '1', protesisName: 'Total' },
             { protesisCode: '2', protesisName: 'Halv' }
           ]
         }
       },
+      {
+        xtype: 'rcfilter',
+        itemId: 'revisionDropdown',
+        cls: 'scw-select',
+        valueField: 'rev_type',
+        displayField: 'beskrivning',
+        value: 'alla',
+        sortfield: 'beskrivning',
+        sortdirection: 'DESC',
+        selectCallback: 'updateGrid',
+        store: {
+          fields: ['rev_type', 'beskrivning'],
+          data: [
+            { rev_type: 'alla', beskrivning: 'Alla förstagångsrevisioner' },
+            { rev_type: 1, beskrivning: 'Första stamrevision' },
+            { rev_type: 2, beskrivning: 'Första cuprevision' },
+            { rev_type: 3, beskrivning: 'Första revision av annat slag' }
+          ]
+        }
+      }
       ]
     },
     {
       xtype: 'container',
       items: [
-      
       {
         xtype: 'label',
         cls: 'scw-label',
         html: 'Artikeltyp'
-            + '<div class="scw-info">'
-            + '<div data-qtip="För att välja flera komponenter samtidigt, '
-            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        html: 'Artikelgrupp'
             + '<div class="scw-info">'
             + '<div data-qtip="För att välja flera komponenter samtidigt, '
             + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
@@ -684,11 +587,15 @@ Ext.define('shpr.volume.view.Main', {
       {
         xtype: 'label',
         cls: 'scw-label',
-        html: ''
+        text: 'Revisionsorsak'
       },
-      
       {
-        xtype: 'rcmultiselect',
+        xtype: 'label',
+        cls: 'scw-label',
+        text: ''
+      },
+      {
+        xtype: 'tagfield',
         itemId: 'articleTypeDropdown',
         cls: 'scw-select scw-multiselect',
         queryMode: 'local',
@@ -697,9 +604,11 @@ Ext.define('shpr.volume.view.Main', {
         valueField: 'articleTypeCode',
         displayField: 'articleTypeName',
         value: 'alla',
+        sortfield: 'articleTypeName',
+        sortdirection: 'DESC',
         listeners: {
           select: function (combo, record) {
-            this.up('#krhMain').getController().updateGrid()
+            this.up().up().up().getController().updatePart(record, 'articleType', combo.valueField);
           }
         },
         store: {
@@ -716,251 +625,259 @@ Ext.define('shpr.volume.view.Main', {
         }
       },
       {
-        xtype: 'rcmultiselect',
-        itemId: 'articleGroupDropdown',
-        valueField: 'articleGroupCode',
-        displayField: 'articleGroupName',
-        value: 'alla',
-        store: {
-          fields: ['articleGroupCode',{
-            name: 'articleGroupName',
-            sortType: 'asAllPlacedFirst'
-          }],
-          data: [
-            { articleGroupCode: 'alla', articleGroupName: 'Alla' }
-          ],
-          
-          sorters: [{
-            property: 'articleGroupName',
-            direction: 'ASC'
-          }]
-        },
-        listeners: {
-          select: function() {
-            if(!this.getPicker().isVisible()){
-              if(this.skippedDuplicate) {
-                console.log('deleted')
-                this.up('#krhMain').getController().updateGrid()
-                this.skippedDuplicate = false
-              } else {
-                this.skippedDuplicate = true
-              }
-            }
-          },
-          collapse: function () {
-            this.up('#krhMain').getController().updateGrid()
-          }
-        },
-      },
-      {
         xtype: 'tagfield',
         itemId: 'articleNumberDropdown',
         cls: 'scw-select scw-multiselect',
         queryMode: 'local',
         multiSelect: true,
         stacked: true,
-        valueField: 'artikelnumer',
-        displayField: 'artikelnumer',
+        valueField: 'artikelnummer',
+        displayField: 'artikelnummer',
         value: 'Alla',
+        sortfield: 'artikelnummer',
+        sortdirection: 'DESC',
         listeners: {
           select: function (combo, record) {
             this.up().up().up().getController().updatePart(record, 'articleNumber', combo.valueField);
           }
         },
         store: {
-          fields: [{
-            name: 'artikelnumer',
-            sortType: 'asAllPlacedFirst'
-            }],
+          fields: ['artikelnummer'],
           data: [
             { artikelnummer: 'Alla' }
-          ],
-          
-          sorters: [{
-            property: 'artikelnumer',
-            direction: 'ASC'
-          }]
+          ]
+        }
+      },
+      {
+        xtype: 'rcfilter',
+        itemId: 'causeDropdown',
+        cls: 'scw-select',
+        valueField: 'causeCode',
+        displayField: 'causeName',
+        value: 'alla',
+        sortfield: 'causeName',
+        sortdirection: 'DESC',
+        selectCallback: 'updateGrid',
+        store: {
+          fields: ['causeCode', 'causeName'],
+          data: [
+            { causeCode: 'alla', causeName: 'Alla' },
+            { causeCode: 1, causeName: 'Aseptisk lossning' },
+            { causeCode: 2, causeName: 'Djup infektion' },
+            { causeCode: 3, causeName: 'Luxation' },
+            { causeCode: 4, causeName: 'Alla aseptiska orsaker' }
+          ]
         }
       }
       ]
-    }
-    ],
-  },
-  {
-    xtype: 'container',
-    items: [{
-      xtype: 'toolbar',
-      itemId: 'dateToolbar',
-      dock: 'top',
-      layout: {
-        type: 'hbox',
-        align: 'stretch'
-      },
-      filtering: false,
-      items: [{
-        xtype: 'datefield',
-        width: 315,
-        itemId: 'startDate',
-        value: Ext.Date.add(new Date(), Ext.Date.YEAR, -1),
-        fieldLabel: 'Operationsdatum'
-                  + '<div class="scw-info">'
-                  + '<div data-qtip="De datum som väljs måste utgöra en period på minst 28 dagar '
-                  + 'och ligga i spannet mellan 1999-01-01 och dagens datum.">i'
-                  + '</div>'
-                  + '</div>',
-        labelWidth: 188,
-        format: 'Y-m-d',
-        altFormats: 'ymd|Ymd',
-        listeners: {
-          change: 'updateStartDate'
-        }
-      },
-      {
-        xtype: 'datefield',
-        width: 150,
-        itemId: 'endDate',
-        value: new Date(),
-        fieldLabel: ' och',
-        labelWidth: 30,
-        labelStyle: 'padding: 8px 0 0 0;',
-        format: 'Y-m-d',
-        altFormats: 'ymd|Ymd',
-        listeners: {
-          change: 'updateEndDate'
-        }
-      },
-      {
-        xtype: 'label',
-        text: '',
-        style: {
-          border: 'none'
-        },
-        flex: 1
-      },
-      {
-        xtype: 'button',
-        itemId: 'exportTableSwedish',
-        cls: 'scw-download-button',
-        autoEl: {
-          tag: 'a',
-          download: 'registreringar.csv'
-        },
-        text: '&#xf019 Excel (sv)',
-        listeners: {
-          click: 'exportTable'
-        }
-      },
-      {
-        xtype: 'button',
-        itemId: 'exportTableEnglish',
-        cls: 'scw-download-button',
-        autoEl: {
-          tag: 'a',
-          download: 'registrations.csv'
-        },
-        text: '&#xf019 Excel (en)',
-        listeners: {
-          click: 'exportTable'
-        }
-      }
-      ]
-    },
-    {
-      xtype: 'grid',
-      itemId: 'dataPanel',
-      width: '100%',
-      cls: 'scw-grid',
-      store: {
-        storeId: 'overviewStore',
-        fields: ['sjukhus', 'artikel', 'beskrivning', 'artikelnummer', 'antal'],
-        groupField: 'sjukhus',
-        data: [
-        ]
-      },
-      features: [{
-        id: 'group',
-        ftype: 'groupingsummary',
-        groupHeaderTpl: '{name}',
-        hideGroupedHeader: true,
-        enableGroupingMenu: false
-      }],
-      columns: [
-        {
-          text: 'Klinik',
-          dataIndex: 'sjukhus',
-          flex: 3
-        },
-        {
-          text: 'Artikelnummer',
-          dataIndex: 'artikelnumer',
-          flex: 2
-        },
-        {
-          text: 'Beskrivning',
-          dataIndex: 'beskrivning',
-          flex: 4
-        },
-        {
-          text: 'Artikeltyp',
-          dataIndex: 'artikel',
-          width: 90
-        },
-        {
-          text: 'Antal',
-          dataIndex: 'antal',
-          width:80,
-          align: 'right',
-          field: {
-            xtype: 'numberfield'
-          },
-          summaryType: 'sum'
-        }
-
-      ],
-      updateGrid: function (data) {
-        var store = {
-          storeId: 'overviewStore',
-          fields: ['sjukhus', 'artikel', 'beskrivning', 'artikelnumer', 'antal'],
-          groupField: 'sjukhus',
-          data: data
-        };
-        this.setStore(store);
-      }
-    },
-    {
-      xtype: 'panel',
-      itemId: 'spinnerPanel',
-      height: 162,
-      hidden: true,
-      border: false,
-      html: '<div class="spinner">'
-          + '<div class="rect1"></div>'
-          + '<div class="rect2"></div>'
-          + '<div class="rect3"></div>'
-          + '<div class="rect4"></div>'
-          + '<div class="rect5"></div>'
-          + '</div>'
-    },
-    {
-      xtype: 'panel',
-      itemId: 'missingDataPanel',
-      height: 80,
-      hidden: true,
-      border: false,
-      html: '<div class="scw-missing-data-panel">För liten mängd data tillgänglig.</div>'
     }
     ]
-  }]
+  },
+  {
+    xtype: 'toolbar',
+    itemId: 'dateToolbar',
+    dock: 'top',
+    layout: {
+      type: 'hbox',
+      align: 'stretch'
+    },
+    filtering: false,
+    items: [{
+      xtype: 'datefield',
+      width: 315,
+      itemId: 'startDate',
+      value: Ext.Date.add(new Date(), Ext.Date.YEAR, -1),
+      fieldLabel: 'Operationsdatum'
+                + '<div class="scw-info">'
+                + '<div data-qtip="De datum som väljs måste utgöra en period på minst ett år '
+                + 'och ligga i spannet mellan 1999-01-01 och dagens datum.">i'
+                + '</div>'
+                + '</div>',
+      labelWidth: 188,
+      format: 'Y-m-d',
+      altFormats: 'ymd|Ymd',
+      listeners: {
+        change: 'updateStartDate'
+      }
+    },
+    {
+      xtype: 'datefield',
+      width: 150,
+      itemId: 'endDate',
+      value: new Date(),
+      fieldLabel: ' och',
+      labelWidth: 30,
+      labelStyle: 'padding: 8px 0 0 0;',
+      format: 'Y-m-d',
+      altFormats: 'ymd|Ymd',
+      listeners: {
+        change: 'updateEndDate'
+      }
+    },
+    {
+      xtype: 'label',
+      text: '',
+      style: {
+        border: 'none'
+      },
+      flex: 1
+    },
+    {
+      xtype: 'button',
+      itemId: 'exportTableSwedish',
+      cls: 'scw-download-button',
+      autoEl: {
+        tag: 'a',
+        download: 'registreringar.csv'
+      },
+      text: '&#xf019 Excel (sv)',
+      listeners: {
+        click: 'exportTable'
+      }
+    },
+    {
+      xtype: 'button',
+      itemId: 'exportTableEnglish',
+      cls: 'scw-download-button',
+      autoEl: {
+        tag: 'a',
+        download: 'registrations.csv'
+      },
+      text: '&#xf019 Excel (en)',
+      listeners: {
+        click: 'exportTable'
+      }
+    }
+    ]
+  },
+  {
+    xtype: 'grid',
+    itemId: 'dataPanel',
+    width: '100%',
+    cls: 'scw-grid',
+    store: {
+      storeId: 'overviewStore',
+      groupField: 'artikeltyp',
+      fields: [],
+      data: []
+
+    },
+    features: [{
+      id: 'group',
+      ftype: 'groupingsummary',
+      groupHeaderTpl: '{name}',
+      hideGroupedHeader: true,
+      enableGroupingMenu: false,
+      startCollapsed: true
+    }],
+    columns: [
+      {
+        text: 'Artikelnummer',
+        dataIndex: 'artikelnummer',
+        flex: 2
+      },
+      {
+        text: 'Beskrivning',
+        dataIndex: 'beskrivning',
+        flex: 4
+      },
+      {
+        text: 'Artikeltyp',
+        dataIndex: 'artikeltyp',
+        width: 90
+      },
+      {
+        text: 'Insatta',
+        dataIndex: 'antal_insatta',
+        width: 70,
+        field: {
+          xtype: 'numberfield'
+        },
+        summaryType: 'sum'
+      },
+      {
+        text: 'Reviderade',
+        dataIndex: 'antal_reviderade',
+        width: 100,
+        field: {
+          xtype: 'numberfield'
+        },
+        summaryType: 'sum'
+      },
+      {
+        text: '0-90 dagar',
+        dataIndex: 'zero_to_90',
+        width: 95,
+        field: {
+          xtype: 'numberfield'
+        },
+        summaryType: 'sum'
+      },
+      {
+        text: '91 dagar -  2 år',
+        dataIndex: 'ninetyone_to_2yrs',
+        width: 120,
+        field: {
+          xtype: 'numberfield'
+        },
+        summaryType: 'sum'
+      },
+      {
+        text: 'Mer än 2 år',
+        dataIndex: 'over_2yrs',
+        width: 105,
+        field: {
+          xtype: 'numberfield'
+        },
+        summaryType: 'sum'
+      }
+    ],
+    updateGrid: function (data) {
+      var store = {
+        storeId: 'overviewStore',
+        fields: [],
+        groupField: 'artikeltyp',
+        data: data
+      };
+      this.setStore(store);
+    }
+  },
+  {
+    xtype: 'panel',
+    itemId: 'spinnerPanel',
+    height: 162,
+    hidden: true,
+    border: false,
+    html: '<div class="spinner">'
+        + '<div class="rect1"></div>'
+        + '<div class="rect2"></div>'
+        + '<div class="rect3"></div>'
+        + '<div class="rect4"></div>'
+        + '<div class="rect5"></div>'
+        + '</div>'
+  },
+  {
+    xtype: 'panel',
+    itemId: 'missingDataPanel',
+    height: 80,
+    hidden: true,
+    border: false,
+    html: '<div class="scw-missing-data-panel">För liten mängd data tillgänglig.</div>'
+  }
+  ]
 });
 
 Ext.application({
   name: 'shpr',
   units: [],
+  viewcontrollers: [
+    'DetailsController'
+  ],
   launch: function () {
     var target = (typeof Stratum.containers !== 'undefined') 
-                    ? Stratum.containers['KRH/ComponentsUsed'] 
+                    ? Stratum.containers['KRH/RevisionScope'] 
                     : 'contentPanel';
-    var main = Ext.create('shpr.volume.view.Main', {
+    var main = Ext.create('shpr.revisions.view.Main', {
       renderTo: target
     });
     if (!window.navigator.msSaveBlob) {
@@ -971,10 +888,11 @@ Ext.application({
     main.getController().oldChoices.articleType = ['alla'];
     main.getController().oldChoices.articleNumber = ['Alla'];
     main.getController().oldChoices.diagnosis = ['alla'];
-    main.getController().oldChoices.diagnosis = ['alla'];
-    // main.getController().oldChoices.clinic = ['alla'];
     main.getController().updateGrid();
+    Ext.apply(Ext.QuickTips.getQuickTip(), {
+      dismissDelay: 0
+    });
   }
 });
 
-//! SHPRs företagsmodul: volymer
+//! SHPRs företagsmodul: revisionsutfall
