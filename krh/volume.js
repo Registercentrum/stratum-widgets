@@ -1,6 +1,6 @@
 
 var devMode = Profile.Context.User.UserID === 9 && true
-Ext.util.CSS.removeStyleSheet('shpr-companymodule');
+Ext.util.CSS.removeStyleSheet('shpr-company');
 Ext.util.CSS.createStyleSheet(''
 
   + '.scw-header {'
@@ -37,46 +37,6 @@ Ext.util.CSS.createStyleSheet(''
   + '  padding-right: 0px;'
   + '}'
 
-  + '.scw-multiselect .x-form-text-wrap {'
-  + '  overflow: visible;'
-  + '}'
-
-  + '.scw-main ul {'
-  + '  padding: 0;'
-  + '}'
-
-  + '.scw-multiselect ul {'
-  // + '  min-height: 40px;'
-  + '}'
-
-  + '.scw-multiselect .x-tagfield {'
-  + '  overflow: hidden !important;'
-  + '}'
-
-  + '.scw-main .scw-multiselect li {'
-  + '  border: none;'
-  + '  background-color: transparent;'
-  + '  margin: 0px 4px 0px 0;'
-  + '}'
-
-  + '.scw-multiselect li:hover {'
-  + '  border: none !important;'
-  + '}'
-
-  + '.scw-multiselect li:last-child {'
-  + '  height: 0;'
-  + '  width: 0;'
-  + '  float: left;'
-  + '}'
-
-  + '.scw-multiselect li div:last-child {'
-  + '   display: none;'
-  + '}'
-
-  + '.scw-multiselect li:hover div:last-child {'
-  + '  display:initial;'
-  + '}'
-
   + '.scw-download-area span {'
   + '  color: grey;'
   + '  font-size: 15px;'
@@ -97,10 +57,6 @@ Ext.util.CSS.createStyleSheet(''
 
   + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(4) {'
   + '  border-top: 1px black solid;'
-  + '}'
-
-  + '.scw-download-button {'
-  // + '  visibility: hidden;'
   + '}'
 
   + '.scw-download-button span {'
@@ -160,13 +116,14 @@ Ext.apply(Ext.data.SortTypes, {
 Ext.define('RC.ui.Multiselect', {
   extend: 'Ext.form.field.Tag',
   xtype: 'rcmultiselect',
-  cls: 'scw-select scw-multiselect',
+  cls: 'scw-select rc-multiselect',
   queryMode: 'local',
   multiSelect: true,
   stacked: true,
 
   initComponent: function () {
     this.oldChoices = [this.value]
+    this.createStyleSheet()
     this.callParent()      
   },
   
@@ -200,7 +157,45 @@ Ext.define('RC.ui.Multiselect', {
       if(!this.getPicker().isVisible()){
         this.deselect = true
       }
-    }
+    },
+  },
+
+  createStyleSheet: function () {
+      var existingStyle = document.getElementById('rc-multiselect')
+      if(existingStyle) return
+      Ext.util.CSS.createStyleSheet(''
+
+      + '.rc-multiselect .x-form-text-wrap {'
+      + '  overflow: visible;'
+      + '}'
+
+      + '.rc-multiselect .x-tagfield {'
+      + '  overflow: hidden !important;'
+      + '}'
+
+      + '.rc-multiselect li {'
+      + '  border: none !important;'
+      + '  background-color: transparent !important;'
+      + '  margin: 0px 4px 0px 0 !important;'
+      + '}'
+
+      + '.rc-multiselect li:hover {'
+      + '  border: none !important;'
+      + '}'
+
+      + '.rc-multiselect li:last-child {'
+      + '  height: 0;'
+      + '  width: 0;'
+      + '  float: left;'
+      + '}'
+
+      + '.rc-multiselect li div:last-child {'
+      + '   display: none;'
+      + '}'
+
+      + '.rc-multiselect li:hover div:last-child {'
+      + '  display:initial;'
+      + '}', 'rc-multiselect');
   },
 
   updateDropdown: function (record) {
@@ -509,15 +504,12 @@ Ext.define('shpr.volume.view.Main', {
         width: '100%',
         cls: 'scw-header',
         text: 'Data inmatad efter senast publicerade årsrapport skall användas'
-            + ' med stor försiktighet då den inte är komplett eller validerad.'
+            + ' med stor försiktighet då den inte är komplett eller validerad. Det är möjligt att välja flera alternativ samtidigt genom att hålla nere ctrl-knappen när man klickar.'
       },
       {
         xtype: 'label',
         cls: 'scw-label',
         html: 'Enhet'
-            + '<div class="scw-info">'
-            + '<div data-qtip="För att välja flera komponenter samtidigt, '
-            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
       },
       {
         xtype: 'label',
@@ -528,9 +520,6 @@ Ext.define('shpr.volume.view.Main', {
         xtype: 'label',
         cls: 'scw-label',
         html: 'Diagnos'
-            + '<div class="scw-info">'
-            + '<div data-qtip="För att välja flera komponenter samtidigt, '
-            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
       },
       {
         xtype: 'label',
@@ -542,8 +531,8 @@ Ext.define('shpr.volume.view.Main', {
         itemId: 'clinicDropdown',
         valueField: 'P_Unit',
         displayField: 'sjukhus',
-        value: 0,
-        default: 0,
+        value: 999,
+        default: 999,
 
         store: {
           fields: ['P_Unit', 'sjukhus'],
@@ -566,8 +555,6 @@ Ext.define('shpr.volume.view.Main', {
           }
         }
       },
-
-      
       {
         xtype: 'rcfilter',
         itemId: 'operationDropdown',
@@ -643,25 +630,16 @@ Ext.define('shpr.volume.view.Main', {
         xtype: 'label',
         cls: 'scw-label',
         html: 'Artikeltyp'
-            + '<div class="scw-info">'
-            + '<div data-qtip="För att välja flera komponenter samtidigt, '
-            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
       },
       {
         xtype: 'label',
         cls: 'scw-label',
         html: 'Artikelgrupp'
-            + '<div class="scw-info">'
-            + '<div data-qtip="För att välja flera komponenter samtidigt, '
-            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
       },
       {
         xtype: 'label',
         cls: 'scw-label',
         html: 'Artikel'
-            + '<div class="scw-info">'
-            + '<div data-qtip="För att välja flera komponenter samtidigt, '
-            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
       },
       {
         xtype: 'label',
@@ -672,7 +650,6 @@ Ext.define('shpr.volume.view.Main', {
       {
         xtype: 'rcmultiselect',
         itemId: 'articleTypeDropdown',
-        cls: 'scw-select scw-multiselect',
         queryMode: 'local',
         multiSelect: true,
         stacked: true,
