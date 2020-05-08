@@ -173,14 +173,15 @@ Ext.define('RC.ui.Multiselect', {
       + '  overflow: hidden !important;'
       + '}'
 
-      + '.rc-multiselect li {'
-      + '  border: none !important;'
-      + '  background-color: transparent !important;'
-      + '  margin: 0px 4px 0px 0 !important;'
+      + '.rc-multiselect li.x-tagfield-item {'
+      + '  border: none;'
+      + '  background-color: transparent;'
+      + '  margin: 0px 4px 0px 0;'
       + '}'
 
       + '.rc-multiselect li:hover {'
       + '  border: none !important;'
+      + '  background-color: initial;'
       + '}'
 
       + '.rc-multiselect li:last-child {'
