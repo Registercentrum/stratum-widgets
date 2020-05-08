@@ -1,5 +1,7 @@
 .eslintrc
 .eslintignore
+.eslintrc.json
+.eslintignore.json
 .gitattributes
 test.html
 test.js

@@ -1,5 +1,3 @@
-
-var devMode = Profile.Context.User.UserID === 9
 Ext.util.CSS.removeStyleSheet('shpr-companymodule');
 Ext.util.CSS.createStyleSheet(''
 
@@ -10,7 +8,7 @@ Ext.util.CSS.createStyleSheet(''
   + '.scw-main ul>li {'
   + '  list-style: initial;'
   + '}'
-  
+
   + '.scw-header {'
   + '  width: 100%;'
   + '  padding: 0 0 0 2px;'
@@ -78,42 +76,6 @@ Ext.util.CSS.createStyleSheet(''
   + '  margin-bottom: 10px;'
   + '}'
 
-  + '.scw-multiselect ul {'
-  // + '  min-height: 40px;'
-  + '}'
-
-  + '.scw-multiselect .x-tagfield {'
-  + '  overflow: hidden !important;'
-  + '}'
-
-  + '.scw-main .scw-multiselect li {'
-  + '  border: none;'
-  + '  background-color: transparent;'
-  + '  margin: 0px 4px 0px 0;'
-  + '}'
-
-  + '.scw-multiselect li:first-child {'
-  //+ '  margin-top: 11px;'
-  + '}'
-
-  + '.scw-multiselect li:hover {'
-  + '  border: none !important;'
-  + '}'
-
-  + '.scw-multiselect li:last-child {'
-  + '  height: 0;'
-  + '  width: 0;'
-  + '  float: left;'
-  + '}'
-
-  + '.scw-multiselect li div:last-child {'
-  + '   display: none;'
-  + '}'
-
-  + '.scw-multiselect li:hover div:last-child {'
-  + '  display:initial;'
-  + '}'
-
   + '.scw-article-list-panel {'
   + '  margin: 10px; 0 0 10px;'
   + '  font-size: 10px;'
@@ -145,6 +107,148 @@ Ext.util.CSS.createStyleSheet(''
   + '  top: -18px;'
   + '  left: 1px;'
   + '}', 'shpr-company');
+Ext.apply(Ext.data.SortTypes, {
+  asAllPlacedFirst: function (str) {
+    if (str === 'Alla') return "0"
+    return str
+  }
+});
+Ext.define('RC.ui.Multiselect', {
+  extend: 'Ext.form.field.Tag',
+  xtype: 'rcmultiselect',
+  cls: 'scw-select rc-multiselect',
+  queryMode: 'local',
+  multiSelect: true,
+  stacked: true,
+
+  initComponent: function () {
+    this.oldChoices = [this.value]
+    this.createStyleSheet()
+    this.callParent()
+  },
+
+  listeners: {
+    select: function (combo, record) {
+      this.updateDropdown(record)
+      if (this.deselect) {
+        if (this.skippedDuplicate) {
+          combo.fireEvent('update')
+          this.skippedDuplicate = false
+          this.deselect = false
+        } else {
+          this.skippedDuplicate = true
+        }
+      } else {
+        if (this.getPicker().isVisible()) {
+          this.postponed = true
+        } else {
+          combo.fireEvent('update')
+          this.postponed = false
+        }
+      }
+    },
+    collapse: function (combo) {
+      if (this.postponed) {
+        combo.fireEvent('update')
+        this.postponed = false
+      }
+    },
+    beforedeselect: function () {
+      if (!this.getPicker().isVisible()) {
+        this.deselect = true
+      }
+    },
+  },
+
+  createStyleSheet: function () {
+    var existingStyle = document.getElementById('rc-multiselect')
+    if (existingStyle) return
+    Ext.util.CSS.createStyleSheet(''
+
+      + '.rc-multiselect .x-form-text-wrap {'
+      + '  overflow: visible;'
+      + '}'
+
+      + '.rc-multiselect .x-tagfield {'
+      + '  overflow: hidden !important;'
+      + '}'
+
+      + '.rc-multiselect li.x-tagfield-item {'
+      + '  border: none;'
+      + '  background-color: transparent;'
+      + '  margin: 0px 4px 0px 0;'
+      + '}'
+
+      + '.rc-multiselect li:hover {'
+      + '  border: none !important;'
+      + '  background-color: initial;'
+      + '}'
+
+      + '.rc-multiselect li:last-child {'
+      + '  height: 0;'
+      + '  width: 0;'
+      + '  float: left;'
+      + '}'
+
+      + '.rc-multiselect li div:last-child {'
+      + '   display: none;'
+      + '}'
+
+      + '.rc-multiselect li:hover div:last-child {'
+      + '  display:initial;'
+      + '}', 'rc-multiselect');
+  },
+
+  updateDropdown: function (record) {
+    var newChoices = this.enumerateNewChoices(record);
+    var removeDefault = (newChoices.length > 1 && newChoices[0] === this.default)
+    var addition = this.checkForAdditions(newChoices);
+    var deletion = this.checkForDeletions(newChoices);
+    this.oldChoices = newChoices;
+    if (addition || (deletion && this.getPicker().isVisible())) {
+      if (!window.event.ctrlKey || removeDefault) {
+        this.oldChoices = [];
+        this.oldChoices.push(addition || deletion);
+        this.clearValue();
+        this.setValue(addition || deletion);
+        !window.event.ctrlKey && this.collapse();
+      }
+    }
+  },
+
+  checkForAdditions: function (record) {
+    for (var item in record) {
+      if (!this.oldChoices.includes(record[item])) {
+        return record[item];
+      }
+    }
+    return '';
+  },
+
+  checkForDeletions: function (record) {
+    for (var item in this.oldChoices) {
+      if (!record.includes(this.oldChoices[item])) {
+        return this.oldChoices[item];
+      }
+    }
+    return '';
+  },
+
+  enumerateNewChoices: function (record) {
+    var newChoices = [];
+    for (var item in record) {
+      if (item === '') continue;
+      newChoices.push(record[item].data[this.valueField]);
+    }
+    return newChoices;
+  },
+
+  reset: function (){
+    this.select(this.default)
+    this.oldChoices = [this.default]
+    this.deselect = false
+  }
+})
 
 Ext.define('shpr.revisions.MainController', {
   extend: 'Ext.app.ViewController',
@@ -160,6 +264,7 @@ Ext.define('shpr.revisions.MainController', {
     var protesis = view.down('#protesisDropdown').getValue();
     var revision = view.down('#revisionDropdown').getValue();
     var articleType = view.down('#articleTypeDropdown').getValue();
+    var articleGroup = view.down('#articleGroupDropdown').getValue();
     var articleNumber = view.down('#articleNumberDropdown').getValue();
     var revisionReason = view.down('#causeDropdown').getValue();
     if (articleNumber[0] === 'Alla') articleNumber[0] = 'alla';
@@ -167,8 +272,8 @@ Ext.define('shpr.revisions.MainController', {
     // var startDate = view.down('#startDate').getValue().toLocaleDateString();
     // var endDate = view.down('#endDate').getValue().toLocaleDateString();
 
-    var startDate = Ext.Date.format(view.down('#startDate').getValue(),  'Y-m-d')
-    var endDate = Ext.Date.format(view.down('#endDate').getValue(),  'Y-m-d')
+    var startDate = Ext.Date.format(view.down('#startDate').getValue(), 'Y-m-d')
+    var endDate = Ext.Date.format(view.down('#endDate').getValue(), 'Y-m-d')
 
     /* IE hack */
     startDate = startDate.replace(/[^ -~]/g, '');
@@ -180,22 +285,46 @@ Ext.define('shpr.revisions.MainController', {
 
     view.oldparameters = view.newparameters;
     view.newparameters = operationType + protesis + revision + articleType + revisionReason + startDate + endDate;
-    if (view.oldparameters !== view.newparameters) articleNumber = 'alla';
+    if (view.oldparameters !== view.newparameters) {
+      articleGroup = 'alla'
+      articleNumber = 'alla';
+    }
 
+    view.oldgroup = view.newgroup
+    view.newgroup = articleGroup + ''
+    if (view.oldgroup !== view.newgroup) articleNumber = 'alla'
+    var baseUrl = '/stratum/api/statistics/shpr/supplier-mod4?'
     Ext.Ajax.request({
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: '/stratum/api/statistics/shpr/supplier-mod4?operationstyp=' + operationType + '&diagnos=' +  diagnosis + '&protestyp=' + protesis + '&rev_type=' + revision + '&artikeltyp=' + articleType + '&article_nr=' + articleNumber + '&rev_reason=' + revisionReason + '&start_datum=' + startDate + '&slut_datum=' + endDate,
+      url: baseUrl
+        + 'operationstyp=' + operationType
+        + '&diagnos=' + diagnosis
+        + '&protestyp=' + protesis
+        + '&rev_type=' + revision
+        + '&artikeltyp=' + articleType
+        + '&article_group=' + articleGroup
+        + '&article_nr=' + articleNumber
+        + '&rev_reason=' + revisionReason
+        + '&start_datum=' + startDate
+        + '&slut_datum=' + endDate,
       success: function (response) {
         spinner && spinner.hide();
         var result = Ext.decode(response.responseText).data;
         var gridData = result[0][0];
         var articles = result[1][0];
+        var groups   = result[2][0].map(function (item) { return { articleGroupCode: item.artikelgrupp, articleGroupName: item.article_group_description } })
         if (view.oldparameters !== view.newparameters) {
           view.down('#articleNumberDropdown').getStore().loadData(articles);
-          view.oldarticles = articles;
-          view.down('#articleNumberDropdown').select('Alla');
+          view.down('#articleNumberDropdown').reset()
+          view.down('#articleGroupDropdown').getStore().loadData(groups);
+          view.down('#articleGroupDropdown').reset()
+        }
+
+        if (view.oldgroup !== view.newgroup) {
+          view.down('#articleNumberDropdown').getStore().loadData(articles);
+          view.down('#articleNumberDropdown').reset()
         }
 
         if (articles.length !== 1) {
@@ -441,236 +570,240 @@ Ext.define('shpr.revisions.view.Main', {
   items: [{
     xtype: 'container',
     items: [
-    {
-      xtype: 'container',
-      items: [
       {
-        xtype: 'label',
-        width: '100%',
-        cls: 'scw-header',
-        text: 'Data inmatad efter senast publicerade årsrapport skall användas med stor försiktighet då den inte är komplett eller validerad.'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        text: 'Operationstyp'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        html: 'Diagnos'
-            + '<div class="scw-info">'
-            + '<div data-qtip="För att välja flera komponenter samtidigt, '
-            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        text: 'Protestyp'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        text: 'Revisionstyp'
-      },
-      {
-        xtype: 'rcfilter',
-        itemId: 'operationDropdown',
-        cls: 'scw-select',
-        valueField: 'operationCode',
-        displayField: 'operationName',
-        value: '1',
-        sortfield: 'operationName',
-        sortdirection: 'DESC',
-        selectCallback: 'updateGrid',
-        store: {
-          fields: ['operationCode', 'operationName'],
-          data: [
-            { operationCode: 1, operationName: 'Primär' },
-            { operationCode: 2, operationName: 'Revision' }
-          ]
-        }
-      },
-      {
-        xtype: 'tagfield',
-        itemId: 'diagnosisDropdown',
-        cls: 'scw-select scw-multiselect',
-        queryMode: 'local',
-        multiSelect: true,
-        stacked: true,
-        valueField: 'diagnosisCode',
-        displayField: 'diagnosisName',
-        value: 'alla',
-        sortfield: 'diagnosisName',
-        sortdirection: 'DESC',
-        listeners: {
-          select: function (combo, record) {
-            this.up().up().up().getController().updatePart(record, 'diagnosis', combo.valueField);
+        xtype: 'container',
+        items: [
+          {
+            xtype: 'label',
+            width: '100%',
+            cls: 'scw-header',
+            text: 'Data inmatad efter senast publicerade årsrapport skall användas med stor försiktighet då den inte är komplett eller validerad.'
+          },
+          {
+            xtype: 'label',
+            cls: 'scw-label',
+            text: 'Operationstyp'
+          },
+          {
+            xtype: 'label',
+            cls: 'scw-label',
+            html: 'Diagnos'
+          },
+          {
+            xtype: 'label',
+            cls: 'scw-label',
+            text: 'Protestyp'
+          },
+          {
+            xtype: 'label',
+            cls: 'scw-label',
+            text: 'Revisionstyp'
+          },
+          {
+            xtype: 'rcfilter',
+            itemId: 'operationDropdown',
+            cls: 'scw-select',
+            valueField: 'operationCode',
+            displayField: 'operationName',
+            value: '1',
+            sortfield: 'operationName',
+            sortdirection: 'DESC',
+            selectCallback: 'updateGrid',
+            store: {
+              fields: ['operationCode', 'operationName'],
+              data: [
+                { operationCode: 1, operationName: 'Primär' },
+                { operationCode: 2, operationName: 'Revision' }
+              ]
+            }
+          },
+          {
+            xtype: 'rcmultiselect',
+            itemId: 'diagnosisDropdown',
+            valueField: 'diagnosisCode',
+            displayField: 'diagnosisName',
+            value: 'alla',
+            default: 'alla',
+            listeners: {
+              update: function () {
+                this.up('#mainView').getController().updateGrid()
+              }
+            },
+            store: {
+              fields: ['diagnosisCode', 'diagnosisName'],
+              data: [
+                { diagnosisCode: 'alla', diagnosisName: 'Alla' },
+                { diagnosisCode: 1, diagnosisName: 'Primär artros' },
+                { diagnosisCode: 2, diagnosisName: 'Inflammatorisk ledsjukdom' },
+                { diagnosisCode: 3, diagnosisName: 'Akut trauma, höftfraktur' },
+                { diagnosisCode: 4, diagnosisName: 'Följdtillstånd barnsjukdom' },
+                { diagnosisCode: 5, diagnosisName: 'Idiopatisk nekros' },
+                { diagnosisCode: 6, diagnosisName: 'Följdtillstånd efter trauma/fraktur' },
+                { diagnosisCode: 7, diagnosisName: 'Tumör' },
+                { diagnosisCode: 8, diagnosisName: 'Annan sekundär artros' },
+                { diagnosisCode: 9, diagnosisName: 'Akut trauma, övriga' },
+                { diagnosisCode: 10, diagnosisName: 'Övrigt' }
+              ]
+            }
+          },
+          {
+            xtype: 'rcfilter',
+            itemId: 'protesisDropdown',
+            cls: 'scw-select',
+            valueField: 'protesisCode',
+            displayField: 'protesisName',
+            value: '1',
+            sortfield: 'protesisName',
+            sortdirection: 'DESC',
+            selectCallback: 'updateGrid',
+            store: {
+              fields: ['protesisCode', 'protesisName'],
+              data: [
+                { protesisCode: '1', protesisName: 'Total' },
+                { protesisCode: '2', protesisName: 'Halv' }
+              ]
+            }
+          },
+          {
+            xtype: 'rcfilter',
+            itemId: 'revisionDropdown',
+            cls: 'scw-select',
+            valueField: 'rev_type',
+            displayField: 'beskrivning',
+            value: 'alla',
+            sortfield: 'beskrivning',
+            sortdirection: 'DESC',
+            selectCallback: 'updateGrid',
+            store: {
+              fields: ['rev_type', 'beskrivning'],
+              data: [
+                { rev_type: 'alla', beskrivning: 'Alla förstagångsrevisioner' },
+                { rev_type: 1, beskrivning: 'Första stamrevision' },
+                { rev_type: 2, beskrivning: 'Första cuprevision' },
+                { rev_type: 3, beskrivning: 'Första revision av annat slag' }
+              ]
+            }
           }
-        },
-        store: {
-          fields: ['diagnosisCode', 'diagnosisName'],
-          data: [
-            { diagnosisCode: 'alla', diagnosisName: 'Alla' },
-            { diagnosisCode: 1, diagnosisName: 'Primär artros' },
-            { diagnosisCode: 2, diagnosisName: 'Inflammatorisk ledsjukdom' },
-            { diagnosisCode: 3, diagnosisName: 'Akut trauma, höftfraktur' },
-            { diagnosisCode: 4, diagnosisName: 'Följdtillstånd barnsjukdom' },
-            { diagnosisCode: 5, diagnosisName: 'Idiopatisk nekros' },
-            { diagnosisCode: 6, diagnosisName: 'Följdtillstånd efter trauma/fraktur' },
-            { diagnosisCode: 7, diagnosisName: 'Tumör' },
-            { diagnosisCode: 8, diagnosisName: 'Annan sekundär artros' },
-            { diagnosisCode: 9, diagnosisName: 'Akut trauma, övriga' },
-            { diagnosisCode: 10, diagnosisName: 'Övrigt' }
-          ]
-        }
+        ]
       },
       {
-        xtype: 'rcfilter',
-        itemId: 'protesisDropdown',
-        cls: 'scw-select',
-        valueField: 'protesisCode',
-        displayField: 'protesisName',
-        value: '1',
-        sortfield: 'protesisName',
-        sortdirection: 'DESC',
-        selectCallback: 'updateGrid',
-        store: {
-          fields: ['protesisCode', 'protesisName'],
-          data: [
-            { protesisCode: '1', protesisName: 'Total' },
-            { protesisCode: '2', protesisName: 'Halv' }
-          ]
-        }
-      },
-      {
-        xtype: 'rcfilter',
-        itemId: 'revisionDropdown',
-        cls: 'scw-select',
-        valueField: 'rev_type',
-        displayField: 'beskrivning',
-        value: 'alla',
-        sortfield: 'beskrivning',
-        sortdirection: 'DESC',
-        selectCallback: 'updateGrid',
-        store: {
-          fields: ['rev_type', 'beskrivning'],
-          data: [
-            { rev_type: 'alla', beskrivning: 'Alla förstagångsrevisioner' },
-            { rev_type: 1, beskrivning: 'Första stamrevision' },
-            { rev_type: 2, beskrivning: 'Första cuprevision' },
-            { rev_type: 3, beskrivning: 'Första revision av annat slag' }
-          ]
-        }
+        xtype: 'container',
+        items: [
+          {
+            xtype: 'label',
+            cls: 'scw-label',
+            text: 'Revisionsorsak'
+          },
+          {
+            xtype: 'label',
+            cls: 'scw-label',
+            html: 'Artikeltyp'
+          },
+
+          {
+            xtype: 'label',
+            cls: 'scw-label',
+            text: 'Artikelgrupp'
+          },
+          {
+            xtype: 'label',
+            cls: 'scw-label',
+            html: 'Artikel'
+          },
+          {
+            xtype: 'rcfilter',
+            itemId: 'causeDropdown',
+            cls: 'scw-select',
+            valueField: 'causeCode',
+            displayField: 'causeName',
+            value: 'alla',
+            sortfield: 'causeName',
+            sortdirection: 'DESC',
+            selectCallback: 'updateGrid',
+            store: {
+              fields: ['causeCode', 'causeName'],
+              data: [
+                { causeCode: 'alla', causeName: 'Alla' },
+                { causeCode: 1, causeName: 'Aseptisk lossning' },
+                { causeCode: 2, causeName: 'Djup infektion' },
+                { causeCode: 3, causeName: 'Luxation' },
+                { causeCode: 4, causeName: 'Alla aseptiska orsaker' }
+              ]
+            }
+          },
+          {
+            xtype: 'rcmultiselect',
+            itemId: 'articleTypeDropdown',
+            valueField: 'articleTypeCode',
+            displayField: 'articleTypeName',
+            value: 'alla',
+            default: 'alla',
+            listeners: {
+              update: function () {
+                this.up('#mainView').getController().updateGrid()
+              }
+            },
+            store: {
+              fields: ['articleTypeCode', 'articleTypeName'],
+              data: [
+                { articleTypeCode: 'alla', articleTypeName: 'Alla' },
+                { articleTypeCode: 'caput', articleTypeName: 'Caput' },
+                { articleTypeCode: 'cup', articleTypeName: 'Cup' },
+                { articleTypeCode: 'liner', articleTypeName: 'Liner' },
+                { articleTypeCode: 'stam', articleTypeName: 'Stam' },
+                { articleTypeCode: 'plugg', articleTypeName: 'Plugg' },
+                { articleTypeCode: 'caputliner', articleTypeName: 'Caputliner' }
+              ]
+            }
+          },
+          {
+            xtype: 'rcmultiselect',
+            itemId: 'articleGroupDropdown',
+            valueField: 'articleGroupCode',
+            displayField: 'articleGroupName',
+            value: 'alla',
+            default: 'alla',
+            listeners: {
+              update: function () {
+                this.up('#mainView').getController().updateGrid()
+              }
+            },
+            store: {
+              fields: ['articleGroupCode', {
+                name: 'articleGroupName',
+                sortType: 'asAllPlacedFirst'
+              }],
+              data: [
+                { articleGroupCode: 'alla', articleGroupName: 'Alla' }
+              ],
+
+              sorters: [{
+                property: 'articleGroupName',
+                direction: 'ASC'
+              }]
+            }
+          },
+          {
+            xtype: 'rcmultiselect',
+            itemId: 'articleNumberDropdown',
+            valueField: 'artikelnummer',
+            displayField: 'artikelnummer',
+            value: 'Alla',
+            default: 'Alla',
+            listeners: {
+              update: function () {
+                this.up('#mainView').getController().updateGrid()
+              }
+            },
+            store: {
+              fields: ['artikelnummer'],
+              data: [
+                { artikelnummer: 'Alla' }
+              ]
+            }
+          }
+        ]
       }
-      ]
-    },
-    {
-      xtype: 'container',
-      items: [
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        html: 'Artikeltyp'
-            + '<div class="scw-info">'
-            + '<div data-qtip="För att välja flera komponenter samtidigt, '
-            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        html: 'Artikel'
-            + '<div class="scw-info">'
-            + '<div data-qtip="För att välja flera komponenter samtidigt, '
-            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        text: 'Revisionsorsak'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        text: ''
-      },
-      {
-        xtype: 'tagfield',
-        itemId: 'articleTypeDropdown',
-        cls: 'scw-select scw-multiselect',
-        queryMode: 'local',
-        multiSelect: true,
-        stacked: true,
-        valueField: 'articleTypeCode',
-        displayField: 'articleTypeName',
-        value: 'alla',
-        sortfield: 'articleTypeName',
-        sortdirection: 'DESC',
-        listeners: {
-          select: function (combo, record) {
-            this.up().up().up().getController().updatePart(record, 'articleType', combo.valueField);
-          }
-        },
-        store: {
-          fields: ['articleTypeCode', 'articleTypeName'],
-          data: [
-            { articleTypeCode: 'alla', articleTypeName: 'Alla' },
-            { articleTypeCode: 'caput', articleTypeName: 'Caput' },
-            { articleTypeCode: 'cup', articleTypeName: 'Cup' },
-            { articleTypeCode: 'liner', articleTypeName: 'Liner' },
-            { articleTypeCode: 'stam', articleTypeName: 'Stam' },
-            { articleTypeCode: 'plugg', articleTypeName: 'Plugg' },
-            { articleTypeCode: 'caputliner', articleTypeName: 'Caputliner' }
-          ]
-        }
-      },
-      {
-        xtype: 'tagfield',
-        itemId: 'articleNumberDropdown',
-        cls: 'scw-select scw-multiselect',
-        queryMode: 'local',
-        multiSelect: true,
-        stacked: true,
-        valueField: 'artikelnummer',
-        displayField: 'artikelnummer',
-        value: 'Alla',
-        sortfield: 'artikelnummer',
-        sortdirection: 'DESC',
-        listeners: {
-          select: function (combo, record) {
-            this.up().up().up().getController().updatePart(record, 'artikelnummer', combo.valueField);
-          }
-        },
-        store: {
-          fields: ['artikelnummer'],
-          data: [
-            { artikelnummer: 'Alla' }
-          ]
-        }
-      },
-      {
-        xtype: 'rcfilter',
-        itemId: 'causeDropdown',
-        cls: 'scw-select',
-        valueField: 'causeCode',
-        displayField: 'causeName',
-        value: 'alla',
-        sortfield: 'causeName',
-        sortdirection: 'DESC',
-        selectCallback: 'updateGrid',
-        store: {
-          fields: ['causeCode', 'causeName'],
-          data: [
-            { causeCode: 'alla', causeName: 'Alla' },
-            { causeCode: 1, causeName: 'Aseptisk lossning' },
-            { causeCode: 2, causeName: 'Djup infektion' },
-            { causeCode: 3, causeName: 'Luxation' },
-            { causeCode: 4, causeName: 'Alla aseptiska orsaker' }
-          ]
-        }
-      }
-      ]
-    }
     ]
   },
   {
@@ -688,11 +821,11 @@ Ext.define('shpr.revisions.view.Main', {
       itemId: 'startDate',
       value: Ext.Date.add(new Date(), Ext.Date.YEAR, -1),
       fieldLabel: 'Operationsdatum'
-                + '<div class="scw-info">'
-                + '<div data-qtip="De datum som väljs måste utgöra en period på minst ett år '
-                + 'och ligga i spannet mellan 1999-01-01 och dagens datum.">i'
-                + '</div>'
-                + '</div>',
+        + '<div class="scw-info">'
+        + '<div data-qtip="De datum som väljs måste utgöra en period på minst ett år '
+        + 'och ligga i spannet mellan 1999-01-01 och dagens datum.">i'
+        + '</div>'
+        + '</div>',
       labelWidth: 188,
       format: 'Y-m-d',
       altFormats: 'ymd|Ymd',
@@ -849,12 +982,12 @@ Ext.define('shpr.revisions.view.Main', {
     hidden: true,
     border: false,
     html: '<div class="spinner">'
-        + '<div class="rect1"></div>'
-        + '<div class="rect2"></div>'
-        + '<div class="rect3"></div>'
-        + '<div class="rect4"></div>'
-        + '<div class="rect5"></div>'
-        + '</div>'
+      + '<div class="rect1"></div>'
+      + '<div class="rect2"></div>'
+      + '<div class="rect3"></div>'
+      + '<div class="rect4"></div>'
+      + '<div class="rect5"></div>'
+      + '</div>'
   },
   {
     xtype: 'panel',
@@ -874,9 +1007,9 @@ Ext.application({
     'DetailsController'
   ],
   launch: function () {
-    var target = (typeof Stratum.containers !== 'undefined') 
-                    ? Stratum.containers['KRH/RevisionScope'] 
-                    : 'contentPanel';
+    var target = (typeof Stratum.containers !== 'undefined')
+      ? Stratum.containers['KRH/RevisionScope']
+      : 'contentPanel';
     var main = Ext.create('shpr.revisions.view.Main', {
       renderTo: target
     });

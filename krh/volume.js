@@ -1,5 +1,3 @@
-
-var devMode = Profile.Context.User.UserID === 9 && true
 Ext.util.CSS.removeStyleSheet('shpr-company');
 Ext.util.CSS.createStyleSheet(''
 
@@ -124,7 +122,7 @@ Ext.define('RC.ui.Multiselect', {
   initComponent: function () {
     this.oldChoices = [this.value]
     this.createStyleSheet()
-    this.callParent()      
+    this.callParent()
   },
   
   listeners: {
@@ -162,7 +160,7 @@ Ext.define('RC.ui.Multiselect', {
 
   createStyleSheet: function () {
       var existingStyle = document.getElementById('rc-multiselect')
-      if(existingStyle) return
+      if (existingStyle) return
       Ext.util.CSS.createStyleSheet(''
 
       + '.rc-multiselect .x-form-text-wrap {'
@@ -241,6 +239,12 @@ Ext.define('RC.ui.Multiselect', {
       newChoices.push(record[item].data[this.valueField]);
     }
     return newChoices;
+  },
+  
+  reset: function (){
+    this.select(this.default)
+    this.oldChoices = [this.default]
+    this.deselect = false
   }
 })
 
@@ -303,19 +307,16 @@ Ext.define('shpr.volume.MainController', {
         var result = Ext.decode(response.responseText).data;
         var gridData = result[0][0];
         var articles = result[1][0];
-        var articleGroups = result[2][0].map(function(item){return {articleGroupCode: item.artikelgrupp, articleGroupName: item.article_group_description}})
+        var groups = result[2][0].map(function(item){return {articleGroupCode: item.artikelgrupp, articleGroupName: item.article_group_description}})
         if (view.oldparameters !== view.newparameters) {
           view.down('#articleNumberDropdown').getStore().loadData(articles);
-          view.oldarticles = articles;
-          view.down('#articleNumberDropdown').select('Alla');
-          view.down('#articleGroupDropdown').getStore().loadData(articleGroups);
-          view.down('#articleGroupDropdown').select('alla')
-          view.down('#articleGroupDropdown').oldChoices=['alla']
+          view.down('#articleNumberDropdown').reset()
+          view.down('#articleGroupDropdown').getStore().loadData(groups);
+          view.down('#articleGroupDropdown').reset()
         }
         if (view.oldgroup !== view.newgroup) {
           view.down('#articleNumberDropdown').getStore().loadData(articles);
-          view.oldarticles = articles;
-          view.down('#articleNumberDropdown').select('Alla');
+          view.down('#articleNumberDropdown').reset()
         }
 
         if (articles.length !== 1) {
