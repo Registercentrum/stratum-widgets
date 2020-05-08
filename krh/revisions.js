@@ -711,15 +711,17 @@ Ext.define('shpr.revisions.view.Main', {
             html: 'Artikel'
           },
           {
-            xtype: 'rcfilter',
+            xtype: 'rcmultiselect',
             itemId: 'causeDropdown',
-            cls: 'scw-select',
             valueField: 'causeCode',
             displayField: 'causeName',
             value: 'alla',
-            sortfield: 'causeName',
-            sortdirection: 'DESC',
-            selectCallback: 'updateGrid',
+            default: 'alla',
+            listeners: {
+              update: function (){
+                this.up('#mainView').getController().updateGrid()
+              }
+            },
             store: {
               fields: ['causeCode', 'causeName'],
               data: [
