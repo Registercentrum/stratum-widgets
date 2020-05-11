@@ -29,6 +29,7 @@ Ext.util.CSS.createStyleSheet(''
 
   + '.scw-select div {'
   + '  border-radius: 3px;'
+  + '  vertical-align: top;'
   + '}'
 
   + '.scw-select-last {'
@@ -98,6 +99,143 @@ Ext.util.CSS.createStyleSheet(''
 Ext.apply(Ext.QuickTips.getQuickTip(), {
   dismissDelay: 0
 });
+
+Ext.define('RC.ui.Multiselect', {
+  extend: 'Ext.form.field.Tag',
+  xtype: 'rcmultiselect',
+  cls: 'scw-select rc-multiselect',
+  queryMode: 'local',
+  multiSelect: true,
+  stacked: true,
+
+  initComponent: function () {
+    this.oldChoices = [this.value]
+    this.createStyleSheet()
+    this.callParent()
+  },
+
+  listeners: {
+    select: function (combo, record) {
+      this.updateDropdown(record)
+      if (this.deselect) {
+        if (this.skippedDuplicate) {
+          combo.fireEvent('update')
+          this.skippedDuplicate = false
+          this.deselect = false
+        } else {
+          this.skippedDuplicate = true
+        }
+      } else {
+        if (this.getPicker().isVisible()) {
+          this.postponed = true
+        } else {
+          combo.fireEvent('update')
+          this.postponed = false
+        }
+      }
+    },
+    collapse: function (combo) {
+      if (this.postponed) {
+        combo.fireEvent('update')
+        this.postponed = false
+      }
+    },
+    beforedeselect: function () {
+      if (!this.getPicker().isVisible()) {
+        this.deselect = true
+      }
+    },
+  },
+
+  createStyleSheet: function () {
+    var existingStyle = document.getElementById('rc-multiselect')
+    if (existingStyle) return
+    Ext.util.CSS.createStyleSheet(''
+
+      + '.rc-multiselect .x-form-text-wrap {'
+      + '  overflow: visible;'
+      + '}'
+
+      + '.rc-multiselect .x-tagfield {'
+      + '  overflow: hidden !important;'
+      + '}'
+
+      + '.rc-multiselect li.x-tagfield-item {'
+      + '  border: none;'
+      + '  background-color: transparent;'
+      + '  margin: 0px 4px 0px 0;'
+      + '}'
+
+      + '.rc-multiselect li:hover {'
+      + '  border: none !important;'
+      + '  background-color: initial;'
+      + '}'
+
+      + '.rc-multiselect li:last-child {'
+      + '  height: 0;'
+      + '  width: 0;'
+      + '  float: left;'
+      + '}'
+
+      + '.rc-multiselect li div:last-child {'
+      + '   display: none;'
+      + '}'
+
+      + '.rc-multiselect li:hover div:last-child {'
+      + '  display:initial;'
+      + '}', 'rc-multiselect');
+  },
+
+  updateDropdown: function (record) {
+    var newChoices = this.enumerateNewChoices(record);
+    var removeDefault = (newChoices.length > 1 && newChoices[0] === this.default)
+    var addition = this.checkForAdditions(newChoices);
+    var deletion = this.checkForDeletions(newChoices);
+    this.oldChoices = newChoices;
+    if (addition || (deletion && this.getPicker().isVisible())) {
+      if (!window.event.ctrlKey || removeDefault) {
+        this.oldChoices = [];
+        this.oldChoices.push(addition || deletion);
+        this.clearValue();
+        this.setValue(addition || deletion);
+        !window.event.ctrlKey && this.collapse();
+      }
+    }
+  },
+
+  checkForAdditions: function (record) {
+    for (var item in record) {
+      if (!this.oldChoices.includes(record[item])) {
+        return record[item];
+      }
+    }
+    return '';
+  },
+
+  checkForDeletions: function (record) {
+    for (var item in this.oldChoices) {
+      if (!record.includes(this.oldChoices[item])) {
+        return this.oldChoices[item];
+      }
+    }
+    return '';
+  },
+
+  enumerateNewChoices: function (record) {
+    var newChoices = [];
+    for (var item in record) {
+      if (item === '') continue;
+      newChoices.push(record[item].data[this.valueField]);
+    }
+    return newChoices;
+  },
+
+  reset: function () {
+    this.select(this.default)
+    this.oldChoices = [this.default]
+    this.deselect = false
+  }
+})
 
 Ext.define('shpr.market.MainController', {
   extend: 'Ext.app.ViewController',
@@ -302,6 +440,9 @@ Ext.define('shpr.market.view.Main', {
   itemId: 'mainView',
   items: [
     {
+    xtype: 'container',
+      items: [
+    {
       xtype: 'label',
       cls: 'scw-header',
       text: 'Data inmatad efter senast publicerade årsrapport skall användas med stor försiktighet då den inte är komplett eller validerad. Marknadsandelar avser endast implantat som används för primäroperationer.'
@@ -327,14 +468,17 @@ Ext.define('shpr.market.view.Main', {
       text: 'Fixation'
     },
     {
-      xtype: 'rcfilter',
+      xtype: 'rcmultiselect',
       itemId: 'regionDropdown',
-      cls: 'scw-select',
       valueField: 'ValueCode',
       displayField: 'ValueName',
       value: 'alla',
-      selectCallback: 'updateGrid',
-
+      default: 'alla',
+      listeners: {
+        update: function (){
+          this.up('#mainView').getController().updateGrid()
+        }
+      },
       store: {
         fields: ['ValueCode', 'ValueName'],
         autoLoad: true,
@@ -384,15 +528,17 @@ Ext.define('shpr.market.view.Main', {
       }
     },
     {
-      xtype: 'rcfilter',
+      xtype: 'rcmultiselect',
       itemId: 'articleTypeDropdown',
-      cls: 'scw-select',
       valueField: 'articletypeCode',
       displayField: 'articletypeName',
       value: 'alla',
-      sortfield: 'articletypeName',
-      sortdirection: 'DESC',
-      selectCallback: 'updateGrid',
+      default: 'alla',
+      listeners: {
+        update: function () {
+          this.up('#mainView').getController().updateGrid()
+        }
+      },
       store: {
         fields: ['articletypeCode', 'articletypeName'],
         data: [
@@ -407,15 +553,17 @@ Ext.define('shpr.market.view.Main', {
       }
     },
     {
-      xtype: 'rcfilter',
+      xtype: 'rcmultiselect',
       itemId: 'fixationDropdown',
-      cls: 'scw-select scw-select-last',
       valueField: 'fixationCode',
       displayField: 'fixationName',
       value: 'alla',
-      sortfield: 'fixationName',
-      sortdirection: 'DESC',
-      selectCallback: 'updateGrid',
+      default: 'alla',
+      listeners: {
+        update: function () {
+          this.up('#mainView').getController().updateGrid()
+        }
+      },
       store: {
         fields: ['fixationCode', 'fixationName'],
         data: [
@@ -428,7 +576,7 @@ Ext.define('shpr.market.view.Main', {
           { fixationCode: 6, fixationName: 'Inte specifierad' }
         ]
       }
-    },
+    }]},
     {
       xtype: 'toolbar',
       itemId: 'DateToolbar',
