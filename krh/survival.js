@@ -8,7 +8,7 @@ Ext.util.CSS.createStyleSheet(''
   + '.scw-main ul>li {'
   + '  list-style: initial;'
   + '}'
-  
+
   + '.scw-header {'
   + '  width: 100%;'
   + '  padding: 0 0 0 2px;'
@@ -144,6 +144,143 @@ Ext.util.CSS.createStyleSheet(''
   + '  left: 1px;'
   + '}', 'shpr-company');
 
+Ext.define('RC.ui.Multiselect', {
+  extend: 'Ext.form.field.Tag',
+  xtype: 'rcmultiselect',
+  cls: 'scw-select rc-multiselect',
+  queryMode: 'local',
+  multiSelect: true,
+  stacked: true,
+
+  initComponent: function () {
+    this.oldChoices = [this.value]
+    this.createStyleSheet()
+    this.callParent()
+  },
+
+  listeners: {
+    select: function (combo, record) {
+      this.updateDropdown(record)
+      if (this.deselect) {
+        if (this.skippedDuplicate) {
+          combo.fireEvent('update')
+          this.skippedDuplicate = false
+          this.deselect = false
+        } else {
+          this.skippedDuplicate = true
+        }
+      } else {
+        if (this.getPicker().isVisible()) {
+          this.postponed = true
+        } else {
+          combo.fireEvent('update')
+          this.postponed = false
+        }
+      }
+    },
+    collapse: function (combo) {
+      if (this.postponed) {
+        combo.fireEvent('update')
+        this.postponed = false
+      }
+    },
+    beforedeselect: function () {
+      if (!this.getPicker().isVisible()) {
+        this.deselect = true
+      }
+    },
+  },
+
+  createStyleSheet: function () {
+    var existingStyle = document.getElementById('rc-multiselect')
+    if (existingStyle) return
+    Ext.util.CSS.createStyleSheet(''
+
+      + '.rc-multiselect .x-form-text-wrap {'
+      + '  overflow: visible;'
+      + '}'
+
+      + '.rc-multiselect .x-tagfield {'
+      + '  overflow: hidden !important;'
+      + '}'
+
+      + '.rc-multiselect li.x-tagfield-item {'
+      + '  border: none;'
+      + '  background-color: transparent;'
+      + '  margin: 0px 4px 0px 0;'
+      + '}'
+
+      + '.rc-multiselect li:hover {'
+      + '  border: none !important;'
+      + '  background-color: initial;'
+      + '}'
+
+      + '.rc-multiselect li:last-child {'
+      + '  height: 0;'
+      + '  width: 0;'
+      + '  float: left;'
+      + '}'
+
+      + '.rc-multiselect li div:last-child {'
+      + '   display: none;'
+      + '}'
+
+      + '.rc-multiselect li:hover div:last-child {'
+      + '  display:initial;'
+      + '}', 'rc-multiselect');
+  },
+
+  updateDropdown: function (record) {
+    var newChoices = this.enumerateNewChoices(record);
+    var removeDefault = (newChoices.length > 1 && newChoices[0] === this.default)
+    var addition = this.checkForAdditions(newChoices);
+    var deletion = this.checkForDeletions(newChoices);
+    this.oldChoices = newChoices;
+    if (addition || (deletion && this.getPicker().isVisible())) {
+      if (!window.event.ctrlKey || removeDefault) {
+        this.oldChoices = [];
+        this.oldChoices.push(addition || deletion);
+        this.clearValue();
+        this.setValue(addition || deletion);
+        !window.event.ctrlKey && this.collapse();
+      }
+    }
+  },
+
+  checkForAdditions: function (record) {
+    for (var item in record) {
+      if (!this.oldChoices.includes(record[item])) {
+        return record[item];
+      }
+    }
+    return '';
+  },
+
+  checkForDeletions: function (record) {
+    for (var item in this.oldChoices) {
+      if (!record.includes(this.oldChoices[item])) {
+        return this.oldChoices[item];
+      }
+    }
+    return '';
+  },
+
+  enumerateNewChoices: function (record) {
+    var newChoices = [];
+    for (var item in record) {
+      if (item === '') continue;
+      newChoices.push(record[item].data[this.valueField]);
+    }
+    return newChoices;
+  },
+
+  reset: function () {
+    this.select(this.default)
+    this.oldChoices = [this.default]
+    this.deselect = false
+  }
+})
+
 Ext.define('shpr.graph.MainController', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.graph.main',
@@ -160,8 +297,8 @@ Ext.define('shpr.graph.MainController', {
     // var startDate = view.down('#startDate').getValue().toLocaleDateString();
     // var endDate = view.down('#endDate').getValue().toLocaleDateString();
 
-    var startDate = Ext.Date.format(view.down('#startDate').getValue(),  'Y-m-d');
-    var endDate = Ext.Date.format(view.down('#endDate').getValue(),  'Y-m-d');
+    var startDate = Ext.Date.format(view.down('#startDate').getValue(), 'Y-m-d');
+    var endDate = Ext.Date.format(view.down('#endDate').getValue(), 'Y-m-d');
 
     startDate = this.stripControlCharacters(startDate);
     endDate = this.stripControlCharacters(endDate);
@@ -180,15 +317,15 @@ Ext.define('shpr.graph.MainController', {
       method: 'get',
       cors: true,
       url: '/stratum/api/statistics/shpr/supplier-mod3?'
-         + 'protestyp=' + protesis 
-         + '&stam=' + stem 
-         + '&cup=' + cup 
-         + '&diagnos=' + diagnosis 
-         + '&rev_reason=' + cause 
-         + '&rev_type=' + revisiontype 
-         + '&method=' + method 
-         + '&start_datum=' + startDate 
-         + '&slut_datum=' + endDate,
+        + 'protestyp=' + protesis
+        + '&stam=' + stem
+        + '&cup=' + cup
+        + '&diagnos=' + diagnosis
+        + '&rev_reason=' + cause
+        + '&rev_type=' + revisiontype
+        + '&method=' + method
+        + '&start_datum=' + startDate
+        + '&slut_datum=' + endDate,
       success: function (response) {
         var result = Ext.decode(response.responseText).data;
         spinner && spinner.hide();
@@ -199,38 +336,32 @@ Ext.define('shpr.graph.MainController', {
           var stems = result[1][0];
           var cups = result[2][0];
           var revisions = result[3][0];
-          var articles = result[4][0];
+          var stemArticles = result[4][0];
+          var cupArticles = result[5][0];
 
           Ext.getStore(graph).updateGrid(data);
           view.down('#' + graph).show();
 
           if (stems.length !== 0) {
-            var stemChoices = view.down('#stemDropdown');
-            var previousChoices = stemChoices.valueCollection.items.slice();
-            stemChoices.getStore().loadData(stems);
-            stemChoices.clearValue();
-            for (var item in previousChoices) {
-              if (item === '') continue;
-              stemChoices.addValue(previousChoices[item].data.P_FemStem_S_StratumCode);
+            var stemDropdown = view.down('#stemDropdown');
+            var stemOptions = stemDropdown.getStore().getCount()
+            if(stemOptions===1){
+              stemDropdown.getStore().loadData(stems);
             }
           }
           if (cups.length !== 0) {
-            var cupChoices = view.down('#cupDropdown');
-            previousChoices = cupChoices.valueCollection.items.slice();
-            cupChoices.getStore().loadData(cups);
-            cupChoices.clearValue();
-            for (item in previousChoices) {
-              if (item === '') continue;
-              cupChoices.addValue(previousChoices[item].data.P_AcetCup_C_StratumCode);
+            var cupDropdown = view.down('#cupDropdown');
+            var cupOptions = cupDropdown.getStore().getCount()
+            if(cupOptions===1){
+              cupDropdown.getStore().loadData(cups);
             }
-            if (cupChoices.getValue() === 0 || cups.length === 1) cupChoices.setValue('alla');
           }
           if (revisions.length !== 0) {
             var revisionChoices = view.down('#revisionDropdown');
             revisionChoices.getStore().loadData(revisions);
           }
-          if (articles) {
-            var articleList = controller.createArticleList(articles);
+          if (stemArticles) {
+            var articleList = controller.createArticleList(stemArticles, cupArticles);
             var html = '<div class="scw-article-list-panel">' + articleList + '</div>'
             view.down('#articleListPanel').setHtml(html);
           }
@@ -329,19 +460,19 @@ Ext.define('shpr.graph.MainController', {
     content += '\n\n';
 
     var dataHeaders = graph === 'survival'
-      ?   'Överlevnad; '
-        + 'År(tid); Lägre gräns 95% konfidensintervall; '
-        + 'Övre gräns 95% konfidensintervall; '
-        + 'At risk; Antal reviderade; Konfidens'
-      :   'Andel reviderade; '
-        + 'Andel avlidna; '
-        + 'År(tid); '
-        + 'Reviderade - lägre gräns 95% konfidensintervall; '
-        + 'Avlidna - lägre gräns 95% konfidensintervall; '
-        + 'Reviderade - övre gräns 95% konfidensintervall; '
-        + 'Avlidna - övre gräns 95% konfidensintervall; '
-        + 'At risk; Revision - Antal händelser; '
-        + 'Dödsfall - Antal händelser';
+      ? 'Överlevnad; '
+      + 'År(tid); Lägre gräns 95% konfidensintervall; '
+      + 'Övre gräns 95% konfidensintervall; '
+      + 'At risk; Antal reviderade; Konfidens'
+      : 'Andel reviderade; '
+      + 'Andel avlidna; '
+      + 'År(tid); '
+      + 'Reviderade - lägre gräns 95% konfidensintervall; '
+      + 'Avlidna - lägre gräns 95% konfidensintervall; '
+      + 'Reviderade - övre gräns 95% konfidensintervall; '
+      + 'Avlidna - övre gräns 95% konfidensintervall; '
+      + 'At risk; Revision - Antal händelser; '
+      + 'Dödsfall - Antal händelser';
     content += dataHeaders;
     var data = Ext.data.StoreManager.lookup(graph);
     content += '\n';
@@ -360,7 +491,7 @@ Ext.define('shpr.graph.MainController', {
     choices = choices.replace('<div class="scw-article-list-panel">', '')
     choices = choices.replace('</div>', '')
     choices = choices.replace(/<br\/>/g, '');
-    
+
     content += choices.replace(/Cupar.*/).replace('undefined');
     content += '\n';
     content += choices.replace(/((?!Cupar).)*/).replace('undefined', '');
@@ -472,18 +603,21 @@ Ext.define('shpr.graph.MainController', {
     return text;
   },
 
-  createArticleList: function (articles) {
+  createArticleList: function (stems, cups) {
     var list = 'Stammar:<br/>';
-    var isCups = false;
-    for (var item in articles) {
-      if (isCups === false && articles[item].stem_or_cup === 'cup') {
-        list += '<br/><br/>Cupar: <br/>';
-        isCups = true;
-      }
-      list += articles[item].article + ', ';
+    stems = stems.slice(2)
+    for (var item in stems) {
+      list += stems[item].article_stem + ', ';
+    }
+    cups = cups.slice(2)
+    list += '<br/><br/>'
+    list += 'Cupar:<br/>'
+    for (item in cups) {
+      list += cups[item].article_cup + ', ';
     }
     return list;
   },
+
 
   updateAxes: function () {
     var view = this.getView();
@@ -638,8 +772,8 @@ Ext.define('shpr.graph.view.Main', {
       xtype: 'label',
       cls: 'scw-header',
       text: 'Implantatöverlevnad avser första revision efter primäroperation. '
-          + 'Data inmatad efter senast publicerade årsrapport skall användas ' 
-          + 'med stor försiktighet då den inte är komplett eller validerad.'
+        + 'Data inmatad efter senast publicerade årsrapport skall användas '
+        + 'med stor försiktighet då den inte är komplett eller validerad.'
     },
     {
       xtype: 'container',
@@ -647,10 +781,7 @@ Ext.define('shpr.graph.view.Main', {
         {
           xtype: 'label',
           cls: 'scw-label',
-          html: 'Diagnos' 
-              + '<div class="scw-info">'
-              + '<div data-qtip="För att välja flera komponenter samtidigt, '
-              + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
+          html: 'Diagnos'
         },
         {
           xtype: 'label',
@@ -660,53 +791,42 @@ Ext.define('shpr.graph.view.Main', {
         {
           xtype: 'label',
           cls: 'scw-label',
-          html: 'Stam' 
-              + '<div class="scw-info">'
-              + '<div data-qtip="För att välja flera komponenter samtidigt, ' 
-              + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
+          text: 'Revisionstyp'
         },
         {
           xtype: 'label',
           cls: 'scw-label',
-          html: 'Cup'
-              + '<div class="scw-info">'
-              + '<div data-qtip="För att välja flera komponenter samtidigt, ' 
-              + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
+          text: 'Revisionsorsak'
         },
         {
-        xtype: 'tagfield',
-        itemId: 'diagnosisDropdown',
-        cls: 'scw-select scw-multiselect',
-        queryMode: 'local',
-        multiSelect: true,
-        stacked: true,
-        valueField: 'diagnosisCode',
-        displayField: 'diagnosisName',
-        value: 'alla',
-        sortfield: 'diagnosisName',
-        sortdirection: 'DESC',
-        listeners: {
-          select: function (combo, record) {
-            this.up().up().getController().updatePart(record, 'diagnosis', combo.valueField);
+          xtype: 'rcmultiselect',
+          itemId: 'diagnosisDropdown',
+          valueField: 'diagnosisCode',
+          displayField: 'diagnosisName',
+          value: 'alla',
+          default: 'alla',
+          listeners: {
+            update: function () {
+              this.up('#mainView').getController().updateGrid()
+            }
+          },
+          store: {
+            fields: ['diagnosisCode', 'diagnosisName'],
+            data: [
+              { diagnosisCode: 'alla', diagnosisName: 'Alla' },
+              { diagnosisCode: 1, diagnosisName: 'Primär artros' },
+              { diagnosisCode: 2, diagnosisName: 'Inflammatorisk ledsjukdom' },
+              { diagnosisCode: 3, diagnosisName: 'Akut trauma, höftfraktur' },
+              { diagnosisCode: 4, diagnosisName: 'Följdtillstånd barnsjukdom' },
+              { diagnosisCode: 5, diagnosisName: 'Idiopatisk nekros' },
+              { diagnosisCode: 6, diagnosisName: 'Följdtillstånd efter trauma/fraktur' },
+              { diagnosisCode: 7, diagnosisName: 'Tumör' },
+              { diagnosisCode: 8, diagnosisName: 'Annan sekundär artros' },
+              { diagnosisCode: 9, diagnosisName: 'Akut trauma, övriga' },
+              { diagnosisCode: 10, diagnosisName: 'Övrigt' }
+            ]
           }
         },
-        store: {
-          fields: ['diagnosisCode', 'diagnosisName'],
-          data: [
-            { diagnosisCode: 'alla', diagnosisName: 'Alla' },
-            { diagnosisCode: 1, diagnosisName: 'Primär artros' },
-            { diagnosisCode: 2, diagnosisName: 'Inflammatorisk ledsjukdom' },
-            { diagnosisCode: 3, diagnosisName: 'Akut trauma, höftfraktur' },
-            { diagnosisCode: 4, diagnosisName: 'Följdtillstånd barnsjukdom' },
-            { diagnosisCode: 5, diagnosisName: 'Idiopatisk nekros' },
-            { diagnosisCode: 6, diagnosisName: 'Följdtillstånd efter trauma/fraktur' },
-            { diagnosisCode: 7, diagnosisName: 'Tumör' },
-            { diagnosisCode: 8, diagnosisName: 'Annan sekundär artros' },
-            { diagnosisCode: 9, diagnosisName: 'Akut trauma, övriga' },
-            { diagnosisCode: 10, diagnosisName: 'Övrigt' }
-          ]
-        }
-      },
         {
           xtype: 'rcfilter',
           itemId: 'protesisDropdown',
@@ -724,86 +844,6 @@ Ext.define('shpr.graph.view.Main', {
               { protesisCode: '2', protesisName: 'Halv' }
             ]
           }
-        },
-        {
-          xtype: 'tagfield',
-          itemId: 'stemDropdown',
-          queryMode: 'local',
-          multiSelect: true,
-          stacked: true,
-          cls: 'scw-select scw-multiselect',
-          value: 'alla',
-          valueField: 'P_FemStem_S_StratumCode',
-          displayField: 'beskrivning_stam',
-          store: {
-            fields: ['P_FemStem_S_StratumCode', 'beskrivning_stam'],
-            data: {
-              P_FemStem_S_StratumCode: 'alla',
-              beskrivning_stam: 'Alla företagets'
-            }
-          },
-          listeners: {
-            select: function (combo, record) {
-              this.up().up().getController().updatePart(record, 'stem');
-            }
-          }
-        },
-        {
-          xtype: 'tagfield',
-          itemId: 'cupDropdown',
-          multiselect: true,
-          queryMode: 'local',
-          stacked: true,
-          cls: 'scw-select scw-multiselect',
-          value: 'alla',
-          valueField: 'P_AcetCup_C_StratumCode',
-          displayField: 'beskrivning_cup',
-          default: 'alla',
-          selectCallback: 'updateGrid',
-
-          store: {
-            fields: ['P_AcetCup_C_StratumCode', 'beskrivning_cup'],
-            data: {
-              P_AcetCup_C_StratumCode: 'alla',
-              beskrivning_cup: 'Alla företagets'
-            }
-          },
-          listeners: {
-            select: function (combo, record) {
-              this.up().up().getController().updatePart(record, 'cup');
-            }
-          }
-        }
-      ]
-    },
-    {
-      xtype: 'container',
-      items: [
-        {
-          xtype: 'label',
-          cls: 'scw-label',
-          text: 'Revisionstyp'
-        },
-        {
-          xtype: 'label',
-          cls: 'scw-label',
-          text: 'Orsak'
-        },
-        {
-          xtype: 'label',
-          cls: 'scw-label',
-          html: 'Beräkningsmodell' 
-              + '<div class="scw-info">' 
-              + '<div data-qtip="Om implantatet kommer revideras ger Kaplan-Meier kurvan'
-              + ' sannolikheten att revisionen inträffar efter en viss tidpunkt.'
-              + ' <br/><br/>Kumulativa incidensen ger andelen implantat som reviderats'
-              + ' och andelen patienter som dött fram till en viss tidpunkt.">i'
-              + '</div></div>'
-        },
-        {
-          xtype: 'label',
-          cls: 'scw-label',
-          text: ''
         },
         {
           xtype: 'rcfilter',
@@ -826,15 +866,17 @@ Ext.define('shpr.graph.view.Main', {
           }
         },
         {
-          xtype: 'rcfilter',
+          xtype: 'rcmultiselect',
           itemId: 'causeDropdown',
-          cls: 'scw-select',
           valueField: 'causeCode',
           displayField: 'causeName',
           value: 'alla',
-          sortfield: 'CauseName',
-          sortdirection: 'DESC',
-          selectCallback: 'updateGrid',
+          default: 'alla',
+          listeners: {
+            update: function(){
+              this.up('#mainView').getController().updateGrid()
+            }
+          },
           store: {
             fields: ['causeCode', 'causeName'],
             data: [
@@ -844,6 +886,84 @@ Ext.define('shpr.graph.view.Main', {
               { causeCode: 3, causeName: 'Luxation' },
               { causeCode: 4, causeName: 'Alla aseptiska orsaker' }
             ]
+          }
+        }
+      ]
+    },
+    {
+      xtype: 'container',
+      items: [
+
+        {
+          xtype: 'label',
+          cls: 'scw-label',
+          html: 'Stam'
+            + '<div class="scw-info">'
+            + '<div data-qtip="För att välja flera komponenter samtidigt, '
+            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
+        },
+        {
+          xtype: 'label',
+          cls: 'scw-label',
+          html: 'Cup'
+            + '<div class="scw-info">'
+            + '<div data-qtip="För att välja flera komponenter samtidigt, '
+            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
+        },
+        {
+          xtype: 'label',
+          cls: 'scw-label',
+          html: 'Beräkningsmodell'
+            + '<div class="scw-info">'
+            + '<div data-qtip="Om implantatet kommer revideras ger Kaplan-Meier kurvan'
+            + ' sannolikheten att revisionen inträffar efter en viss tidpunkt.'
+            + ' <br/><br/>Kumulativa incidensen ger andelen implantat som reviderats'
+            + ' och andelen patienter som dött fram till en viss tidpunkt.">i'
+            + '</div></div>'
+        },
+        {
+          xtype: 'label',
+          cls: 'scw-label',
+          text: ''
+        },
+        {
+          xtype: 'rcmultiselect',
+          itemId: 'stemDropdown',
+          valueField: 'P_FemStem_S_StratumCode',
+          displayField: 'beskrivning_stam',
+          value: 'alla',
+          default: 'alla',
+          listeners: {
+            update: function () {
+              this.up('#mainView').getController().updateGrid()
+            }
+          },
+          store: {
+            fields: ['P_FemStem_S_StratumCode', 'beskrivning_stam'],
+            data: {
+              P_FemStem_S_StratumCode: 'alla',
+              beskrivning_stam: 'Alla företagets'
+            }
+          }
+        },
+        {
+          xtype: 'rcmultiselect',
+          itemId: 'cupDropdown',
+          valueField: 'P_AcetCup_C_StratumCode',
+          displayField: 'beskrivning_cup',
+          value: 'alla',
+          default: 'alla',
+          listeners: {
+            update: function () {
+              this.up('#mainView').getController().updateGrid()
+            }
+          },
+          store: {
+            fields: ['P_AcetCup_C_StratumCode', 'beskrivning_cup'],
+            data: {
+              P_AcetCup_C_StratumCode: 'alla',
+              beskrivning_cup: 'Alla företagets'
+            }
           }
         },
         {
@@ -882,11 +1002,11 @@ Ext.define('shpr.graph.view.Main', {
           itemId: 'startDate',
           value: Ext.Date.add(new Date(), Ext.Date.YEAR, -1),
           fieldLabel: 'Operationsdatum'
-                    + '<div class="scw-info">'
-                    + '<div data-qtip="Avser datum för primäroperation. '
-                    + 'De datum som väljs måste utgöra en period på minst ett år'
-                    + ' och ligga i spannet mellan 1999-01-01 och dagens datum.">i'
-                    + '</div></div>mellan',
+            + '<div class="scw-info">'
+            + '<div data-qtip="Avser datum för primäroperation. '
+            + 'De datum som väljs måste utgöra en period på minst ett år'
+            + ' och ligga i spannet mellan 1999-01-01 och dagens datum.">i'
+            + '</div></div>mellan',
           labelWidth: 188,
           format: 'Y-m-d',
           altFormats: 'ymd|Ymd',
@@ -1212,12 +1332,12 @@ Ext.define('shpr.graph.view.Main', {
       hidden: true,
       border: false,
       html: '<div class="spinner">'
-          + '<div class="rect1"></div>'
-          + '<div class="rect2"></div>'
-          + '<div class="rect3"></div>'
-          + '<div class="rect4"></div>'
-          + '<div class="rect5"></div>'
-          + '</div>'
+        + '<div class="rect1"></div>'
+        + '<div class="rect2"></div>'
+        + '<div class="rect3"></div>'
+        + '<div class="rect4"></div>'
+        + '<div class="rect5"></div>'
+        + '</div>'
     },
     {
       xtype: 'panel',
@@ -1251,24 +1371,24 @@ Ext.define('shpr.graph.view.Main', {
 });
 
 Ext.define('Novanti.overrides.chart.legend.SpriteLegend', {
-    override: 'Ext.chart.legend.SpriteLegend',
+  override: 'Ext.chart.legend.SpriteLegend',
 
 
-    isXType: function (xtype) {       
-        return xtype === 'sprite';
-    },
+  isXType: function (xtype) {
+    return xtype === 'sprite';
+  },
 
 
-    getItemId: function () {
-        return this.getId();
-    }
+  getItemId: function () {
+    return this.getId();
+  }
 });
 
 Ext.application({
   name: 'shpr',
   units: [],
   viewcontrollers: [
-  //  'DetailsController'
+    //  'DetailsController'
   ],
   launch: function () {
     var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['KRH/Graph'] : 'contentPanel';
