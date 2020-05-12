@@ -1,3 +1,4 @@
+
 Ext.util.CSS.removeStyleSheet('shpr-companymodule');
 Ext.util.CSS.createStyleSheet(''
 
@@ -577,7 +578,7 @@ Ext.define('shpr.revisions.view.Main', {
             xtype: 'label',
             width: '100%',
             cls: 'scw-header',
-            text: 'Data inmatad efter senast publicerade årsrapport skall användas med stor försiktighet då den inte är komplett eller validerad.'
+            text: 'Data inmatad efter senast publicerade årsrapport skall användas med stor försiktighet då den inte är komplett eller validerad. Det är i de flesta av menyerna möjligt att välja flera alternativ samtidigt genom att hålla nere ctrl-knappen när man klickar.'
           },
           {
             xtype: 'label',

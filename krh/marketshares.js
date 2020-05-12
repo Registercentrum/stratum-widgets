@@ -445,7 +445,7 @@ Ext.define('shpr.market.view.Main', {
     {
       xtype: 'label',
       cls: 'scw-header',
-      text: 'Data inmatad efter senast publicerade årsrapport skall användas med stor försiktighet då den inte är komplett eller validerad. Marknadsandelar avser endast implantat som används för primäroperationer.'
+      text: 'Data inmatad efter senast publicerade årsrapport skall användas med stor försiktighet då den inte är komplett eller validerad. Marknadsandelar avser endast implantat som används för primäroperationer. Det är i de flesta av menyerna möjligt att välja flera alternativ samtidigt genom att hålla nere ctrl-knappen när man klickar.'
     },
     {
       xtype: 'label',

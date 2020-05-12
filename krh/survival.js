@@ -1,3 +1,4 @@
+
 Ext.util.CSS.removeStyleSheet('shpr-companymodule');
 Ext.util.CSS.createStyleSheet(''
 
@@ -344,7 +345,7 @@ Ext.define('shpr.graph.MainController', {
           }
           if (cups.length !== 0) {
             var cupDropdown = view.down('#cupDropdown');
-              cupDropdown.getStore().loadData(cups);
+            cupDropdown.getStore().loadData(cups);
           }
           if (revisions.length !== 0) {
             var revisionChoices = view.down('#revisionDropdown');
@@ -775,7 +776,7 @@ Ext.define('shpr.graph.view.Main', {
       cls: 'scw-header',
       text: 'Implantatöverlevnad avser första revision efter primäroperation. '
         + 'Data inmatad efter senast publicerade årsrapport skall användas '
-        + 'med stor försiktighet då den inte är komplett eller validerad.'
+        + 'med stor försiktighet då den inte är komplett eller validerad. Det är i de flesta av menyerna möjligt att välja flera alternativ samtidigt genom att hålla nere ctrl-knappen när man klickar.'
     },
     {
       xtype: 'container',
