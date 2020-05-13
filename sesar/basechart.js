@@ -20,22 +20,8 @@ Ext.define('Sesar.view.Filter', {
 Ext.define('Sesar.chart.Time', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'sesartime',
-  /*
-  plugins: {
-    responsive: true
-  },
-  responsiveConfig: {
-    'width < 1250': {
-      width: '100%'
-    },
-    'width >= 1250': {
-      width: '100%'
-    },
-  },
-  */
   border: false,
   cls: 'sesar-timechart',
-  colors: ['#DD4C39', '#0791AB'],
   colors: ['#ee442f', '#63acbe'],
   padding: '10 0 0 0',
   insetPadding: '0 35 20 10',
@@ -158,7 +144,6 @@ Ext.define('Sesar.chart.AgeGroups', {
   xtype: 'sesarage',
   border: false,
   cls: 'sesar-timechart',
-  colors: ['#DD4C39', '#0791AB'],
   colors: ['#ee442f', '#63acbe'],
   padding: '10 0 0 0',
   innerPadding: '10 10 10 0',
@@ -360,12 +345,11 @@ Ext.define('Sesar.chart.Comparison', {
   ]
 })
 
-var ctrlr=Ext.define('Sesar.controller.Main', {
+Ext.define('Sesar.controller.Main', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.main',
 
   updateCharts: function (tab) {
-    var chart, url
     var controller = this
     var view = this.getView()
     var isTabChange = typeof tab === 'string'
@@ -389,7 +373,6 @@ var ctrlr=Ext.define('Sesar.controller.Main', {
 
     controller.tab = typeof tab === 'string' && tab || controller.tab
     controller.filters = { start: startyear, end: endyear, report: report, sex: sex, clinic: clinic, clinicName: clinicName || (Profile.Context && Profile.Context.Unit.UnitName) }
-  // view.down('sesar' + controller.tab).up('panel').down().setData({caption: '...', subcaption: '...'})
     switch (controller.tab) {
       case 'time':
         controller.updateData(controller.tab, 'clinics-over-time', view, controller)
@@ -408,8 +391,8 @@ var ctrlr=Ext.define('Sesar.controller.Main', {
       this.updateProgress(false)
       return
     }
-    chart = view.down('sesar' + tab)
-    url = this.createUrl(type, this.filters)
+    var chart = view.down('sesar' + tab)
+    var url = this.createUrl(type, this.filters)
     url = tab === 'comparison' ? url.replace(/&clinic=[A-z0-9]*/, '') : url
     tab === 'comparison' && chart.setHeight(360) && chart.getStore().setSorters([this.sortAsc]) && chart.getStore().loadData({})
     this.fetchData(chart, url, this.filters.report, controller, tab)
@@ -440,7 +423,7 @@ var ctrlr=Ext.define('Sesar.controller.Main', {
         captions.subheader.text = config.subcaption
         chart.usePercentages = config.percentage
         chart.precision = config.precision || 0
-        // chart.setCaptions(Ext.Object.merge({}, controller.captions, captions))
+        chart.getAxes()[0].setTitle({text: controller.reportConfigs[report].axis, strokeStyle: 'darkslategrey', lineWidth: 1, globalAlpha: 0.4})
         chart.up('panel').down().setData(config)
         if(tab === 'comparison'){
           result = result.filter(function(item){return item.Mean !== 'NA'})
@@ -670,8 +653,7 @@ Ext.define('Sesar.view.Main', {
         'width >= 768': {
           layout: {
             type: 'box',
-            vertical: false,
-            // align: 'stretch'
+            vertical: false
           }
         }
       },
@@ -893,13 +875,11 @@ Ext.define('Sesar.view.Main', {
   ]
 })
 
-
 function getYearSelectionItems(){
-	var i=0;
 	var currentYr=new Date().getFullYear();
 	var arr=[];
-	for(y=2014; y<=currentYr; y++){ 
-		arr.push({ ValueName: y , ValueCode: 'year' + y });
+	for(var year=2014; year <= currentYr; year++){ 
+		arr.push({ ValueName: year , ValueCode: 'year' + year });
 	}
 	return arr;
 }
