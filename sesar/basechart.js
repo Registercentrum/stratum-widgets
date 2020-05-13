@@ -442,7 +442,10 @@ var ctrlr=Ext.define('Sesar.controller.Main', {
         chart.precision = config.precision || 0
         // chart.setCaptions(Ext.Object.merge({}, controller.captions, captions))
         chart.up('panel').down().setData(config)
-        tab === 'comparison' && chart.setHeight(result.length * 28 + 50)
+        if(tab === 'comparison'){
+          result = result.filter(function(item){return item.Mean !== 'NA'})
+          chart.setHeight(result.length * 28 + 50)
+        }
         chart.getStore().loadData(result)
         controller.status[tab] = true
       }
