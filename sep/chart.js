@@ -1,10 +1,13 @@
 
+// 
 Ext.define('Septum.view.Main', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'trend',
   alias: 'view.trend',
+  border: false,
+  cls: 'septum-chart',
   height: 500,
-  width: 700,
+  width: '100%',
 
   captions: {
     credits: {
@@ -12,7 +15,7 @@ Ext.define('Septum.view.Main', {
       text: '\n\n\nAktuell enhet: ' + (Profile && Profile.Context !== null ? Profile.Context.Unit.UnitName : 'Riket') + '\n',
       align: 'left',
       style: {
-        fontSize: 14,
+        fontSize: 12,
         fontFamily: 'open_sans',
         fontWeight: 400
       }
@@ -34,7 +37,7 @@ Ext.define('Septum.view.Main', {
     type: 'dom',
     docked: 'bottom',
     style: {
-      padding: '0 0 0 42px',
+      padding: '0 0 20px 42px',
     },
     tpl: '<div class="x-legend-inner"><div class="x-legend-container"><tpl for="."><div class="x-legend-item"><span class="x-legend-item-marker {[ values.disabled ? Ext.baseCSSPrefix + \'legend-inactive\' : \'\' ]}" style="background:{mark};"></span>{name}</div></tpl></div></div>'
   },
@@ -148,14 +151,19 @@ Ext.application({
 Ext.util.CSS.removeStyleSheet('septum');
 Ext.util.CSS.createStyleSheet(
   ' '
-  + '  .x-legend-container {'
-  + '      width: 520px;'
-  + '      height: 140px;'
+  + '.septum-chart .x-panel-body-default {'
+  + '  border: none;'
+  + '}'
+  
+  + '.septum-chart .x-legend-container {'
+  + '      width: 100%;'
+//  + '      height: 140px;'
   + '      margin: auto;'
   + '      text-align: left;'
   + '  }'
-  + '  .x-legend-item {'
-  + '    width: 260px;'
+
+  + '.septum-chart .x-legend-item {'
+  + '    width: 50%;'
   + '    max-width: 260px;'
   + '    float: left;'
   + '    text-overflow: clip;'
