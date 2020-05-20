@@ -900,22 +900,22 @@ Ext.define('shpr.graph.view.Main', {
         {
           xtype: 'label',
           cls: 'scw-label',
-          html: 'Stam'
+          html: 'Stam - artikelgrupp'
         },
         {
           xtype: 'label',
           cls: 'scw-label',
-          html: 'Stamartiklar'
+          html: 'Stam - artikel'
         },
         {
           xtype: 'label',
           cls: 'scw-label',
-          html: 'Cup'
+          html: 'Cup - artikelgrupp'
         },
         {
           xtype: 'label',
           cls: 'scw-label',
-          html: 'Cupartiklar'
+          html: 'Cup - artikel'
         },
         {
           xtype: 'rcmultiselect',
