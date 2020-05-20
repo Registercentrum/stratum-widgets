@@ -1,13 +1,12 @@
 
 var widgetConfig = widgetConfig || {}
-widgetConfig.Roles = widgetConfig.Roles || widgetConfig.Roles || [901, 902, 903, 907, 908]
-widgetConfig.Roles.push(0)
 widgetConfig.devMode = Profile.Context && Profile.Context.User.UserID <= 200
-// widgetConfig.devMode = false
-widgetConfig.passhash = 'zdn+TQhqObQUdp9hZv/qm9CQLak='
-
 
 function onReady() {
+  widgetConfig.Roles = widgetConfig.Roles || [901, 902, 903, 907, 908]
+  widgetConfig.Roles.push(0)
+  // widgetConfig.devMode = false
+  widgetConfig.passhash = 'zdn+TQhqObQUdp9hZv/qm9CQLak='
   Ext.tip.QuickTipManager.init()
   RC && RC.UserAdministration && RC.UserAdministration.app && RC.UserAdministration.app.destroy()
   // Ext.create('RC.UserAdministration.view.FileDrop').show();
@@ -544,6 +543,7 @@ Ext.define('RC.UserAdministration.controller.User', {
     return filter
   },
 
+  /* eslint-disable no-undef */
   createContextFilter: function () {
     return function (context) {
     return context.User.Username.toLowerCase().indexOf(term) > -1
@@ -552,6 +552,7 @@ Ext.define('RC.UserAdministration.controller.User', {
             || (context.User.Email && context.User.Email.toLowerCase().indexOf(term) > -1)
     }
   },
+  /* eslint-enable no-undef */
 
   updateGrid: function () {
     var store  = this.getView().getStore()
@@ -748,14 +749,6 @@ Ext.define('RC.UserAdministration.controller.Form', {
     return form
   },
 
-  transformHsaid: function (component, value) {
-    var value = form.HSAID
-    if (value && value.indexOf('SE') > -1) {
-      value = value.toUpperCase()
-    }
-    return value
-  },
-
   transformPersonalId: function (form) {
     if (!form.PersonalId) return
     this.lookup('hsaid').setValue(form.PersonalId)
@@ -940,7 +933,6 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
   },
 
   getQueryFromInputs: function () {
-    var view = this.getView()
     var inputs = ''
     inputs += this.lookup('firstname').getValue().length > 2 ? this.lookup('firstname').getValue() + ' ' : ''
     inputs += this.lookup('lastname').getValue().length > 2 ? this.lookup('lastname').getValue() + ' ' : ''
@@ -1144,7 +1136,8 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     record.set('HSAID', null)
     record.set('Passhash', widgetConfig.passhash)
     Ext.StoreManager.lookup('users').sync()
-    this.getView().destroy()
+    // todo: sync + mail
+    // this.getView().destroy()
   },
 
   showLog: function () {
@@ -1153,7 +1146,6 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
   },
 
   fetchLogg: function () {
-    var controller = this
     var deferred = new Ext.Deferred()
 
     Ext.Ajax.request({
@@ -1896,7 +1888,6 @@ Ext.define('RC.UserAdministration.controller.Unit', {
   onDomainsLoaded: function (dataLoader) {
     this.getView().setDomains(dataLoader.getDomains())
     var domains = this.getView().getDomains()
-    var bindings = dataLoader.getBindings()
     var grid = this.getView().getHeaderContainer()
     domains.forEach(function (domain) {
       grid.insert(Ext.create('Ext.grid.column.Column', {
@@ -2212,7 +2203,6 @@ Ext.define('RC.UserAdministration.controller.CreateUnit', {
   addDomains: function () {
     var domains = this.getView().getDomains()
     var form = this.getView().down()
-    var controller = this
     domains.forEach(function (domain) {
       form.add({
         xtype: 'rcfilter',
@@ -2455,7 +2445,7 @@ Ext.define('RC.UserAdministration.controller.FileDrop', {
   },
 
   read: function (e) {
-    var content = e.target.result
+    // var content = e.target.result
   }
 })
 
@@ -2480,7 +2470,7 @@ Ext.util.CSS.createStyleSheet(
   + '  border-color: rgba(0,0,0,0);'
   + '}'
 
-  + '.rc-gridbutton.x-btn-over .x-btn-icon-el-default-small {'
+  + '.rc-gridbutton.x-btn-over .x-btn-icon-el-default-small, .rc-gridbutton.x-btn-focus .x-btn-icon-el-default-small {'
   + '  color: #af1212;'
   + '}'
 
@@ -2516,6 +2506,7 @@ Ext.util.CSS.createStyleSheet(
   'useradministration'
 )
 
+// eslint-disable-next-line no-unused-vars
 function start() {
   Ext.Loader.loadScript({
     url: '/stratum/extjs/scripts/exporter.js',
