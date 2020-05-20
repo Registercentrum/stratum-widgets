@@ -239,7 +239,7 @@
                 indicatorLabel: 'Besvärsfrihet'
               }, {
                 indicatorId: 4,
-                indicatorLabel: 'Täckningsgrad'
+                indicatorLabel: widgetConfig.label
               }],
             sorters: ['indicatorId'],
             listeners: {
@@ -756,10 +756,7 @@
                 + 'under de senaste 12 '
                 + 'månaderna.';
             case 4:
-              return 'av patienterna som '
-                + 'opereras finns i '
-                + 'tonsillregistret. Uppgifterna '
-                + 'avser 2017';
+              return widgetConfig.description;
             default:
               return 'Beskrivning saknas';
           }
@@ -1051,7 +1048,7 @@
       }; //transformData
   
       var updateIndicatorData = function (chart, indicatorId, unitCode, unitName) {
-        var url = serverPrefix + '/stratum/api/statistics/ton/oversiktsandelar/'; // oversiktsandelar3
+        var url = serverPrefix + widgetConfig.overviewurl
         var me = this;
         Ext.Ajax.request({
           url: url,
@@ -1103,7 +1100,7 @@
           chart1 = getBarChart(1, 'Återinläggning för blödning', 'Återinläggning för blödning'),
           chart2 = getPieChart(2, 'Smärta', 'Sökt för smärta efter operation'),
           chart3 = getPieChart(3, 'Symptomfrihet', 'Besvärsfrihet'),
-          chart4 = getPieChart(4, 'Täckningsgrad', 'Täckningsgrad')
+          chart4 = getPieChart(4, widgetConfig.label, widgetConfig.label)
           //chart4 = getNoChart(4, 'Täckningsgrad', 'Täckningsgrad')
         ],
       });
@@ -1499,7 +1496,7 @@
         var isNational = (unitCode === 0);
         var includeTE = _current.te ? 1 : 0;
         var includeTT = _current.tt ? 1 : 0;
-        var url = serverPrefix + '/stratum/api/statistics/ton/tonw-trend-fem-ar-v2'; // tonw-trend-fem-ar-v2
+        var url = serverPrefix + window.widgetConfig.trendurl
   
         Ext.Ajax.request({
           url: url,
@@ -2965,7 +2962,7 @@
       }; //transformData
   
       var updateAllClinicsData = function () {
-        var url = serverPrefix + '/stratum/api/statistics/ton/allaklinikerte/';
+        var url = serverPrefix + widgetConfig.clinicsurl
   
         Ext.Ajax.request({
           url: url,
