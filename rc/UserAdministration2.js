@@ -1134,6 +1134,7 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     this.getForm().updateRecord()
     var record = this.getForm().getRecord()
     record.set('HSAID', null)
+    this.lookup('hsaid').setValue(null)
     record.set('Passhash', widgetConfig.passhash)
     Ext.StoreManager.lookup('users').sync()
     // todo: sync + mail
@@ -1505,7 +1506,7 @@ Ext.define('RC.UserAdministration.form.User', {
           text: 'Förnya SITHS-kort',
           handler: 'renewSiths',
           minWidth: 80,
-          hidden: widgetConfig.devMode !== true
+          // hidden: widgetConfig.devMode !== true
         },
         {
           xtype: 'button',
