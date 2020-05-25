@@ -1,4 +1,4 @@
-
+//
 var widgetConfig = widgetConfig || {}
 widgetConfig.devMode = Profile.Context && Profile.Context.User.UserID <= 200
 
@@ -1078,12 +1078,39 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     this.lookup('extra').enable()
     var personalidIsUsed = this.getView().getUserData().data.PersonalId
     this.updateStatusBar()
+    this.loadContextActivity()
     if (personalidIsUsed) {
       this.lookup('hsaid').setValue(null)
       this.onBankIdChoosen()
     } else {
       this.onSithIdChoosen()
     }
+  },
+
+  loadContextActivity: function(){
+    var store = this.getView().down('grid').getStore()
+    var contexts = store.getData().items
+    var controller = this
+    contexts.forEach(function(context){controller.updateContext(context.data.ContextID, store)})
+  },
+
+  updateContext: function (id, store) {
+    Ext.Ajax.request({
+      url: '/stratum/api/metadata/logentries/context/' + id,
+      method: 'GET',
+      withCredentials: true,
+      success: function (result, request) {
+        var data = Ext.decode(result.responseText).data
+        if(data.length === 0) {
+          var record = store.findRecord('ContextID', id)
+          record.set('deletable', true)
+          record.commit()
+        }
+      },
+      failure: function (result, request) {
+        
+      }
+    })
   },
 
   loadUserData: function () {
@@ -1151,7 +1178,7 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
 
     Ext.Ajax.request({
       // url: '/stratum/api/metadata/logentries/latest/logtype/' + 1201,
-      // url: '/stratum.registercentrum.se/api/metadata/logentries/context/ContextID?after=aFromDate',
+      // url: '/stratum/api/metadata/logentries/context/ContextID?after=aFromDate',
       url: '/stratum/api/metadata/users/register/110?expose=deep',
       method: 'GET',
       withCredentials: true,
@@ -1616,11 +1643,13 @@ Ext.define('RC.UserAdministration.view.ContextGrid', {
         xtype: 'widgetcolumn',
         widget: {
             textAlign: 'center',
-            // text: 'Ta bort',
             xtype: 'button',
             cls: 'rc-gridbutton',
             iconCls: 'x-fa fa-trash',
-            handler: 'onRemoveContext'
+            handler: 'onRemoveContext',
+            bind: {
+              hidden: '{!record.deletable}'
+            },
         },
         hidden: !widgetConfig.devMode
     },
