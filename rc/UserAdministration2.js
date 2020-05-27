@@ -1,4 +1,3 @@
-//
 var widgetConfig = widgetConfig || {}
 widgetConfig.devMode = Profile.Context && Profile.Context.User.UserID <= 200
 
@@ -1146,6 +1145,7 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
 
   onContextAdded: function (context) {
     var store = this.lookup('contexts').getStore()
+    context.deletable = true
     store.add(context)
     var usergrid = RC.UserAdministration.app.down('usergrid')
     var existingUser = Ext.StoreManager.get('users').getById(context.User.UserID)
@@ -1651,7 +1651,7 @@ Ext.define('RC.UserAdministration.view.ContextGrid', {
               hidden: '{!record.deletable}'
             },
         },
-        hidden: !widgetConfig.devMode
+        hidden: false //!widgetConfig.devMode
     },
     {
       text: 'Slutdatum',
@@ -1713,6 +1713,8 @@ Ext.define('RC.UserAdministration.controller.Context', {
   },
 
   removeContext: function(component){
+    var userGrid = RC.UserAdministration.app.down('usergrid')
+    var contextStore = this.getView().getStore()
     var record = component.getWidgetRecord().getData()
      Ext.Ajax.request({
       url: '/stratum/api/metadata/contexts/' + record.ContextID,
@@ -1720,7 +1722,9 @@ Ext.define('RC.UserAdministration.controller.Context', {
       jsonData: record,
       withCredentials: true,
       success: function (result, request) {
-        // observer.fireEvent('contextsupdated', record.data.User.UserID)
+        userGrid.fireEvent('contextsupdated', record.User.UserID)
+        var contextRecord = contextStore.findRecord('ContextID', record.ContextID)
+        contextStore.remove(contextRecord)
       },
       failure: function (result, request) {
       }
@@ -1734,7 +1738,7 @@ Ext.define('RC.UserAdministration.controller.Context', {
       method: 'GET',
       withCredentials: true,
       success: function (result, request) {
-        // observer.fireEvent('contextsupdated', record.data.User.UserID)
+       
       },
       failure: function (result, request) {
       }
