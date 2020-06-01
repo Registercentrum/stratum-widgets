@@ -1,10 +1,11 @@
 var widgetConfig = widgetConfig || {}
 widgetConfig.devMode = Profile.Context && Profile.Context.User.UserID <= 200
+// widgetConfig.devMode = false
 
 function onReady() {
   widgetConfig.Roles = widgetConfig.Roles || [901, 902, 903, 907, 908]
   widgetConfig.Roles.push(0)
-  // widgetConfig.devMode = false
+  
   widgetConfig.passhash = 'zdn+TQhqObQUdp9hZv/qm9CQLak='
   Ext.tip.QuickTipManager.init()
   RC && RC.UserAdministration && RC.UserAdministration.app && RC.UserAdministration.app.destroy()
@@ -1517,55 +1518,61 @@ Ext.define('RC.UserAdministration.form.User', {
       border: false,
       items: [
         {
-          xtype: 'tbspacer', flex: 1
+          xtype: 'tbspacer', flex: 0
         },
         {
           xtype: 'button',
           reference: 'showLogButton',
           text: 'Logg',
+          iconCls: 'x-fa fa-trash',
           handler: 'showLog',
-          minWidth: 80,
-          hidden: widgetConfig.devMode !== true
+          flex: 1,
+          hidden: true
         },
         {
           xtype: 'button',
           reference: 'renewSithsButton',
           text: 'Förnya SITHS-kort',
           handler: 'renewSiths',
-          minWidth: 80,
-          // hidden: widgetConfig.devMode !== true
+          iconCls: 'x-fa fa-refresh',
+          flex: 1
         },
         {
           xtype: 'button',
           reference: 'WelcomeLetterButton',
           text: 'Välkomstbrev',
           handler: 'onSendWelcomeMail',
-          minWidth: 80
+          iconCls: 'x-fa fa-envelope',
+          flex: 1
         },
         {
           xtype: 'button',
           reference: 'createContextButton',
           text: 'Skapa ny kontext',
+          iconCls: 'x-fa fa-id-card-o',
           handler: 'onCreateContext',
-          minWidth: 80
+          flex: 1
         },
         {
           xtype: 'button',
           reference: 'sithIdButton',
           text: 'Byt till SITHS-kort',
+          iconCls: 'x-fa fa-exchange',
           handler: 'onSithIdChoosen',
-          minWidth: 80
+          flex: 1
         },
         {
           xtype: 'button',
           reference: 'bankIdButton',
           text: 'Byt till BankID',
+          iconCls: 'x-fa fa-exchange',
           handler: 'onBankIdChoosen',
-          minWidth: 80
+          flex: 1
         },
         {
           text: 'Avbryt',
-          minWidth: 80,
+          flex: 1,
+          iconCls: 'x-fa fa-times-circle',
           handler: function () {
             this.up('window').destroy()
           }
@@ -1573,9 +1580,10 @@ Ext.define('RC.UserAdministration.form.User', {
         {
           xtype: 'button',
           text: 'Spara',
+          iconCls: 'x-fa fa-floppy-o',
           handler: 'onSave',
           formBind: true,
-          minWidth: 80
+          flex: 1
         }
       ]
     }
