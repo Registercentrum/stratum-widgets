@@ -1,3 +1,4 @@
+
 var widgetConfig = widgetConfig || {}
 widgetConfig.devMode = Profile.Context && Profile.Context.User.UserID <= 200
 // widgetConfig.devMode = false
@@ -2540,6 +2541,10 @@ Ext.util.CSS.createStyleSheet(
 
   + '.rc-useradministration .x-grid-item-selected .x-grid-item-focused {'
   + '  color: #f0f0f0;'
+  + '}'
+
+  + '.rc-useradministration .x-btn-icon-el-default-toolbar-small {'
+  + '  color: #888;'
   + '}'
 
   + '.rc-info div {'
