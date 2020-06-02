@@ -984,7 +984,8 @@ Ext.define('RC.UserAdministration.view.EditUser', {
   cls: 'rc-useradministration',
 
   listeners: {
-    contextadded: 'onContextAdded'
+    contextadded: 'onContextAdded',
+    change: 'onFormChanged'
   },
 
   config: {
@@ -1128,13 +1129,35 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
   },
 
   onSave: function () {
+    var controller = this
     this.transformUser()
     this.getForm().updateRecord()
     if (this.getForm().getRecord().data.HSAID === '') {
       this.getForm().getRecord().data.HSAID = null
     }
-    Ext.StoreManager.lookup('users').sync()
-    this.getView().destroy()
+    var recordChanged = this.getForm().getRecord().isDirty()
+    recordChanged && this.showSaveSpinner()
+    !recordChanged && this.showSaveCheckmark()
+    Ext.StoreManager.lookup('users').sync({callback: function () { controller.showSaveCheckmark()}})
+  },
+
+  onFormChanged: function () {
+    this.showSaveDefault()
+  },
+
+  showSaveDefault: function () {
+    this.lookup('saveButton')
+    this.lookup('saveButton').setIconCls('x-fa fa-floppy-o')
+  },
+
+  showSaveSpinner: function(){
+    this.lookup('saveButton')
+    this.lookup('saveButton').setIconCls('x-fa fas fa-cog fa-spin')
+  },
+
+  showSaveCheckmark: function() {
+    this.lookup('saveButton')
+    this.lookup('saveButton').setIconCls('x-fa fa-check')
   },
 
   onCreateContext: function () {
@@ -1581,6 +1604,7 @@ Ext.define('RC.UserAdministration.form.User', {
         {
           xtype: 'button',
           text: 'Spara',
+          reference: 'saveButton',
           iconCls: 'x-fa fa-floppy-o',
           handler: 'onSave',
           formBind: true,
@@ -2547,6 +2571,14 @@ Ext.util.CSS.createStyleSheet(
   + '  color: #888;'
   + '}'
 
+  + '.rc-useradministration .x-btn-default-toolbar-small {'
+  + '  border-color: #f0f0f0;'
+  + '}'
+
+  + '.rc-useradministration .x-btn-default-toolbar-small:hover {'
+  + '  border-color: #b0b0b0;'
+  + '}'
+  
   + '.rc-info div {'
   + '  border-color: #eee;'
   + '}',
