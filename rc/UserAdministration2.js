@@ -889,7 +889,24 @@ Ext.define('RC.UserAdministration.view.CreateUser', {
         data: [],
         type: 'user',
         storeId: 'matchingusers'
-      },
+      }
+    }
+  ],
+  dockedItems: [
+    {
+      xtype: 'toolbar',
+      dock: 'bottom',
+      items: [
+        {
+          xtype: 'label',
+          text: '...',
+          reference: 'statusbar',
+          style: {
+            fontWeight: 'normal',
+            color: '#606060'
+          }
+        }
+      ]
     }
   ]
 })
@@ -960,6 +977,7 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
     var matches = Ext.decode(response.responseText).data
     matches = this.filterMactches(matches)
     this.lookup('matchUser').getStore().loadData(matches)
+    this.lookup('statusbar').setText('Antal: ' + matches.length)
   },
 
   filterMactches: function (matches) {
@@ -1141,23 +1159,40 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     Ext.StoreManager.lookup('users').sync({callback: function () { controller.showSaveCheckmark()}})
   },
 
+  renewSiths: function () {
+    var controller = this
+    this.transformUser()
+    this.getForm().updateRecord()
+    var record = this.getForm().getRecord()
+    !record.data.HSAID === null && this.showRenewSpinner()
+    record.set('HSAID', null)
+    this.lookup('hsaid').setValue(null)
+    record.set('Passhash', widgetConfig.passhash)
+    Ext.StoreManager.lookup('users').sync({callback: function () { controller.showRenewCheckmark()}})
+  },
+
   onFormChanged: function () {
     this.showSaveDefault()
   },
 
   showSaveDefault: function () {
-    this.lookup('saveButton')
     this.lookup('saveButton').setIconCls('x-fa fa-floppy-o')
   },
 
   showSaveSpinner: function(){
-    this.lookup('saveButton')
     this.lookup('saveButton').setIconCls('x-fa fas fa-cog fa-spin')
   },
 
   showSaveCheckmark: function() {
-    this.lookup('saveButton')
     this.lookup('saveButton').setIconCls('x-fa fa-check')
+  },
+
+  showRenewSpinner: function(){
+    this.lookup('renewSithsButton').setIconCls('x-fa fas fa-refresh fa-spin')
+  },
+  
+  showRenewCheckmark: function() {
+    this.lookup('renewSithsButton').setIconCls('x-fa fa-check')
   },
 
   onCreateContext: function () {
@@ -1179,18 +1214,6 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
     } else {
       usergrid.fireEvent('contextsupdated', context.User.UserID)
     }
-  },
-
-  renewSiths: function () {
-    this.transformUser()
-    this.getForm().updateRecord()
-    var record = this.getForm().getRecord()
-    record.set('HSAID', null)
-    this.lookup('hsaid').setValue(null)
-    record.set('Passhash', widgetConfig.passhash)
-    Ext.StoreManager.lookup('users').sync()
-    // todo: sync + mail
-    // this.getView().destroy()
   },
 
   showLog: function () {
@@ -1268,6 +1291,18 @@ Ext.define('RC.UserAdministration.view.MatchUser', {
       flex: 1,
       sortable: true,
       hidden: localStorage.getItem('Email') === 'hidden' || false
+    }
+  ],
+  dockedItems: [
+    {
+      xtype: 'header',
+      title: 'Existerande användare',
+      padding: 10,
+      border: false,
+      style: {
+        color: 'white',
+        backgroundColor: '#888',
+      }
     }
   ],
 })
@@ -1423,7 +1458,7 @@ Ext.define('RC.UserAdministration.form.User', {
   fieldDefaults: {
     validateOnChange: true
   },
-  bodyPadding: 7,
+  bodyPadding: '23 7',
   defaults: {
     layout: 'form',
     xtype: 'textfield',
