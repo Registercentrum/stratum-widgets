@@ -344,29 +344,33 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
         {
           reference: 'exportButton',
           text: 'Exportera',
+          iconCls: 'x-fa fa-download',
           handler: 'export',
-          minWidth: 80,
+          width: 120,
           disabled: false
         },
         {
           reference: 'emailButton',
           text: 'E-posta',
+          iconCls: 'x-fa fa-envelope',
           handler: 'mail',
-          minWidth: 80,
+          width: 120,
           disabled: true
         },
         {
           reference: 'editButton',
           text: 'Redigera',
+          iconCls: 'x-fa fa-edit',
           handler: 'edit',
-          minWidth: 80,
+          width: 120,
           disabled: true
         },
         {
           reference: 'createButton',
-          text: 'Lägg till användare',
+          text: 'Lägg till',
+          iconCls: 'x-fa fa-plus',
           handler: 'create',
-          minWidth: 80,
+          width: 120,
           disabled: false
         }
       ]
@@ -1180,7 +1184,7 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
   },
 
   showSaveSpinner: function(){
-    this.lookup('saveButton').setIconCls('x-fa fas fa-cog fa-spin')
+    this.lookup('saveButton').setIconCls('x-fa fa-cog fa-spin')
   },
 
   showSaveCheckmark: function() {
@@ -1188,7 +1192,7 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
   },
 
   showRenewSpinner: function(){
-    this.lookup('renewSithsButton').setIconCls('x-fa fas fa-refresh fa-spin')
+    this.lookup('renewSithsButton').setIconCls('x-fa fa-refresh fa-spin')
   },
   
   showRenewCheckmark: function() {
@@ -1577,7 +1581,9 @@ Ext.define('RC.UserAdministration.form.User', {
       border: false,
       items: [
         {
-          xtype: 'tbspacer', flex: 0
+          xtype: 'tbspacer',
+          reference: 'spacer', 
+          flex: 1
         },
         {
           xtype: 'button',
@@ -1585,7 +1591,7 @@ Ext.define('RC.UserAdministration.form.User', {
           text: 'Logg',
           iconCls: 'x-fa fa-trash',
           handler: 'showLog',
-          flex: 1,
+          width: 155,
           hidden: true
         },
         {
@@ -1594,15 +1600,7 @@ Ext.define('RC.UserAdministration.form.User', {
           text: 'Förnya SITHS-kort',
           handler: 'renewSiths',
           iconCls: 'x-fa fa-refresh',
-          flex: 1
-        },
-        {
-          xtype: 'button',
-          reference: 'WelcomeLetterButton',
-          text: 'Välkomstbrev',
-          handler: 'onSendWelcomeMail',
-          iconCls: 'x-fa fa-envelope',
-          flex: 1
+          width: 155,
         },
         {
           xtype: 'button',
@@ -1610,7 +1608,15 @@ Ext.define('RC.UserAdministration.form.User', {
           text: 'Skapa ny kontext',
           iconCls: 'x-fa fa-id-card-o',
           handler: 'onCreateContext',
-          flex: 1
+          width: 155,
+        },
+        {
+          xtype: 'button',
+          reference: 'WelcomeLetterButton',
+          text: 'Välkomstbrev',
+          handler: 'onSendWelcomeMail',
+          iconCls: 'x-fa fa-envelope',
+          width: 155,
         },
         {
           xtype: 'button',
@@ -1618,7 +1624,7 @@ Ext.define('RC.UserAdministration.form.User', {
           text: 'Byt till SITHS-kort',
           iconCls: 'x-fa fa-exchange',
           handler: 'onSithIdChoosen',
-          flex: 1
+          width: 155,
         },
         {
           xtype: 'button',
@@ -1626,11 +1632,11 @@ Ext.define('RC.UserAdministration.form.User', {
           text: 'Byt till BankID',
           iconCls: 'x-fa fa-exchange',
           handler: 'onBankIdChoosen',
-          flex: 1
+          width: 155,
         },
         {
           text: 'Avbryt',
-          flex: 1,
+          width: 155,
           iconCls: 'x-fa fa-times-circle',
           handler: function () {
             this.up('window').destroy()
@@ -1640,10 +1646,10 @@ Ext.define('RC.UserAdministration.form.User', {
           xtype: 'button',
           text: 'Spara',
           reference: 'saveButton',
-          iconCls: 'x-fa fa-floppy-o',
+          iconCls: 'x-fa fa-floppy',
           handler: 'onSave',
           formBind: true,
-          flex: 1
+          width: 155,
         }
       ]
     }
@@ -2605,7 +2611,7 @@ Ext.util.CSS.createStyleSheet(
   + '.rc-useradministration .x-btn-icon-el-default-toolbar-small {'
   + '  color: #888;'
   + '}'
-
+/*
   + '.rc-useradministration .x-btn-default-toolbar-small {'
   + '  border-color: #f0f0f0;'
   + '}'
@@ -2613,7 +2619,7 @@ Ext.util.CSS.createStyleSheet(
   + '.rc-useradministration .x-btn-default-toolbar-small:hover {'
   + '  border-color: #b0b0b0;'
   + '}'
-  
+  */
   + '.rc-info div {'
   + '  border-color: #eee;'
   + '}',
