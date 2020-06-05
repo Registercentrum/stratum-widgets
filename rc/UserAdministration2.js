@@ -226,17 +226,6 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
     }
   ],
 
-  // features: [{ ftype: 'grouping', enableGroupingMenu: true }],
-  /*
-  features: [{
-    id: 'group',
-    ftype: 'groupingsummary',
-    groupHeaderTpl: '{name}',
-    hideGroupedHeader: true,
-    enableGroupingMenu: false
-  }],
-  */
-
   dockedItems: [
     {
       xtype: 'toolbar',
@@ -258,7 +247,8 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
           xtype: 'button',
           reference: 'searchButton',
           text: 'Sök',
-          width: 100,
+          iconCls: 'x-fa fa-search',
+          width: 120,
           handler: 'searchOwn',
           disabled: false
         },
@@ -360,7 +350,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
         {
           reference: 'editButton',
           text: 'Redigera',
-          iconCls: 'x-fa fa-edit',
+          iconCls: 'x-fa fa-pencil',
           handler: 'edit',
           width: 120,
           disabled: true
@@ -368,7 +358,7 @@ Ext.define('RC.UserAdministration.view.UserGrid', {
         {
           reference: 'createButton',
           text: 'Lägg till',
-          iconCls: 'x-fa fa-plus',
+          iconCls: 'x-fa fa-user-plus',
           handler: 'create',
           width: 120,
           disabled: false
@@ -958,6 +948,8 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
     var inputs = ''
     inputs += this.lookup('firstname').getValue().length > 2 ? this.lookup('firstname').getValue() + ' ' : ''
     inputs += this.lookup('lastname').getValue().length > 2 ? this.lookup('lastname').getValue() + ' ' : ''
+    inputs += this.lookup('hsaid').getValue().length > 2 ? this.lookup('hsaid').getValue() + ' ' : ''
+    inputs += this.lookup('personalid').getValue().length > 2 ? this.lookup('personalid').getValue() + ' ' : ''
     inputs += this.lookup('username').getValue().length > 2 ? this.lookup('username').getValue() + ' ' : ''
     inputs = inputs.length > 0 ? inputs.substring(0, inputs.length - 1) : ''
     return inputs
@@ -979,18 +971,26 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
 
   showMatchingUsers: function (response) {
     var matches = Ext.decode(response.responseText).data
-    matches = this.filterMactches(matches)
+    this.matches = matches
+    matches = this.filterMatches(matches)
     this.lookup('matchUser').getStore().loadData(matches)
     this.lookup('statusbar').setText('Antal: ' + matches.length)
+    this.lookup('hsaid').isValid()
+    this.lookup('personalid').isValid()
   },
 
-  filterMactches: function (matches) {
+  filterMatches: function (matches) {
     var firstName = this.lookup('firstname').getValue()
     var lastName = this.lookup('lastname').getValue()
+    var hsaid = this.lookup('hsaid').isDisabled() ? '' : this.lookup('hsaid').getValue()
+    var bankid = this.lookup('personalid').isDisabled() ? '' : this.lookup('personalid').getValue()
     var email = this.lookup('username').getValue()
     matches = matches.filter(function (match) {
+      if(hsaid === match.HSAID || bankid === match.HSAID) return true
       return (firstName.length < 3 || Ext.String.startsWith(match.FirstName, firstName, true))
         && (lastName.length < 3 || Ext.String.startsWith(match.LastName, lastName, true))
+        && (hsaid.length < 3 || Ext.String.startsWith(match.HSAID, hsaid, true))
+        && (bankid.length < 3 || Ext.String.startsWith(match.HSAID, bankid, true))
         && (email.length < 3 || Ext.String.startsWith(match.Email, email, true))
     })
     return matches
@@ -1180,7 +1180,7 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
   },
 
   showSaveDefault: function () {
-    this.lookup('saveButton').setIconCls('x-fa fa-floppy-o')
+    this.lookup('saveButton').setIconCls('x-fa fa-cloud-upload')
   },
 
   showSaveSpinner: function(){
@@ -1635,9 +1635,9 @@ Ext.define('RC.UserAdministration.form.User', {
           width: 155,
         },
         {
-          text: 'Avbryt',
+          text: 'Stäng',
           width: 155,
-          iconCls: 'x-fa fa-times-circle',
+          iconCls: 'x-fa fa-close',
           handler: function () {
             this.up('window').destroy()
           }
@@ -1646,7 +1646,7 @@ Ext.define('RC.UserAdministration.form.User', {
           xtype: 'button',
           text: 'Spara',
           reference: 'saveButton',
-          iconCls: 'x-fa fa-floppy',
+          iconCls: 'x-fa fa-cloud-upload',
           handler: 'onSave',
           formBind: true,
           width: 155,
@@ -1923,7 +1923,8 @@ Ext.define('RC.UserAdministration.view.UnitGrid', {
           xtype: 'button',
           reference: 'searchButton',
           text: 'Sök',
-          width: 100,
+          iconCls: 'x-fa fa-search',
+          width: 120,
           handler: 'searchUnits',
           disabled: false
         },
@@ -1937,22 +1938,25 @@ Ext.define('RC.UserAdministration.view.UnitGrid', {
         {
           reference: 'exportButton',
           text: 'Exportera',
+          iconCls: 'x-fa fa-download',
           handler: 'export',
-          minWidth: 80,
+          width: 120,
           disabled: false
         },
         {
           reference: 'editButton',
           text: 'Redigera',
+          iconCls: 'x-fa fa-pencil',
           handler: 'edit',
-          minWidth: 80,
+          width: 120,
           disabled: true
         },
         {
           reference: 'createButton',
-          text: 'Lägg till enhet',
+          text: 'Lägg till',
+          iconCls: 'x-fa fa-plus',
           handler: 'create',
-          minWidth: 80,
+          width: 120,
           disabled: false
         }
       ]
@@ -2135,16 +2139,7 @@ Ext.define('RC.UserAdministration.form.Unit', {
       store: { type: 'active' },
       valueField: 'ActiveCode',
       displayField: 'ActiveName'
-    },
-    /*
-    { 
-      fieldLabel: 'Bindings', 
-      name: 'Bindings', 
-      reference: 'bindings', 
-      allowBlank: true, 
-      xtype: 'hiddenfield' 
     }
-    */
   ],
 
   dockedItems: [
@@ -2157,8 +2152,9 @@ Ext.define('RC.UserAdministration.form.Unit', {
           xtype: 'tbspacer', flex: 1
         },
         {
-          text: 'Avbryt',
-          minWidth: 80,
+          text: 'Stäng',
+          iconCls: 'x-fa fa-close',
+          width: 155,
           handler: function () {
             this.up('window').destroy()
           }
@@ -2166,9 +2162,10 @@ Ext.define('RC.UserAdministration.form.Unit', {
         {
           xtype: 'button',
           text: 'Spara',
+          iconCls: 'x-fa fa-cloud-upload',
           handler: 'onSave',
           formBind: true,
-          minWidth: 80
+          width: 155
         }
       ]
     }
@@ -2369,15 +2366,38 @@ Ext.define('RC.UserAdministration.view.Filter', {
 Ext.define('RC.UserAdministration.Validators', {
   override: 'Ext.form.field.VTypes',
   
-  hsaid: function (value) {
+  hsaid: function (value, field) {
     var validator = new RegExp(/^SE[a-zA-Z0-9-]{1,29}$/)
-    return validator.test(value)
+    var matches = field.up('window').getController().matches
+    var existingId = field.up('window').getController().filterMatches && field.up('window').getController().filterMatches(matches).pop() && field.up('window').getController().filterMatches(matches).pop().HSAID === value
+    
+    var validId = validator.test(value)
+    if(!validId) {
+      this.hsaidText = 'Inget giltigt <br/>HSAID'
+      return false
+    }
+    if(existingId) {
+      this.hsaidText = 'Detta HSAID finns<br>redan registrerat'
+      return false
+    }
+    return true
   },
   hsaidText: 'Inget giltigt <br/>HSAID',
 
-  personalid: function (value) {
+  personalid: function (value, field) {
     var validator = new RegExp(/^(19|20)[0-9]{10}$/)
-    return validator.test(value)
+    var matches = field.up('window').getController().matches
+    var existingId = field.up('window').getController().filterMatches && field.up('window').getController().filterMatches(matches).length === 1
+    var validId = validator.test(value)
+    if(!validId) {
+      this.personalidText = 'Inget giltigt personnummer <br/>ÅÅÅÅMMDDXXXX'
+      return false
+    }
+    if(existingId) {
+      this.personalidText = 'Personnumret finns<br>redan registrerat'
+      return false
+    }
+    return true
   },
   personalidText: 'Inget giltigt personnummer <br/>ÅÅÅÅMMDDXXXX',
 
