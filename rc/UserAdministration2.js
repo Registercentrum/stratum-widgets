@@ -834,6 +834,30 @@ Ext.define('RC.UserAdministration.controller.Form', {
     window.location = mail
   },
 
+  showSaveDefault: function () {
+    this.lookup('saveButton').setIconCls('x-fa fa-cloud-upload')
+  },
+
+  showSaveSpinner: function(){
+    this.lookup('saveButton').setIconCls('x-fa fa-cog fa-spin')
+  },
+
+  showSaveCheckmark: function() {
+    this.lookup('saveButton').setIconCls('x-fa fa-check')
+  },
+
+  showSaveFailed: function() {
+    this.lookup('saveButton').setIconCls('x-fa fa-exclamation')
+  },
+
+  showRenewSpinner: function(){
+    this.lookup('renewSithsButton').setIconCls('x-fa fa-refresh fa-spin')
+  },
+  
+  showRenewCheckmark: function() {
+    this.lookup('renewSithsButton').setIconCls('x-fa fa-check')
+  },
+
   getSithsMail: function () {
     var content = 'Hej{name}!{nl}{nl}Välkommen till {site}.{nl}'
       + 'Du har nu fått ett inloggningskonto till {site}, men behöver först koppla ditt {nl}'
@@ -934,8 +958,8 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
     data.controller = this
     data.user = this.getUser()
     data.context = this.getContext()
-    this.saveUser(data).then(controller.saveContext).then(controller.updateUser)
-    this.getView().destroy()
+    this.showSaveSpinner()
+    this.saveUser(data).then(controller.saveContext).then(controller.updateUser).then(function(){controller.showSaveCheckmark.call(controller)}, function(){controller.showSaveFailed.call(controller)})
   },
 
   onFormChanged: function () {
@@ -1177,26 +1201,6 @@ Ext.define('RC.UserAdministration.controller.EditUser', {
 
   onFormChanged: function () {
     this.showSaveDefault()
-  },
-
-  showSaveDefault: function () {
-    this.lookup('saveButton').setIconCls('x-fa fa-cloud-upload')
-  },
-
-  showSaveSpinner: function(){
-    this.lookup('saveButton').setIconCls('x-fa fa-cog fa-spin')
-  },
-
-  showSaveCheckmark: function() {
-    this.lookup('saveButton').setIconCls('x-fa fa-check')
-  },
-
-  showRenewSpinner: function(){
-    this.lookup('renewSithsButton').setIconCls('x-fa fa-refresh fa-spin')
-  },
-  
-  showRenewCheckmark: function() {
-    this.lookup('renewSithsButton').setIconCls('x-fa fa-check')
   },
 
   onCreateContext: function () {
