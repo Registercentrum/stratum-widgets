@@ -791,6 +791,7 @@ Ext.define('RC.UserAdministration.controller.Form', {
   },
 
   updateUser: function (data) {
+    var deferred = new Ext.Deferred()
     var user = data.user
     var controller = data.controller
     Ext.Ajax.request({
@@ -804,10 +805,13 @@ Ext.define('RC.UserAdministration.controller.Form', {
           return units.indexOf(context.Unit.UnitID) >= 0
         })
         Ext.ComponentQuery.query('usergrid')[0].getStore().add(user)
+        deferred.resolve(data)
       },
       failure: function (result, request) {
+        deferred.reject(data)
       }
     })
+    return deferred
   },
 
   getAllRegistryUnits: function () {
@@ -842,12 +846,14 @@ Ext.define('RC.UserAdministration.controller.Form', {
     this.lookup('saveButton').setIconCls('x-fa fa-cog fa-spin')
   },
 
-  showSaveCheckmark: function() {
-    this.lookup('saveButton').setIconCls('x-fa fa-check')
+  showSaveCheckmark: function(data) {
+    var me = data && data.controller ? data.controller : this
+    me.lookup('saveButton').setIconCls('x-fa fa-check')
   },
 
-  showSaveFailed: function() {
-    this.lookup('saveButton').setIconCls('x-fa fa-exclamation')
+  showSaveFailed: function(data) {
+    var me = data && data.controller ? data.controller : this
+    me.lookup('saveButton').setIconCls('x-fa fa-exclamation')
   },
 
   showRenewSpinner: function(){
@@ -959,7 +965,7 @@ Ext.define('RC.UserAdministration.controller.CreateUser', {
     data.user = this.getUser()
     data.context = this.getContext()
     this.showSaveSpinner()
-    this.saveUser(data).then(controller.saveContext).then(controller.updateUser).then(function(){controller.showSaveCheckmark.call(controller)}, function(){controller.showSaveFailed.call(controller)})
+    this.saveUser(data).then(controller.saveContext).then(controller.updateUser).then(controller.showSaveCheckmark, controller.showSaveFailed)
   },
 
   onFormChanged: function () {
