@@ -17,7 +17,7 @@ function onReady() {
   Ext.create('RC.UserAdministration.store.Bindings', { storeId: 'bindings' })
   RC.UserAdministration.app = Ext.create('Ext.tab.Panel', {
     cls: 'navbar-default',
-    renderTo: 'contentPanel',
+    renderTo: Stratum && Stratum.containers ? Stratum.containers['RC/UserAdministration11'] : 'contentPanel',
     items: [{ title: 'Användare', xtype: 'usergrid' }, { title: 'Enheter', xtype: 'unitgrid' }]
   })
   RC.UserAdministration.data = Ext.create('RC.UserAdministration.storage.Data', {
