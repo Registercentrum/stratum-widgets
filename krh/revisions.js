@@ -195,6 +195,11 @@ Ext.define('RC.ui.Multiselect', {
       + '   display: none;'
       + '}'
 
+      + '.rc-multiselect .x-form-text-default .x-tagfield-input-field {'
+      + '  height: 0;'
+      + '  padding: 0;'
+      + '}'
+
       + '.rc-multiselect li:hover div:last-child {'
       + '  display:initial;'
       + '}', 'rc-multiselect');

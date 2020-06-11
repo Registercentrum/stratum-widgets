@@ -197,6 +197,11 @@ Ext.define('RC.ui.Multiselect', {
       + '   display: none;'
       + '}'
 
+      + '.rc-multiselect .x-form-text-default .x-tagfield-input-field {'
+      + '  height: 0;'
+      + '  padding: 0;'
+      + '}'
+
       + '.rc-multiselect li:hover div:last-child {'
       + '  display:initial;'
       + '}', 'rc-multiselect');
@@ -342,10 +347,12 @@ Ext.define('shpr.graph.MainController', {
           if (stems.length !== 0) {
             var stemDropdown = view.down('#stemDropdown');
             stemDropdown.getStore().loadData(stems);
+            //stemDropdown.reset()
           }
           if (cups.length !== 0) {
             var cupDropdown = view.down('#cupDropdown');
             cupDropdown.getStore().loadData(cups);
+            //cupDropdown.reset()
           }
           if (revisions.length !== 0) {
             var revisionChoices = view.down('#revisionDropdown');
