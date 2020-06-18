@@ -652,7 +652,7 @@ Ext.define("RC.UserAdministration.controller.User", {
     this.updateGrid();
   },
 
-  userClicked: function (component, record, item, index) {
+  userClicked: function (component, record, item, index, recentlySaved) {
     record.data.LastActive = this.getLatestContextLogin(record.data);
     record.data.Info = JSON.parse(record.data.Extra || "{}")[
       Profile.Site.Register.RegisterID
@@ -663,6 +663,7 @@ Ext.define("RC.UserAdministration.controller.User", {
 
     Ext.create("RC.UserAdministration.view.EditUser", {
       userData: record,
+      recentlySaved: recentlySaved,
       contextData: Ext.clone(record.data.Contexts),
       contextsForValidation: Ext.clone(record.data.Contexts),
     }).show();
@@ -693,10 +694,9 @@ Ext.define("RC.UserAdministration.controller.User", {
     this.loadUser(data).then(controller.loadUserContexts);
   },
 
-  editUser: function (user) {
+  editUser: function (user, recentlySaved) {
     var record = this.getView().getStore().getById(user);
-    console.log(user);
-    this.userClicked(null, record);
+    this.userClicked(null, record, null, null, recentlySaved);
   },
 
   loadUser: function (data) {
@@ -1107,7 +1107,7 @@ Ext.define("RC.UserAdministration.controller.CreateUser", {
     if (widgetConfig.openEditOnSave) {
       var usergrid = RC.UserAdministration.app.down("usergrid")
       usergrid.fireEvent("edituser", data.user.UserID)
-      me.up("window").destroy()
+      me.getView().destroy()
     }
   },
 
@@ -1214,6 +1214,7 @@ Ext.define("RC.UserAdministration.view.EditUser", {
     userData: [],
     contextData: [],
     contextsForValidation: [],
+    recentlySaved: false
   },
 
   items: [
@@ -1317,6 +1318,9 @@ Ext.define("RC.UserAdministration.controller.EditUser", {
       this.onSithIdChoosen();
     }
     this.getForm().isValid()
+    if (this.getView().getRecentlySaved()) {
+      this.showSaveCheckmark()
+    }
   },
 
   loadContextActivity: function () {
@@ -1865,7 +1869,7 @@ Ext.define("RC.UserAdministration.form.User", {
             if (event.ctrlKey) {
               var user = this.up("window").getController().savedUser || 1
               var usergrid = RC.UserAdministration.app.down("usergrid")
-              usergrid.fireEvent("edituser", user)
+              usergrid.fireEvent("edituser", user, true)
             }
             this.up("window").destroy()
           },
