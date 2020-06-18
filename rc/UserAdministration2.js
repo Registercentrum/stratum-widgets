@@ -1316,6 +1316,7 @@ Ext.define("RC.UserAdministration.controller.EditUser", {
     } else {
       this.onSithIdChoosen();
     }
+    this.getForm().isValid()
   },
 
   loadContextActivity: function () {
