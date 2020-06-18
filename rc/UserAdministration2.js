@@ -2619,13 +2619,15 @@ Ext.define("RC.UserAdministration.Validators", {
   override: "Ext.form.field.VTypes",
 
   hsaid: function (value, field) {
+    var controller = field.up("window").getController()
     var validator = new RegExp(/^SE[a-zA-Z0-9-]{1,29}$/);
     var matches = field.up("window").getController().matches;
-    var existingId =
-      field.up("window").getController().filterMatches &&
-      field.up("window").getController().filterMatches(matches).pop() &&
-      field.up("window").getController().filterMatches(matches).pop().HSAID ===
-        value;
+    var mymatches = controller.filterMatches && controller.filterMatches(matches)
+
+    var existingId = mymatches.some(function(match){
+      return match.HSAID === value
+    })
+
 
     var validId = validator.test(value);
     if (!validId) {
