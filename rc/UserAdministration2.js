@@ -1005,6 +1005,21 @@ Ext.define("RC.UserAdministration.controller.Form", {
       "{sender}";
     return widgetConfig.bankidMail || content;
   },
+
+  fetchIDs: function (hsaid) {
+    var ids = []
+      Ext.Ajax.request({
+        async: false,
+        url: "/stratum/api/metadata/users?query=" + hsaid,
+        success: function (response) {
+          ids = Ext.decode(response.responseText).data
+        },
+        failure: function (response) {
+          
+        },
+      });
+      return ids
+    }
 });
 
 Ext.define("RC.UserAdministration.view.CreateUser", {
@@ -2621,10 +2636,9 @@ Ext.define("RC.UserAdministration.Validators", {
   hsaid: function (value, field) {
     var controller = field.up("window").getController()
     var validator = new RegExp(/^SE[a-zA-Z0-9-]{1,29}$/);
-    var matches = field.up("window").getController().matches;
-    var mymatches = controller.filterMatches && controller.filterMatches(matches)
+    var hsaids = controller.fetchIDs && controller.fetchIDs(value)
 
-    var existingId = mymatches.some(function(match){
+    var existingId = hsaids.some(function(match){
       return match.HSAID === value
     })
 
