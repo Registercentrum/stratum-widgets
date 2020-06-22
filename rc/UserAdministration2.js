@@ -2773,7 +2773,7 @@ Ext.define("RC.UserAdministration.storage.Data", {
     Ext.Promise.all([
       Ext.Ajax.request({
         url:
-          "stratum/api/metadata/domains/register/" +
+          "/stratum/api/metadata/domains/register/" +
           Profile.Site.Register.RegisterID,
       }),
     ]).then(function (results) {
@@ -2786,7 +2786,7 @@ Ext.define("RC.UserAdministration.storage.Data", {
       domains.forEach(function (domain) {
         requests.push(
           Ext.Ajax.request({
-            url: "stratum/api/metadata/domains/" + domain.DomainID,
+            url: "/stratum/api/metadata/domains/" + domain.DomainID,
           })
         );
       });
@@ -2945,9 +2945,7 @@ Ext.util.CSS.createStyleSheet(
 )
 
 // eslint-disable-next-line no-unused-vars
-function start() {
-  Ext.Loader.loadScript({
-    url: '/stratum/extjs/scripts/exporter.js',
-    onLoad: function () { onReady() }
-  })
-}
+Ext.Loader.loadScript({
+  url: '/stratum/extjs/scripts/exporter.js',
+  onLoad: function () { onReady() }
+})
