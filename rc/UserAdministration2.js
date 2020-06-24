@@ -1317,25 +1317,23 @@ Ext.define("RC.UserAdministration.controller.EditUser", {
   },
 
   init: function () {
-    this.callParent();
-    this.loadUserData();
-    delete this.lookup("username").vtype;
-    delete this.lookup("hsaid").vtype;
-    this.lookup("username").setFieldLabel("Användarnamn");
-    this.lookup("extra").enable();
-    var personalidIsUsed = this.getView().getUserData().data.PersonalId;
-    this.updateStatusBar();
-    this.loadContextActivity();
+    this.callParent()
+    this.loadUserData()
+    delete this.lookup("username").vtype
+    delete this.lookup("hsaid").vtype
+    this.lookup("username").setFieldLabel("Användarnamn")
+    this.lookup("extra").enable()
+    var personalidIsUsed = this.getView().getUserData().data.PersonalId
+    this.updateStatusBar()
+    this.loadContextActivity()
     if (personalidIsUsed) {
-      this.lookup("hsaid").setValue(null);
-      this.onBankIdChoosen();
+      this.lookup("hsaid").setValue(null)
+      this.onBankIdChoosen()
     } else {
-      this.onSithIdChoosen();
+      this.onSithIdChoosen()
     }
     this.getForm().isValid()
-    if (this.getView().getRecentlySaved()) {
-      this.showSaveCheckmark()
-    }
+    this.showSaveCheckmark()
   },
 
   loadContextActivity: function () {
