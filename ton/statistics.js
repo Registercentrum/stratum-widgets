@@ -3974,4 +3974,4 @@ Ext.onReady(function () {
   });
   // Create the widget
   TonsillWidget();
-});
+}); // 
