@@ -79,7 +79,7 @@ function start () {
 			var value;
 			var d = rc.VisitDate.substr(0, 10);
 			fields.push({name: d, type: 'string'});
-			value = Ext.isEmpty(rc.Smoking) ? '' : mappedDomains['Aktuella rökvanor'][rc.Smoking];
+			value = Ext.isEmpty(rc.Smoking) ? '' : mappedDomains['CurrentSmokingHabits'][rc.Smoking];
 			a[0].push(value);
 			value = Ext.isEmpty(rc.FEV1PercentAfter) ? '' : rc.FEV1PercentAfter.toString().replace('.',',');
 			a[1].push(value);
@@ -100,7 +100,7 @@ function start () {
 			a[8].push(value);
 			value = Ext.isEmpty(rc.InfluenzaVaccination) ? '' : mappedDomains['YesNo'][rc.InfluenzaVaccination];
 			a[9].push(value);
-			value = Ext.isEmpty(rc.PneumococcalVaccination) ? '' : mappedDomains['Pneumokock vaccination'][rc.PneumococcalVaccination];
+			value = Ext.isEmpty(rc.PneumococcalVaccination) ? '' : mappedDomains['PneumococcusVaccination'][rc.PneumococcalVaccination];
 			a[10].push(value);
 		});
 		// Update the user model with all fields.
