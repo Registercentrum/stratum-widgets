@@ -3030,6 +3030,15 @@ var TonsillWidget = function () {
       var description = _current.indicatorId != 4 ? 'Presenterade data avser samtliga tonsilloperationer. Ett urval baserat på operationsmetod kan göras genom att klicka i eller ur rutorna nedan.' : 'Presenterade data avser tonsillektomi med eller utan abrasio.'
       detailsPanel.down('#chartDescription').setHtml(description)
       detailsPanel.down("#IndicatorName--").setHtml(_current.indicatorName);
+      if(widgetConfig.newVersion) {
+          if(_current.indicatorId === 4) {
+              detailsPanel.down('#te').hide()
+              detailsPanel.down('#tt').hide()
+          } else {
+              detailsPanel.down('#te').show()
+              detailsPanel.down('#tt').show()
+          }
+      }
       //indicatorDescription.updateDescription();
     };
 
