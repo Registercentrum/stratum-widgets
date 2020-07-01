@@ -1435,7 +1435,15 @@ var TonsillWidget = function () {
                 "Svarsfrekvens 30 d: {3}<br>" +
                 "Svarsfrekvens 6 mån: {4}<br>" +
                 "Täckningsgrad: {5}";
-
+              var textIndicator4 = 
+                "Andel: {0}<br>" +
+                "Antal helt kalla operationer: {7}<br>" +
+                "Antal registrerade operationer där både operations- och blodstillningsteknik är angivna: {1}<br>" +
+                "Antal registrerade operationer: {8}<br>";
+                
+              if(widgetConfig.newVersion) {
+                text = _current.indicatorId !== 4 ? text : textIndicator4
+              }
               var suffix = item.field === "fraction" ? "" : "N";
               var fraction = Ext.util.Format.number(
                 rec.data["fraction" + suffix] * 100,
@@ -2092,7 +2100,7 @@ var TonsillWidget = function () {
     var component = Ext.create("Ext.Component", {
       itemId: "chartDescription",
       cls: "ton-chart-description",
-      width: "40%",
+      width: "45%",
       align: "bottom",
       padding: "0 10 0 10",
       margin: "35 10 0 10",
@@ -2135,7 +2143,16 @@ var TonsillWidget = function () {
           (_current.indicatorId === 1 ? "" : "Svarsfrekvens 6 mån: {5}<br>") +
           "Täckningsgrad: {6}<br>" +
           "</p>";
-
+        
+        var templateIndicator4 = 
+            '<p><span style="color:#359aa3">{0}</span><br>' +
+            "Andel: {1}<br>" +
+            "Antal helt kalla operationer: {8}<br>" +
+            "Antal registrerade operationer där både operations- och blodstillningsteknik är angivna: {2}<br>" +
+            "Antal registrerade operationer: {9}<br>"
+        if(widgetConfig.newVersion) {
+            template = _current.indicatorId !== 4 ? template : templateIndicator4
+        }
         var fraction = Ext.util.Format.number(data.fraction * 100, "0.0%");
         var freq30 = Ext.util.Format.number(data.freq30 * 100, "0%");
         var freq180 = Ext.util.Format.number(data.freq180 * 100, "0%");
@@ -2884,13 +2901,14 @@ var TonsillWidget = function () {
         },
         {
           xtype: "panel",
+          itemId: 'chartDescription',
           subStyle: {
             width: "100%",
             height: 40,
             fontWeight: "bold",
           },
           html:
-            '<div style="font-size: 13px">Presenterade data avser alla tonsilloperationer, alltså tonsillektomi med eller utan abrasio, respektive tonsillotomi med eller utan abrasio.</div>',
+            '<div style="font-size: 13px">Presenterade data avser samtliga tonsilloperationer. Ett urval baserat på operationsmetod kan göras genom att klicka i eller ur rutorna nedan.</div>',
         },
         {
           itemId: "Header--",
@@ -2971,7 +2989,7 @@ var TonsillWidget = function () {
     var doSelectYear = function (data, name) {
       chart1Year.updateData([data]);
       chart1YearDescription.updateDescription(data);
-      // qqq chartHalfYear.updateData(data);
+      // chartHalfYear.updateData(data);
       Ext.ComponentQuery.query("#IndicatorName--")[0].setHtml(
         name + ", " + data.year
       );
@@ -3009,6 +3027,8 @@ var TonsillWidget = function () {
           }
         }*/
       chart5Year.updateData();
+      var description = _current.indicatorId != 4 ? 'Presenterade data avser samtliga tonsilloperationer. Ett urval baserat på operationsmetod kan göras genom att klicka i eller ur rutorna nedan.' : 'Presenterade data avser tonsillektomi med eller utan abrasio.'
+      detailsPanel.down('#chartDescription').setHtml(description)
       detailsPanel.down("#IndicatorName--").setHtml(_current.indicatorName);
       //indicatorDescription.updateDescription();
     };
@@ -3290,15 +3310,10 @@ var TonsillWidget = function () {
           xtype: "panel",
           itemId: "allClinicsLegend",
           cls: "ton-legend-all-clinics",
+          updateDescription: function() {
+            console.log('update')  
+          },
           updateLegend: function () {
-
-            var timePeriod = allUnitsChart.period || ['2017', '2019']
-            var timeIntervals = [
-              "perioden 2016-2018",
-              "perioden 2016-2018",
-              "perioden 2016-2018",
-              "2017",
-            ];
 
             var greenTexts = [
               "Färre återinläggningar",
@@ -3319,15 +3334,22 @@ var TonsillWidget = function () {
               "Sämre täckningsgrad",
             ];
 
+            if(widgetConfig.newVersion) {
+                greenTexts[3] = '>75%'
+                orangeTexts[3] = '25-75%'
+                redTexts[3] = '<25%'
+            }
+ 
             var greenText = greenTexts[_current.indicatorId - 1];
             var orangeText = orangeTexts[_current.indicatorId - 1];
             var redText = redTexts[_current.indicatorId - 1];
-            var timeText = timeIntervals[_current.indicatorId - 1];
+
+            var description = _current.indicatorId !== 4 ? 'Det som visas här baseras endast på rena tonsillektomier och avser de två senaste åren fram till dagens datum.' : 'Det som visas här är andelen tonsillektomier med eller utan abrasio som genomförts med helt kall teknik under de senaste två åren fram till dagens datum.'
 
             this.setHtml(
-              '<div class="ton-legend-timeframe">Det som visas här baseras endast på rena tonsillektomier och avser perioden ' +
-                timePeriod.shift() + '-' + timePeriod.shift() +
-                '.<br/> Konfidensintervall 95%: <div class="ton-legend-state-confidence-interval"></div>Rikets<div class="ton-legend-confidence-interval"><div class="ton-legend-confidence-interval-bar"></div></div>Enhetens</div><div class="ton-legend-colors"><div class="ton-circle ton-green"></div>' +
+              '<div class="ton-legend-timeframe">' + 
+                description +
+                '<br/> Konfidensintervall 95%: <div class="ton-legend-state-confidence-interval"></div>Rikets<div class="ton-legend-confidence-interval"><div class="ton-legend-confidence-interval-bar"></div></div>Enhetens</div><div class="ton-legend-colors"><div class="ton-circle ton-green"></div>' +
                 greenText +
                 '<div class="ton-circle ton-orange"></div>' +
                 orangeText +
@@ -3775,12 +3797,14 @@ var TonsillWidget = function () {
       var text1 = null,
         text2 = null;
       var indciator4 = widgetConfig.indicator || 'Indikatorn visar andelen patienter som har registrerats i Tonsilloperationsregistret, av alla tonsilloperationer som har identifierats + från Tonsilloperationsregistret eller Patientregistret.'
+      var addendum = '<p style="font-weight:400">Data i detta diagram uppdateras dagligen. Det kan därför finnas skillnader mellan dessa data och kliniktabellerna som uppdateras mindre ofta.</p>'
       switch (_current.indicatorId) {
         case 1:
           text1 =
             '<h2 class="upper">Om indikatorn</h2>' + 
             '<p style="font-weight:400">Indikatorn visar andelen patienter som anger att de har lagts in på ' +
-            "sjukhus för blödning inom 30 dagar efter operationen och beräknas av alla som har besvarat frågan i 30-dagarsenkäten.";
+            "sjukhus för blödning inom 30 dagar efter operationen och beräknas av alla som har besvarat frågan i 30-dagarsenkäten."
+            + addendum
           // + 'av alla patienter som har opererats med tonsillektomi / '
           //+ 'eller tonsillektomi+abrasio på en klinik.'
           text2 = "&nbsp;";
@@ -3809,7 +3833,7 @@ var TonsillWidget = function () {
             '<h2 class="upper">Om indikatorn</h2>' +
             '<p style="font-weight:400">Indikatorn visar andelen patienter som uppger att de har ' +
             "kontaktat sjukvården på grund av smärta efter operationen " +
-            'och beräknas av alla som har besvarat frågan i 30-dagarsenkäten.</p><p style="font-weight:400">Data i detta diagram uppdateras dagligen. Det kan därför finnas skillnader mellan dessa data och kliniktabellerna som uppdateras mindre ofta.</p>';
+            'och beräknas av alla som har besvarat frågan i 30-dagarsenkäten.</p>' + addendum;
           text2 = "&nbsp;";
           break;
         case 3:
@@ -3817,13 +3841,15 @@ var TonsillWidget = function () {
             '<h2 class="upper">Om indikatorn</h2>' +
             '<p style="font-weight:400">Indikatorn visar andelen patienter som har svarat ' +
             '"Besvären borta" eller "Jag har blivit ganska bra från mina ' +
-            'besvär" och beräknas av alla patienter som har besvarat frågan i 6-månadersenkäten.</p>';
+            'besvär" och beräknas av alla patienter som har besvarat frågan i 6-månadersenkäten.</p>'
+            + addendum
           text2 = "&nbsp;";
           break;
         case 4:
           text1 =
             '<h2 class="upper">Om indikatorn</h2>' +
-            '<p style="font-weight:400">' + indciator4 + '</p>';
+            '<p style="font-weight:400">' + indciator4 + '</p>'
+            + addendum
           text2 = "&nbsp;";
           break;
       }
