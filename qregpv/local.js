@@ -157,10 +157,24 @@
                         proxy: {
                             type: 'ajax',
                             cors: true, //TODO: remove in production
-                            url: '/stratum/api/metadata/domains/map/5656',
+                            url: 'https://qregpv.registercentrum.se/stratum/api/metadata/domains/5656',
                             reader: {
-                                type: 'objecttoarray',
-                                rootProperty: 'data.Unit'
+                                type: 'json',
+                                // Filter out inactive health centers.
+                                transform: function(raw) {
+                                    var byActive = function(elm) {
+                                        return elm.IsActive;
+                                    }
+                                    var toObject = function(elm) {
+                                        return {
+                                            key: elm.ValueCode,
+                                            value: elm.ValueName
+                                        };
+                                    }
+                                    var filtered = Ext.Array.filter(raw.data.DomainValues, byActive);
+                                    var transformed = Ext.Array.map(filtered, toObject);
+                                    return transformed;
+                                }
                             }
                         },
                         listeners: {
@@ -190,7 +204,7 @@
     initializeLatestDate: function (callback) {
         var repo = this;
         Ext.Ajax.request({
-            url: '/stratum/api/aggregate/QRegPV/QRegPV/Total/Max(Q_Month)/Q_Year',
+            url: 'https://qregpv.registercentrum.se/stratum/api/aggregate/QRegPV/QRegPV/Total/Max(Q_Month)/Q_Year',
             localCall: true, //TODO: Remove
             method: 'get',
             success: function (response) {
@@ -246,7 +260,7 @@
                 }),
                 proxy: {
                     type: 'ajax',
-                    url: '/stratum/api/metadata/domains/map/5655',
+                    url: 'https://qregpv.registercentrum.se/stratum/api/metadata/domains/map/5655',
                     reader: {
                         type: 'objecttoarray',
                         rootProperty: 'data.Indikatorer'
@@ -326,7 +340,7 @@
                 },
                 loadCountData: function (HSAID, year, month) {
                     var loadFn = function () {
-                        var url = '/stratum/api/registrations/form/2179?query=Q_Year%20eq%20{1},Q_Month%20eq%20{2},Q_Indicator%20in%20{3}|{4},Q_Unit%20eq%20{0}';
+                        var url = 'https://qregpv.registercentrum.se/stratum/api/registrations/form/2179?query=Q_Year%20eq%20{1},Q_Month%20eq%20{2},Q_Indicator%20in%20{3}|{4},Q_Unit%20eq%20{0}';
                         this.proxy.url = Ext.String.format(
                             url,
                             HSAID,
@@ -402,7 +416,7 @@
                         'Y-m-d'
                     );
                     var loadFn = function () {
-                        var url = '/stratum/api/registrations/form/2179?query=Q_Date%20gt%20' +
+                        var url = 'https://qregpv.registercentrum.se/stratum/api/registrations/form/2179?query=Q_Date%20gt%20' +
                             startDate +
                             ',Q_Unit%20in%20{0}|{1}';
                         // var filters;

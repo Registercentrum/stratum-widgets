@@ -132,6 +132,7 @@ Ext.application({
     var url = '/stratum/api/statistics/Sep/m1m2/?apikey=bK3H9bwaG4o=&idnr=';
 
     Ext.create('Septum.view.Line', {
+      border: false,
       renderTo: target,
       unit: unit,
       store: { proxy: { url: url + WidgetConfig.id } },

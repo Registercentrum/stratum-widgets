@@ -20,22 +20,9 @@ Ext.define('Sesar.view.Filter', {
 Ext.define('Sesar.chart.Time', {
   extend: 'Ext.chart.CartesianChart',
   xtype: 'sesartime',
-  /*
-  plugins: {
-    responsive: true
-  },
-  responsiveConfig: {
-    'width < 1250': {
-      width: '100%'
-    },
-    'width >= 1250': {
-      width: '100%'
-    },
-  },
-  */
+  controller: 'time',
   border: false,
   cls: 'sesar-timechart',
-  colors: ['#DD4C39', '#0791AB'],
   colors: ['#ee442f', '#63acbe'],
   padding: '10 0 0 0',
   insetPadding: '0 35 20 10',
@@ -44,7 +31,10 @@ Ext.define('Sesar.chart.Time', {
     panY: true,
   },
   legend: {
-    type: 'dom'
+    type: 'dom',
+    listeners: {
+      itemclick: 'syncLines'
+    }
   },
   store: {
     data: [],
@@ -54,6 +44,9 @@ Ext.define('Sesar.chart.Time', {
       type: 'numeric',
       title: {
         text: '',
+        strokeStyle: 'darkslategrey', 
+        lineWidth: 1, 
+        globalAlpha: 0.4
       },
       titleMargin: 20,
       position: 'left',
@@ -93,6 +86,7 @@ Ext.define('Sesar.chart.Time', {
     {
       type: 'line',
       title: 'Kliniken',
+      itemId: 'clinicLine',
       xField: 'Year',
       yField: 'Clinic_Mean',
       useDarkerStrokeColor: false,
@@ -119,7 +113,25 @@ Ext.define('Sesar.chart.Time', {
           text = text === 'NA' ? 'För få uppgifter för att visa' : text
           return tooltip.setHtml('Antal: ' + text)
         }
+      },
+
+      renderer: function(sprite, config, rendererData, index) {
+          var changes = {}
+          var currentYearIndex = this.getChart().currentYearIndex
+          var isPreliminaryData = index === currentYearIndex
+          
+          switch (config.type) {
+              case 'marker':
+                  changes.fillStyle = isPreliminaryData ? 'rgba(0,0,0,0)': '#ee442f'
+                  break;
+              case 'line':
+                  changes.strokeStyle = isPreliminaryData ? 'rgba(0,0,0,0)': '#ee442f'
+                  break;
+          }
+          
+          return changes;
       }
+      
     },
     {
       type: 'line',
@@ -148,9 +160,146 @@ Ext.define('Sesar.chart.Time', {
         renderer: function (tooltip, record, context) {
           return tooltip.setHtml('Antal: ' + record.get('State_Denominator'))
         }
+      },
+      
+      renderer: function(sprite, config, rendererData, index) {
+        var currentYearIndex = this.getChart().currentYearIndex
+        var isPreliminaryData = index === currentYearIndex
+        var changes = {}
+
+        switch (config.type) {
+            case 'marker':
+                changes.fillStyle = isPreliminaryData ? 'rgba(0,0,0,0)': '#63acbe'
+                break;
+            case 'line':
+                changes.strokeStyle = isPreliminaryData ? 'rgba(0,0,0,0)': '#63acbe'
+                break;
+        }
+
+        return changes;
       }
-    }
+    },
+    {
+      type: 'line',
+      title: 'Kliniken-partiell data',
+      itemId: 'clinicPartial',
+      xField: 'Year',
+      yField: 'Clinic_Mean',
+      showInLegend: false,
+      useDarkerStrokeColor: false,
+      style: {
+        lineWidth: 4,
+        lineDash: [6,3]
+      },
+      subStyle: {
+        lineDash: [6,3]
+      },
+      marker: {
+        type: 'circle',
+        size: 4,
+        radius: 7,
+        fillOpacity: 1,
+        'stroke-width': 3,
+        strokeStyle: '#fff'
+      },
+      tooltip: {
+        style: {
+          backgroundColor: '#DD4C39',
+          borderColor: '#DD4C39',
+        },
+        autoHide: true,
+        dismissDelay: 0,
+        renderer: function (tooltip, record, context) {
+          var text = record.get('Clinic_Numerator')
+          text = text === 'NA' ? 'För få uppgifter för att visa' : text
+          return tooltip.setHtml('Antal: ' + text)
+        }
+      },
+      
+      renderer: function(sprite, config, rendererData, index) {
+          var changes = {}
+          var currentYearIndex = this.getChart().currentYearIndex
+          var isPreliminaryData = index === currentYearIndex
+  
+          switch (config.type) {
+              case 'marker':
+                  changes.fillStyle = isPreliminaryData ? '#ee442f': 'rgba(0,0,0,0)'
+                  break;
+              case 'line':
+                  changes.strokeStyle = isPreliminaryData ? '#ee442f': 'rgba(0,0,0,0)'
+                  break;
+          }
+  
+          return changes;
+      }
+    },
+    {
+      type: 'line',
+      title: 'Riket - partiella',
+      xField: 'Year',
+      yField: 'State_Mean',
+      showInLegend: false,
+      useDarkerStrokeColor: false,
+      style: {
+        lineWidth: 4,
+        lineDash: [6,3]
+      },
+      subStyle: {
+        lineDash: [6,3]
+      },
+      marker: {
+        type: 'circle',
+        size: 4,
+        radius: 7,
+        fillOpacity: 1,
+        'stroke-width': 3,
+        strokeStyle: '#fff'
+      },
+      tooltip: {
+        style: {
+          backgroundColor: 'rgb(25, 149, 173)',
+          borderColor: 'rgb(25, 149, 173)'
+        },
+        autoHide: true,
+        dismissDelay: 0,
+        renderer: function (tooltip, record, context) {
+          return tooltip.setHtml('Antal: ' + record.get('State_Denominator'))
+        }
+      },
+      
+      renderer: function(sprite, config, rendererData, index) {
+        var changes = {}
+        var currentYearIndex = this.getChart().currentYearIndex
+        var isPreliminaryData = index === currentYearIndex
+
+        switch (config.type) {
+            case 'marker':
+                changes.fillStyle = isPreliminaryData ? '#63acbe': 'rgba(0,0,0,0)'
+                break;
+            case 'line':
+                changes.strokeStyle = isPreliminaryData ? '#63acbe': 'rgba(0,0,0,0)'
+                break;
+        }
+
+        return changes;
+      }
+    },
   ]
+})
+
+Ext.define('Sesar.chart.TimeChart', {
+  extend: 'Ext.app.ViewController',
+  alias: 'controller.time',
+  syncLines: function(legend, item){
+    if(item.data.series === 'ext-chart-series-line-1'){
+      this.getView().getSeries()[2].setHidden(item.data.valueOf().disabled)
+      this.getView().redraw()
+    }
+    if(item.data.series === 'ext-chart-series-line-2'){
+      this.getView().getSeries()[3].setHidden(item.data.valueOf().disabled)
+      this.getView().redraw()
+    }
+  }
 })
 
 Ext.define('Sesar.chart.AgeGroups', {
@@ -158,7 +307,6 @@ Ext.define('Sesar.chart.AgeGroups', {
   xtype: 'sesarage',
   border: false,
   cls: 'sesar-timechart',
-  colors: ['#DD4C39', '#0791AB'],
   colors: ['#ee442f', '#63acbe'],
   padding: '10 0 0 0',
   innerPadding: '10 10 10 0',
@@ -177,6 +325,12 @@ Ext.define('Sesar.chart.AgeGroups', {
       type: 'numeric',
       position: 'left',
       titleMargin: 20,
+      title: {
+        text: '',
+        strokeStyle: 'darkslategrey', 
+        lineWidth: 1, 
+        globalAlpha: 0.4
+      },
       style: {
         strokeStyle: '#677792',
         axisLine: false
@@ -262,6 +416,12 @@ Ext.define('Sesar.chart.Comparison', {
       type: 'numeric',
       position: 'bottom',
       fields: ['Mean'],
+      title: {
+        text: '',
+        strokeStyle: 'darkslategrey', 
+        lineWidth: 1, 
+        globalAlpha: 0.4
+      },
       style: {
         strokeStyle: '#677792',
         axisLine: false
@@ -360,12 +520,11 @@ Ext.define('Sesar.chart.Comparison', {
   ]
 })
 
-var ctrlr=Ext.define('Sesar.controller.Main', {
+Ext.define('Sesar.controller.Main', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.main',
 
   updateCharts: function (tab) {
-    var chart, url
     var controller = this
     var view = this.getView()
     var isTabChange = typeof tab === 'string'
@@ -375,11 +534,14 @@ var ctrlr=Ext.define('Sesar.controller.Main', {
     var startyear = view.down('#startyearFilter').getDisplayValue()
     var endyear = view.down('#endyearFilter').getDisplayValue()
     var clinicName = view.down('#clinicFilter').getDisplayValue()
-	var currentYr=new Date().getFullYear();
-	Ext.get('warningCmp').setVisible(false);
-	if(startyear==currentYr || endyear == currentYr){
-		Ext.get('warningCmp').setVisible(true);
-	}
+
+    /**/
+    var currentYr=new Date().getFullYear();
+    Ext.get('warningCmp').setVisible(false);
+    if(startyear==currentYr || endyear == currentYr){
+      Ext.get('warningCmp').setVisible(true);
+    }
+    /**/
 
     !Ext.Object.isEmpty(Ext.Ajax.requests) && Ext.Ajax.abort(controller.currentRequest)
 
@@ -389,7 +551,6 @@ var ctrlr=Ext.define('Sesar.controller.Main', {
 
     controller.tab = typeof tab === 'string' && tab || controller.tab
     controller.filters = { start: startyear, end: endyear, report: report, sex: sex, clinic: clinic, clinicName: clinicName || (Profile.Context && Profile.Context.Unit.UnitName) }
-  // view.down('sesar' + controller.tab).up('panel').down().setData({caption: '...', subcaption: '...'})
     switch (controller.tab) {
       case 'time':
         controller.updateData(controller.tab, 'clinics-over-time', view, controller)
@@ -408,8 +569,8 @@ var ctrlr=Ext.define('Sesar.controller.Main', {
       this.updateProgress(false)
       return
     }
-    chart = view.down('sesar' + tab)
-    url = this.createUrl(type, this.filters)
+    var chart = view.down('sesar' + tab)
+    var url = this.createUrl(type, this.filters)
     url = tab === 'comparison' ? url.replace(/&clinic=[A-z0-9]*/, '') : url
     tab === 'comparison' && chart.setHeight(360) && chart.getStore().setSorters([this.sortAsc]) && chart.getStore().loadData({})
     this.fetchData(chart, url, this.filters.report, controller, tab)
@@ -440,9 +601,18 @@ var ctrlr=Ext.define('Sesar.controller.Main', {
         captions.subheader.text = config.subcaption
         chart.usePercentages = config.percentage
         chart.precision = config.precision || 0
-        // chart.setCaptions(Ext.Object.merge({}, controller.captions, captions))
+        chart.currentYearIndex = -1
+        chart.getAxes()[0].setTitle({text: controller.reportConfigs[report].axis, /*strokeStyle: 'darkslategrey', lineWidth: 1, globalAlpha: 0.4*/})
         chart.up('panel').down().setData(config)
-        tab === 'comparison' && chart.setHeight(result.length * 28 + 50)
+        if(tab === 'comparison'){
+          result = result.filter(function(item){return item.Mean !== 'NA'})
+          chart.setHeight(result.length * 28 + 50)
+        }
+        if(tab==='time'){
+          if(result.slice(-1)[0].Year === new Date().getFullYear()){
+            chart.currentYearIndex = result.length-1
+          }
+        }
         chart.getStore().loadData(result)
         controller.status[tab] = true
       }
@@ -667,8 +837,7 @@ Ext.define('Sesar.view.Main', {
         'width >= 768': {
           layout: {
             type: 'box',
-            vertical: false,
-            // align: 'stretch'
+            vertical: false
           }
         }
       },
@@ -890,13 +1059,11 @@ Ext.define('Sesar.view.Main', {
   ]
 })
 
-
 function getYearSelectionItems(){
-	var i=0;
 	var currentYr=new Date().getFullYear();
 	var arr=[];
-	for(y=2014; y<=currentYr; y++){ 
-		arr.push({ ValueName: y , ValueCode: 'year' + y });
+	for(var year=2014; year <= currentYr; year++){ 
+		arr.push({ ValueName: year , ValueCode: 'year' + year });
 	}
 	return arr;
 }
@@ -1039,11 +1206,11 @@ Ext.util.CSS.createStyleSheet(
   + '}'
 
   + ' .sesar-category {'
-  + '     padding-top: 10px;'
-  + '     padding-bottom: 6px;'
-  + '     border-top: 1px dashed #000;'
-  + '     font-weight: normal;'
-  + '     margin-top: 5px;'
+  + '  padding-top: 10px;'
+  + '  padding-bottom: 6px;'
+  + '  border-top: 1px dashed #000;'
+  + '  font-weight: normal;'
+  + '  margin-top: 5px;'
   + '  background-color: #e0e0e0;'
   + '  color: #606060;'
   + '  cursor: default;'

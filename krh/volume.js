@@ -1,5 +1,5 @@
 
-Ext.util.CSS.removeStyleSheet('shpr-companymodule');
+Ext.util.CSS.removeStyleSheet('shpr-company');
 Ext.util.CSS.createStyleSheet(''
 
   + '.scw-header {'
@@ -11,7 +11,7 @@ Ext.util.CSS.createStyleSheet(''
   + '}'
 
   + '.scw-label {'
-  + '  width: 33%;'
+  + '  width: 25%;'
   + '  padding-left: 2px;'
   + '  display: inline-block;'
   + '}'
@@ -21,7 +21,7 @@ Ext.util.CSS.createStyleSheet(''
   + '  border-radius: 3px;'
   + '  background-color: #f9f9f9;'
   + '  border: solid 1px #b7b7b7;'
-  + '  width: 33%;'
+  + '  width: 25%;'
   + '  padding-right: 5px;'
   + '  float: left;'
   + '  border: none;'
@@ -34,42 +34,6 @@ Ext.util.CSS.createStyleSheet(''
 
   + '.scw-select-last {'
   + '  padding-right: 0px;'
-  + '}'
-
-  + '.scw-main ul {'
-  + '  padding: 0;'
-  + '}'
-
-  + '.scw-multiselect ul {'
-  // + '  min-height: 40px;'
-  + '}'
-
-  + '.scw-multiselect .x-tagfield {'
-  + '  overflow: hidden !important;'
-  + '}'
-
-  + '.scw-main .scw-multiselect li {'
-  + '  border: none;'
-  + '  background-color: transparent;'
-  + '  margin: 0px 4px 0px 0;'
-  + '}'
-
-  + '.scw-multiselect li:hover {'
-  + '  border: none !important;'
-  + '}'
-
-  + '.scw-multiselect li:last-child {'
-  + '  height: 0;'
-  + '  width: 0;'
-  + '  float: left;'
-  + '}'
-
-  + '.scw-multiselect li div:last-child {'
-  + '   display: none;'
-  + '}'
-
-  + '.scw-multiselect li:hover div:last-child {'
-  + '  display:initial;'
   + '}'
 
   + '.scw-download-area span {'
@@ -92,10 +56,6 @@ Ext.util.CSS.createStyleSheet(''
 
   + '.scw-grid .x-grid-row-summary .x-grid-cell:nth-child(4) {'
   + '  border-top: 1px black solid;'
-  + '}'
-
-  + '.scw-download-button {'
-  // + '  visibility: hidden;'
   + '}'
 
   + '.scw-download-button span {'
@@ -145,6 +105,155 @@ Ext.apply(Ext.QuickTips.getQuickTip(), {
   dismissDelay: 0
 });
 
+Ext.apply(Ext.data.SortTypes, {
+  asAllPlacedFirst: function (str) {
+    if(str==='Alla') return "0"
+    return str
+  }
+});
+
+Ext.define('RC.ui.Multiselect', {
+  extend: 'Ext.form.field.Tag',
+  xtype: 'rcmultiselect',
+  cls: 'scw-select rc-multiselect',
+  queryMode: 'local',
+  multiSelect: true,
+  stacked: true,
+
+  initComponent: function () {
+    this.oldChoices = [this.value]
+    this.createStyleSheet()
+    this.callParent()
+  },
+  
+  listeners: {
+    select: function (combo, record) {
+      this.updateDropdown(record)
+      if(this.deselect) {
+        if(this.skippedDuplicate) {
+          combo.fireEvent('update')  
+          this.skippedDuplicate = false
+          this.deselect = false
+        } else {
+          this.skippedDuplicate = true
+        }
+      } else {
+        if(this.getPicker().isVisible()){
+          this.postponed = true
+        } else {
+          combo.fireEvent('update')  
+          this.postponed = false
+        }
+      } 
+    },
+    collapse: function (combo) {
+      if(this.postponed){
+        combo.fireEvent('update')
+        this.postponed = false
+      }
+    },
+    beforedeselect: function () {
+      if(!this.getPicker().isVisible()){
+        this.deselect = true
+      }
+    },
+  },
+
+  createStyleSheet: function () {
+      var existingStyle = document.getElementById('rc-multiselect')
+      if (existingStyle) return
+      Ext.util.CSS.createStyleSheet(''
+
+      + '.rc-multiselect .x-form-text-wrap {'
+      + '  overflow: visible;'
+      + '}'
+
+      + '.rc-multiselect .x-tagfield {'
+      + '  overflow: hidden !important;'
+      + '}'
+
+      + '.rc-multiselect li.x-tagfield-item {'
+      + '  border: none;'
+      + '  background-color: transparent;'
+      + '  margin: 0px 4px 0px 0;'
+      + '}'
+
+      + '.rc-multiselect li:hover {'
+      + '  border: none !important;'
+      + '  background-color: initial;'
+      + '}'
+
+      + '.rc-multiselect li:last-child {'
+      + '  height: 0;'
+      + '  width: 0;'
+      + '  float: left;'
+      + '}'
+
+      + '.rc-multiselect li div:last-child {'
+      + '   display: none;'
+      + '}'
+
+      + '.rc-multiselect .x-form-text-default .x-tagfield-input-field {'
+      + '  height: 0;'
+      + '  padding: 0;'
+      + '}'
+
+      + '.rc-multiselect li:hover div:last-child {'
+      + '  display:initial;'
+      + '}', 'rc-multiselect');
+  },
+
+  updateDropdown: function (record) {
+    var newChoices = this.enumerateNewChoices(record);
+    var removeDefault = (newChoices.length >1 && newChoices[0] === this.default)
+    var addition = this.checkForAdditions(newChoices);
+    var deletion = this.checkForDeletions(newChoices);
+    this.oldChoices = newChoices;
+    if (addition || (deletion && this.getPicker().isVisible())) {
+      if (!window.event.ctrlKey || removeDefault) {
+        this.oldChoices = [];
+        this.oldChoices.push(addition||deletion);
+        this.clearValue();
+        this.setValue(addition||deletion);
+        !window.event.ctrlKey && this.collapse();
+      }
+    }
+  },
+
+  checkForAdditions: function (record) {
+    for (var item in record) {
+      if (!this.oldChoices.includes(record[item])) {
+        return record[item];
+      }
+    }
+    return '';
+  },
+
+  checkForDeletions: function (record) {
+    for (var item in this.oldChoices) {
+      if (!record.includes(this.oldChoices[item])) {
+        return this.oldChoices[item];
+      }
+    }
+    return '';
+  },
+
+  enumerateNewChoices: function (record) {
+    var newChoices = [];
+    for (var item in record) {
+      if (item === '') continue;
+      newChoices.push(record[item].data[this.valueField]);
+    }
+    return newChoices;
+  },
+  
+  reset: function (){
+    this.select(this.default)
+    this.oldChoices = [this.default]
+    this.deselect = false
+  }
+})
+
 Ext.define('shpr.volume.MainController', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.volume.main',
@@ -156,13 +265,10 @@ Ext.define('shpr.volume.MainController', {
     var diagnosis = view.down('#diagnosisDropdown').getValue();
     var protesis = view.down('#protesisDropdown').getValue();
     var articleType = view.down('#articleTypeDropdown').getValue();
+    var articleGroup = view.down('#articleGroupDropdown').getValue();
     var articleNumber = view.down('#articleNumberDropdown').getValue();
 
-    if (clinic === 'Riket') clinic = '1000';
     if (articleNumber === 'Alla') articleNumber = 'alla';
-
-    // var startDate = view.down('#startDate').getValue().toLocaleDateString();
-    // var endDate = view.down('#endDate').getValue().toLocaleDateString();
 
     var startDate = Ext.Date.format(view.down('#startDate').getValue(),  'Y-m-d')
     var endDate = Ext.Date.format(view.down('#endDate').getValue(),  'Y-m-d')
@@ -179,31 +285,44 @@ Ext.define('shpr.volume.MainController', {
 
     view.oldparameters = view.newparameters;
     view.newparameters = operationType + protesis + articleType + startDate + endDate;
-    if (view.oldparameters !== view.newparameters) articleNumber = 'alla';
-
+    if (view.oldparameters !== view.newparameters) {
+      articleGroup = 'alla'
+      articleNumber = 'alla';
+    }
+    
+    view.oldgroup = view.newgroup
+    view.newgroup = articleGroup + ''
+    if (view.oldgroup !== view.newgroup) articleNumber = 'alla'
+    var baseUrl = '/stratum/api/statistics/shpr/supplier-mod1?'
     Ext.Ajax.request({
       type: 'ajax',
       method: 'get',
       cors: true,
-      url: '/stratum/api/statistics/shpr/supplier-mod1?'
-         + 'enhet=' + clinic + 
+      url: baseUrl
+         + 'enhet=' + clinic
          + '&operationstyp=' + operationType 
          + '&diagnos=' + diagnosis 
          + '&protestyp=' + protesis 
          + '&artikeltyp=' + articleType 
+         + '&article_group=' + articleGroup
          + '&article_nr=' + articleNumber 
          + '&start_datum=' + startDate 
-         + '&slut_datum=' + endDate 
-         + '&diagnos=alla',
+         + '&slut_datum=' + endDate,
       success: function (response) {
         spinner && spinner.hide();
         var result = Ext.decode(response.responseText).data;
         var gridData = result[0][0];
         var articles = result[1][0];
+        var groups = result[2][0].map(function(item){return {articleGroupCode: item.artikelgrupp, articleGroupName: item.article_group_description}})
         if (view.oldparameters !== view.newparameters) {
           view.down('#articleNumberDropdown').getStore().loadData(articles);
-          view.oldarticles = articles;
-          view.down('#articleNumberDropdown').select('Alla');
+          view.down('#articleNumberDropdown').reset()
+          view.down('#articleGroupDropdown').getStore().loadData(groups);
+          view.down('#articleGroupDropdown').reset()
+        }
+        if (view.oldgroup !== view.newgroup) {
+          view.down('#articleNumberDropdown').getStore().loadData(articles);
+          view.down('#articleNumberDropdown').reset()
         }
 
         if (articles.length !== 1) {
@@ -324,51 +443,6 @@ Ext.define('shpr.volume.MainController', {
     selections.endDate = view.down('#endDate').getValue();
     return selections;
   },
-
-  updatePart: function (record, part, code) {
-    var newChoices = this.enumerateNewChoices(record, code);
-    var addition = this.checkForAdditions(newChoices, part);
-    var deletion = this.checkForDeletions(newChoices, part);
-    this.oldChoices[part] = newChoices;
-    if (addition || deletion) {
-      if (!window.event.ctrlKey) {
-        var newValue = addition || deletion;
-        this.oldChoices[part] = [];
-        this.oldChoices[part].push(newValue);
-        this.getView().down('#' + part + 'Dropdown').clearValue();
-        this.getView().down('#' + part + 'Dropdown').setValue(newValue);
-        this.getView().down('#' + part + 'Dropdown').collapse();
-      }
-    }
-    this.updateGrid();
-  },
-
-  checkForAdditions: function (record, part) {
-    for (var item in record) {
-      if (!this.oldChoices[part].includes(record[item])) {
-        return record[item];
-      }
-    }
-    return '';
-  },
-
-  checkForDeletions: function (record, part) {
-    for (var item in this.oldChoices[part]) {
-      if (!record.includes(this.oldChoices[part][item])) {
-        return this.oldChoices[part][item];
-      }
-    }
-    return '';
-  },
-
-  enumerateNewChoices: function (record, code) {
-    var newChoices = [];
-    for (var item in record) {
-      if (item === '') continue;
-      newChoices.push(record[item].data[code]);
-    }
-    return newChoices;
-  },
   
   categoryTranslations: {
     'Alla': 'All',
@@ -425,6 +499,7 @@ Ext.define('shpr.view.Filter', {
 Ext.define('shpr.volume.view.Main', {
   extend: 'Ext.container.Container',
   controller: 'volume.main',
+  itemId: 'krhMain',
   cls: 'scw-main',
   items: [{
     xtype: 'container',
@@ -437,12 +512,12 @@ Ext.define('shpr.volume.view.Main', {
         width: '100%',
         cls: 'scw-header',
         text: 'Data inmatad efter senast publicerade årsrapport skall användas'
-            + ' med stor försiktighet då den inte är komplett eller validerad.'
+            + ' med stor försiktighet då den inte är komplett eller validerad. Det är i de flesta av menyerna möjligt att välja flera alternativ samtidigt genom att hålla nere ctrl-knappen när man klickar.'
       },
       {
         xtype: 'label',
         cls: 'scw-label',
-        text: 'Enhet'
+        html: 'Enhet'
       },
       {
         xtype: 'label',
@@ -453,20 +528,19 @@ Ext.define('shpr.volume.view.Main', {
         xtype: 'label',
         cls: 'scw-label',
         html: 'Diagnos'
-            + '<div class="scw-info">'
-            + '<div data-qtip="För att välja flera komponenter samtidigt, '
-            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
       },
       {
-        xtype: 'rcfilter',
+        xtype: 'label',
+        cls: 'scw-label',
+        text: 'Protestyp'
+      },
+      {
+        xtype: 'rcmultiselect',
         itemId: 'clinicDropdown',
-        cls: 'scw-select',
         valueField: 'P_Unit',
         displayField: 'sjukhus',
-        value: '0',
-        sortfield: 'sjukhus',
-        sortdirection: 'DESC',
-        selectCallback: 'updateGrid',
+        value: 999,
+        default: 999,
 
         store: {
           fields: ['P_Unit', 'sjukhus'],
@@ -481,6 +555,12 @@ Ext.define('shpr.volume.view.Main', {
               rootProperty: 'data[0]'
             }
           }
+        },
+
+        listeners: {
+          update: function () {
+            this.up('#krhMain').getController().updateGrid()
+          }
         }
       },
       {
@@ -490,8 +570,6 @@ Ext.define('shpr.volume.view.Main', {
         valueField: 'operationCode',
         displayField: 'operationName',
         value: 'alla',
-        sortfield: 'operationName',
-        sortdirection: 'DESC',
         fields: ['operationName', 'operationCode'],
         selectCallback: 'updateGrid',
         store: {
@@ -504,20 +582,15 @@ Ext.define('shpr.volume.view.Main', {
         }
       },
       {
-        xtype: 'tagfield',
+        xtype: 'rcmultiselect',
         itemId: 'diagnosisDropdown',
-        cls: 'scw-select scw-multiselect',
-        queryMode: 'local',
-        multiSelect: true,
-        stacked: true,
         valueField: 'diagnosisCode',
         displayField: 'diagnosisName',
         value: 'alla',
-        sortfield: 'diagnosisName',
-        sortdirection: 'DESC',
+        default: 'alla',
         listeners: {
-          select: function (combo, record) {
-            this.up().up().up().getController().updatePart(record, 'diagnosis', combo.valueField);
+          update: function () {
+            this.up('#krhMain').getController().updateGrid()
           }
         },
         store: {
@@ -536,32 +609,6 @@ Ext.define('shpr.volume.view.Main', {
             { diagnosisCode: 10, diagnosisName: 'Övrigt' }
           ]
         }
-      }
-      ]
-    },
-    {
-      xtype: 'container',
-      items: [
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        text: 'Protestyp'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        html: 'Artikeltyp'
-            + '<div class="scw-info">'
-            + '<div data-qtip="För att välja flera komponenter samtidigt, '
-            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
-      },
-      {
-        xtype: 'label',
-        cls: 'scw-label',
-        html: 'Artikel'
-            + '<div class="scw-info">'
-            + '<div data-qtip="För att välja flera komponenter samtidigt, '
-            + 'håll inne CTRL-knappen när du gör dina val.">i</div></div>'
       },
       {
         xtype: 'rcfilter',
@@ -570,8 +617,6 @@ Ext.define('shpr.volume.view.Main', {
         valueField: 'protesisCode',
         displayField: 'protesisName',
         value: 'alla',
-        sortfield: 'protesisName',
-        sortdirection: 'DESC',
         fields: ['protesisName', 'protesisCode'],
         selectCallback: 'updateGrid',
         store: {
@@ -583,21 +628,46 @@ Ext.define('shpr.volume.view.Main', {
           ]
         }
       },
+      ]
+    },
+    {
+      xtype: 'container',
+      items: [
+      
       {
-        xtype: 'tagfield',
+        xtype: 'label',
+        cls: 'scw-label',
+        html: 'Artikeltyp'
+      },
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        html: 'Artikelgrupp'
+      },
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        html: 'Artikel'
+      },
+      {
+        xtype: 'label',
+        cls: 'scw-label',
+        html: ''
+      },
+      
+      {
+        xtype: 'rcmultiselect',
         itemId: 'articleTypeDropdown',
-        cls: 'scw-select scw-multiselect',
         queryMode: 'local',
         multiSelect: true,
         stacked: true,
         valueField: 'articleTypeCode',
         displayField: 'articleTypeName',
         value: 'alla',
-        sortfield: 'articleTypeName',
-        sortdirection: 'DESC',
+        default: 'alla',
         listeners: {
-          select: function (combo, record) {
-            this.up().up().getController().updatePart(record, 'articleType');
+          update: function () {
+            this.up('#krhMain').getController().updateGrid()
           }
         },
         store: {
@@ -614,29 +684,59 @@ Ext.define('shpr.volume.view.Main', {
         }
       },
       {
-        xtype: 'tagfield',
-        itemId: 'articleNumberDropdown',
-        cls: 'scw-select scw-multiselect',
-        queryMode: 'local',
-        multiSelect: true,
-        stacked: true,
-        valueField: 'artikelnumer',
-        displayField: 'artikelnumer',
-        value: 'Alla',
-        sortfield: 'artikelnumer',
-        sortdirection: 'DESC',
+        xtype: 'rcmultiselect',
+        itemId: 'articleGroupDropdown',
+        valueField: 'articleGroupCode',
+        displayField: 'articleGroupName',
+        value: 'alla',
+        default: 'alla',
         listeners: {
-          select: function (combo, record) {
-            this.up().up().getController().updatePart(record, 'articleNumber');
+          update: function() {
+            this.up('#krhMain').getController().updateGrid()
           }
         },
         store: {
-          fields: ['artikelnumer'],
+          fields: ['articleGroupCode',{
+            name: 'articleGroupName',
+            sortType: 'asAllPlacedFirst'
+          }],
           data: [
-            { artikelnummer: 'Alla' }
-          ]
+            { articleGroupCode: 'alla', articleGroupName: 'Alla' }
+          ],
+          
+          sorters: [{
+            property: 'articleGroupName',
+            direction: 'ASC'
+          }]
         }
       },
+      {
+        xtype: 'rcmultiselect',
+        itemId: 'articleNumberDropdown',
+        valueField: 'artikelnumer',
+        displayField: 'artikelnumer',
+        value: 'Alla',
+        default: 'Alla',
+        listeners: {
+          update: function () {
+            this.up('#krhMain').getController().updateGrid()
+          }
+        },
+        store: {
+          fields: [{
+            name: 'artikelnumer',
+            sortType: 'asAllPlacedFirst'
+            }],
+          data: [
+            { artikelnummer: 'Alla' }
+          ],
+          
+          sorters: [{
+            property: 'artikelnumer',
+            direction: 'ASC'
+          }]
+        }
+      }
       ]
     }
     ],
@@ -826,6 +926,8 @@ Ext.application({
     main.getController().oldChoices.articleType = ['alla'];
     main.getController().oldChoices.articleNumber = ['Alla'];
     main.getController().oldChoices.diagnosis = ['alla'];
+    main.getController().oldChoices.diagnosis = ['alla'];
+    // main.getController().oldChoices.clinic = ['alla'];
     main.getController().updateGrid();
   }
 });

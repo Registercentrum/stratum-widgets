@@ -1,4 +1,5 @@
 
+//
 Ext.define('Boa.store.Report', {
   extend: 'Ext.data.Store',
   alias: 'store.report',
@@ -10,6 +11,20 @@ Ext.define('Boa.store.Report', {
 Ext.define('Boa.controller.Report', {
   extend: 'Ext.app.ViewController',
   alias: 'controller.report',
+
+  init: function () {
+    var yearStore = this.lookup('yearFilter').getStore()
+    var years = []
+    var currentYear = (new Date()).getFullYear()
+    for (var i = 2011; i <= currentYear; i++) {
+      years.push({ YearCode: i, YearName: i })
+    }
+    years.push({ YearCode: 0, YearName: 'Alla år' })
+    years.reverse()
+    yearStore.loadData(years)
+    this.lookup('yearFilter').setValue(0)
+  },
+
   updateGrid: function () {
     var controller = this;
     var table = this.getView().down('#table');
@@ -71,6 +86,7 @@ Ext.define('Boa.view.Report', {
   items: [
     {
       itemId: 'yearFilter',
+      reference: 'yearFilter',
       xtype: 'boafilter',
       displayField: 'YearName',
       valueField: 'YearCode',
@@ -86,18 +102,7 @@ Ext.define('Boa.view.Report', {
       },
       store: {
         fields: ['YearCode', 'YearName'],
-        data: [
-          { YearCode: 0, YearName: 'Alla år' },
-          { YearCode: 2019, YearName: '2019' },
-          { YearCode: 2018, YearName: '2018' },
-          { YearCode: 2017, YearName: '2017' },
-          { YearCode: 2016, YearName: '2016' },
-          { YearCode: 2015, YearName: '2015' },
-          { YearCode: 2014, YearName: '2014' },
-          { YearCode: 2013, YearName: '2013' },
-          { YearCode: 2012, YearName: '2012' },
-          { YearCode: 2011, YearName: '2011' }
-        ]
+        data: []
       }
     },
     {

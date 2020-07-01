@@ -1,6 +1,6 @@
 
 
-widgetConfig = {}
+var widgetConfig = {}
 widgetConfig.apikey = 'MpuYxfbtp5I='
 Ext.util.CSS.removeStyleSheet('bsw');
 Ext.util.CSS.createStyleSheet(
@@ -1710,7 +1710,7 @@ Ext.define('Boa.controller.OverviewController', {
   createDropdownItems: function (component) {
     var store = component.getStore()
     var currentYear = (new Date()).getFullYear()
-    for (i = 2011; i <= currentYear; i++) {
+    for (var i = 2011; i <= currentYear; i++) {
       store.insert(0, { YearCode: i, YearName: i })
     }
     store.insert(0, { YearCode: 0, YearName: 'Alla år' })
@@ -3049,7 +3049,7 @@ Ext.define('Boa.view.OverView', {
 
     var years = []
     var currentYear = (new Date()).getFullYear()
-    for (i = 2011; i <= currentYear; i++) {
+    for (var i = 2011; i <= currentYear; i++) {
       years.push({ YearCode: i, YearName: i })
     }
     years.push({ YearCode: 0, YearName: 'Alla år' })
