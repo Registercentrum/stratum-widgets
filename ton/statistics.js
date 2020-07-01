@@ -2839,7 +2839,7 @@ var TonsillWidget = function () {
             style: "cursor: pointer; color: #359aa3; font-size:12pt;",
             html:
               '<span class="fa fa-info-circle" aria-hidden="true" data-qtip="' +
-              "Blödningsresultat visas med konfidensintervall. " +
+              "Resultaten visas med konfidensintervall. " +
               "Konfidensintervallet visar om det finns en statistiskt " +
               "signifikant skillnad mellan staplarna. Om staplarnas " +
               "intervall inte överlappar varandra finns det en skillnad. " +
