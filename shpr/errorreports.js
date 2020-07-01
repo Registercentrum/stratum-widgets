@@ -1,4 +1,3 @@
-
 (function() {
 
 	var container = Stratum.containers && Stratum.containers['SHPR/ErrorReports'] || 'sw-rccontainer1';
@@ -53,7 +52,6 @@
 			},
 			
 			constructor: function (aConfig) {
-				if(!Ext.ClassManager.isCreated('Stratum.UnitItem')) {
 				Ext.define('Stratum.UnitItem', {
 					extend: 'Stratum.Unit',
 					idProperty: 'UnitCode',
@@ -63,7 +61,6 @@
 						{ name: 'IsActive', type: 'bool' }
 					]
 				});
-				}
  				this.controlee = {}; // Map of ids to views.
  				this.parameter = {}; // Map of parameter names to values for api call or filtering.
  				this.contexts  = {}; // Map of units to contexts for current users loginable contexts (for impersonation).
@@ -267,7 +264,7 @@
 				dataIndex: 'SubjectKey',
 				width: 130,
 				renderer: function(aValue) {
-					return '<a href="#!subject?key=' + (Repository.Global.Methods.EncryptNIN || function(x) { return x; })(aValue) + '">' + aValue + '</a>';
+					return '<a href="https://' + window.location.host + '/registrering#!subject?key=' + (Repository.Global.Methods.EncryptNIN || function(x) { return x; })(aValue) +' ">' + aValue + '</a>';
 				}
 			},/*{
 				text: 'Sida',
@@ -297,7 +294,7 @@
 				flex: 1,
 				renderer: function(aValue, aConfig, aRecord) {
 					return Ext.String.format(
-						'<a href="#!event?id={1}"><strong style="color: #f44336">{0}</strong><br><small>{2}</small></a>', 
+						'<a href="https://' + window.location.host + '/registrering#!event?id={1}"><strong style="color: #f44336">{0}</strong><br><small>{2}</small></a>', 
 						aValue, 
 						aRecord.get('EventID_Primary'), 
 						aRecord.get('ErrorNote')
@@ -318,3 +315,5 @@
 
 })();
 //! Koordinatorns rapporter för att övervaka, kontrollera och rapportera misstänkta fel.
+//# sourceURL=SHPR/ErrorReports
+
