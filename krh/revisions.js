@@ -1016,7 +1016,7 @@ Ext.application({
   ],
   launch: function () {
     var target = (typeof Stratum.containers !== 'undefined')
-      ? Stratum.containers['KRH/RevisionScope']
+      ? Stratum.containers['KRH/Revisions']
       : 'contentPanel';
     var main = Ext.create('shpr.revisions.view.Main', {
       renderTo: target
