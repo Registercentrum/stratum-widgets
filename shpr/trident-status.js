@@ -80,19 +80,20 @@ Ext.define("SHPR.view.TridentStatusController", {
     var index = 0
     data.patients.forEach(function(patient) {
       var record = store.findRecord('SubjectKey', patient.SubjectKey)
-      var key = 'SE_POSTPROM1::1::F_PROM_1::1::IG_PROM_PROM::1::I_PROM_FJSDATE'
-      // var key = 'SE_PRIMARYTRT_1::1::F_PRIMARYTRT_1::1::IG_PRIMA_PRIMARYTRT::1::I_PRIMA_P_SURGDATE'
+      // var key = 'SE_POSTPROM1::1::F_PROM_1::1::IG_PROM_PROM::1::I_PROM_FJSDATE'
+      var key = 'SE_PRIMARYTRT::1::F_PRIMARYTRT_1::1::IG_PRIMA_PRIMARYTRT::1::I_PRIMA_P_SURGDATE'
       var dateString = answers[index].find(function(answer){return answer.Id === key})
+      dateString = dateString ? dateString.Value : ''
       var surgeryDate  = new Date(Date.parse(dateString))
-      var elapsedTime = 0
+      var elapsedTime = 0.1 // Divide by zero hack
       if(surgeryDate) {
         elapsedTime = new Date() - surgeryDate
       }
-      dateString = dateString ? dateString.Value : ''
+      elapsedTime = elapsedTime/365/24/60/60/1000
       record.set('SurgeryDate', dateString)
-      record.set('ReadyProm1', elapsedTime >= 365*1 ? 'Ja': 'Nej')
-      record.set('ReadyProm6', elapsedTime >= 365*6 ? 'Ja': 'Nej')
-      record.set('ReadyProm10', elapsedTime >= 365*10 ? 'Ja': 'Nej')
+      record.set('ReadyProm1', elapsedTime >= 1 ? 'Ja': 'Nej')
+      record.set('ReadyProm6', elapsedTime >= 6 ? 'Ja': 'Nej')
+      record.set('ReadyProm10', elapsedTime >= 10 ? 'Ja': 'Nej')
       record.commit()
       index++
     });

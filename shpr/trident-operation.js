@@ -1,4 +1,4 @@
-widgetConfig = {prefix: 'SE_PRIMARYTRT_1::1::F_PRIMARYTRT_1::1::IG_PRIMA_PRIMARYTRT::1::I_PRIMA_'}
+widgetConfig = {prefix: 'SE_PRIMARYTRT::1::F_PRIMARYTRT_1::1::IG_PRIMA_PRIMARYTRT::1::I_PRIMA_'}
 
 Ext.define("SHPR.view.form.TridentOperation", {
     extend: "Ext.form.Panel",
