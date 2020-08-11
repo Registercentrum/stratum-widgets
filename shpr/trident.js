@@ -820,8 +820,6 @@ SHPR.forms[2].questions = [
 	}
 ]
 
-Ext.create("SHPR.view.form.Trident", { renderTo: "sw-kpl2" });
-
 Ext.util.CSS.removeStyleSheet('shpr');
 Ext.util.CSS.createStyleSheet(
   ' '

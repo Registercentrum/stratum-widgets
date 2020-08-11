@@ -103,7 +103,7 @@ Ext.define("SHPR.view.form.TridentOperation", {
 	}
 });     
 
-Ext.create("SHPR.view.form.TridentOperation", { renderTo: "sw-kpl2" });
+Ext.create("SHPR.view.form.TridentOperation", { renderTo: "contentPanel" });
 
 Ext.util.CSS.removeStyleSheet('shpr');
 Ext.util.CSS.createStyleSheet(

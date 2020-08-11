@@ -101,7 +101,7 @@ Ext.define("SHPR.view.TridentStatusController", {
   
 });     
 
-Ext.create("SHPR.view.TridentStatus", { renderTo: "sw-kpl2" });
+Ext.create("SHPR.view.TridentStatus", { renderTo: "contentPanel" });
 
 Ext.util.CSS.removeStyleSheet('shpr');
 Ext.util.CSS.createStyleSheet(

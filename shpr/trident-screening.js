@@ -130,7 +130,7 @@ Ext.define("SHPR.view.form.TridentScreening", {
 	}
 });     
 
-Ext.create("SHPR.view.form.TridentScreening", { renderTo: "sw-kpl2" });
+Ext.create("SHPR.view.form.TridentScreening", { renderTo: "contentPanel" });
 
 Ext.util.CSS.removeStyleSheet('shpr');
 Ext.util.CSS.createStyleSheet(
