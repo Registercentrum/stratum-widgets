@@ -1,16 +1,4 @@
 
-widgetConfig = {
-	formNumber: 1,
-	formName: 'PREPROM - FJS',
-	formIdentifier: 'SE_PREPROM::1::F_PROM_1::1::IG_PROM_PROM::1::I_PROM_FJS'
-}
-
-widgetConfig = {
-	formNumber: 2,
-	formName: 'PREPROM - OHS',
-	formIdentifier: 'SE_PREPROM::1::F_PROM_1::1::IG_PROM_PROM::1::I_PROM_OHS'
-}
-
 Ext.define("SHPR.view.form.Trident", {
   extend: "Ext.form.Panel",
   xtype: "trident",
@@ -39,7 +27,7 @@ Ext.define("SHPR.view.form.Trident", {
 			},
 			items: [{
 				xtype: 'container',
-				layout: 'hbox',
+				layout: 'vbox',
 				margin: '0 0 5 0',
 
 				items: [{
@@ -49,10 +37,20 @@ Ext.define("SHPR.view.form.Trident", {
 						width: 300
 					},
 					{
+						/*
 						xtype: 'textfield',
 						fieldLabel: 'Datum',
 						name: widgetConfig.formIdentifier + 'DATE',
 						width: 300
+						*/
+						xtype: 'datefield',
+                        fieldLabel: 'Datum',
+                        width: 240,
+                        itemId: 'startDate',
+                        value: new Date(),
+                        format: 'Y-m-d',
+                        altFormats: 'ymd|Ymd',
+                        name: widgetConfig.formIdentifier + 'DATE',
 					}]
 			}]
 		}
@@ -63,6 +61,7 @@ Ext.define("SHPR.view.form.Trident", {
       text: "Hämta svaren",
       width: 150,
       handler: "onFetchAnswers",
+      hidden: true
     },
     {
       text: "Skicka in svaren",
@@ -113,7 +112,7 @@ Ext.define("SHPR.view.Question", {
 				name: widgetConfig.formIdentifier + question.id,
         boxLabel: option.text,
         inputValue: option.value,
-        checked: option.checked || false,
+        checked: option.checked || false
       });
     });
   },
@@ -138,6 +137,7 @@ Ext.define("SHPR.view.form.TridentController", {
 	onCompleteClick: function () {
 		console.log('complete')
 		var answers = this.prepareJSON()
+		answers[1].value = Ext.Date.format(this.getView().down('#startDate').getValue(),  'Y-m-d')
 		var subject = answers.shift().value
 		this.subject = subject
 		this.saveData(subject, answers)
@@ -163,6 +163,8 @@ Ext.define("SHPR.view.form.TridentController", {
 				jsonData: answers,
 				success: function (response) {
 						console.log("SUCCESS", response);
+						Ext.toast({html: 'Svaren registrerade', anchor: 'contentPanel', align: 'b'})
+						//Ext.Msg.alert('Svaren registrerade', 'Registrerat');
 				},
 				failure: function (response) {
 						console.log("FAIL", response);
@@ -172,7 +174,7 @@ Ext.define("SHPR.view.form.TridentController", {
 	
 	getData: function (subjectKey) {
 		Ext.Ajax.request({
-			url: "/stratum/api/rrct/steisure/subjects/data/", // + subjectKey,
+			url: "/stratum/api/rrct/steisure/subjects/data/" + subjectKey,
 			method: "GET",
 		
 			success: function (response) {
@@ -820,8 +822,6 @@ SHPR.forms[2].questions = [
 	}
 ]
 
-Ext.create("SHPR.view.form.Trident", { renderTo: "sw-kpl2" });
-
 Ext.util.CSS.removeStyleSheet('shpr');
 Ext.util.CSS.createStyleSheet(
   ' '
@@ -834,6 +834,12 @@ Ext.util.CSS.createStyleSheet(
 
 	+ '.shpr-trident .x-fieldset {'
 	+ '  background: #fff;'
+	+ '}'
+
+	+ '.trident-toast {'
+	+ '  width: 100%;'
+	+ '  height: 40px;'
+	+ '  background: red;'
 	+ '}'
 
 	, 'trident'

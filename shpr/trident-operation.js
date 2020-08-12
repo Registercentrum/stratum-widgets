@@ -1,3 +1,4 @@
+
 widgetConfig = {prefix: 'SE_PRIMARYTRT::1::F_PRIMARYTRT_1::1::IG_PRIMA_PRIMARYTRT::1::I_PRIMA_'}
 
 Ext.define("SHPR.view.form.TridentOperation", {
@@ -8,6 +9,7 @@ Ext.define("SHPR.view.form.TridentOperation", {
     cls: 'shpr-trident',
     width: '100%',
     bodyPadding: 10,
+    marginBottom: 20,
     frame: false,
   
     fieldDefaults: {
@@ -39,10 +41,14 @@ Ext.define("SHPR.view.form.TridentOperation", {
                         width: 400
                     },
                     {
-                        xtype: 'textfield',
+                        xtype: 'datefield',
                         fieldLabel: 'Operationsdatum',
+                        width: 240,
+                        itemId: 'startDate',
+                        value: new Date(),
+                        format: 'Y-m-d',
+                        altFormats: 'ymd|Ymd',
                         name: widgetConfig.prefix + 'P_SURGDATE',
-                        width: 400
                     },
                     {
                         xtype: "radiogroup",
@@ -74,6 +80,7 @@ Ext.define("SHPR.view.form.TridentOperation", {
 
     onCompleteClick: function () {
         var answers = this.prepareJSON()
+        answers[1].value = Ext.Date.format(this.getView().down('#startDate').getValue(),  'Y-m-d')
 		var subject = answers.shift().value
         this.subject = subject
         this.saveData(subject, answers)
@@ -95,6 +102,7 @@ Ext.define("SHPR.view.form.TridentOperation", {
 				jsonData: answers,
 				success: function (response) {
 						console.log("SUCCESS", response);
+						Ext.toast({html: 'Svaren registrerade', anchor: 'contentPanel', align: 't'})
 				},
 				failure: function (response) {
 						console.log("FAIL", response);
@@ -103,7 +111,7 @@ Ext.define("SHPR.view.form.TridentOperation", {
 	}
 });     
 
-Ext.create("SHPR.view.form.TridentOperation", { renderTo: "sw-kpl2" });
+Ext.create("SHPR.view.form.TridentOperation", { renderTo: "contentPanel" });
 
 Ext.util.CSS.removeStyleSheet('shpr');
 Ext.util.CSS.createStyleSheet(
@@ -117,6 +125,12 @@ Ext.util.CSS.createStyleSheet(
 
 	+ '.shpr-trident .x-fieldset {'
 	+ '  background: #fff;'
+	+ '}'
+
+	+ '.trident-toast {'
+	+ '  width: 100%;'
+	+ '  height: 40px;'
+	+ '  background: red;'
 	+ '}'
 
 	, 'trident'

@@ -1,3 +1,4 @@
+
 widgetConfig = {prefix: 'SE_SCREENING::1::F_SCREENING_1::1::IG_SCREE_SCREENING::1::I_SCREE_'}
 
 Ext.define("SHPR.view.form.TridentScreening", {
@@ -45,10 +46,20 @@ Ext.define("SHPR.view.form.TridentScreening", {
                           width: 400
                       },
                       {
+                      	/*
                           xtype: 'textfield',
                           fieldLabel: 'Samtyckesdatum',
                           name: widgetConfig.prefix + 'CONSENTDATE',
                           width: 400
+                          */
+                           xtype: 'datefield',
+                           fieldLabel: 'Samtyckesdatum',
+                           width: 240,
+                           itemId: 'startDate',
+                           value: new Date(),
+                           format: 'Y-m-d',
+                           altFormats: 'ymd|Ymd',
+                           name: widgetConfig.prefix + 'CONSENTDATE',
                       },
                       {
                         xtype: "radiogroup",
@@ -80,30 +91,39 @@ Ext.define("SHPR.view.form.TridentScreening", {
 
     onCompleteClick: function () {
 		var answers = this.prepareJSON()
+		answers[2].value = Ext.Date.format(this.getView().down('#startDate').getValue(),  'Y-m-d')
 		var subject = answers.shift().value
-    this.subject = subject
-    this.savePatient(subject)
-    this.saveData(subject, answers)
+        var data = {}
+        data.answers = answers
+        data.subject = subject
+        data.controller = this
+        this.savePatient(data).then(this.saveData)
   },
 
-  savePatient: function (subject) {
-    var eventId = new Date().toISOString()
+  savePatient: function (data) {
     
+    var deferred = new Ext.Deferred()
+    var eventId = new Date().toISOString()
+
     Ext.Ajax.request({
       url: "/stratum/api/rrct/steisure/subjects",
       method: "POST",
       jsonData: {
-          subjectKey: subject,
+          subjectKey: data.subject,
           eventId: eventId
       },
       success: function (response) {
           console.log("SUCCESS", response);
+          deferred.resolve(data)
       },
       failure: function (response) {
           console.log("FAIL", response);
+          Ext.toast({anchor: 'contentPanel', html: 'Patienten kunde inte registreras'});
+          deferred.reject('Unable to register patient')
       }
     });
-    
+
+    return deferred.promise
   },
   
   prepareJSON: function () {
@@ -115,22 +135,24 @@ Ext.define("SHPR.view.form.TridentScreening", {
 		return answers
 	},
 
-	saveData: function(subject, answers) {
+	saveData: function(data) {
 		Ext.Ajax.request({
-				url: "/stratum/api/rrct/steisure/subjects/data/" + subject,
+				url: "/stratum/api/rrct/steisure/subjects/data/" + data.subject,
 				method: "POST",
-				jsonData: answers,
+				jsonData: data.answers,
 				success: function (response) {
 						console.log("SUCCESS", response);
+						Ext.toast({anchor: 'contentPanel', html: 'Patienten registrerades'});
 				},
 				failure: function (response) {
 						console.log("FAIL", response);
+						Ext.toast({anchor: 'contentPanel', html: 'Patienten kunde inte registreras'});
 				}
 		});		
 	}
 });     
 
-Ext.create("SHPR.view.form.TridentScreening", { renderTo: "sw-kpl2" });
+Ext.create("SHPR.view.form.TridentScreening", { renderTo: "contentPanel" });
 
 Ext.util.CSS.removeStyleSheet('shpr');
 Ext.util.CSS.createStyleSheet(
