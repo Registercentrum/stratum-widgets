@@ -5,6 +5,7 @@
 .gitattributes
 test.html
 test.js
+temp.js
 _backup/
 node_modules/
 dist/

@@ -76,7 +76,7 @@ function start () {
 			var tval;
 			var d = rc.VisitDate.substr(0, 10);
 			fields.push({name: d, type: 'string'});
-			value = Ext.isEmpty(rc.Smoking) ? '' : mappedDomains['Aktuella rökvanor'][rc.Smoking];
+			value = Ext.isEmpty(rc.Smoking) ? '' : mappedDomains['CurrentSmokingHabits'][rc.Smoking];
 			a[0].push(value);
 			value = Ext.isEmpty(rc.FEV1PercentAfter) ? '' : rc.FEV1PercentAfter.toString().replace('.',',');
 			a[1].push(value);

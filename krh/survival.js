@@ -1474,7 +1474,7 @@ Ext.application({
     //  'DetailsController'
   ],
   launch: function () {
-    var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['KRH/Graph'] : 'contentPanel';
+    var target = (typeof Stratum.containers !== 'undefined') ? Stratum.containers['KRH/Survival'] : 'contentPanel';
     var main = Ext.create('shpr.graph.view.Main', {
       renderTo: target
     });
