@@ -2946,6 +2946,6 @@ Ext.util.CSS.createStyleSheet(
 
 // eslint-disable-next-line no-unused-vars
 Ext.Loader.loadScript({
-  url: '/stratum/extjs/scripts/exporter.js',
+  url: '/ExtJS/scripts/exporter.js',
   onLoad: function () { onReady() }
 })
