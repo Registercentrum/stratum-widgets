@@ -226,10 +226,7 @@ Ext.define('Shpr.view.Main', {
               height: 400,
             }
           },
-
-          border: false,
           insetPadding: '30px 0px 30px 0px',
-
           border: false,
           touchAction: {
             panY: true,
@@ -1177,7 +1174,6 @@ Ext.define('Shpr.controller.Compass', {
     var view = this.getView()
     var options = view.down('#indicatorFilter').getStore().getData().items
     var value = view.down('#indicatorFilter').getValue()
-    var diagnosis = view.down('#diagnosisFilter').getValue()
     var eligible = options.filter(function (item) { return item.data.ValueCode === value }).length
     if (eligible) return
     view.down('#diagnosisFilter').getDisplayValue() !== 'Fraktur' && view.down('#indicatorFilter').setValue('satis')
@@ -1217,7 +1213,6 @@ Ext.define('Shpr.controller.Compass', {
     if (this.getView().itemId !== 'compass') {
       view = this.getView().up('#compass')
     }
-    var include = false
     var diagnosis = view.down('#diagnosisFilter').getValue()
     return (diagnosis === 1 && item.data.Arthritis) || (diagnosis === 3 && item.data.Fracture)
   },
@@ -1290,7 +1285,6 @@ Ext.define('Shpr.controller.Compass', {
         view.down('#charnleyFilter').disable()
         break
     }
-    var diagnosis = view.down('#diagnosisFilter').getValue()
   },
 
   transformData: function (data) {
@@ -1413,11 +1407,11 @@ Ext.define('Shpr.controller.Compass', {
     var indicator = this.getView().down('#indicatorFilter').getDisplayValue()
     var unit = ';;' + this.getView().down('#unitFilter').getDisplayValue() + ';;;' + this.getView().down('#comparisonFilter').getDisplayValue()
     var headers = 'År;;Resultat; Antal;;Resultat; Antal;\n';
+    var data = Ext.data.StoreManager.lookup('timechart');
+
     var content = '';
     content += indicator + '\n' + unit + '\n' + headers;
 
-    var data = Ext.data.StoreManager.lookup('timechart');
-    var counter;
     var fields = ['year', 'y_unit', 'n_unit', 'y_comparison', 'n_comparison']
     for (var i in data.data.items) {
       if (i === '') continue;

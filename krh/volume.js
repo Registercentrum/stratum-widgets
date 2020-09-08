@@ -913,7 +913,7 @@ Ext.application({
   units: [],
   launch: function () {
     var target = (typeof Stratum.containers !== 'undefined') 
-                    ? Stratum.containers['KRH/ComponentsUsed'] 
+                    ? Stratum.containers['KRH/Volume'] 
                     : 'contentPanel';
     var main = Ext.create('shpr.volume.view.Main', {
       renderTo: target
@@ -931,5 +931,3 @@ Ext.application({
     main.getController().updateGrid();
   }
 });
-
-//! SHPRs företagsmodul: volymer
