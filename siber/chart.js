@@ -384,7 +384,7 @@ function createChart(id) {
 					var newWord = words.shift();
 					words.forEach(function (word) {
 						var testWord = newWord + ' ' + word;
-						if (testWord.length > 19) {
+						if (testWord.length > 18) {
 							newLabel.push(newWord);
 							newWord = word;
 						} else {
